@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Rome Improv Festival – Prenotazioni</title>
+<meta name="viewport" content="width=1440"><script id="artyou-viewport">(function(){try{var w=Math.min(screen.width,screen.height);if(w<=600){var m=document.querySelector('meta[name="viewport"]');m.setAttribute("content","width=device-width, initial-scale=1, viewport-fit=cover");document.documentElement.classList.add("am-mobile");}}catch(e){}})();</script>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script src="js/support.js"></script>
+<script src="js/enhancements.js"></script>
+
+<style id="artyou-centered-layout">
+html{background:#C79A2B!important;}
+body{margin:0!important;background:#C79A2B!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;min-height:100vh!important;}
+body>x-dc,x-dc{width:100%!important;max-width:1200px!important;margin:0 auto!important;}
+x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 auto!important;background:#fff!important;box-shadow:0 0 36px rgba(44,31,8,.30)!important;min-height:100vh!important;}
+@media(min-width:1200px){body>x-dc,x-dc,x-dc>div:first-of-type{width:1200px!important;max-width:1200px!important;}}
+@media(max-width:1199px){html,body{background:#fff!important;} body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;box-shadow:none!important;}}
+</style>
+
+
+
+
+<style id="artyou-mobile-css">
+@media (max-width: 820px) {
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { overflow-x: hidden; background: #F6F3EC !important; }
+  body { font-size: 16px; }
+  /* contenitore principale: larghezza schermo, altezza libera */
+  .am-mobile [style*="width: 1440px"] { width: 100% !important; }
+  .am-mobile [style*="width: 1440px"][style*="flex-direction: column"] { height: auto !important; min-height: 100vh; overflow: hidden; }
+  .am-mobile body > div, .am-mobile body > div > div, .am-mobile body > div > div > div { max-width: 100vw; }
+
+  /* margini */
+  .am-px { padding-left: 20px !important; padding-right: 20px !important; }
+  .am-py { padding-top: 48px !important; padding-bottom: 48px !important; }
+  .am-mx { margin-left: 20px !important; margin-right: 20px !important; }
+  .am-my { margin-top: 0 !important; margin-bottom: 48px !important; }
+
+  /* griglie e righe */
+  .am-grid1 { grid-template-columns: minmax(0, 1fr) !important; }
+  .am-grid2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  /* griglie di schede solo testo: una per riga, più leggibili */
+  .am-grid2:not(.am-k):not(:has(img, [role="img"])) { grid-template-columns: minmax(0, 1fr) !important; }
+  .am-stack { flex-direction: column !important; align-items: stretch !important; gap: 24px !important; }
+  .am-stack > * { max-width: 100% !important; min-width: 0 !important; }
+  .am-wrap { flex-wrap: wrap; }
+  /* righe "foto + testo" (es. schede persone): restano affiancate, il testo va a capo */
+  .am-pr { padding-right: 20px !important; }
+  .am-wrap:has(> [role="img"][style*="flex-shrink: 0"][style*="border-radius"]) { flex-wrap: nowrap !important; }
+  .am-wrap:has(> [role="img"][style*="flex-shrink: 0"][style*="border-radius"]) > :not([role="img"]) { min-width: 0; flex: 1 1 auto; }
+  /* elementi che nel desktop occupano più colonne/righe: sul telefono si mettono in fila */
+  [style*="grid-area"], [style*="grid-column"], [style*="grid-row"] { grid-area: auto !important; grid-column: auto !important; grid-row: auto !important; }
+  .am-grid2:has(> [style*="grid-area"], > [style*="grid-column"]) { grid-template-columns: minmax(0, 1fr) !important; }
+  /* righe con cerchio numerato o avatar tondo: restano affiancate */
+  .am-wrap:has(> [style*="flex-shrink: 0"][style*="border-radius"][style*="height"]) { flex-wrap: nowrap !important; }
+  .am-wrap:has(> [style*="flex-shrink: 0"][style*="border-radius"][style*="height"]) > :not([style*="flex-shrink: 0"]) { min-width: 0; flex: 1 1 auto; }
+  /* riquadri data in alto a destra nelle schede: non coprono più il testo */
+  article > .am-abs[style*="top: 20px"][style*="right: 20px"]:first-child { position: relative !important; top: auto !important; right: auto !important; align-self: flex-end; margin: 16px 16px -8px auto; }
+  /* moduli: un campo per riga */
+  .am-grid2:has(input, select, textarea) { grid-template-columns: minmax(0, 1fr) !important; }
+  /* intestazioni di tabella fatte a griglia (Sede / Quando / ...): sul telefono non servono */
+  .am-grid1[style*="text-transform: uppercase"][style*="grid-template-columns"] { display: none !important; }
+
+  /* HOME – apertura con slider */
+  /* le foto del carosello sono in 3:2: il riquadro ha la stessa proporzione, la foto si vede intera */
+  #am-hero { height: auto !important; padding-top: calc(100vw * 2 / 3); overflow: hidden; }
+  #am-hero [role="img"] { width: 100% !important; height: calc(100vw * 2 / 3) !important; min-height: 0 !important;
+    background-size: cover !important; background-position: center !important; transform: none !important; }
+  #am-hero > .am-abs[style*="top: 32px"] { top: 12px !important; right: 12px !important; font-size: 13px !important; padding: 7px 12px !important; }
+  #am-hero > .am-abs[style*="bottom: 64px"] { position: relative !important; left: auto !important; bottom: auto !important; width: auto !important; border-radius: 0 !important; background: #0D1115 !important; padding: 28px 20px 36px !important; gap: 16px !important; }
+  #am-hero .am-grid2 { grid-template-columns: minmax(0, 1fr) !important; gap: 10px !important; }
+  .am-wfull { width: 100% !important; max-width: 100% !important; flex-basis: auto !important; box-sizing: border-box !important; }
+  .am-mwfull { max-width: 100% !important; }
+  .am-nominw { min-width: 0 !important; }
+  .am-hauto { height: auto !important; min-height: 0 !important; }
+  .am-himg { height: 240px !important; }
+  .am-wrap-text { white-space: normal !important; }
+  img, video, iframe { max-width: 100%; }
+  table { display: block; overflow-x: auto; max-width: 100%; }
+
+  /* testo leggibile */
+  .am-fs-xxl { font-size: 38px !important; line-height: 1.08 !important; letter-spacing: -0.8px !important; }
+  .am-fs-xl  { font-size: 32px !important; line-height: 1.12 !important; letter-spacing: -0.5px !important; }
+  .am-fs-l   { font-size: 27px !important; line-height: 1.15 !important; letter-spacing: -0.3px !important; }
+  .am-fs-m   { font-size: 23px !important; line-height: 1.2 !important; }
+  .am-fs-s   { font-size: 19px !important; line-height: 1.3 !important; }
+  .am-fs-lead{ font-size: 17px !important; line-height: 1.55 !important; }
+  .am-fs-body{ font-size: 16px !important; line-height: 1.55 !important; }
+  .am-fs-tiny{ font-size: 13px !important; }
+  p, li { overflow-wrap: anywhere; }
+
+  /* header + menu hamburger */
+  header { padding: 12px 16px !important; flex-wrap: nowrap !important; flex-direction: row !important; align-items: center !important; position: relative; gap: 10px !important; }
+  header > a:first-of-type img { height: 40px !important; }
+  header > nav { display: none !important; }
+  header > div { gap: 8px !important; flex-wrap: nowrap !important; flex-direction: row !important; }
+  header a:has(.am-short) { padding: 10px 14px !important; font-size: 14px !important; white-space: nowrap; }
+  header .am-long { display: none !important; }
+  header .am-short { display: inline !important; }
+  header a[aria-label="Scrivici su WhatsApp"] { width: 44px !important; height: 44px !important; flex: 0 0 44px; }
+  .artyou-menu-btn { display: flex !important; width: 44px; height: 44px; flex: 0 0 44px; border-radius: 22px; border: 1px solid #3A444D; align-items: center; justify-content: center; color: #F6F3EC; cursor: pointer; }
+  #artyou-menu-toggle:checked ~ nav {
+    display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 0 !important;
+    position: absolute; left: 0; right: 0; top: 100%; z-index: 1000; background: #13181D; padding: 8px 20px 20px !important;
+    border-top: 1px solid #2A333B; box-shadow: 0 18px 30px rgba(0,0,0,.35);
+  }
+  #artyou-menu-toggle:checked ~ nav a:last-child { border-bottom: 0; }
+  #artyou-menu-toggle:checked ~ nav a { font-size: 19px !important; padding: 15px 0 !important; border-bottom: 1px solid #2A333B; color: #F6F3EC !important; }
+  #artyou-menu-toggle:checked ~ nav a.artyou-menu-extra { display: block !important; padding-left: 18px !important; font-size: 17px !important; color: #C4CCD2 !important; }
+  #artyou-menu-toggle:checked ~ div .artyou-menu-btn .am-open { display: none; }
+  #artyou-menu-toggle:checked ~ div .artyou-menu-btn .am-close { display: block !important; }
+
+  /* barre secondarie (Corsi, Chi siamo): scorrono in orizzontale */
+  nav[aria-label="Chi siamo"], header + div + nav, header + nav {
+    overflow-x: auto; white-space: nowrap; flex-wrap: nowrap !important; gap: 22px !important;
+    padding-left: 20px !important; padding-right: 20px !important; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  nav[aria-label="Chi siamo"] > *, header + div + nav > *, header + nav > * { flex: 0 0 auto; }
+
+  /* footer */
+  footer * { column-gap: 16px; }
+  footer { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; padding: 28px 20px calc(28px + env(safe-area-inset-bottom, 0px)) !important; }
+
+  /* pulsanti e link: area di tocco comoda */
+  a[style*="border-radius: 999px"], a[style*="border-radius: 24px"][style*="padding"], button {
+    min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; text-align: center;
+  }
+  input, select, textarea { font-size: 16px !important; max-width: 100%; }
+}
+@media (min-width: 821px) {
+  .artyou-menu-btn, #artyou-menu-toggle, .artyou-menu-extra { display: none !important; }
+  .am-short { display: none !important; }
+}
+</style>
+
+<style id="artyou-stage-bg">
+@media (min-width: 821px) {
+  html, body { background: #11181D !important; }
+  body div[style*="width: 1440px"][style*="flex-direction: column"] {
+    position: relative;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      -18px 0 40px -8px rgba(0, 0, 0, 0.75),
+      18px 0 40px -8px rgba(0, 0, 0, 0.75),
+      0 0 120px 20px rgba(0, 0, 0, 0.55) !important;
+  }
+}
+</style>
+
+<style id="artyou-mobile-ritocchi">
+/* WhatsApp verde fisso in basso a destra (home) – computer e telefono */
+#am-wa-float {
+  position: fixed !important; top: auto !important; left: auto !important;
+  right: max(24px, calc((100vw - 1440px) / 2 + 32px)) !important;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+  z-index: 900 !important;
+}
+.am-ig-cta { display: none !important; }
+@media (max-width: 820px) {
+  /* header: niente icona WhatsApp, il logo non si schiaccia */
+  header a[aria-label="Scrivici su WhatsApp"] { display: none !important; }
+  header > a:first-of-type { flex-shrink: 0 !important; }
+  header > a:first-of-type img { width: auto !important; max-width: none !important; }
+
+  #am-wa-float { width: 58px !important; height: 58px !important; right: 16px !important; bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important; }
+
+  /* schede docenti (due per riga): testi e pulsanti a misura */
+  .am-grid2 article:has(> a[aria-label^="Profilo di"]) > div { padding: 14px !important; gap: 8px !important; }
+  .am-grid2 article:has(> a[aria-label^="Profilo di"]) > div > a:first-child { font-size: 18px !important; line-height: 1.2 !important; }
+  .am-grid2 article:has(> a[aria-label^="Profilo di"]) > div > .am-wrap:first-of-type > span { font-size: 12px !important; padding: 4px 8px !important; }
+  .am-grid2 article:has(> a[aria-label^="Profilo di"]) > div > span { font-size: 13px !important; line-height: 1.4 !important; }
+  .am-grid2 article:has(> a[aria-label^="Profilo di"]) > div > .am-wrap:last-child { flex-direction: column !important; flex-wrap: nowrap !important; gap: 6px !important; }
+  .am-grid2 article:has(> a[aria-label^="Profilo di"]) > div > .am-wrap:last-child > a {
+    height: 38px !important; min-height: 38px !important; width: 100%; box-sizing: border-box;
+    font-size: 12.5px !important; padding: 0 8px !important; justify-content: center !important;
+    flex-wrap: nowrap !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; gap: 6px !important;
+  }
+  .am-grid2 article:has(> a[aria-label^="Profilo di"]) > div > .am-wrap:last-child > a svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  /* home: via il feed Instagram e la galleria, al loro posto un pulsante */
+  #foto > .am-grid1, #foto .am-desktop-only { display: none !important; }
+  #foto .am-ig-cta {
+    display: inline-flex !important; align-self: flex-start; align-items: center; gap: 10px;
+    padding: 16px 26px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 16px; letter-spacing: .5px;
+    color: #FFFFFF; background: linear-gradient(45deg, #FEDA75, #FA7E1E, #D62976, #962FBF, #4F5BD5);
+    box-shadow: 0 10px 24px rgba(214, 41, 118, .35);
+  }
+  #foto .am-ig-text { display: block !important; }
+}
+</style>
+<meta name="artyou-build" content="2026-09-26T15:47:56.297Z">
+
+<style id="artyou-forms-css">
+.artyou-form-msg { margin-top: 12px; padding: 14px 16px; border-radius: 12px; font-size: 15px; line-height: 1.5; font-weight: 600; }
+.artyou-form-msg.err { background: #FDECEC; color: #8A1C1C; border: 1px solid #F3B8B8; }
+.artyou-form-msg.wait { background: #EEF4F8; color: #1A4A66; border: 1px solid #C9DDEA; }
+.artyou-form-msg a { color: inherit; font-weight: 700; }
+.artyou-field-err { outline: 2px solid #D93A3A !important; outline-offset: 1px; }
+</style>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=Instrument+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="icon" type="image/png" href="img/favicon-192.png">
+<style>
+body{margin:0;background:#F6F3EC}
+a{color:#1A6E99}a:hover{color:#12506F}
+</style>
+</helmet>
+<div class="am-wfull am-hauto" style="width: 1440px; height: 2300px; display: flex; flex-direction: column; background: #F6F3EC; color: #13181D; font-family: 'Instrument Sans', 'Helvetica Neue', Helvetica, sans-serif; position: relative; overflow: hidden;">
+<header class="am-px am-wrap" style="background: #13181D; display: flex; align-items: center; justify-content: space-between; padding: 20px 120px;">
+<a href="index.html" aria-label="Artyou Roma – Home" class="am-wrap" style="display: flex; align-items: center;"><img src="img/logo-orizzontale-bianco.png" alt="Artyou Roma" style="height: 56px; width: auto; display: block;"></a>
+<input type="checkbox" id="artyou-menu-toggle" aria-hidden="true" tabindex="-1" class="am-abs" style="position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none;">
+<nav class="am-wrap" style="display: flex; gap: 36px; align-items: center;"><a href="index.html" style="text-decoration: none; font-size: 16px; font-weight: 500; color: #E6EBEE;">Spettacoli</a>
+<a href="improvvisazione.html" style="text-decoration: none; font-size: 16px; font-weight: 500; color: #E6EBEE;">Corsi</a>
+<a href="workshow-corso.html" style="text-decoration: none; font-size: 16px; font-weight: 500; color: #E6EBEE;">Workshow</a>
+<a href="index.html" style="text-decoration: none; font-size: 16px; font-weight: 700; color: #FFFFFF;">Festival e Altro</a>
+<a href="chi-siamo.html" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Chi Siamo</a>
+<a href="insegnanti.html" class="artyou-menu-extra" style="display: none; text-decoration: none;">I docenti</a>
+<a href="index.html" style="text-decoration: none; font-size: 16px; font-weight: 500; color: #E6EBEE;">Contatti</a></nav>
+<div class="am-wrap" style="display: flex; gap: 12px; align-items: center;">
+<a target="_blank" rel="noopener" href="https://wa.me/393271881956" aria-label="Scrivici su WhatsApp" class="am-wrap" style="width: 48px; height: 48px; border-radius: 24px; border: 1px solid #3A444D; display: flex; align-items: center; justify-content: center; color: #F6F3EC;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.2 7.5L3 21l2-5.6A8.4 8.4 0 1 1 21 11.5z"></path></svg></a>
+<a href="index.html" class="am-fs-body" style="background: {{accent}}; color: #1C1606; padding: 14px 22px; border-radius: 999px; font-weight: 700; text-decoration: none; font-size: 15px;"><span class="am-long">Lezione di prova gratis</span><span class="am-short">Prova gratis</span></a>
+<label for="artyou-menu-toggle" class="artyou-menu-btn" role="button" aria-label="Apri il menu" style="display: none;"><svg class="am-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg><svg class="am-close" style="display: none;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></label></div>
+</header>
+<div aria-hidden="true" style="height: 6px; background: #7A1631;"></div>
+<section class="am-px am-py am-grid1" style="background: #13181D; color: #F6F3EC; padding: 64px 120px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: center;">
+<div style="display: flex; flex-direction: column; gap: 18px;">
+<nav aria-label="Percorso" class="am-wrap am-fs-body" style="font-size: 14px; color: #9AA5AE; display: flex; gap: 10px;"><a href="index.html" style="color: #C4CCD2;">Home</a><span>/</span><a href="index.html" style="color: #C4CCD2;">Festival e Altro</a><span>/</span><span>Rome Improv Festival</span></nav>
+<p class="am-fs-body" style="margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #F09000;">Festival internazionale · 12-13-14 marzo 2027</p>
+<h1 class="am-fs-xxl" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 76px; line-height: 0.98; letter-spacing: -2px;">Rome Improv Festival</h1>
+<p class="am-mwfull am-fs-lead" style="margin: 0; font-size: 19px; line-height: 1.55; color: #C4CCD2; max-width: 640px;">Tre giorni in cui l’improvvisazione parla inglese nella Città Eterna: workshop con insegnanti internazionali e spettacoli ogni sera. Diretto da Giacomo Cappucci con Artyou Roma.</p>
+</div>
+<div role="img" aria-label="Improvvisatori e improvvisatrici applaudono sul palco" class="am-himg" style="position: relative; height: 360px; border-radius: 24px; background-color: #3A1330; background-image: url(img/rome-improv-festival.jpg); background-size: cover; background-position: 50% 40%;">
+<div class="am-abs" style="position: absolute; bottom: 20px; left: 20px; background: #F6F3EC; color: #13181D; border-radius: 16px; padding: 12px 18px; display: flex; flex-direction: column; align-items: center;"><span class="am-fs-m" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px; line-height: 1;">12-13-14</span><span style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">Marzo ’27</span></div>
+</div>
+</section>
+<main class="am-px am-py am-grid1" style="padding: 64px 120px 96px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: start;">
+<div style="display: flex; flex-direction: column; gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 18px;">
+<h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 40px;">Il programma</h2>
+<div class="am-grid1" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;"><div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C46A00;">Venerdì 12 marzo</span><span class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 22px;">Giorno 1</span><span class="am-fs-body" style="font-size: 15px; color: #3F474E; line-height: 1.5;">Workshop di giorno · spettacoli la sera<br>[Orari]</span></div><div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C46A00;">Sabato 13 marzo</span><span class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 22px;">Giorno 2</span><span class="am-fs-body" style="font-size: 15px; color: #3F474E; line-height: 1.5;">Workshop di giorno · spettacoli la sera<br>[Orari]</span></div><div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #C46A00;">Domenica 14 marzo</span><span class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 22px;">Giorno 3</span><span class="am-fs-body" style="font-size: 15px; color: #3F474E; line-height: 1.5;">Workshop di giorno · spettacoli la sera<br>[Orari]</span></div></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 18px;">
+<h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 40px;">Come si prenota</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #3F474E;"><strong>Pass festival</strong> (un workshop a scelta + tutti gli spettacoli serali) · <strong>Solo workshop</strong> · <strong>Biglietti per le serate</strong>. [Prezzi]</p>
+<h3 class="am-fs-m" style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 26px;">I 4 workshop e i loro insegnanti</h3>
+<div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<sc-for list="{{wsCards}}" as="w" hint-placeholder-count="4">
+<article style="background: #FFFFFF; border: 2px solid {{w.border}}; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column;">
+<div style="height: 160px; background: {{w.tint}}; color: #C9D2D8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: 13px; border-bottom: 6px solid {{w.color}};"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg><span>Foto dell’insegnante</span></div>
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1;">
+<span class="am-wrap" style="display: flex; justify-content: space-between; align-items: center; gap: 8px;"><span class="am-fs-tiny" style="font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #3F474E;">Workshop {{w.n}} · in inglese</span><span style="font-size: 13px; font-weight: {{w.leftWeight}}; color: {{w.leftColor}};">{{w.left}}</span></span>
+<span class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 22px; line-height: 1.1;">{{w.label}}</span>
+<span class="am-fs-body" style="font-size: 15px; color: #3F474E;">con <a href="insegnanti.html" style="font-weight: 700;">[Nome Cognome]</a> · [Paese]</span>
+<span class="am-fs-body" style="font-size: 14px; line-height: 1.5; color: #555D64;">[Due righe sul workshop e per chi è pensato.]</span>
+<button type="button" onClick="{{w.pick}}" class="am-fs-body" style="margin-top: auto; height: 44px; border-radius: 12px; border: 1px solid #13181D; background: {{w.btnBg}}; color: {{w.btnFg}}; font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer;">{{w.btnLabel}}</button>
+</div>
+</article>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #3F474E;">Puoi <strong>pagare subito online</strong> oppure <strong>riservare il posto</strong> e completare il pagamento entro [7 giorni]: se non arriva, il posto torna disponibile per gli altri.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<h2 class="am-fs-m" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px;">Info pratiche</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #3F474E;">Lingua: inglese · Dove: [Sede], Roma · Per chi: improvvisatori e improvvisatrici di ogni scuola, [livello richiesto]</p>
+</div>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 22px; box-shadow: 0 20px 50px rgba(19,24,29,0.08);">
+<sc-if value="{{notConfirmed}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 22px;">
+<h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Prenota o riserva</h2>
+<div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cosa vuoi prenotare?</span><div class="am-wrap" style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{types}}" as="c" hint-placeholder-count="3">
+<button type="button" onClick="{{c.pick}}" class="am-fs-body" style="padding: 11px 16px; border-radius: 999px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer; min-height: 44px;">{{c.label}}</button>
+</sc-for>
+</div></div>
+<sc-if value="{{isWs}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Scegli il workshop</span><div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{workshops}}" as="w" hint-placeholder-count="4">
+<button type="button" onClick="{{w.pick}}" class="am-wrap" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; border: 2px solid {{w.border}}; background: {{w.bg}}; font-family: inherit; color: #13181D; cursor: pointer; text-align: left;">
+<span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 16px; font-weight: 700;">{{w.label}}</span><span style="font-size: 13px; color: #555D64;">{{w.sub}}</span></span>
+<span class="am-fs-body am-wrap-text" style="font-size: 14px; font-weight: {{w.leftWeight}}; color: {{w.leftColor}}; white-space: nowrap;">{{w.left}}</span>
+</button>
+</sc-for>
+</div><span style="font-size: 13px; color: #555D64;">Workshop in inglese · posti limitati per garantire il lavoro in scena</span></div>
+</sc-if>
+<sc-if value="{{isShow}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Scegli la serata</span><div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{evenings}}" as="e" hint-placeholder-count="3">
+<button type="button" onClick="{{e.pick}}" class="am-wrap" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; border: 2px solid {{e.border}}; background: {{e.bg}}; font-family: inherit; color: #13181D; cursor: pointer; text-align: left;">
+<span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 16px; font-weight: 700;">{{e.label}}</span><span style="font-size: 13px; color: #555D64;">{{e.sub}}</span></span>
+<span class="am-fs-body am-wrap-text" style="font-size: 14px; font-weight: {{e.leftWeight}}; color: {{e.leftColor}}; white-space: nowrap;">{{e.left}}</span>
+</button>
+</sc-for>
+</div></div>
+</sc-if>
+<sc-if value="{{showStepper}}" hint-placeholder-val="{{ false }}"><div class="am-wrap" style="display: flex; justify-content: space-between; align-items: center;">
+<span style="display: flex; flex-direction: column; gap: 2px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Posti</span><span style="font-size: 13px; color: #555D64;">{{maxNote}}</span></span>
+<div class="am-wrap" style="display: flex; align-items: center; gap: 16px;">
+<button type="button" onClick="{{minus}}" aria-label="Togli un posto" class="am-fs-s" style="width: 44px; height: 44px; border-radius: 22px; border: 1px solid #CFC8BA; background: #FFFFFF; font-size: 22px; color: #13181D; cursor: pointer;">−</button>
+<span class="am-fs-m" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 26px; min-width: 24px; text-align: center;">{{seats}}</span>
+<button type="button" onClick="{{plus}}" aria-label="Aggiungi un posto" class="am-fs-s" style="width: 44px; height: 44px; border-radius: 22px; border: 1px solid #CFC8BA; background: #FFFFFF; font-size: 22px; color: #13181D; cursor: pointer; opacity: {{plusOpacity}};">+</button>
+</div>
+</div></sc-if>
+<sc-if value="{{available}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 22px;">
+<div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Come vuoi procedere?</span><div class="am-wrap" style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{payOpts}}" as="c" hint-placeholder-count="3">
+<button type="button" onClick="{{c.pick}}" class="am-fs-body" style="padding: 11px 16px; border-radius: 999px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer; min-height: 44px;">{{c.label}}</button>
+</sc-for>
+</div><span style="font-size: 13px; color: #555D64;">{{payNote}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-scuola" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Scuola o gruppo di provenienza <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-scuola" type="text" placeholder="Es. Artyou Roma" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
+<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
+<button type="button" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
+<a target="_blank" rel="noopener" href="{{wa}}" class="am-wrap" style="height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #25D366; color: #0B2E1A; border-radius: 14px; font-weight: 700; font-size: 16px; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.2 7.5L3 21l2-5.6A8.4 8.4 0 1 1 21 11.5z"></path></svg> Prenota su WhatsApp</a>
+</div>
+</sc-if>
+<sc-if value="{{soldOut}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 14px; background: #F8E9ED; border: 1px solid #E7C3CD; border-radius: 16px; padding: 22px;">
+<span class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 24px; color: #7A1631;">{{soldTitle}}</span>
+<span style="font-size: 16px; line-height: 1.5; color: #3F474E;">Scegli un’altra opzione oppure scrivici: ti mettiamo in lista d’attesa e ti avvisiamo se si libera un posto.</span>
+<a target="_blank" rel="noopener" href="{{waWait}}" class="am-wrap" style="height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #25D366; color: #0B2E1A; border-radius: 14px; font-weight: 700; font-size: 16px; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.2 7.5L3 21l2-5.6A8.4 8.4 0 1 1 21 11.5z"></path></svg> Lista d’attesa su WhatsApp</a>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{confirmed}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
+<span class="am-wrap" style="width: 60px; height: 60px; border-radius: 30px; background: {{accent}}; color: #1C1606; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg></span>
+<h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">{{doneTitle}}</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">{{summary}}</p>
+<p class="am-fs-body" style="margin: 0; font-size: 15px; line-height: 1.5; color: #555D64;">{{doneNote}}</p>
+<button type="button" onClick="{{edit}}" class="am-fs-body" style="border: 1px solid #CFC8BA; background: #FFFFFF; border-radius: 12px; padding: 13px 18px; font-family: inherit; font-weight: 600; font-size: 15px; cursor: pointer; color: #13181D;">Modifica</button>
+</div>
+</sc-if>
+</div>
+</main>
+<footer class="am-px am-wrap am-fs-body" style="flex-grow: 1; background: #0D1115; color: #9AA5AE; padding: 32px 120px; display: flex; justify-content: space-between; align-items: flex-start; font-size: 14px;">
+<span>© 2026 Artyou Roma · Via La Spezia, 73 – Roma</span>
+<a href="mailto:info@artyouroma.it" style="color: #9AA5AE;">info@artyouroma.it</a><a href="privacy-policy.html" target="_blank" rel="noopener" style="color:#9AA5AE;">Privacy Policy</a>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F09000","options":["#F09000","#2CA8E0","#E41870","#7A1631"]},"postiWorkshop":{"editor":"int","default":16,"min":1,"max":60},"postiSpettacolo":{"editor":"int","default":120,"min":1,"max":500},"$preview":{"width":1440,"height":2300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { type: 0, ws: 0, ev: 0, seats: 2, pay: 1, confirmed: false };
+  }
+  avail(r) {
+    return { left: r === 0 ? "Completo" : (r <= 5 ? "Ultimi " + r + " posti" : r + " posti liberi"), leftColor: r <= 5 ? "#7A1631" : "#555D64", leftWeight: r <= 5 ? 700 : 500 };
+  }
+  chip(on) {
+    return { bg: on ? "#13181D" : "#FFFFFF", fg: on ? "#FFFFFF" : "#13181D", border: on ? "#13181D" : "#CFC8BA" };
+  }
+  row(on) {
+    return { bg: on ? "#E6F3FA" : "#FFFFFF", border: on ? "#1A6E99" : "#E4DED2" };
+  }
+  renderVals() {
+    var self = this, st = this.state || {};
+    var wsCap = this.props.postiWorkshop ?? 16, showCap = this.props.postiSpettacolo ?? 120, maxPer = 6;
+    var typeNames = ["Pass festival", "Solo workshop", "Spettacoli"];
+    var type = st.type || 0;
+    var wsData = [
+      { label: "[Workshop 1]", sub: "con [Docente] · [Paese]", sold: 10 },
+      { label: "[Workshop 2]", sub: "con [Docente] · [Paese]", sold: 13 },
+      { label: "[Workshop 3]", sub: "con [Docente] · [Paese]", sold: 16 },
+      { label: "[Workshop 4]", sub: "con [Docente] · [Paese]", sold: 4 }
+    ];
+    var evData = [
+      { label: "Venerdì 12 marzo", sub: "Spettacolo serale · [ora]", sold: 60 },
+      { label: "Sabato 13 marzo", sub: "Spettacolo serale · [ora]", sold: 116 },
+      { label: "Domenica 14 marzo", sub: "Spettacolo serale · [ora]", sold: 30 }
+    ];
+    var ws = st.ws || 0, ev = st.ev || 0;
+    var wsRem = wsData.map(function (w) { return Math.max(0, wsCap - Math.min(wsCap, w.sold)); });
+    var evRem = evData.map(function (e) { return Math.max(0, showCap - Math.min(showCap, e.sold)); });
+    var isShow = type === 2, isWs = !isShow;
+    var rem = isShow ? evRem[ev] : wsRem[ws];
+    var maxAllowed = Math.min(rem, maxPer);
+    var seats = isShow ? Math.max(1, Math.min(st.seats || 2, Math.max(1, maxAllowed))) : 1;
+    var pay = st.pay == null ? 1 : st.pay;
+    var types = typeNames.map(function (l, i) { return Object.assign({ label: l, pick: function () { self.setState({ type: i }); } }, self.chip(i === type)); });
+    var wsMeta = [["#2CA8E0", "#0F4A66"], ["#F09000", "#5C3700"], ["#941880", "#4A1040"], ["#28B4A8", "#0E4A45"]];
+    var wsCards = wsData.map(function (w, i) {
+      var on = !isShow && i === ws, full = wsRem[i] === 0;
+      return Object.assign({ n: i + 1, label: w.label, color: wsMeta[i][0], tint: wsMeta[i][1], border: on ? "#13181D" : "#E4DED2",
+        btnLabel: full ? "Completo · lista d’attesa" : (on ? "Selezionato" : "Scegli questo workshop"),
+        btnBg: on ? "#13181D" : "#FFFFFF", btnFg: on ? "#FFFFFF" : "#13181D",
+        pick: function () { self.setState({ ws: i, type: type === 2 ? 1 : type }); } }, self.avail(wsRem[i]));
+    });
+    var workshops = wsData.map(function (w, i) { return Object.assign({ label: w.label, sub: w.sub, pick: function () { self.setState({ ws: i }); } }, self.avail(wsRem[i]), self.row(i === ws)); });
+    var evenings = evData.map(function (e, i) { return Object.assign({ label: e.label, sub: e.sub, pick: function () { self.setState({ ev: i }); } }, self.avail(evRem[i]), self.row(i === ev)); });
+    var payOpts = ["Paga ora online", "Riserva il posto"].map(function (l, i) { return Object.assign({ label: l, pick: function () { self.setState({ pay: i }); } }, self.chip(i === pay)); });
+    var what = isShow ? (seats === 1 ? "1 posto" : seats + " posti") + " per lo spettacolo di " + evData[ev].label.toLowerCase() : typeNames[type] + " · " + wsData[ws].label;
+    var wa = "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare al Rome Improv Festival: " + what + ".");
+    return {
+      accent: this.props.accent ?? "#F09000",
+      wsCards: wsCards,
+      types: types, workshops: workshops, evenings: evenings, payOpts: payOpts,
+      isWs: isWs, isShow: isShow, showStepper: isShow,
+      seats: seats, maxNote: rem <= maxPer ? "Restano " + rem + " posti" : "Massimo " + maxPer + " a prenotazione",
+      plusOpacity: seats >= maxAllowed ? 0.35 : 1,
+      available: rem > 0, soldOut: rem === 0,
+      soldTitle: isShow ? "Serata esaurita" : "Workshop completo",
+      payNote: pay === 1 ? "Il posto resta bloccato per te per [7 giorni]: ricevi il link per pagare via email." : "Pagamento sicuro con carta o PayPal [da confermare].",
+      ctaLabel: pay === 1 ? "Riserva il posto" : "Prenota e paga · [€]",
+      wa: wa,
+      waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! " + what + " è al completo: potete mettermi in lista d’attesa?"),
+      confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
+      doneTitle: pay === 1 ? "Posto riservato!" : "Prenotazione confermata!",
+      summary: "Rome Improv Festival · " + what + ".",
+      doneNote: pay === 1 ? "Ti abbiamo inviato un’email con il link per completare il pagamento entro [7 giorni]." : "Ti abbiamo inviato un’email con la ricevuta e i dettagli.",
+      minus: function () { self.setState({ seats: Math.max(1, seats - 1) }); },
+      plus: function () { self.setState({ seats: Math.min(maxAllowed, seats + 1) }); },
+      confirm: function () { self.setState({ confirmed: true }); },
+      edit: function () { self.setState({ confirmed: false }); }
+    };
+  }
+}
+</script>
+
+
+<script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
+<script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
+
+<script id="artyou-forms-js">
+(function(){
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbz7Uj6O7hUQ-X4kOAbeEv9DCYnfcDyZ20LURXtWqZBXvsvey9obP4JJbcbsQMfUEagT7w/exec";
+  var MODULO = "Rome Improv Festival";
+  var WA = "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei informazioni (" + MODULO + ").");
+  var ARANCIO = "rgb(240, 144, 0)";
+
+  function q(id){ return document.getElementById("f-" + id) || document.getElementById("p-" + id); }
+  function testo(el){ return (el && el.innerText || "").replace(/\s+/g, " ").trim(); }
+  function etichetta(el){
+    var L = el.closest("label"); if (L) return testo(L);
+    if (el.id) { var l = document.querySelector('label[for="' + el.id + '"]'); if (l) return testo(l); }
+    var p = el.parentElement;
+    for (var i = 0; i < 3 && p; i++) { var t = p.querySelector("label, span"); if (t && t !== el && testo(t)) return testo(t); p = p.parentElement; }
+    return el.id || "Campo";
+  }
+  function pulisci(k){ return k.replace(/\s*\((facoltativo|obbligatorio)\)\s*/gi, "").replace(/[:*]\s*$/, "").trim(); }
+  function isSubmit(b){
+    if (!b || b.tagName !== "BUTTON" || !q("nome")) return false;
+    if (getComputedStyle(b).backgroundColor !== ARANCIO) return false;
+    var c = b; while (c && !c.contains(q("nome"))) c = c.parentElement;
+    return !!c;
+  }
+  function contenitore(b){ var c = b; while (c && !c.contains(q("nome"))) c = c.parentElement; return c || document.body; }
+  function messaggio(b, tipo, html){
+    document.querySelectorAll(".artyou-form-msg").forEach(function(x){ x.remove(); });
+    if (!html) return null;
+    var box = document.createElement("div");
+    box.className = "artyou-form-msg " + tipo; box.setAttribute("role", tipo === "err" ? "alert" : "status"); box.innerHTML = html;
+    b.insertAdjacentElement("afterend", box);
+    return box;
+  }
+  function scelte(){
+    if (MODULO === "Lezione di prova" || MODULO === "Iscrizioni") return "";
+    var out = [];
+    document.querySelectorAll("button").forEach(function(b){
+      if (b.closest("header, nav, [role=dialog]") || isSubmit(b)) return;
+      var bg = getComputedStyle(b).backgroundColor;
+      if (bg !== "rgb(19, 24, 29)" && bg !== "rgb(230, 243, 250)") return;
+      var t = testo(b);
+      if (!t || /^(Tutti|Tutte|Accetta|Nega)$/i.test(t)) return;
+      if (/^Selezionato$/i.test(t)) return;
+      t = (b.innerText || "").split("\n").map(function(s){return s.trim();}).filter(Boolean)[0] || t;
+      if (out.indexOf(t) === -1) out.push(t);
+    });
+    return out.join(" · ");
+  }
+  function raccogli(b){
+    var c = contenitore(b), d = { Modulo: MODULO };
+    d.Nome = (q("nome").value || "").trim();
+    d.Cognome = (q("cognome") && q("cognome").value || "").trim();
+    d.Telefono = (q("tel") && q("tel").value || "").trim();
+    d.Email = (q("mail") && q("mail").value || "").trim();
+    var hEvento = document.getElementById("f-evento-id");
+    if (hEvento && hEvento.value) d.Evento = hEvento.value;
+    else if (MODULO === "Spettacolo" || MODULO === "Un Vortice di Emozioni") { var h1 = document.querySelector("h1"); if (h1) d.Evento = testo(h1); }
+    var s = scelte(); if (s) d.Scelte = s;
+    var posti = testo(b).match(/(\d+)\s+post/); if (posti) d.Posti = posti[1];
+    if (MODULO === "Iscrizioni") { var m = testo(b).split("·").slice(1).join("·").trim(); if (m) d.Corso = m; }
+    c.querySelectorAll("input, select, textarea").forEach(function(el){
+      if (/^(f|p)-(nome|cognome|tel|mail)$/.test(el.id) || el.type === "hidden") return;
+      var k = pulisci(etichetta(el));
+      if (el.type === "checkbox") {
+        if (/privacy/i.test(k)) k = "Privacy accettata";
+        else if (/foto e video/i.test(k)) k = "Consenso foto e video";
+        else if (/tessera/i.test(k)) k = "Ha già la tessera";
+        d[k] = el.checked ? "Sì" : "No";
+      } else if (el.tagName === "SELECT") {
+        d[k] = el.options[el.selectedIndex] ? el.options[el.selectedIndex].text : el.value;
+      } else if ((el.value || "").trim()) {
+        d[k] = el.value.trim();
+      }
+    });
+    var pagaEl = document.getElementById("f-paga-online"), prezzoEl = document.getElementById("f-prezzo");
+    var prezzo = prezzoEl ? parseFloat(prezzoEl.value) : NaN;
+    if (pagaEl && pagaEl.value === "true" && !isNaN(prezzo) && prezzo > 0) {
+      d.Pagamento = "PayPal (online)"; d.Importo = (prezzo * (parseInt(d.Posti, 10) || 1)).toFixed(2);
+    } else { d.Pagamento = "In cassa"; }
+    var hp = c.querySelector("input[name=_hp]"); d._hp = hp ? hp.value : "";
+    return d;
+  }
+  function valida(b, d){
+    var errori = [];
+    [["nome","il nome"],["cognome","il cognome"],["mail","un’email valida"],["tel","un numero di telefono valido"]].forEach(function(x){
+      var el = q(x[0]); if (!el) return;
+      var v = (el.value || "").trim(), ok = !!v;
+      if (x[0] === "mail") ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+      if (x[0] === "tel") ok = v.replace(/\D/g, "").length >= 8;
+      el.classList.toggle("artyou-field-err", !ok);
+      if (!ok) errori.push(x[1]);
+    });
+    var priv = null;
+    contenitore(b).querySelectorAll("input[type=checkbox]").forEach(function(el){ if (/privacy/i.test(etichetta(el))) priv = el; });
+    if (priv && !priv.checked) { errori.push("l’accettazione della privacy policy"); priv.classList.add("artyou-field-err"); }
+    else if (priv) priv.classList.remove("artyou-field-err");
+    return errori;
+  }
+  function trappola(){
+    var n = q("nome"); if (!n) return;
+    var c = n.parentElement; if (!c || c.querySelector("input[name=_hp]")) return;
+    var i = document.createElement("input"); i.name = "_hp"; i.tabIndex = -1; i.autocomplete = "off"; i.setAttribute("aria-hidden", "true");
+    i.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;opacity:0;";
+    c.appendChild(i);
+  }
+  document.addEventListener("focusin", trappola);
+  document.addEventListener("input", function(e){ if (e.target.classList) e.target.classList.remove("artyou-field-err"); }, true);
+  document.addEventListener("change", function(e){ if (e.target.classList) e.target.classList.remove("artyou-field-err"); }, true);
+
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest("button");
+    if (!isSubmit(b)) return;
+    if (b.getAttribute("data-artyou-ok") === "1") { b.removeAttribute("data-artyou-ok"); return; }
+    e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+    if (b.getAttribute("data-artyou-busy") === "1") return;
+    trappola();
+    var d = raccogli(b);
+    var errori = valida(b, d);
+    if (errori.length) { messaggio(b, "err", "Per inviare manca " + errori.join(", ") + "."); return; }
+    if (!ENDPOINT) { messaggio(b, "err", "Le prenotazioni online saranno attive a breve. Nel frattempo <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a>."); return; }
+    var ppWin = (d.Pagamento === "PayPal (online)") ? window.open("", "_blank") : null;
+    b.setAttribute("data-artyou-busy", "1"); b.style.opacity = "0.6";
+    messaggio(b, "wait", "Invio in corso…");
+    fetch(ENDPOINT, { method: "POST", body: JSON.stringify(d) })
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if (res && res.ok) {
+          if (ppWin) {
+            var h1 = document.querySelector("h1");
+            var voce = (h1 ? testo(h1) : MODULO) + (d.Scelte ? " – " + d.Scelte : "");
+            var ppUrl = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=" + encodeURIComponent("info@artyouroma.it") +
+              "&item_name=" + encodeURIComponent(voce) + "&amount=" + parseFloat(d.Importo).toFixed(2) + "&currency_code=EUR&no_shipping=1";
+            try { ppWin.location.href = ppUrl; } catch (e) {}
+            messaggio(b, "wait", "Prenotazione registrata! Ti abbiamo aperto <b>PayPal</b> in una nuova scheda per pagare <b>" + d.Importo.replace(".", ",") + " €</b>. Se non si apre, <a href=\"" + ppUrl + "\" target=\"_blank\" rel=\"noopener\">clicca qui</a>.");
+            return;
+          }
+          messaggio(b, "", ""); b.setAttribute("data-artyou-ok", "1"); b.click(); return;
+        }
+        if (res && res.errore === "esaurito") {
+          if (ppWin) { try { ppWin.close(); } catch (e) {} }
+          if (d.Evento && typeof res.liberi === "number") { window.ARTYOU_CAP = window.ARTYOU_CAP || {}; window.ARTYOU_CAP[d.Evento] = res.liberi; window.dispatchEvent(new Event("hashchange")); }
+          messaggio(b, "err", res.liberi > 0 ? "Nel frattempo sono rimasti solo " + res.liberi + " posti: riduci il numero di posti oppure scegli un’altra data." : "Ci dispiace, i posti per questa data sono appena esauriti. Scegli un’altra data oppure <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a> per la lista d’attesa.");
+          return;
+        }
+        throw new Error(res && res.errore || "errore");
+      })
+      .catch(function(){
+        if (ppWin) { try { ppWin.close(); } catch (e) {} }
+        messaggio(b, "err", "Non siamo riusciti a inviare la richiesta. Riprova tra poco oppure <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a>.");
+      })
+      .then(function(){ b.removeAttribute("data-artyou-busy"); b.style.opacity = ""; });
+  }, true);
+
+  if (ENDPOINT) {
+    fetch(ENDPOINT + "?disponibilita=1").then(function(r){ return r.json(); }).then(function(res){
+      if (res && res.disponibilita) { window.ARTYOU_CAP = Object.assign({}, window.ARTYOU_CAP, res.disponibilita); window.dispatchEvent(new Event("hashchange")); }
+    }).catch(function(){});
+  }
+})();
+</script>
+</body>
+</html>

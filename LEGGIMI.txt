@@ -1,0 +1,26 @@
+ARTYOU ROMA - SITO HTML (prototipo navigabile, larghezza fissa 1440 px)
+
+Pagine principali
+- index.html ................ Homepage
+- workshow.html ............. Homepage con scorrimento automatico alla sezione WorkshoW
+- workshow-corso.html ....... Corsi > WorkshoW: i 6 weekend, schede docenti e prenotazione
+- chi-siamo.html, insegnanti.html, insegnante.html#nome-cognome
+- improvvisazione.html, teatro.html, stand-up.html, iscrizione.html
+- spettacolo.html#nome-spettacolo (es. #shortyou, #standup-bistrot68)
+- un-vortice-di-emozioni.html, rome-improv-festival.html, yep.html
+- mappa-del-sito.html
+- img/, js/, favicon.ico: non spostarli
+
+Nota: lo stile responsivo per telefono e' stato rimosso su richiesta.
+Le pagine hanno larghezza fissa (1440 px); su schermi piu' stretti
+vanno viste con zoom/scroll orizzontale.
+
+Pubblicazione
+- GitHub + Vercel: sostituisci il contenuto del repository con questa cartella
+  (o lo ZIP che la contiene, secondo come e' impostato il tuo build.js).
+- Hosting classico: carica tutto il contenuto in una cartella (es. /anteprima).
+
+Da sapere
+- Il consenso ai cookie viene ricordato (js/enhancements.js).
+- Prenotazioni e iscrizioni sono dimostrative: non vengono salvate.
+- I testi tra [parentesi quadre] sono segnaposto.
