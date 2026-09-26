@@ -1,0 +1,40 @@
+name: Publish Artyou build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-build.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target
+        uses: actions/checkout@v4
+
+      - name: Clone source
+        run: git clone --depth 1 https://github.com/fabioleonardi22-blip/Artyou2026beta2591.git /tmp/artyou-source
+
+      - name: Build source
+        working-directory: /tmp/artyou-source
+        run: |
+          npm install
+          npm run build
+
+      - name: Copy built site
+        run: |
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name '.github' -exec rm -rf {} +
+          cp -a /tmp/artyou-source/dist/. .
+          mkdir -p .github/workflows
+
+      - name: Commit built site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Publish latest Artyou build"
+          git push
