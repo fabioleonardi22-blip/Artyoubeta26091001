@@ -136,28 +136,29 @@ function createEventBooking_(data) {
 
   const ev = getEvent_(evento);
 
-  if (!ev) {
-    return jsonResponse_({
-      ok: false,
-      errore: "evento_non_configurato"
-    });
-  }
+  // Se l'evento non è ancora configurato nel foglio Eventi,
+  // la prenotazione viene comunque accettata e salvata.
+  // La gestione della capienza si attiva automaticamente
+  // appena aggiungi l'evento nel foglio Eventi.
+  let liberi = null;
 
-  if (!ev.attivo) {
-    return jsonResponse_({
-      ok: false,
-      errore: "evento_non_attivo"
-    });
-  }
+  if (ev) {
+    if (!ev.attivo) {
+      return jsonResponse_({
+        ok: false,
+        errore: "evento_non_attivo"
+      });
+    }
 
-  const liberi = getAvailableSeats_(evento);
+    liberi = getAvailableSeats_(evento);
 
-  if (posti > liberi) {
-    return jsonResponse_({
-      ok: false,
-      errore: "esaurito",
-      liberi: liberi
-    });
+    if (posti > liberi) {
+      return jsonResponse_({
+        ok: false,
+        errore: "esaurito",
+        liberi: liberi
+      });
+    }
   }
 
   const online = /paypal|online|carta|stripe/i.test(pagamento);
@@ -194,7 +195,7 @@ function createEventBooking_(data) {
     ok: true,
     id: id,
     stato: stato,
-    liberi: liberi - posti,
+    liberi: typeof liberi === "number" ? liberi - posti : null,
     holdMinutes: online ? CFG.HOLD_MINUTES : 0
   });
 }
