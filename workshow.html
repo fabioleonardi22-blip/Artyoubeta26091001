@@ -998,8 +998,8 @@ class Component extends DCLogic {
     var ppWin = (d.Pagamento === "PayPal (online)") ? window.open("", "_blank") : null;
     b.setAttribute("data-artyou-busy", "1"); b.style.opacity = "0.6";
     messaggio(b, "wait", "Invio in corso…");
-    fetch(ENDPOINT, { method: "POST", body: JSON.stringify(d) })
-      .then(function(r){ return r.json(); })
+    fetch(ENDPOINT, { method: "POST", mode: "no-cors", body: JSON.stringify(d) })
+      .then(function(r){ return r.type === "opaque" ? { ok: true } : r.json(); })
       .then(function(res){
         if (res && res.ok) {
           if (ppWin) {
