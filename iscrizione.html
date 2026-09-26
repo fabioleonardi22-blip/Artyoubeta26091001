@@ -331,7 +331,10 @@ class Component extends DCLogic {
   function pulisci(k){ return k.replace(/\s*\((facoltativo|obbligatorio)\)\s*/gi, "").replace(/[:*]\s*$/, "").trim(); }
   function isSubmit(b){
     if (!b || b.tagName !== "BUTTON" || !q("nome")) return false;
-    if (getComputedStyle(b).backgroundColor !== ARANCIO) return false;
+    var label = (b.innerText || b.textContent || "").trim();
+    var action = b.getAttribute("onClick") || b.getAttribute("onclick") || "";
+    var looksSubmit = /invia|prenota|conferma|avvisami/i.test(label) || /send|submit|confirm/i.test(action);
+    if (!looksSubmit) return false;
     var c = b; while (c && !c.contains(q("nome"))) c = c.parentElement;
     return !!c;
   }
