@@ -293,6 +293,12 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <span class="am-wrap" style="width: 60px; height: 60px; border-radius: 30px; background: {{accent}}; color: #1C1606; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg></span>
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">{{doneTitle}}</h2>
 <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">{{summary}}</p>
+<sc-if value="{{bookingCode}}" hint-placeholder-val="{{ false }}">
+<div style="background:#13181D;color:#FFFFFF;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;">
+<span style="font-size:12px;letter-spacing:1px;text-transform:uppercase;opacity:.72;font-weight:700;">Codice prenotazione</span>
+<strong style="font-size:20px;letter-spacing:.6px;">{{bookingCode}}</strong>
+</div>
+</sc-if>
 <p class="am-fs-body" style="margin: 0; font-size: 15px; line-height: 1.5; color: #555D64;">{{doneNote}}</p>
 <button type="button" onClick="{{edit}}" class="am-fs-body" style="border: 1px solid #CFC8BA; background: #FFFFFF; border-radius: 12px; padding: 13px 18px; font-family: inherit; font-weight: 600; font-size: 15px; cursor: pointer; color: #13181D;">Modifica</button>
 </div>
@@ -321,13 +327,21 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F09000","options":["#F09000","#2CA8E0","#E41870","#7A1631"]},"capienza":{"editor":"int","default":60,"min":1,"max":500},"maxPerPrenotazione":{"editor":"int","default":6,"min":1,"max":20},"$preview":{"width":1440,"height":1400}}'>
 class Component extends DCLogic {
-  constructor(props) { super(props); this.state = { date: 0, seats: 2, confirmed: false }; }
+  constructor(props) { super(props); this.state = { date: 0, seats: 2, confirmed: false, bookingCode: "" }; }
   componentDidMount() {
     var self = this;
     this.onHash = function () { self.setState({ h: window.location.hash }); };
+    this.onBookingCode = function (ev) {
+      var code = ev && ev.detail ? String(ev.detail) : "";
+      self.setState({ bookingCode: code });
+    };
     window.addEventListener("hashchange", this.onHash);
+    window.addEventListener("artyou-booking-code", this.onBookingCode);
   }
-  componentWillUnmount() { window.removeEventListener("hashchange", this.onHash); }
+  componentWillUnmount() {
+    window.removeEventListener("hashchange", this.onHash);
+    window.removeEventListener("artyou-booking-code", this.onBookingCode);
+  }
   hash() { try { return decodeURIComponent((window.location.hash || "").slice(1)); } catch (e) { return ""; } }
   avail(r) {
     return { left: r === 0 ? "Completo" : (r <= 5 ? "Ultimi " + r + " posti" : r + " posti liberi"), leftColor: r <= 5 ? "#7A1631" : "#555D64", leftWeight: r <= 5 ? 700 : 500 };
@@ -375,7 +389,7 @@ class Component extends DCLogic {
       ctaLabel: cur.tbd ? "Avvisami" : (payOnline ? "Prenota e paga online · " + seatsLabel : "Conferma prenotazione · " + seatsLabel),
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare per " + what + "."),
       waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! " + what + " è esaurito: potete mettermi in lista d’attesa?"),
-      confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
+      confirmed: !!st.confirmed, notConfirmed: !st.confirmed, bookingCode: st.bookingCode || "",
       doneTitle: cur.tbd ? "Ti avviseremo!" : "Prenotazione confermata!",
       summary: cur.tbd ? cur.title + ", " + cur.venue + "." : seatsLabel + " per " + what + ".",
       doneNote: cur.tbd ? "Appena la data è confermata ti scriviamo per prenotare." : "Ti abbiamo inviato un’email di riepilogo: paghi in cassa la sera dello spettacolo.",
