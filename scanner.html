@@ -6,8 +6,12 @@
   <meta name="theme-color" content="#0f1418">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Artyou Scanner">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>Artyou Check-in</title>
+  <link rel="manifest" href="/scanner.webmanifest">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="icon" href="/img/favicon-192.png" type="image/png">
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
     :root{--bg:#0f1418;--panel:#171d22;--line:#303941;--text:#fff;--muted:#aab3ba;--orange:#f39a00;--green:#2e7d32;--red:#b52e2e;--amber:#b67b00}
@@ -28,7 +32,8 @@
     .check{width:100%;margin-top:16px;font-size:18px;min-height:60px}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
     .overlay.show{display:flex}.login{background:#fff;color:#111;max-width:360px;width:100%;border-radius:18px;padding:22px}.login h2{margin:0 0 8px}.pinbox{display:flex;gap:8px;margin-top:16px}
     .stats{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;background:#12171b;border:1px solid var(--line);border-radius:16px;padding:14px 16px}.stats-title{font-size:13px;color:var(--muted);margin-bottom:3px}.stats-event{font-weight:800;font-size:17px}.stats-count{font-size:28px;font-weight:900;white-space:nowrap}.status{text-align:center;color:var(--muted);font-size:12px}.flash{display:none;padding:13px;border-radius:12px;background:#4b2020;color:#ffdede;font-weight:700}.flash.show{display:block}
-    @media(max-width:480px){main{padding:10px}#reader{min-height:330px}.name{font-size:24px}}
+    .install-card{display:flex;align-items:center;gap:12px}.install-icon{width:54px;height:54px;border-radius:14px;background:var(--orange);color:#211300;display:flex;align-items:center;justify-content:center;font-size:28px;flex:0 0 54px}.install-copy{flex:1}.install-copy strong{display:block;font-size:16px}.install-copy span{display:block;color:var(--muted);font-size:13px;line-height:1.35;margin-top:3px}.install-btn{min-height:46px;padding:8px 14px}.ios-help{display:none;margin-top:10px;padding:12px;border-radius:11px;background:#20272d;color:#dce3e8;font-size:13px;line-height:1.45}.ios-help.show{display:block}
+    @media(max-width:480px){main{padding:10px}#reader{min-height:330px}.name{font-size:24px}.install-card{align-items:flex-start;flex-wrap:wrap}.install-btn{width:100%}}
   </style>
 </head>
 <body>
@@ -36,6 +41,15 @@
   <header><h1>🎭 Artyou Roma</h1><div class="sub">Check-in ingressi</div></header>
   <main>
     <div id="flash" class="flash"></div>
+    <section class="card install-card">
+      <div class="install-icon">▣</div>
+      <div class="install-copy">
+        <strong>Installa Artyou Scanner</strong>
+        <span>Aggiungi un'icona alla schermata Home di iPhone o Android e apri direttamente il check-in.</span>
+      </div>
+      <button id="installBtn" class="primary install-btn" type="button">Installa</button>
+      <div id="iosHelp" class="ios-help">Su iPhone: apri questa pagina in <strong>Safari</strong>, tocca <strong>Condividi</strong> e scegli <strong>Aggiungi alla schermata Home</strong>.</div>
+    </section>
     <section class="stats">
       <div>
         <div class="stats-title">INGRESSI REGISTRATI</div>
@@ -80,9 +94,69 @@
 
 <script>
 let qr=null, active=false, busy=false, current=null;
+let deferredInstallPrompt=null;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function isIOS(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+}
+function isStandalone(){
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone===true;
+}
+function updateInstallUI(){
+  const btn=$("installBtn"),help=$("iosHelp");
+  if(!btn||!help)return;
+  if(isStandalone()){
+    btn.textContent="Installata";
+    btn.disabled=true;
+    btn.style.opacity=".55";
+    help.classList.remove("show");
+    return;
+  }
+  if(isIOS()){
+    btn.textContent="Come installare";
+  }else if(deferredInstallPrompt){
+    btn.textContent="Installa";
+  }else{
+    btn.textContent="Aggiungi alla Home";
+  }
+}
+window.addEventListener("beforeinstallprompt",function(e){
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  updateInstallUI();
+});
+window.addEventListener("appinstalled",function(){
+  deferredInstallPrompt=null;
+  updateInstallUI();
+  flash("Artyou Scanner installato sulla schermata Home.");
+});
+async function installScannerApp(){
+  const help=$("iosHelp");
+  if(isStandalone())return;
+  if(isIOS()){
+    help.classList.toggle("show");
+    return;
+  }
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    try{await deferredInstallPrompt.userChoice}catch(e){}
+    deferredInstallPrompt=null;
+    updateInstallUI();
+    return;
+  }
+  help.innerHTML='Su Android: apri il menu di Chrome <strong>⋮</strong> e scegli <strong>Installa app</strong> oppure <strong>Aggiungi a schermata Home</strong>.';
+  help.classList.toggle("show");
+}
 function pin(){return sessionStorage.getItem('artyouScannerPin')||''}
+$("installBtn").addEventListener("click",installScannerApp);
+updateInstallUI();
+if("serviceWorker" in navigator){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("/scanner-sw.js").catch(function(){});
+  });
+}
 async function unlock(){
   const v=$('pin').value.trim();
   if(!v){$('loginMsg').textContent='Inserisci il PIN.';return}
