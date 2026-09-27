@@ -8,6 +8,8 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script src="js/support.js"></script>
 <script src="js/enhancements.js"></script>
+<script src="js/artyou-events-config.js"></script>
+<script src="js/artyou-events.js"></script>
 
 <style id="artyou-centered-layout">
 html{background:#C79A2B!important;}
@@ -731,18 +733,21 @@ class Component extends DCLogic {
       var st = self.state || {};
       if (!st.heroPaused) self.setState({ heroIdx: ((st.heroIdx || 0) + 1) % 14 });
     }, 6000);
+    this.onEventsLoaded = function () { self.setState({ eventsVersion: Date.now() }); };
+    window.addEventListener("artyou-events-loaded", this.onEventsLoaded);
   }
   componentWillUnmount() {
     if (this.timer) clearInterval(this.timer);
     if (this.heroTimer) clearInterval(this.heroTimer);
+    window.removeEventListener("artyou-events-loaded", this.onEventsLoaded);
   }
   renderVals() {
     var self = this;
     var st = this.state || {};
     var filter = st.filter || "Tutti";
-    var tints = { "Improvvisazione": "#0F4A66", "Teatro": "#4A1040", "Stand-up": "#5A0F30", "Eventi": "#3D5410" };
-    var tags = { "Improvvisazione": "#1A6E99", "Teatro": "#941880", "Stand-up": "#C0145C", "Eventi": "#4F7A0A" };
-    var all = [
+    var tints = { "Improvvisazione": "#0F4A66", "Teatro": "#4A1040", "Stand-up": "#5A0F30", "ImproEnglish": "#0E4A45", "Eventi": "#3D5410", "Festival": "#3A1330", "Workshop": "#5B4010" };
+    var tags = { "Improvvisazione": "#1A6E99", "Teatro": "#941880", "Stand-up": "#C0145C", "ImproEnglish": "#127A70", "Eventi": "#4F7A0A", "Festival": "#7A1631", "Workshop": "#8A6200" };
+    var fallbackShows = [
       { cat: "Improvvisazione", day: "04", month: "ott", when: "Domenica 4 ottobre · dalle 19:30", slug: "shortyou", title: "ShortYou · show & aperitivo", where: "The Spot Improv · Via G. Bonaccorsi, 28", img: "img/shortyou-4-ottobre.jpg" },
       { cat: "Improvvisazione", day: "09", month: "ott", when: "Venerdì 9 ottobre · 21:00", slug: "spettacolo-9-ottobre" },
       { cat: "Teatro", day: "24", month: "ott", when: "Sabato 24 ottobre · 20:45", slug: "spettacolo-24-ottobre" },
@@ -757,18 +762,50 @@ class Component extends DCLogic {
       { cat: "Teatro", day: "11", month: "dic", when: "Venerdì 11 dicembre · 20:45" },
       { cat: "Improvvisazione", day: "18", month: "dic", when: "Venerdì 18 dicembre · 21:00" }
     ];
-    var venues = { "Improvvisazione": "[Teatro], Roma", "Teatro": "[Teatro], Roma", "Stand-up": "[Locale], Roma" };
+
+    function badgeFromLabel(label, tbd) {
+      if (tbd) return { day: "?", month: "presto" };
+      var s = String(label || "");
+      var m = s.match(/\b(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)\b/i);
+      if (!m) return { day: "•", month: "data" };
+      var months = {gennaio:"gen",febbraio:"feb",marzo:"mar",aprile:"apr",maggio:"mag",giugno:"giu",luglio:"lug",agosto:"ago",settembre:"set",ottobre:"ott",novembre:"nov",dicembre:"dic"};
+      return { day: String(m[1]).padStart(2,"0"), month: months[m[2].toLowerCase()] || m[2].slice(0,3).toLowerCase() };
+    }
+
+    var managed = (window.ARTYOU_DYNAMIC_SHOWS && window.ARTYOU_DYNAMIC_SHOWS.length) ? window.ARTYOU_DYNAMIC_SHOWS.map(function (e) {
+      var first = e.dates && e.dates.length ? e.dates[0] : {label:"Data da definire"};
+      var badge = badgeFromLabel(first.label, e.tbd);
+      return {
+        cat: e.cat || "Eventi",
+        day: badge.day,
+        month: badge.month,
+        when: first.label || "Data da definire",
+        slug: e.slug,
+        title: e.title,
+        where: [e.venue,e.addr].filter(Boolean).join(" · "),
+        img: e.poster || "",
+        tbd: !!e.tbd
+      };
+    }) : [];
+
+    var all = managed.length ? managed : fallbackShows;
+    var venues = { "Improvvisazione": "[Teatro], Roma", "Teatro": "[Teatro], Roma", "Stand-up": "[Locale], Roma", "ImproEnglish": "[Teatro], Roma", "Eventi": "Roma", "Festival": "Roma", "Workshop": "Roma" };
     var shows = all.filter(function (s) { return filter === "Tutti" || s.cat === filter; }).map(function (s) {
-      var msg = "Ciao! Vorrei prenotare per " + (s.cat === "Eventi" ? "l’evento" : "lo spettacolo di " + s.cat.toLowerCase()) + " di " + s.when.split(" · ")[0].toLowerCase() + ".";
+      var msg = "Ciao! Vorrei informazioni su " + (s.title || "l'evento") + " · " + s.when + ".";
       return {
         cat: s.cat, day: s.day, month: s.month, when: s.when,
-        title: s.title || "[Titolo spettacolo]", where: s.where || venues[s.cat], bgImg: s.img ? "url(" + s.img + ")" : "none", href: "spettacolo.html#" + (s.slug || "spettacolo-9-ottobre"), phOp: s.img ? 0 : 1, badgeDisp: s.img ? "none" : "flex",
-        tint: tints[s.cat], tagColor: tags[s.cat],
+        title: s.title || "[Titolo spettacolo]", where: s.where || venues[s.cat] || "Roma",
+        bgImg: s.img ? "url(" + s.img + ")" : "none",
+        href: "spettacolo.html#" + (s.slug || ""),
+        phOp: s.img ? 0 : 1,
+        badgeDisp: s.img ? "none" : "flex",
+        tint: tints[s.cat] || "#26343D",
+        tagColor: tags[s.cat] || "#415D6B",
         wa: "https://wa.me/393271881956?text=" + encodeURIComponent(msg)
       };
     });
     shows = shows.slice(0, 4);
-    var filters = ["Tutti", "Improvvisazione", "Teatro", "Stand-up"].map(function (label) {
+    var filters = ["Tutti", "Improvvisazione", "Teatro", "Stand-up", "Eventi"].map(function (label) {
       var on = label === filter;
       return {
         label: label,
