@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Spettacoli ed Eventi | Artyou Roma</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Calendario spettacoli, eventi, festival e serate Artyou Roma. Scopri le prossime date e prenota il tuo posto.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script src="js/artyou-events-config.js"></script>
+<script src="js/artyou-events.js"></script>
+<style>
+:root{--ink:#13181D;--paper:#F6F3EC;--line:#E4DED2;--orange:#F09000;--muted:#626C74;--white:#fff}
+*{box-sizing:border-box}html{background:#13181D}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+.wrap{max-width:1200px;margin:0 auto;background:var(--paper);min-height:100vh}
+header{background:#13181D;color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:22px;position:sticky;top:0;z-index:20}
+.logo img{height:52px;width:auto;display:block}.nav{display:flex;gap:26px;align-items:center}.nav a{color:#E6EBEE;text-decoration:none;font-weight:700;font-size:15px}.nav a.active{color:#fff;border-bottom:2px solid var(--orange);padding-bottom:5px}
+.hero{padding:76px 64px 44px;background:#fff;border-bottom:1px solid var(--line)}.eyebrow{font-size:13px;letter-spacing:2px;text-transform:uppercase;font-weight:900;color:#1A6E99}.hero h1{font-size:58px;line-height:.98;margin:12px 0 16px;letter-spacing:-1.8px}.hero p{max-width:760px;font-size:19px;line-height:1.55;color:#46515A;margin:0}
+.controls{padding:24px 64px;background:#fff;border-bottom:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap;align-items:center}.filter{border:1px solid #CFC8BA;background:transparent;border-radius:999px;padding:11px 18px;font-weight:800;cursor:pointer}.filter.active{background:#13181D;color:#fff;border-color:#13181D}
+.content{padding:44px 64px 80px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:100%}.poster{height:290px;background:#26343D center/cover no-repeat;position:relative}.badge{position:absolute;top:16px;left:16px;background:#fff;border-radius:14px;padding:9px 12px;min-width:58px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.1)}.badge strong{display:block;font-size:26px;line-height:1}.badge span{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:900}.body{padding:20px;display:flex;flex-direction:column;gap:10px;flex:1}.cat{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;font-weight:900}.body h2{font-size:25px;line-height:1.05;margin:0}.when,.where{font-size:14px;color:var(--muted);line-height:1.45}.desc{font-size:15px;color:#3F474E;line-height:1.5;margin:2px 0 0}.actions{margin-top:auto;padding-top:10px;display:flex;gap:9px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:12px;padding:12px 15px;font-size:14px;font-weight:900}.primary{background:var(--orange);color:#201503}.wa{background:#25D366;color:#0B2E1A}.empty{padding:28px;border:1px dashed #CFC8BA;border-radius:16px;background:#fff;color:var(--muted);text-align:center}.footer{background:#0D1115;color:#9AA5AE;padding:28px 64px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:13px}.footer a{color:#9AA5AE}
+.menuBtn{display:none;background:transparent;border:1px solid #3A444D;color:#fff;border-radius:10px;padding:9px 11px;font-size:20px}
+@media(max-width:900px){.hero,.controls,.content{padding-left:22px;padding-right:22px}.hero{padding-top:48px}.hero h1{font-size:42px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{display:none}.menuBtn{display:block}.nav.open{display:flex;position:absolute;left:0;right:0;top:100%;background:#13181D;flex-direction:column;align-items:stretch;padding:12px 22px 20px;gap:0;border-top:1px solid #2A333B}.nav.open a{padding:13px 0;border-bottom:1px solid #2A333B}.footer{padding:26px 22px}}
+@media(max-width:620px){.grid{grid-template-columns:1fr}.poster{height:330px}.logo img{height:42px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<a class="logo" href="index.html" aria-label="Artyou Roma Home"><img src="img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a>
+<nav id="nav" class="nav">
+<a class="active" href="spettacoli.html">Spettacoli</a>
+<a href="improvvisazione.html">Corsi</a>
+<a href="workshow-corso.html">Workshow</a>
+<a href="index.html#festival">Festival e Altro</a>
+<a href="chi-siamo.html">Chi Siamo</a>
+<a href="index.html#contatti">Contatti</a>
+</nav>
+<button id="menuBtn" class="menuBtn" aria-label="Apri menu">☰</button>
+</header>
+
+<section class="hero">
+<div class="eyebrow">In scena</div>
+<h1>Spettacoli ed Eventi</h1>
+<p>Il calendario completo Artyou: improvvisazione, teatro, stand-up, festival, workshop e serate speciali. Gli eventi pubblicati dal Gestionale compaiono automaticamente qui.</p>
+</section>
+
+<section class="controls" id="filters"></section>
+
+<main class="content">
+<div id="grid" class="grid"></div>
+<div id="empty" class="empty" style="display:none">Nessun evento disponibile per questa categoria.</div>
+</main>
+
+<footer class="footer">
+<span>© 2026 Artyou Roma · Via La Spezia, 73 – Roma</span>
+<div><a href="mailto:info@artyouroma.it">info@artyouroma.it</a> · <a href="privacy-policy.html">Privacy Policy</a></div>
+</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var COLORS={
+  "Improvvisazione":["#0F4A66","#1A6E99"],
+  "Teatro":["#4A1040","#941880"],
+  "Stand-up":["#5A0F30","#C0145C"],
+  "ImproEnglish":["#0E4A45","#127A70"],
+  "Eventi":["#3D5410","#4F7A0A"],
+  "Festival":["#3A1330","#7A1631"],
+  "Workshop":["#5B4010","#8A6200"]
+};
+var FALLBACK=[
+ {slug:"shortyou",title:"ShortYou · show & aperitivo",cat:"Improvvisazione",poster:"img/shortyou-4-ottobre.jpg",desc:"Scene brevi, giochi e tanta complicità con il pubblico.",venue:"The Spot Improv",addr:"Via Giuseppe Bonaccorsi, 28 – Roma",dates:[{label:"Domenica 4 ottobre · dalle 19:30"}]},
+ {slug:"spettacolo-9-ottobre",title:"Spettacolo di improvvisazione",cat:"Improvvisazione",poster:"",desc:"",venue:"Roma",addr:"",dates:[{label:"Venerdì 9 ottobre · 21:00"}]},
+ {slug:"spettacolo-24-ottobre",title:"Spettacolo di teatro",cat:"Teatro",poster:"",desc:"",venue:"Roma",addr:"",dates:[{label:"Sabato 24 ottobre · 20:45"}]},
+ {slug:"standup-bistrot68",title:"Stand-up comedy · lo spettacolo del corso",cat:"Stand-up",poster:"",desc:"Gli allievi del corso salgono sul palco con i loro monologhi.",venue:"Bistrot68 Centocelle",addr:"",tbd:true,dates:[{label:"Data da definire"}]}
+];
+var current="Tutti";
+var events=[];
+
+function badge(label,tbd){
+ if(tbd)return{day:"?",month:"presto"};
+ var s=String(label||"");
+ var m=s.match(/\b(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)\b/i);
+ if(!m)return{day:"•",month:"data"};
+ var mo={gennaio:"gen",febbraio:"feb",marzo:"mar",aprile:"apr",maggio:"mag",giugno:"giu",luglio:"lug",agosto:"ago",settembre:"set",ottobre:"ott",novembre:"nov",dicembre:"dic"};
+ return{day:String(m[1]).padStart(2,"0"),month:mo[m[2].toLowerCase()]||m[2].slice(0,3).toLowerCase()};
+}
+function esc(s){return String(s||"").replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function cats(){
+ var out=["Tutti"];events.forEach(function(e){if(e.cat&&out.indexOf(e.cat)<0)out.push(e.cat)});return out;
+}
+function renderFilters(){
+ var box=document.getElementById("filters");box.innerHTML="";
+ cats().forEach(function(cat){var b=document.createElement("button");b.className="filter"+(cat===current?" active":"");b.textContent=cat;b.onclick=function(){current=cat;renderFilters();render()};box.appendChild(b)});
+}
+function render(){
+ var box=document.getElementById("grid");var empty=document.getElementById("empty");box.innerHTML="";
+ var list=events.filter(function(e){return current==="Tutti"||e.cat===current});
+ empty.style.display=list.length?"none":"block";
+ list.forEach(function(e){
+   var first=e.dates&&e.dates.length?e.dates[0]:{label:"Data da definire"};
+   var b=badge(first.label,e.tbd), col=COLORS[e.cat]||["#26343D","#415D6B"];
+   var art=document.createElement("article");art.className="card";
+   var posterStyle=e.poster?'background-image:url("'+String(e.poster).replace(/"/g,"%22")+'");':'background-color:'+col[0]+';';
+   var where=[e.venue,e.addr].filter(Boolean).join(" · ");
+   var msg="Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".";
+   art.innerHTML='<div class="poster" style="'+posterStyle+'"><div class="badge"><strong>'+esc(b.day)+'</strong><span>'+esc(b.month)+'</span></div></div>'+
+     '<div class="body"><span class="cat" style="color:'+col[1]+'">'+esc(e.cat||"Evento")+'</span>'+
+     '<h2>'+esc(e.title||"Evento")+'</h2>'+
+     '<div class="when">'+esc(first.label||"Data da definire")+'</div>'+
+     (where?'<div class="where">'+esc(where)+'</div>':'')+
+     (e.desc?'<p class="desc">'+esc(e.desc)+'</p>':'')+
+     '<div class="actions"><a class="btn primary" href="spettacolo.html#'+encodeURIComponent(e.slug||"")+'">Scopri e prenota</a>'+
+     '<a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/393271881956?text='+encodeURIComponent(msg)+'">WhatsApp</a></div></div>';
+   box.appendChild(art);
+ });
+}
+function load(){
+ events=(window.ARTYOU_DYNAMIC_SHOWS&&window.ARTYOU_DYNAMIC_SHOWS.length)?window.ARTYOU_DYNAMIC_SHOWS:FALLBACK;
+ renderFilters();render();
+}
+window.addEventListener("artyou-events-loaded",function(){load()});
+setTimeout(load,250);
+document.getElementById("menuBtn").onclick=function(){document.getElementById("nav").classList.toggle("open")};
+})();
+</script>
+</body>
+</html>
