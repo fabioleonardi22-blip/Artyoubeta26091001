@@ -4,7 +4,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, errore: 'method_not_allowed' });
   }
 
-  const { action, code, pin } = req.body || {};
+  const { action, code, event, pin } = req.body || {};
   const expectedPin = process.env.ARTYOU_SCANNER_PIN;
   const appsScriptUrl = process.env.ARTYOU_APPS_SCRIPT_URL;
   const scannerSecret = process.env.ARTYOU_SCANNER_SECRET;
@@ -17,12 +17,12 @@ export default async function handler(req, res) {
     return res.status(401).json({ ok: false, errore: 'pin_non_valido' });
   }
 
-  if (!['lookup', 'checkin'].includes(String(action || ''))) {
+  if (!['lookup', 'checkin', 'stats'].includes(String(action || ''))) {
     return res.status(400).json({ ok: false, errore: 'azione_non_valida' });
   }
 
   const normalizedCode = String(code || '').trim().toUpperCase();
-  if (!/^ART-\d{8}-[A-Z0-9]+$/.test(normalizedCode)) {
+  if (action !== 'stats' && !/^ART-\d{8}-[A-Z0-9]+$/.test(normalizedCode)) {
     return res.status(400).json({ ok: false, errore: 'codice_non_valido' });
   }
 
@@ -31,8 +31,9 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        action: action === 'lookup' ? 'scanner_lookup' : 'scanner_checkin',
+        action: action === 'lookup' ? 'scanner_lookup' : action === 'checkin' ? 'scanner_checkin' : 'scanner_stats',
         codice: normalizedCode,
+        evento: String(event || '').trim(),
         scannerSecret
       }),
       redirect: 'follow'
