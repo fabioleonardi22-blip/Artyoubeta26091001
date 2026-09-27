@@ -42,6 +42,7 @@
         <button class="primary" onclick="startScanner()">📷 Avvia</button>
         <button class="secondary" onclick="stopScanner()">Ferma</button>
       </div>
+      <button id="checkinBtn" class="success check" onclick="checkin()" style="display:none">✓ REGISTRA INGRESSO</button>
       <div class="hint">Apri questa pagina direttamente in Safari o Chrome e consenti l'accesso alla fotocamera.</div>
     </section>
 
@@ -121,12 +122,20 @@ async function lookup(code){
   }catch(e){renderBad('❌ ERRORE',e.message);resetLater(2500)}
 }
 function renderBooking(p){
-  let cls='ok',state='✅ PRENOTAZIONE VALIDA',btn='';
-  if(p.stato==='ANNULLATA'){cls='bad';state='❌ PRENOTAZIONE ANNULLATA'}
-  else if(p.stato==='PRESENTE'){cls='warn';state='⚠️ GIÀ ENTRATO'}
-  else btn='<button class="success check" onclick="checkin()">✓ REGISTRA INGRESSO · '+esc(p.posti)+' '+(Number(p.posti)===1?'posto':'posti')+'</button>';
+  let cls='ok',state='✅ PRENOTAZIONE VALIDA';
+  const btn=$('checkinBtn');
+  if(p.stato==='ANNULLATA'){
+    cls='bad';state='❌ PRENOTAZIONE ANNULLATA';btn.style.display='none';
+  }
+  else if(p.stato==='PRESENTE'){
+    cls='warn';state='⚠️ GIÀ ENTRATO';btn.style.display='none';
+  }
+  else{
+    btn.style.display='block';
+    btn.textContent='✓ REGISTRA INGRESSO · '+esc(p.posti)+' '+(Number(p.posti)===1?'posto':'posti');
+  }
   const el=$('result');el.className='result show '+cls;
-  el.innerHTML='<div class="state">'+state+'</div><div class="name">'+esc(p.nome)+' '+esc(p.cognome)+'</div><div class="event"><strong>'+esc(p.titolo)+'</strong><br>'+esc(p.dataEvento)+(p.oraEvento?' · '+esc(p.oraEvento):'')+'</div><div class="meta"><div>Posti: <strong>'+esc(p.posti)+'</strong></div><div>Stato: <strong>'+esc(p.stato)+'</strong></div>'+(p.checkin?'<div>Check-in: <strong>'+esc(p.checkin)+'</strong></div>':'')+'</div><div class="code">'+esc(p.codice)+'</div>'+btn;
+  el.innerHTML='<div class="state">'+state+'</div><div class="name">'+esc(p.nome)+' '+esc(p.cognome)+'</div><div class="event"><strong>'+esc(p.titolo)+'</strong><br>'+esc(p.dataEvento)+(p.oraEvento?' · '+esc(p.oraEvento):'')+'</div><div class="meta"><div>Posti: <strong>'+esc(p.posti)+'</strong></div><div>Stato: <strong>'+esc(p.stato)+'</strong></div>'+(p.checkin?'<div>Check-in: <strong>'+esc(p.checkin)+'</strong></div>':'')+'</div><div class="code">'+esc(p.codice)+'</div>';
 }
 function renderBad(title,text){const el=$('result');el.className='result show bad';el.innerHTML='<div class="state">'+esc(title)+'</div><div class="event">'+esc(text||'')+'</div>'}
 async function checkin(){
@@ -135,12 +144,12 @@ async function checkin(){
   try{
     const r=await api('checkin',current.codice);
     if(!r.ok){if(r.prenotazione){current=r.prenotazione;renderBooking(current)}else renderBad('❌ CHECK-IN NON RIUSCITO',r.errore||'');return resetLater(3000)}
-    current=r.prenotazione;const el=$('result');el.className='result show ok';
+    current=r.prenotazione;$('checkinBtn').style.display='none';const el=$('result');el.className='result show ok';
     el.innerHTML='<div class="state">✅ INGRESSO REGISTRATO</div><div class="name">'+esc(current.nome)+' '+esc(current.cognome)+'</div><div class="event"><strong>'+esc(current.titolo)+'</strong><br>'+esc(current.dataEvento)+(current.oraEvento?' · '+esc(current.oraEvento):'')+'</div><div class="meta"><div>Ingressi: <strong>'+esc(current.posti)+'</strong></div><div>Check-in: <strong>'+esc(current.checkin)+'</strong></div></div><div class="code">'+esc(current.codice)+'</div>';
     if(navigator.vibrate)navigator.vibrate([100,60,100]);resetLater(3500);
   }catch(e){renderBad('❌ ERRORE CHECK-IN',e.message);resetLater(3000)}
 }
-function resetLater(ms){setTimeout(()=>{current=null;busy=false;$('manualCode').value='';$('result').className='result';$('result').innerHTML='';$('status').textContent=active?'Fotocamera attiva · pronto per il prossimo QR':'Scanner pronto'},ms)}
+function resetLater(ms){setTimeout(()=>{current=null;busy=false;$('manualCode').value='';$('checkinBtn').style.display='none';$('result').className='result';$('result').innerHTML='';$('status').textContent=active?'Fotocamera attiva · pronto per il prossimo QR':'Scanner pronto'},ms)}
 window.addEventListener('beforeunload',stopScanner);
 if(pin())$('loginOverlay').classList.remove('show');
 </script>
