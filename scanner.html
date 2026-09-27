@@ -109,10 +109,25 @@ async function onScan(text){
   if(busy)return;
   const code=(text||'').trim(); if(!code)return;
   busy=true;if(navigator.vibrate)navigator.vibrate(80);
-  await stopScanner();
+  pauseScannerForResult();
   await lookup(code);
 }
-function manualLookup(){const c=$('manualCode').value.trim();if(!c)return flash('Inserisci il codice prenotazione.');busy=true;lookup(c)}
+function manualLookup(){
+  const c=$('manualCode').value.trim();
+  if(!c)return flash('Inserisci il codice prenotazione.');
+  busy=true;
+  pauseScannerForResult();
+  lookup(c);
+}
+
+function pauseScannerForResult(){
+  try{
+    if(qr && active){
+      qr.pause(true);
+      $('status').textContent='Scansione in pausa';
+    }
+  }catch(e){}
+}
 async function lookup(code){
   $('status').textContent='Verifica prenotazione…';
   try{
@@ -189,6 +204,13 @@ async function scanAnother(){
   $('nextBtn').style.display='none';
   $('result').className='result';
   $('result').innerHTML='';
+  try{
+    if(qr && active){
+      qr.resume();
+      $('status').textContent='Fotocamera attiva · inquadra il QR';
+      return;
+    }
+  }catch(e){}
   $('status').textContent='Avvio nuova scansione…';
   await startScanner();
 }
