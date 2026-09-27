@@ -1,0 +1,1 @@
+window.ARTYOU_EVENTS_ENDPOINT = "";
