@@ -27,7 +27,7 @@
     .meta{display:grid;gap:7px;margin-top:14px}.code{margin-top:16px;background:#12171b;color:#fff;border-radius:10px;padding:12px;text-align:center;font-weight:800;letter-spacing:.5px}
     .check{width:100%;margin-top:16px;font-size:18px;min-height:60px}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
     .overlay.show{display:flex}.login{background:#fff;color:#111;max-width:360px;width:100%;border-radius:18px;padding:22px}.login h2{margin:0 0 8px}.pinbox{display:flex;gap:8px;margin-top:16px}
-    .status{text-align:center;color:var(--muted);font-size:12px}.flash{display:none;padding:13px;border-radius:12px;background:#4b2020;color:#ffdede;font-weight:700}.flash.show{display:block}
+    .stats{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;background:#12171b;border:1px solid var(--line);border-radius:16px;padding:14px 16px}.stats-title{font-size:13px;color:var(--muted);margin-bottom:3px}.stats-event{font-weight:800;font-size:17px}.stats-count{font-size:28px;font-weight:900;white-space:nowrap}.status{text-align:center;color:var(--muted);font-size:12px}.flash{display:none;padding:13px;border-radius:12px;background:#4b2020;color:#ffdede;font-weight:700}.flash.show{display:block}
     @media(max-width:480px){main{padding:10px}#reader{min-height:330px}.name{font-size:24px}}
   </style>
 </head>
@@ -36,6 +36,13 @@
   <header><h1>🎭 Artyou Roma</h1><div class="sub">Check-in ingressi</div></header>
   <main>
     <div id="flash" class="flash"></div>
+    <section class="stats">
+      <div>
+        <div class="stats-title">INGRESSI REGISTRATI</div>
+        <div id="statsEvent" class="stats-event">Evento</div>
+      </div>
+      <div id="statsCount" class="stats-count">— / —</div>
+    </section>
     <section class="card">
       <div id="reader"></div>
       <div class="actions">
@@ -76,21 +83,33 @@ let qr=null, active=false, busy=false, current=null;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function pin(){return sessionStorage.getItem('artyouScannerPin')||''}
-function unlock(){
+async function unlock(){
   const v=$('pin').value.trim();
   if(!v){$('loginMsg').textContent='Inserisci il PIN.';return}
   sessionStorage.setItem('artyouScannerPin',v);
   $('loginOverlay').classList.remove('show');
   $('loginMsg').textContent='';
+  await loadStats();
+  await startScanner();
 }
 function flash(t){$('flash').textContent=t;$('flash').classList.add('show');setTimeout(()=>$('flash').classList.remove('show'),3500)}
-async function api(action,code){
-  const r=await fetch('/api/checkin',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action,code,pin:pin()})});
+async function api(action,code,event){
+  const r=await fetch('/api/checkin',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action,code,event,pin:pin()})});
   const data=await r.json().catch(()=>({ok:false,errore:'risposta_non_valida'}));
   if(r.status===401){sessionStorage.removeItem('artyouScannerPin');$('loginOverlay').classList.add('show');throw new Error('PIN non valido')}
   if(!r.ok&&!data.ok) throw new Error(data.errore||'Errore server');
   return data;
 }
+async function loadStats(event){
+  try{
+    const r=await api('stats','',event||'');
+    if(r&&r.ok&&r.stats){
+      $('statsEvent').textContent=r.stats.titolo||r.stats.evento||'Evento';
+      $('statsCount').textContent=String(r.stats.presenti)+' / '+String(r.stats.capienza);
+    }
+  }catch(e){}
+}
+
 async function startScanner(){
   if(active||busy)return;
   if(typeof Html5Qrcode==='undefined'){flash('Lettore QR non caricato. Controlla la connessione.');return}
@@ -141,6 +160,7 @@ async function lookup(code){
     }
     current=r.prenotazione;
     renderBooking(current);
+    loadStats(current.evento);
     $('nextBtn').style.display='block';
     $('status').textContent='Prenotazione trovata';
     busy=false;
@@ -187,6 +207,7 @@ async function checkin(){
     const el=$('result');el.className='result show ok';
     el.innerHTML='<div class="state">✅ INGRESSO REGISTRATO</div><div class="name">'+esc(current.nome)+' '+esc(current.cognome)+'</div><div class="event"><strong>'+esc(current.titolo)+'</strong><br>'+esc(current.dataEvento)+(current.oraEvento?' · '+esc(current.oraEvento):'')+'</div><div class="meta"><div>Ingressi: <strong>'+esc(current.posti)+'</strong></div><div>Check-in: <strong>'+esc(current.checkin)+'</strong></div></div><div class="code">'+esc(current.codice)+'</div>';
     $('status').textContent='Ingresso registrato';
+    loadStats(current.evento);
     if(navigator.vibrate)navigator.vibrate([100,60,100]);
     busy=false;
   }catch(e){
@@ -215,7 +236,10 @@ async function scanAnother(){
   await startScanner();
 }
 window.addEventListener('beforeunload',stopScanner);
-if(pin())$('loginOverlay').classList.remove('show');
+if(pin()){
+  $('loginOverlay').classList.remove('show');
+  setTimeout(async()=>{await loadStats();await startScanner();},250);
+}
 </script>
 </body>
 </html>
