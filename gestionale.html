@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Gestionale Eventi | Artyou Roma</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="favicon.ico" sizes="any">
+<script src="js/artyou-events-config.js"></script>
+<style>
+:root{--ink:#13181D;--paper:#F6F3EC;--line:#DED7CA;--orange:#F09000;--blue:#2CA8E0;--green:#28B4A8;--muted:#66717A;--white:#fff;--red:#9E2942}
+*{box-sizing:border-box} body{margin:0;background:#ECE7DE;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+header{background:var(--ink);color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px;position:sticky;top:0;z-index:5}
+header strong{font-size:22px} header span{font-size:13px;color:#BFC8CF}
+.app{max-width:1500px;margin:0 auto;padding:28px;display:grid;grid-template-columns:350px minmax(0,1fr);gap:24px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 10px 30px rgba(30,25,20,.06)}
+.sidebar{padding:18px;height:calc(100vh - 118px);position:sticky;top:94px;display:flex;flex-direction:column;gap:14px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:11px;padding:11px 15px;font-weight:800;cursor:pointer;font-size:14px}.primary{background:var(--orange);color:#231A08}.dark{background:var(--ink);color:#fff}.soft{background:var(--paper);color:var(--ink);border:1px solid var(--line)}.danger{background:#F9E8EC;color:var(--red)}
+input,select,textarea{width:100%;border:1px solid #CFC8BA;border-radius:10px;padding:11px 12px;font:inherit;background:#fff} textarea{min-height:100px;resize:vertical}
+label{font-size:13px;font-weight:800;display:flex;flex-direction:column;gap:7px}.field-help{font-weight:400;color:var(--muted);font-size:12px;line-height:1.35}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.main{padding:26px}.section{border-top:1px solid var(--line);padding-top:22px;margin-top:22px}.section:first-child{border-top:0;padding-top:0;margin-top:0}
+.section h2{margin:0 0 16px;font-size:19px}.checks{display:flex;gap:22px;flex-wrap:wrap}.checks label{flex-direction:row;align-items:center}.checks input{width:auto}
+.list{overflow:auto}.event{padding:13px;border:1px solid var(--line);border-radius:12px;margin-bottom:9px;cursor:pointer}.event:hover{border-color:#A79E90}.event.active{background:#FFF5E3;border-color:var(--orange)}.event strong{display:block;margin-bottom:4px}.meta{font-size:12px;color:var(--muted)}
+.repeat{display:flex;flex-direction:column;gap:9px}.repeat-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}.cast-row{grid-template-columns:1fr 1fr auto}
+.status{border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.45}.status.ok{background:#EAF8F2;color:#12634E}.status.err{background:#FCEDEF;color:#8A2438}.status.info{background:#EDF6FB;color:#155A7A}
+.login{display:flex;gap:8px}.login input{flex:1}.empty{color:var(--muted);font-size:13px;padding:10px}
+.poster-preview{min-height:170px;border-radius:14px;border:1px dashed #CFC8BA;background:#F7F4ED center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:#8A8378;font-size:13px}
+.topline{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:20px}.topline h1{margin:0;font-size:30px}.topline p{margin:6px 0 0;color:var(--muted)}
+@media(max-width:900px){.app{grid-template-columns:1fr;padding:14px}.sidebar{position:static;height:auto}.grid2,.grid3{grid-template-columns:1fr}.main{padding:18px}.topline{flex-direction:column}.cast-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div><strong>ARTYOU · Gestionale Eventi</strong><br><span>Spettacoli, workshop, festival e prenotazioni</span></div><a href="index.html" style="color:#fff;font-weight:700">← Torna al sito</a></header>
+<div class="app">
+  <aside class="panel sidebar">
+    <div>
+      <label>PIN amministratore</label>
+      <div class="login"><input id="pin" type="password" autocomplete="current-password" placeholder="PIN"><button class="btn dark" id="loginBtn">Accedi</button></div>
+    </div>
+    <div class="toolbar"><button class="btn primary" id="newBtn">+ Nuovo evento</button><button class="btn soft" id="refreshBtn">Aggiorna</button></div>
+    <div id="status" class="status info">Configura l'endpoint e inserisci il PIN per iniziare.</div>
+    <div class="list" id="eventList"><div class="empty">Nessun evento caricato.</div></div>
+  </aside>
+
+  <main class="panel main">
+    <div class="topline">
+      <div><h1 id="formTitle">Nuovo evento</h1><p>Compila i campi e salva. Il sito userà automaticamente i dati pubblicati dal gestionale.</p></div>
+      <div class="toolbar"><a class="btn soft" id="previewBtn" href="spettacolo.html" target="_blank" style="text-decoration:none">Anteprima</a><button class="btn primary" id="saveBtn">Salva evento</button><button class="btn danger" id="deleteBtn" style="display:none">Elimina</button></div>
+    </div>
+
+    <input id="id" type="hidden">
+
+    <section class="section">
+      <h2>1. Informazioni principali</h2>
+      <div class="grid2">
+        <label>Titolo<input id="title" placeholder="Es. ShortYou · show & aperitivo"></label>
+        <label>Slug / codice evento<input id="slug" placeholder="es. shortyou"><span class="field-help">Codice unico, senza spazi. Viene usato anche per le prenotazioni.</span></label>
+        <label>Categoria<select id="cat"><option>Improvvisazione</option><option>Teatro</option><option>Stand-up</option><option>ImproEnglish</option></select></label>
+        <label>Ordine<input id="ordine" type="number" value="100"><span class="field-help">Numero più basso = evento mostrato prima.</span></label>
+      </div>
+      <label style="margin-top:14px">Descrizione<textarea id="desc" placeholder="Descrivi lo spettacolo, il format e cosa aspettarsi."></textarea></label>
+    </section>
+
+    <section class="section">
+      <h2>2. Luogo e biglietto</h2>
+      <div class="grid2">
+        <label>Luogo<input id="venue" placeholder="Es. Teatro Antigone"></label>
+        <label>Indirizzo<input id="addr" placeholder="Via ..., Roma"></label>
+        <label>Ricerca Google Maps<input id="maps" placeholder="Teatro Antigone Roma"></label>
+        <label>Prezzo €<input id="price" type="number" min="0" step="0.01" placeholder="12"></label>
+        <label>Capienza<input id="capienza" type="number" min="0" value="60"></label>
+      </div>
+      <div class="checks" style="margin-top:16px">
+        <label><input id="pagaOnline" type="checkbox"> Pagamento online</label>
+        <label><input id="tbd" type="checkbox"> Data da definire</label>
+        <label><input id="attivo" type="checkbox" checked> Pubblicato / attivo</label>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3. Locandina</h2>
+      <div class="grid2">
+        <div>
+          <label>URL o percorso immagine<input id="poster" placeholder="img/locandina.jpg oppure URL completo"></label>
+          <div style="height:10px"></div>
+          <label>Carica immagine dal computer<input id="posterFile" type="file" accept="image/jpeg,image/png,image/webp"><span class="field-help">Se il Gestionale immagini è configurato, il file viene caricato su Drive e l'URL viene compilato automaticamente.</span></label>
+          <button class="btn soft" id="uploadBtn" style="margin-top:10px">Carica immagine</button>
+        </div>
+        <div class="poster-preview" id="posterPreview">Anteprima locandina</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="topline" style="margin-bottom:12px"><div><h2 style="margin:0">4. Date</h2><p>Puoi aggiungere una o più repliche.</p></div><button class="btn soft" id="addDateBtn">+ Aggiungi data</button></div>
+      <div class="repeat" id="dates"></div>
+    </section>
+
+    <section class="section">
+      <div class="topline" style="margin-bottom:12px"><div><h2 style="margin:0">5. Cast</h2><p>Facoltativo. Lo slug collega il nome alla pagina docente.</p></div><button class="btn soft" id="addCastBtn">+ Aggiungi persona</button></div>
+      <div class="repeat" id="cast"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+"use strict";
+var endpoint=window.ARTYOU_EVENTS_ENDPOINT||"";
+var events=[],currentId="";
+
+function $(id){return document.getElementById(id)}
+function pin(){return $("pin").value.trim()}
+function setStatus(msg,type){var s=$("status");s.className="status "+(type||"info");s.textContent=msg}
+function slugify(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")}
+function apiGet(action){if(!endpoint) return Promise.reject(new Error("Endpoint Gestionale non configurato"));return fetch(endpoint+"?action="+encodeURIComponent(action)+"&pin="+encodeURIComponent(pin())+"&_="+Date.now()).then(r=>r.json())}
+function apiPost(body){if(!endpoint) return Promise.reject(new Error("Endpoint Gestionale non configurato"));body.pin=pin();return fetch(endpoint,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)}).then(r=>r.json())}
+function assert(res){if(!res||!res.ok)throw new Error((res&&res.errore)||"Operazione non riuscita");return res}
+
+function dateRow(v){
+  var row=document.createElement("div");row.className="repeat-row";
+  row.innerHTML='<input class="date-label" placeholder="Es. Venerdì 17 aprile · 21:00"><button type="button" class="btn danger">Rimuovi</button>';
+  row.querySelector("input").value=(v&&v.label)||"";
+  row.querySelector("button").onclick=function(){row.remove();if(!$("dates").children.length)addDate()};
+  $("dates").appendChild(row);
+}
+function addDate(v){dateRow(v||{label:"",sold:0})}
+function castRow(v){
+  var row=document.createElement("div");row.className="repeat-row cast-row";
+  row.innerHTML='<input class="cast-name" placeholder="Nome e cognome"><input class="cast-slug" placeholder="slug-docente"><button type="button" class="btn danger">Rimuovi</button>';
+  row.querySelector(".cast-name").value=(v&&v.name)||"";
+  row.querySelector(".cast-slug").value=(v&&v.slug)||"";
+  row.querySelector("button").onclick=function(){row.remove()};
+  $("cast").appendChild(row);
+}
+function addCast(v){castRow(v||{name:"",slug:""})}
+
+function clearForm(){
+  currentId=""; $("id").value=""; $("title").value=""; $("slug").value=""; $("cat").value="Improvvisazione";
+  $("ordine").value=100;$("desc").value="";$("venue").value="";$("addr").value="";$("maps").value="";
+  $("price").value="";$("capienza").value=60;$("pagaOnline").checked=false;$("tbd").checked=false;$("attivo").checked=true;
+  $("poster").value="";$("posterFile").value="";$("posterPreview").style.backgroundImage="";$("posterPreview").textContent="Anteprima locandina";
+  $("dates").innerHTML="";addDate();$("cast").innerHTML="";$("deleteBtn").style.display="none";$("formTitle").textContent="Nuovo evento";
+  document.querySelectorAll(".event").forEach(x=>x.classList.remove("active"));updatePreviewLink();
+}
+function loadForm(e){
+  currentId=e.id||"";$("id").value=currentId;$("title").value=e.title||"";$("slug").value=e.slug||"";$("cat").value=e.cat||"Improvvisazione";
+  $("ordine").value=e.ordine||100;$("desc").value=e.desc||"";$("venue").value=e.venue||"";$("addr").value=e.addr||"";$("maps").value=e.maps||"";
+  $("price").value=e.price===""?"":e.price;$("capienza").value=e.capienza||0;$("pagaOnline").checked=!!e.pagaOnline;$("tbd").checked=!!e.tbd;$("attivo").checked=!!e.attivo;
+  $("poster").value=e.poster||"";$("dates").innerHTML="";(e.dates||[]).forEach(addDate);if(!$("dates").children.length)addDate();
+  $("cast").innerHTML="";(e.cast||[]).forEach(addCast);$("deleteBtn").style.display="inline-block";$("formTitle").textContent=e.title||"Modifica evento";
+  updatePoster();updatePreviewLink();renderList();
+}
+function collect(){
+  var dates=[].slice.call(document.querySelectorAll(".date-label")).map(x=>({label:x.value.trim(),sold:0})).filter(x=>x.label);
+  var cast=[].slice.call(document.querySelectorAll(".cast-row")).map(row=>({name:row.querySelector(".cast-name").value.trim(),slug:row.querySelector(".cast-slug").value.trim()})).filter(x=>x.name);
+  return {id:currentId,slug:$("slug").value.trim()||slugify($("title").value),title:$("title").value.trim(),cat:$("cat").value,ordine:Number($("ordine").value)||100,
+    desc:$("desc").value.trim(),venue:$("venue").value.trim(),addr:$("addr").value.trim(),maps:$("maps").value.trim(),price:$("price").value===""?"":Number($("price").value),
+    capienza:Number($("capienza").value)||0,pagaOnline:$("pagaOnline").checked,tbd:$("tbd").checked,attivo:$("attivo").checked,poster:$("poster").value.trim(),dates:dates,cast:cast};
+}
+function renderList(){
+  var box=$("eventList");box.innerHTML="";
+  if(!events.length){box.innerHTML='<div class="empty">Nessun evento nel gestionale.</div>';return}
+  events.forEach(function(e){
+    var d=document.createElement("div");d.className="event"+(e.id===currentId?" active":"");
+    d.innerHTML="<strong>"+escapeHtml(e.title||e.slug)+"</strong><div class='meta'>"+escapeHtml(e.cat||"")+" · "+(e.attivo?"Pubblicato":"Bozza")+" · "+escapeHtml((e.dates&&e.dates[0]&&e.dates[0].label)||"")+"</div>";
+    d.onclick=function(){loadForm(e)};box.appendChild(d);
+  });
+}
+function escapeHtml(s){return String(s||"").replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function refresh(){
+  setStatus("Caricamento eventi…","info");
+  apiGet("list").then(assert).then(function(r){events=r.events||[];renderList();setStatus("Gestionale collegato. "+events.length+" eventi trovati.","ok")}).catch(function(e){setStatus(e.message,"err")});
+}
+function save(){
+  var e=collect();if(!e.title){setStatus("Inserisci il titolo.","err");return}if(!e.dates.length){setStatus("Inserisci almeno una data.","err");return}
+  setStatus("Salvataggio in corso…","info");
+  apiPost({action:"save",event:e}).then(assert).then(function(r){currentId=r.event.id;setStatus("Evento salvato e sincronizzato con le prenotazioni.","ok");return apiGet("list")}).then(assert).then(function(r){events=r.events||[];var cur=events.find(x=>x.id===currentId);if(cur)loadForm(cur);else renderList()}).catch(function(e){setStatus(e.message,"err")});
+}
+function del(){
+  if(!currentId)return;if(!confirm("Eliminare questo evento? Verrà disattivato anche nel foglio prenotazioni."))return;
+  apiPost({action:"delete",id:currentId}).then(assert).then(function(){setStatus("Evento eliminato.","ok");clearForm();refresh()}).catch(function(e){setStatus(e.message,"err")});
+}
+function updatePoster(){var u=$("poster").value.trim();if(u){$("posterPreview").style.backgroundImage='url("'+u.replace(/"/g,"%22")+'")';$("posterPreview").textContent=""}else{$("posterPreview").style.backgroundImage="";$("posterPreview").textContent="Anteprima locandina"}}
+function updatePreviewLink(){var s=$("slug").value.trim()||slugify($("title").value);$("previewBtn").href="spettacolo.html"+(s?"#"+encodeURIComponent(s):"")}
+function upload(){
+  var file=$("posterFile").files[0];if(!file){setStatus("Scegli prima un'immagine.","err");return}
+  if(file.size>5*1024*1024){setStatus("Immagine troppo grande: massimo 5 MB.","err");return}
+  var reader=new FileReader();setStatus("Caricamento immagine…","info");
+  reader.onload=function(){var b64=String(reader.result).split(",")[1]||"";apiPost({action:"uploadimage",name:file.name,mime:file.type,base64:b64}).then(assert).then(function(r){$("poster").value=r.url;updatePoster();setStatus("Immagine caricata.","ok")}).catch(function(e){setStatus(e.message,"err")})};reader.readAsDataURL(file);
+}
+$("loginBtn").onclick=refresh;$("refreshBtn").onclick=refresh;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("deleteBtn").onclick=del;
+$("addDateBtn").onclick=function(){addDate()};$("addCastBtn").onclick=function(){addCast()};$("poster").oninput=updatePoster;$("uploadBtn").onclick=upload;
+$("title").oninput=function(){if(!currentId&&!$("slug").value.trim())$("slug").value=slugify(this.value);updatePreviewLink()};$("slug").oninput=updatePreviewLink;
+clearForm();
+if(!endpoint)setStatus("Prima configurazione: inserisci l'URL /exec del Gestionale in js/artyou-events-config.js.","err");
+})();
+</script>
+</body>
+</html>
