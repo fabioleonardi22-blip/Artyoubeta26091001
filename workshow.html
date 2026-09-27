@@ -209,10 +209,9 @@ body{margin:0;background:#F6F3EC}
 a{color:#1A6E99}a:hover{color:#12506F}
 </style>
 </helmet>
-<div class="am-wfull am-hauto" style="width: 1440px; height: auto; min-height: 100vh; display: flex; flex-direction: column; background: #F6F3EC; color: #13181D; font-family: 'Instrument Sans', 'Helvetica Neue', Helvetica, sans-serif; position: relative; overflow: hidden;">
+<div class="am-wfull am-hauto" style="width: 1440px; height: auto; min-height: 100vh; display: flex; flex-direction: column; background: #F6F3EC; color: #13181D; font-family: 'Instrument Sans', 'Helvetica Neue', Helvetica, sans-serif; position: relative;">
 
-<section style="background: #13181D; color: #F6F3EC; display: flex; flex-direction: column;">
-<header class="am-px am-wrap" style="display: flex; align-items: center; justify-content: space-between; padding: 20px 120px;">
+<header class="am-px am-wrap" style="display: flex; align-items: center; justify-content: space-between; padding: 20px 120px; position: sticky; top: 0; z-index: 500; background: #13181D;">
 <a href="#" aria-label="Artyou Roma – Home" class="am-wrap" style="display: flex; align-items: center;"><img src="img/logo-orizzontale-bianco.png" alt="Artyou Roma" style="height: 56px; width: auto; display: block;"></a>
 <input type="checkbox" id="artyou-menu-toggle" aria-hidden="true" tabindex="-1" class="am-abs" style="position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none;">
 <nav class="am-wrap" style="display: flex; gap: 36px; align-items: center;">
@@ -229,6 +228,8 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <label for="artyou-menu-toggle" class="artyou-menu-btn" role="button" aria-label="Apri il menu" style="display: none;"><svg class="am-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg><svg class="am-close" style="display: none;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></label></div>
 </header>
 <div aria-hidden="true" style="height: 6px; background: #7A1631;"></div>
+<section style="background: #13181D; color: #F6F3EC; display: flex; flex-direction: column;">
+
 
 <div id="am-hero" class="am-hauto" style="position: relative; height: 780px; overflow: hidden; background: #0D1115;">
 <sc-if value="{{heroPhotos}}" hint-placeholder-val="{{ true }}">
