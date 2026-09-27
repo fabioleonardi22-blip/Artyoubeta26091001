@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f1418">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Artyou Check-in</title>
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    :root{--bg:#0f1418;--panel:#171d22;--line:#303941;--text:#fff;--muted:#aab3ba;--orange:#f39a00;--green:#2e7d32;--red:#b52e2e;--amber:#b67b00}
+    *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100%}
+    body{min-height:100vh}.app{max-width:760px;margin:auto;min-height:100vh;padding-bottom:calc(22px + env(safe-area-inset-bottom))}
+    header{padding:calc(18px + env(safe-area-inset-top)) 18px 16px;border-bottom:1px solid var(--line);background:#12171b}
+    h1{font-size:24px;margin:0}.sub{color:var(--muted);margin-top:5px}
+    main{padding:14px;display:grid;gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px}
+    #reader{overflow:hidden;border-radius:14px;background:#000;min-height:360px}#reader video{object-fit:cover!important}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    button,input{font:inherit}button{min-height:54px;border:0;border-radius:12px;font-weight:800;padding:10px 14px}
+    .primary{background:var(--orange);color:#211300}.secondary{background:#2a333a;color:#fff}.success{background:var(--green);color:white}.danger{background:var(--red);color:white}
+    .manual{display:flex;gap:8px}.manual input,.pinbox input{flex:1;min-width:0;border-radius:11px;border:1px solid #46525a;background:#0f1418;color:#fff;padding:13px;font-size:16px;text-transform:uppercase}
+    .hint{font-size:13px;color:var(--muted);line-height:1.45;margin-top:8px}.result{display:none;background:#fff;color:#111;border-radius:18px;padding:20px;border:4px solid transparent}
+    .result.show{display:block}.result.ok{border-color:#43a047}.result.warn{border-color:#d59a22}.result.bad{border-color:#c33}
+    .state{font-weight:900;font-size:23px;margin-bottom:14px}.name{font-size:28px;font-weight:900}.event{margin-top:8px;color:#3e474d;font-size:17px;line-height:1.4}
+    .meta{display:grid;gap:7px;margin-top:14px}.code{margin-top:16px;background:#12171b;color:#fff;border-radius:10px;padding:12px;text-align:center;font-weight:800;letter-spacing:.5px}
+    .check{width:100%;margin-top:16px;font-size:18px;min-height:60px}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+    .overlay.show{display:flex}.login{background:#fff;color:#111;max-width:360px;width:100%;border-radius:18px;padding:22px}.login h2{margin:0 0 8px}.pinbox{display:flex;gap:8px;margin-top:16px}
+    .status{text-align:center;color:var(--muted);font-size:12px}.flash{display:none;padding:13px;border-radius:12px;background:#4b2020;color:#ffdede;font-weight:700}.flash.show{display:block}
+    @media(max-width:480px){main{padding:10px}#reader{min-height:330px}.name{font-size:24px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header><h1>🎭 Artyou Roma</h1><div class="sub">Check-in ingressi</div></header>
+  <main>
+    <div id="flash" class="flash"></div>
+    <section class="card">
+      <div id="reader"></div>
+      <div class="actions">
+        <button class="primary" onclick="startScanner()">📷 Avvia</button>
+        <button class="secondary" onclick="stopScanner()">Ferma</button>
+      </div>
+      <div class="hint">Apri questa pagina direttamente in Safari o Chrome e consenti l'accesso alla fotocamera.</div>
+    </section>
+
+    <section class="card">
+      <div class="manual">
+        <input id="manualCode" autocomplete="off" placeholder="ART-20260927-XXXX">
+        <button class="secondary" onclick="manualLookup()">Cerca</button>
+      </div>
+    </section>
+
+    <section id="result" class="result"></section>
+    <div id="status" class="status">Scanner pronto</div>
+  </main>
+</div>
+
+<div id="loginOverlay" class="overlay show">
+  <div class="login">
+    <h2>Accesso staff</h2>
+    <div>Inserisci il PIN dello scanner.</div>
+    <div class="pinbox">
+      <input id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="PIN">
+      <button class="primary" onclick="unlock()">Entra</button>
+    </div>
+    <div id="loginMsg" class="hint"></div>
+  </div>
+</div>
+
+<script>
+let qr=null, active=false, busy=false, current=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function pin(){return sessionStorage.getItem('artyouScannerPin')||''}
+function unlock(){
+  const v=$('pin').value.trim();
+  if(!v){$('loginMsg').textContent='Inserisci il PIN.';return}
+  sessionStorage.setItem('artyouScannerPin',v);
+  $('loginOverlay').classList.remove('show');
+  $('loginMsg').textContent='';
+}
+function flash(t){$('flash').textContent=t;$('flash').classList.add('show');setTimeout(()=>$('flash').classList.remove('show'),3500)}
+async function api(action,code){
+  const r=await fetch('/api/checkin',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action,code,pin:pin()})});
+  const data=await r.json().catch(()=>({ok:false,errore:'risposta_non_valida'}));
+  if(r.status===401){sessionStorage.removeItem('artyouScannerPin');$('loginOverlay').classList.add('show');throw new Error('PIN non valido')}
+  if(!r.ok&&!data.ok) throw new Error(data.errore||'Errore server');
+  return data;
+}
+async function startScanner(){
+  if(active||busy)return;
+  if(typeof Html5Qrcode==='undefined'){flash('Lettore QR non caricato. Controlla la connessione.');return}
+  try{
+    qr=new Html5Qrcode('reader');
+    await qr.start({facingMode:'environment'},{fps:12,qrbox:(w,h)=>{const d=Math.floor(Math.min(w,h)*.72);return{width:d,height:d}},aspectRatio:1},onScan,()=>{});
+    active=true;$('status').textContent='Fotocamera attiva · inquadra il QR';
+  }catch(e){flash('Fotocamera non disponibile. Controlla i permessi di Safari/Chrome.');$('status').textContent='Fotocamera non disponibile'}
+}
+async function stopScanner(){
+  try{if(qr&&active)await qr.stop()}catch(e){}
+  try{if(qr)qr.clear()}catch(e){}
+  qr=null;active=false;$('status').textContent='Scanner fermo';
+}
+async function onScan(text){
+  if(busy)return;
+  const code=(text||'').trim(); if(!code)return;
+  busy=true;if(navigator.vibrate)navigator.vibrate(80);
+  await lookup(code);
+}
+function manualLookup(){const c=$('manualCode').value.trim();if(!c)return flash('Inserisci il codice prenotazione.');busy=true;lookup(c)}
+async function lookup(code){
+  $('status').textContent='Verifica prenotazione…';
+  try{
+    const r=await api('lookup',code);
+    if(!r.trovato){renderBad('❌ PRENOTAZIONE NON TROVATA',code);return resetLater(2500)}
+    current=r.prenotazione;renderBooking(current);
+    if(current.stato==='ANNULLATA'||current.stato==='PRESENTE')resetLater(4000);
+    else {$('status').textContent='Prenotazione trovata';busy=false}
+  }catch(e){renderBad('❌ ERRORE',e.message);resetLater(2500)}
+}
+function renderBooking(p){
+  let cls='ok',state='✅ PRENOTAZIONE VALIDA',btn='';
+  if(p.stato==='ANNULLATA'){cls='bad';state='❌ PRENOTAZIONE ANNULLATA'}
+  else if(p.stato==='PRESENTE'){cls='warn';state='⚠️ GIÀ ENTRATO'}
+  else btn='<button class="success check" onclick="checkin()">✓ REGISTRA INGRESSO · '+esc(p.posti)+' '+(Number(p.posti)===1?'posto':'posti')+'</button>';
+  const el=$('result');el.className='result show '+cls;
+  el.innerHTML='<div class="state">'+state+'</div><div class="name">'+esc(p.nome)+' '+esc(p.cognome)+'</div><div class="event"><strong>'+esc(p.titolo)+'</strong><br>'+esc(p.dataEvento)+(p.oraEvento?' · '+esc(p.oraEvento):'')+'</div><div class="meta"><div>Posti: <strong>'+esc(p.posti)+'</strong></div><div>Stato: <strong>'+esc(p.stato)+'</strong></div>'+(p.checkin?'<div>Check-in: <strong>'+esc(p.checkin)+'</strong></div>':'')+'</div><div class="code">'+esc(p.codice)+'</div>'+btn;
+}
+function renderBad(title,text){const el=$('result');el.className='result show bad';el.innerHTML='<div class="state">'+esc(title)+'</div><div class="event">'+esc(text||'')+'</div>'}
+async function checkin(){
+  if(!current||!current.codice||busy)return;
+  busy=true;$('status').textContent='Registro ingresso…';
+  try{
+    const r=await api('checkin',current.codice);
+    if(!r.ok){if(r.prenotazione){current=r.prenotazione;renderBooking(current)}else renderBad('❌ CHECK-IN NON RIUSCITO',r.errore||'');return resetLater(3000)}
+    current=r.prenotazione;const el=$('result');el.className='result show ok';
+    el.innerHTML='<div class="state">✅ INGRESSO REGISTRATO</div><div class="name">'+esc(current.nome)+' '+esc(current.cognome)+'</div><div class="event"><strong>'+esc(current.titolo)+'</strong><br>'+esc(current.dataEvento)+(current.oraEvento?' · '+esc(current.oraEvento):'')+'</div><div class="meta"><div>Ingressi: <strong>'+esc(current.posti)+'</strong></div><div>Check-in: <strong>'+esc(current.checkin)+'</strong></div></div><div class="code">'+esc(current.codice)+'</div>';
+    if(navigator.vibrate)navigator.vibrate([100,60,100]);resetLater(3500);
+  }catch(e){renderBad('❌ ERRORE CHECK-IN',e.message);resetLater(3000)}
+}
+function resetLater(ms){setTimeout(()=>{current=null;busy=false;$('manualCode').value='';$('result').className='result';$('result').innerHTML='';$('status').textContent=active?'Fotocamera attiva · pronto per il prossimo QR':'Scanner pronto'},ms)}
+window.addEventListener('beforeunload',stopScanner);
+if(pin())$('loginOverlay').classList.remove('show');
+</script>
+</body>
+</html>
