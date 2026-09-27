@@ -1,6 +1,7 @@
 const GEST_CFG = {
   SHEET_ID_PROPERTY: "ARTYOU_SHEET_ID",
   PIN_PROPERTY: "ARTYOU_GESTIONALE_PIN",
+  IMAGE_FOLDER_PROPERTY: "ARTYOU_EVENT_IMAGES_FOLDER_ID",
   SHEET_SITE: "EventiSito",
   SHEET_BOOKING: "Eventi"
 };
@@ -48,6 +49,11 @@ function doPost(e) {
       return gestJson_({ok:true});
     }
 
+    if (action === "uploadimage") {
+      const url = gestUploadImage_(data);
+      return gestJson_({ok:true, url:url});
+    }
+
     return gestJson_({ok:false, errore:"azione_non_valida"});
   } catch (err) {
     return gestJson_({ok:false, errore:String(err && err.message || err)});
@@ -58,6 +64,11 @@ function doPost(e) {
 
 function setupGestionale() {
   const ss = gestSpreadsheet_();
+  const props = PropertiesService.getScriptProperties();
+  if (!props.getProperty(GEST_CFG.IMAGE_FOLDER_PROPERTY)) {
+    const folder = DriveApp.createFolder("Artyou Eventi - Immagini");
+    props.setProperty(GEST_CFG.IMAGE_FOLDER_PROPERTY, folder.getId());
+  }
   gestEnsureSheet_(ss, GEST_CFG.SHEET_SITE, [
     "ID","Slug","Titolo","Categoria","Descrizione","Poster","Luogo","Indirizzo",
     "Maps","Prezzo","PagaOnline","Capienza","DateJSON","CastJSON","TBD","Attivo",
@@ -212,6 +223,24 @@ function gestDeleteEvent_(id) {
       }
     }
   }
+}
+
+function gestUploadImage_(data) {
+  const raw = String(data.base64 || "");
+  const mime = String(data.mime || "image/jpeg");
+  const original = String(data.name || "locandina");
+  if (!raw) throw new Error("immagine_mancante");
+  const allowed = ["image/jpeg","image/png","image/webp"];
+  if (allowed.indexOf(mime) === -1) throw new Error("formato_immagine_non_valido");
+  const bytes = Utilities.base64Decode(raw);
+  if (bytes.length > 5 * 1024 * 1024) throw new Error("immagine_troppo_grande");
+  const folderId = PropertiesService.getScriptProperties().getProperty(GEST_CFG.IMAGE_FOLDER_PROPERTY);
+  if (!folderId) throw new Error("cartella_immagini_non_configurata");
+  const clean = gestSlug_(original.replace(/\.[^.]+$/,"")) || "locandina";
+  const ext = mime === "image/png" ? ".png" : (mime === "image/webp" ? ".webp" : ".jpg");
+  const file = DriveApp.getFolderById(folderId).createFile(Utilities.newBlob(bytes, mime, clean + "-" + Date.now() + ext));
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return "https://drive.google.com/uc?export=view&id=" + file.getId();
 }
 
 function gestSlug_(s){
