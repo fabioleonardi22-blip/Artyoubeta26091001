@@ -1,0 +1,29 @@
+name: Package stable site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/package-site.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build deployment ZIP
+        run: |
+          zip -r artyou-site-definitivo.zip . \
+            -x ".git/*" ".github/*" "artyou-site-definitivo.zip"
+
+      - name: Upload deployment package
+        uses: actions/upload-artifact@v4
+        with:
+          name: artyou-site-definitivo
+          path: artyou-site-definitivo.zip
+          if-no-files-found: error
