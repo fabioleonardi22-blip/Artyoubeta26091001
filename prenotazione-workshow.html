@@ -233,11 +233,15 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <p class="am-fs-lead" style="margin:0;font-size:19px;line-height:1.6;color:#3F474E;">Inserisci i tuoi dati essenziali per richiedere il posto. Riceverai la conferma via email.</p>
 <div id="ws-form-box" style="background:#FFF;border:1px solid #E4DED2;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:22px;">
 <div style="padding:16px 18px;border-radius:14px;background:#FDF1DE;border:1px solid #EADFCB;display:flex;flex-direction:column;gap:4px;"><span style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#9A5A00;">WorkshoW selezionato</span><strong id="ws-label" style="font-size:18px;color:#13181D;">WorkshoW</strong></div>
+<div id="ws-capacity-box" style="padding:16px 18px;border-radius:14px;background:#F6F3EC;border:1px solid #E4DED2;display:flex;align-items:center;justify-content:space-between;gap:14px;">
+  <span style="font-size:14px;font-weight:700;color:#3F474E;">Disponibilità</span>
+  <strong id="ws-capacity-count" style="font-size:16px;color:#555D64;">Caricamento…</strong>
+</div>
 <input id="f-evento-id" type="hidden" value="">
 <div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;"><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-nome" style="font-size:14px;font-weight:700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-cognome" style="font-size:14px;font-weight:700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div></div>
 <div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;"><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-mail" style="font-size:14px;font-weight:700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-tel" style="font-size:14px;font-weight:700;">Telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 ..." style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div></div>
 <label style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#3F474E;line-height:1.4;"><input id="f-privacy" type="checkbox" style="width:20px;height:20px;margin:0;flex-shrink:0;">Ho letto e accetto la privacy policy (obbligatorio)</label>
-<button type="button" onclick="workshowSuccess()" style="height:58px;border:none;border-radius:14px;background:#F09000;color:#1C1606;font-family:inherit;font-weight:800;font-size:17px;cursor:pointer;">Conferma prenotazione WorkshoW</button>
+<button id="ws-submit" type="button" onclick="workshowSuccess()" disabled style="height:58px;border:none;border-radius:14px;background:#F09000;color:#1C1606;font-family:inherit;font-weight:800;font-size:17px;cursor:pointer;">Conferma prenotazione WorkshoW</button>
 </div>
 <div id="ws-success" style="display:none;background:#FFF;border:1px solid #E4DED2;border-radius:24px;padding:32px;flex-direction:column;gap:16px;"><h2 style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:32px;">Prenotazione inviata!</h2><p style="margin:0;font-size:17px;line-height:1.55;color:#3F474E;">Abbiamo ricevuto la tua richiesta per <strong id="ws-success-label">il WorkshoW</strong>. Riceverai la conferma via email.</p><a href="workshow-corso.html" style="font-weight:700;">Torna ai WorkshoW</a></div>
 </div>
@@ -256,7 +260,95 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
 
-<script id="workshow-page-init">(function(){var L={"ws-horror":"WorkshoW · Horror","ws-maschera":"WorkshoW · La maschera teatrale","ws-thriller":"WorkshoW · Thriller","ws-parole":"WorkshoW · Parole e testo","ws-shakespeare":"WorkshoW · Shakespeare","ws-vulpio":"WorkshoW · Laboratorio avanzati (gennaio)"};function a(){var h="";try{h=decodeURIComponent((location.hash||"").replace(/^#/,""));}catch(e){}if(!L[h])h="ws-horror";var i=document.getElementById("f-evento-id");if(i)i.value=h;var x=document.getElementById("ws-label");if(x)x.textContent=L[h];var y=document.getElementById("ws-success-label");if(y)y.textContent=L[h];}window.workshowSuccess=function(){var f=document.getElementById("ws-form-box"),s=document.getElementById("ws-success");if(f)f.style.display="none";if(s)s.style.display="flex";window.scrollTo({top:0,behavior:"smooth"});};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",a);else a();window.addEventListener("hashchange",a);})();</script>
+<script id="workshow-page-init">
+(function(){
+  var LABELS={
+    "ws-horror":"WorkshoW · Horror",
+    "ws-maschera":"WorkshoW · La maschera teatrale",
+    "ws-thriller":"WorkshoW · Thriller",
+    "ws-parole":"WorkshoW · Parole e testo",
+    "ws-shakespeare":"WorkshoW · Shakespeare",
+    "ws-vulpio":"WorkshoW · Laboratorio avanzati (gennaio)"
+  };
+  var MATCH={
+    "ws-horror":["horror"],
+    "ws-maschera":["maschera"],
+    "ws-thriller":["thriller"],
+    "ws-parole":["parole","testo"],
+    "ws-shakespeare":["shakespeare"],
+    "ws-vulpio":["vulpio","laboratorio avanzati","avanzati"]
+  };
+  function requested(){
+    var h="";
+    try{h=decodeURIComponent((location.hash||"").replace(/^#/,""));}catch(e){}
+    return LABELS[h]?h:"ws-horror";
+  }
+  function resolveEventId(req){
+    var cap=window.ARTYOU_CAP||{};
+    if(Object.prototype.hasOwnProperty.call(cap,req)) return req;
+    var info=window.ARTYOU_EVENT_INFO||{}, keys=Object.keys(info);
+    var words=MATCH[req]||[];
+    for(var i=0;i<keys.length;i++){
+      var k=keys[i], x=info[k]||{};
+      var hay=(k+" "+(x.titolo||"")+" "+(x.descrizione||"")+" "+(x.tipo||"")+" "+(x.categoria||"")).toLowerCase();
+      var isWs=/workshow|workshop/i.test(hay);
+      if(!isWs) continue;
+      for(var j=0;j<words.length;j++){
+        if(hay.indexOf(words[j].toLowerCase())!==-1) return k;
+      }
+    }
+    return req;
+  }
+  function renderCapacity(){
+    var req=requested(), eventId=resolveEventId(req), cap=window.ARTYOU_CAP||{};
+    var hidden=document.getElementById("f-evento-id");
+    if(hidden) hidden.value=eventId;
+
+    var label=document.getElementById("ws-label");
+    if(label) label.textContent=LABELS[req];
+    var success=document.getElementById("ws-success-label");
+    if(success) success.textContent=LABELS[req];
+
+    var count=document.getElementById("ws-capacity-count");
+    var box=document.getElementById("ws-capacity-box");
+    var btn=document.getElementById("ws-submit");
+    var ready=Object.prototype.hasOwnProperty.call(cap,eventId);
+    var rem=ready?Math.max(0,Number(cap[eventId])||0):null;
+
+    if(!ready){
+      if(count){count.textContent="Da configurare nel gestionale";count.style.color="#7A4A00";}
+      if(box){box.style.background="#FFF7E8";box.style.borderColor="#E8D2A8";}
+      if(btn){btn.disabled=true;btn.style.opacity=".45";btn.style.cursor="not-allowed";btn.textContent="Disponibilità non configurata";}
+      return;
+    }
+    if(rem===0){
+      if(count){count.textContent="Completo";count.style.color="#7A1631";}
+      if(box){box.style.background="#F8E9ED";box.style.borderColor="#E7C3CD";}
+      if(btn){btn.disabled=true;btn.style.opacity=".45";btn.style.cursor="not-allowed";btn.textContent="WorkshoW completo";}
+      return;
+    }
+    if(count){
+      count.textContent=rem<=5?("Ultimi "+rem+" posti"):(rem+" posti liberi");
+      count.style.color=rem<=5?"#7A1631":"#3F474E";
+    }
+    if(box){box.style.background=rem<=5?"#FFF1F2":"#F6F3EC";box.style.borderColor=rem<=5?"#E7C3CD":"#E4DED2";}
+    if(btn){btn.disabled=false;btn.style.opacity="1";btn.style.cursor="pointer";btn.textContent="Conferma prenotazione WorkshoW";}
+  }
+  window.workshowSuccess=function(){
+    var f=document.getElementById("ws-form-box"),s=document.getElementById("ws-success");
+    if(f)f.style.display="none";
+    if(s)s.style.display="flex";
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+  function boot(){renderCapacity();}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+  window.addEventListener("hashchange",renderCapacity);
+  window.addEventListener("artyou:capacity-updated",renderCapacity);
+  window.addEventListener("artyou:booking-success",renderCapacity);
+  setTimeout(renderCapacity,250);
+  setTimeout(renderCapacity,1000);
+})();
+</script>
 
 <script>window.ARTYOU_BOOKING_MODULE="WorkshoW";window.ARTYOU_BOOKING_DEBUG=true;</script>
 <script src="js/artyou-booking-config.js"></script>
