@@ -35,6 +35,13 @@ function doGet(e) {
       });
     }
 
+    if (params.eventi === "1") {
+      return jsonResponse_({
+        ok: true,
+        eventi: getEventiPubblici_()
+      });
+    }
+
     if (params.evento) {
       const evento = String(params.evento || "").trim();
       return jsonResponse_({
@@ -311,6 +318,37 @@ function cancelBooking_(data) {
     ok: false,
     errore: "prenotazione_non_trovata"
   });
+}
+
+function getEventiPubblici_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName(CFG.SHEET_EVENTI);
+  if (!sh || sh.getLastRow() < 2) return {};
+
+  const rows = sh.getDataRange().getValues();
+  const headers = rows[0];
+  const idxEvento = headers.indexOf("Evento");
+  const idxTitolo = headers.indexOf("Titolo");
+  const idxData = headers.indexOf("Data");
+  const idxCapienza = headers.indexOf("Capienza");
+  const idxPrezzo = headers.indexOf("Prezzo");
+  const idxAttivo = headers.indexOf("Attivo");
+
+  const out = {};
+  for (let i = 1; i < rows.length; i++) {
+    const id = String(rows[i][idxEvento] || "").trim();
+    if (!id) continue;
+    const attivo = idxAttivo === -1 ? true : parseBool_(rows[i][idxAttivo]);
+    if (!attivo) continue;
+    out[id] = {
+      titolo: idxTitolo === -1 ? "" : String(rows[i][idxTitolo] || ""),
+      data: idxData === -1 ? "" : String(rows[i][idxData] || ""),
+      capienza: idxCapienza === -1 ? "" : rows[i][idxCapienza],
+      prezzo: idxPrezzo === -1 ? "" : rows[i][idxPrezzo],
+      attivo: true
+    };
+  }
+  return out;
 }
 
 function getDisponibilita_() {
