@@ -41,7 +41,7 @@ html,body{margin:0;background:#11181D;color:var(--ink);font-family:'Instrument S
 .content{padding:20px 120px 112px;background:#F6F3EC}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
 .card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:100%}
-.poster{height:300px;background:#26343D center/cover no-repeat;position:relative;display:flex;align-items:center;justify-content:center;color:#C9D2D8}
+.poster{width:100%;aspect-ratio:4/5;height:auto;background:#26343D center/cover no-repeat;position:relative;display:flex;align-items:center;justify-content:center;color:#C9D2D8;flex:0 0 auto}
 .badge{position:absolute;top:18px;left:18px;background:#fff;color:#13181D;border-radius:14px;padding:10px 14px;min-width:58px;text-align:center}
 .badge strong{display:block;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:30px;line-height:1}
 .badge span{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
@@ -64,7 +64,14 @@ footer a{color:#9AA5AE}
   body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
   .hero,.filters,.content,footer{width:100%!important;max-width:100%!important;min-width:0!important;}
   .grid{width:100%!important;max-width:100%!important;min-width:0!important;}
-  .card{width:100%!important;max-width:100%!important;min-width:0!important;}  #artyou-menu-toggle:checked~nav{display:flex;flex-direction:column;align-items:stretch;gap:0;position:absolute;left:0;right:0;top:100%;z-index:1000;background:#13181D;padding:8px 20px 20px;border-top:1px solid #2A333B;box-shadow:0 18px 30px rgba(0,0,0,.35)}
+  .card{width:100%!important;max-width:100%!important;min-width:0!important;}
+  .card{overflow:hidden!important;border-radius:18px!important;}
+  .card-body{padding:16px!important;gap:8px!important;}
+  .card h2{font-size:21px!important;line-height:1.08!important;}
+  .when,.where{font-size:13px!important;line-height:1.45!important;}
+  .actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;width:100%!important;}
+  .btn{width:100%!important;padding:11px 10px!important;font-size:13px!important;white-space:nowrap!important;}
+  .poster .badge{top:14px!important;left:14px!important;}  #artyou-menu-toggle:checked~nav{display:flex;flex-direction:column;align-items:stretch;gap:0;position:absolute;left:0;right:0;top:100%;z-index:1000;background:#13181D;padding:8px 20px 20px;border-top:1px solid #2A333B;box-shadow:0 18px 30px rgba(0,0,0,.35)}
   #artyou-menu-toggle:checked~nav a{font-size:19px;padding:15px 0;border-bottom:1px solid #2A333B;color:#F6F3EC}
   #artyou-menu-toggle:checked~div .artyou-menu-btn .am-open{display:none}
   #artyou-menu-toggle:checked~div .artyou-menu-btn .am-close{display:block!important}
@@ -74,10 +81,9 @@ footer a{color:#9AA5AE}
   .filters{padding:0 20px 24px}
   .content{padding:12px 20px 64px}
   .grid{grid-template-columns:minmax(0,1fr);gap:18px}
-  .poster{height:220px}
   footer{flex-direction:column;gap:12px;padding:28px 20px calc(28px + env(safe-area-inset-bottom,0px))}
 }
-@media(max-width:560px){.poster{height:330px}}
+@media(max-width:560px){.poster{width:100%;aspect-ratio:4/5;height:auto;background-position:center top}}
 </style>
 
 
@@ -336,7 +342,7 @@ function render(){
      '<div class="when">'+esc(first.label||"Data da definire")+'</div>'+
      (where?'<div class="where">'+esc(where)+'</div>':'')+
      (e.desc?'<p class="desc">'+esc(e.desc)+'</p>':'')+
-     '<div class="actions"><a class="btn primary" href="'+detailHref+'">Scopri e prenota</a>'+
+     '<div class="actions"><a class="btn primary" href="'+detailHref+'">Prenota</a>'+
      '<a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/393271881956?text='+encodeURIComponent(msg)+'">WhatsApp</a></div></div>';
    box.appendChild(art);
  });
