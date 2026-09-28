@@ -241,7 +241,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;"><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-nome" style="font-size:14px;font-weight:700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-cognome" style="font-size:14px;font-weight:700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div></div>
 <div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;"><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-mail" style="font-size:14px;font-weight:700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-tel" style="font-size:14px;font-weight:700;">Telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 ..." style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div></div>
 <label style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#3F474E;line-height:1.4;"><input id="f-privacy" type="checkbox" style="width:20px;height:20px;margin:0;flex-shrink:0;">Ho letto e accetto la privacy policy (obbligatorio)</label>
-<button id="ws-submit" type="button" onclick="workshowSuccess()" disabled style="height:58px;border:none;border-radius:14px;background:#F09000;color:#1C1606;font-family:inherit;font-weight:800;font-size:17px;cursor:pointer;">Conferma prenotazione WorkshoW</button>
+<button id="ws-submit" type="button" onclick="workshowSuccess()" disabled style="height:58px;border:none;border-radius:14px;background:#F09000;color:#1C1606;font-family:inherit;font-weight:800;font-size:17px;cursor:not-allowed;opacity:.45;">Verifica disponibilità…</button>
 </div>
 <div id="ws-success" style="display:none;background:#FFF;border:1px solid #E4DED2;border-radius:24px;padding:32px;flex-direction:column;gap:16px;"><h2 style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:32px;">Prenotazione inviata!</h2><p style="margin:0;font-size:17px;line-height:1.55;color:#3F474E;">Abbiamo ricevuto la tua richiesta per <strong id="ws-success-label">il WorkshoW</strong>. Riceverai la conferma via email.</p><a href="workshow-corso.html" style="font-weight:700;">Torna ai WorkshoW</a></div>
 </div>
@@ -264,18 +264,18 @@ a{color:#1A6E99}a:hover{color:#12506F}
 (function(){
   var LABELS={
     "ws-horror":"WorkshoW · Horror",
-    "ws-maschera":"WorkshoW · La maschera teatrale",
+    "ws-maschera":"WorkshoW · Human Comedy",
     "ws-thriller":"WorkshoW · Thriller",
-    "ws-parole":"WorkshoW · Parole e testo",
+    "ws-parole":"WorkshoW · From Text to Next",
     "ws-shakespeare":"WorkshoW · Shakespeare",
-    "ws-vulpio":"WorkshoW · Laboratorio avanzati (gennaio)"
+    "ws-vulpio":"WorkshoW · Laboratorio avanzati"
   };
-  var MATCH={
-    "ws-horror":["horror"],
-    "ws-maschera":["maschera"],
-    "ws-thriller":["thriller"],
-    "ws-parole":["parole","testo"],
-    "ws-shakespeare":["shakespeare"],
+  var WORDS={
+    "ws-horror":["horror","fiaba"],
+    "ws-maschera":["human comedy","mangolini","maschera"],
+    "ws-thriller":["thriller","zadro"],
+    "ws-parole":["from text to next","forbicioni","text"],
+    "ws-shakespeare":["shakespeare","buzza","mezza primavera"],
     "ws-vulpio":["vulpio","laboratorio avanzati","avanzati"]
   };
   function requested(){
@@ -283,56 +283,40 @@ a{color:#1A6E99}a:hover{color:#12506F}
     try{h=decodeURIComponent((location.hash||"").replace(/^#/,""));}catch(e){}
     return LABELS[h]?h:"ws-horror";
   }
-  function resolveEventId(req){
+  function resolve(req){
     var cap=window.ARTYOU_CAP||{};
     if(Object.prototype.hasOwnProperty.call(cap,req)) return req;
-    var info=window.ARTYOU_EVENT_INFO||{}, keys=Object.keys(info);
-    var words=MATCH[req]||[];
+    var info=window.ARTYOU_EVENT_INFO||{}, keys=Object.keys(info), words=WORDS[req]||[];
     for(var i=0;i<keys.length;i++){
-      var k=keys[i], x=info[k]||{};
+      var k=keys[i],x=info[k]||{};
       var hay=(k+" "+(x.titolo||"")+" "+(x.descrizione||"")+" "+(x.tipo||"")+" "+(x.categoria||"")).toLowerCase();
-      var isWs=/workshow|workshop/i.test(hay);
-      if(!isWs) continue;
-      for(var j=0;j<words.length;j++){
-        if(hay.indexOf(words[j].toLowerCase())!==-1) return k;
-      }
+      for(var j=0;j<words.length;j++) if(hay.indexOf(words[j])!==-1) return k;
     }
     return req;
   }
-  function renderCapacity(){
-    var req=requested(), eventId=resolveEventId(req), cap=window.ARTYOU_CAP||{};
-    var hidden=document.getElementById("f-evento-id");
-    if(hidden) hidden.value=eventId;
-
-    var label=document.getElementById("ws-label");
-    if(label) label.textContent=LABELS[req];
-    var success=document.getElementById("ws-success-label");
-    if(success) success.textContent=LABELS[req];
-
-    var count=document.getElementById("ws-capacity-count");
-    var box=document.getElementById("ws-capacity-box");
-    var btn=document.getElementById("ws-submit");
+  function render(){
+    var req=requested(), eventId=resolve(req), cap=window.ARTYOU_CAP||{};
+    var hidden=document.getElementById("f-evento-id"); if(hidden)hidden.value=eventId;
+    var lab=document.getElementById("ws-label"); if(lab)lab.textContent=LABELS[req];
+    var done=document.getElementById("ws-success-label"); if(done)done.textContent=LABELS[req];
+    var cnt=document.getElementById("ws-capacity-count"),box=document.getElementById("ws-capacity-box"),btn=document.getElementById("ws-submit");
     var ready=Object.prototype.hasOwnProperty.call(cap,eventId);
     var rem=ready?Math.max(0,Number(cap[eventId])||0):null;
-
     if(!ready){
-      if(count){count.textContent="Da configurare nel gestionale";count.style.color="#7A4A00";}
+      if(cnt){cnt.textContent="Disponibilità da configurare";cnt.style.color="#7A4A00";}
       if(box){box.style.background="#FFF7E8";box.style.borderColor="#E8D2A8";}
-      if(btn){btn.disabled=true;btn.style.opacity=".45";btn.style.cursor="not-allowed";btn.textContent="Disponibilità non configurata";}
+      if(btn){btn.disabled=true;btn.textContent="Disponibilità non configurata";btn.style.opacity=".45";btn.style.cursor="not-allowed";}
       return;
     }
     if(rem===0){
-      if(count){count.textContent="Completo";count.style.color="#7A1631";}
+      if(cnt){cnt.textContent="Completo";cnt.style.color="#7A1631";}
       if(box){box.style.background="#F8E9ED";box.style.borderColor="#E7C3CD";}
-      if(btn){btn.disabled=true;btn.style.opacity=".45";btn.style.cursor="not-allowed";btn.textContent="WorkshoW completo";}
+      if(btn){btn.disabled=true;btn.textContent="WorkshoW completo";btn.style.opacity=".45";btn.style.cursor="not-allowed";}
       return;
     }
-    if(count){
-      count.textContent=rem<=5?("Ultimi "+rem+" posti"):(rem+" posti liberi");
-      count.style.color=rem<=5?"#7A1631":"#3F474E";
-    }
+    if(cnt){cnt.textContent=rem<=5?("Ultimi "+rem+" posti"):(rem+" posti liberi");cnt.style.color=rem<=5?"#7A1631":"#3F474E";}
     if(box){box.style.background=rem<=5?"#FFF1F2":"#F6F3EC";box.style.borderColor=rem<=5?"#E7C3CD":"#E4DED2";}
-    if(btn){btn.disabled=false;btn.style.opacity="1";btn.style.cursor="pointer";btn.textContent="Conferma prenotazione WorkshoW";}
+    if(btn){btn.disabled=false;btn.textContent="Conferma prenotazione WorkshoW";btn.style.opacity="1";btn.style.cursor="pointer";}
   }
   window.workshowSuccess=function(){
     var f=document.getElementById("ws-form-box"),s=document.getElementById("ws-success");
@@ -340,13 +324,11 @@ a{color:#1A6E99}a:hover{color:#12506F}
     if(s)s.style.display="flex";
     window.scrollTo({top:0,behavior:"smooth"});
   };
-  function boot(){renderCapacity();}
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
-  window.addEventListener("hashchange",renderCapacity);
-  window.addEventListener("artyou:capacity-updated",renderCapacity);
-  window.addEventListener("artyou:booking-success",renderCapacity);
-  setTimeout(renderCapacity,250);
-  setTimeout(renderCapacity,1000);
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",render);else render();
+  window.addEventListener("hashchange",render);
+  window.addEventListener("artyou:capacity-updated",render);
+  window.addEventListener("artyou:booking-success",render);
+  setTimeout(render,250);setTimeout(render,1000);
 })();
 </script>
 
