@@ -286,7 +286,7 @@ async function loadEvents(){
     const r = await fetch(ARTYOU_API_URL + sep + 'eventi=1', {cache:'no-store'});
     const j = await r.json();
     if (!j.ok) throw new Error(j.errore || 'Risposta non valida');
-    publicEvents = Array.isArray(j.eventi) ? j.eventi : [];
+    publicEvents = Array.isArray(j.eventi) ? j.eventi : (j.eventi && typeof j.eventi === 'object' ? Object.values(j.eventi) : []);
     renderEvents();
   }catch(err){
     $('eventsBox').className='error';
