@@ -229,13 +229,13 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <main class="am-px am-py am-grid1" style="padding: 56px 120px 96px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: start; flex-grow: 1;">
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <nav aria-label="Percorso" class="am-wrap am-fs-body" style="font-size: 15px; color: #555D64; display: flex; gap: 10px;"><a href="index.html">Home</a><span>/</span><a href="improvvisazione.html">Corsi</a><span>/</span><span>Iscrizione</span></nav>
-<h1 class="am-fs-xxl" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 64px; line-height: 1; letter-spacing: -2px;">Iscriviti a un corso</h1>
-<p class="am-fs-lead" style="margin: 0; font-size: 19px; line-height: 1.6; color: #3F474E;">Compila il modulo per richiedere il posto. Per i WorkshoW chiediamo solo i dati essenziali e ti confermiamo la prenotazione via email.</p>
+<h1 id="artyou-form-title" class="am-fs-xxl" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 64px; line-height: 1; letter-spacing: -2px;">Iscriviti a un corso</h1>
+<p id="artyou-form-intro" class="am-fs-lead" style="margin: 0; font-size: 19px; line-height: 1.6; color: #3F474E;">Compila il modulo per richiedere il posto. Per i WorkshoW chiediamo solo i dati essenziali e ti confermiamo la prenotazione via email.</p>
 <div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 22px;">
 <sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
-<div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Quale corso?</span>
+<div id="artyou-course-chooser" style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Quale corso?</span>
 <div class="am-wrap" style="display: flex; flex-wrap: wrap; gap: 8px;">
 <sc-for list="{{courses}}" as="c" hint-placeholder-count="11">
 <button type="button" onClick="{{c.pick}}" class="am-fs-body" style="padding: 10px 14px; border-radius: 999px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-weight: 600; font-size: 14px; cursor: pointer; min-height: 44px;">{{c.label}}</button>
@@ -243,30 +243,30 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div></div>
 </sc-if>
 <sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}">
-<div style="padding:16px 18px;border-radius:14px;background:#FDF1DE;border:1px solid #EADFCB;display:flex;flex-direction:column;gap:4px;"><span style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#9A5A00;">WorkshoW selezionato</span><strong style="font-size:18px;color:#13181D;">{{selLabel}}</strong></div>
+<div id="artyou-workshow-selected" style="padding:16px 18px;border-radius:14px;background:#FDF1DE;border:1px solid #EADFCB;display:flex;flex-direction:column;gap:4px;"><span style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#9A5A00;">WorkshoW selezionato</span><strong id="artyou-workshow-label" style="font-size:18px;color:#13181D;">{{selLabel}}</strong></div>
 </sc-if>
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
-<div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-sede" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Sede preferita</label><select id="f-sede" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit; background: #FFFFFF;"><option>Nessuna preferenza</option><option>San Giovanni</option><option>Eroi</option><option>Ionio</option><option>Valle Aurelia</option><option>Africano</option><option>Boccea</option></select></div>
+<div id="artyou-field-sede" style="display: flex; flex-direction: column; gap: 8px;"><label for="f-sede" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Sede preferita</label><select id="f-sede" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit; background: #FFFFFF;"><option>Nessuna preferenza</option><option>San Giovanni</option><option>Eroi</option><option>Ionio</option><option>Valle Aurelia</option><option>Africano</option><option>Boccea</option></select></div>
 </sc-if>
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div></div>
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
-<div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+<div id="artyou-field-come" class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
 <div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-come" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Come ci hai conosciuto?</label><select id="f-come" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit; background: #FFFFFF;"><option>Passaparola</option><option>Instagram</option><option>Facebook</option><option>Google</option><option>Uno spettacolo</option><option>Altro</option></select></div>
 </div>
-<span class="am-fs-body" style="font-size: 14px; color: #555D64; margin-top: -8px;">Per Artyou Young inserisci i dati del genitore e indica nelle note nome ed età del ragazzo o della ragazza.</span>
+<span id="artyou-young-note" class="am-fs-body" style="font-size: 14px; color: #555D64; margin-top: -8px;">Per Artyou Young inserisci i dati del genitore e indica nelle note nome ed età del ragazzo o della ragazza.</span>
 </sc-if>
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
-<div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-note" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Note <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><textarea id="f-note" rows="3" style="border: 1px solid #CFC8BA; border-radius: 12px; padding: 12px 16px; font-size: 16px; font-family: inherit; resize: vertical;"></textarea></div>
+<div id="artyou-field-note" style="display: flex; flex-direction: column; gap: 8px;"><label for="f-note" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Note <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><textarea id="f-note" rows="3" style="border: 1px solid #CFC8BA; border-radius: 12px; padding: 12px 16px; font-size: 16px; font-family: inherit; resize: vertical;"></textarea></div>
 </sc-if>
 <div style="display: flex; flex-direction: column; gap: 12px;">
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3F474E; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy (obbligatorio)</label>
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
-<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3F474E; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Acconsento all’uso di foto e video delle lezioni e degli spettacoli sui canali di Artyou</label>
-<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3F474E; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho già la tessera associativa Artyou</label>
+<label id="artyou-photo-consent" class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3F474E; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Acconsento all’uso di foto e video delle lezioni e degli spettacoli sui canali di Artyou</label>
+<label id="artyou-tessera" class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3F474E; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho già la tessera associativa Artyou</label>
 </sc-if>
 </div>
-<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Invia l’iscrizione · {{selLabel}}</button></sc-if>
-<sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 800; font-size: 17px; cursor: pointer;">Conferma prenotazione WorkshoW</button></sc-if>
+<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}"><button id="artyou-generic-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Invia l’iscrizione · {{selLabel}}</button></sc-if>
+<sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}"><button id="artyou-workshow-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 800; font-size: 17px; cursor: pointer;">Conferma prenotazione WorkshoW</button></sc-if>
 </div>
 </sc-if>
 <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
@@ -328,6 +328,66 @@ class Component extends DCLogic {
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
+<script id="artyou-workshow-mode">
+(function(){
+  var LABELS = {
+    "ws-horror":"Horror",
+    "ws-maschera":"La maschera teatrale",
+    "ws-thriller":"Thriller",
+    "ws-parole":"Parole e testo",
+    "ws-shakespeare":"Shakespeare",
+    "ws-vulpio":"Laboratorio avanzati (gennaio)"
+  };
+  function applyWorkshowMode(){
+    var h="";
+    try{ h=decodeURIComponent((location.hash||"").replace(/^#/,"")); }catch(e){}
+    var isWs=/^ws-/.test(h);
+    document.documentElement.classList.toggle("artyou-workshow-mode",isWs);
+    if(!isWs) return;
+
+    var title=document.getElementById("artyou-form-title");
+    var intro=document.getElementById("artyou-form-intro");
+    if(title) title.textContent="Prenota il tuo WorkshoW";
+    if(intro) intro.textContent="Inserisci i tuoi dati essenziali per richiedere il posto. Riceverai la conferma via email.";
+
+    var label=LABELS[h] || h.replace(/^ws-/,"").replace(/-/g," ");
+    var chosen=document.getElementById("artyou-workshow-label");
+    if(chosen) chosen.textContent="WorkshoW · "+label;
+
+    [
+      "artyou-course-chooser",
+      "artyou-field-sede",
+      "artyou-field-come",
+      "artyou-young-note",
+      "artyou-field-note",
+      "artyou-photo-consent",
+      "artyou-tessera",
+      "artyou-generic-submit"
+    ].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.style.setProperty("display","none","important");
+    });
+
+    var selected=document.getElementById("artyou-workshow-selected");
+    if(selected) selected.style.setProperty("display","flex","important");
+    var submit=document.getElementById("artyou-workshow-submit");
+    if(submit) submit.style.setProperty("display","block","important");
+
+    var aside=document.querySelector("aside");
+    if(aside){
+      var h2=aside.querySelector("h2");
+      var ol=aside.querySelector("ol");
+      if(h2) h2.textContent="Cosa succede dopo";
+      if(ol) ol.innerHTML="<li>Ricevi l’email di conferma della richiesta.</li><li>Verifichiamo la disponibilità del WorkshoW.</li><li>Ti confermiamo il posto e le eventuali indicazioni di pagamento.</li>";
+    }
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",applyWorkshowMode);
+  else applyWorkshowMode();
+  window.addEventListener("hashchange",function(){setTimeout(applyWorkshowMode,0);});
+  setTimeout(applyWorkshowMode,250);
+  setTimeout(applyWorkshowMode,1000);
+})();
+</script>
 <script id="artyou-forms-js">
 (function(){
   var ENDPOINT = "https://script.google.com/macros/s/AKfycbyGHySayrDhjw78H2jJjI-hCkus_NkcFWFLu980vh-Pr0vQeE8Vthn_42X9PIixxLfW/exec";
