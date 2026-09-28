@@ -1,1 +1,1 @@
-window.ARTYOU_BOOKING_ENDPOINT = "https://script.google.com/macros/s/AKfycbyGHySayrDhjw78H2jJjI-hCkus_NkcFWFLu980vh-Pr0vQeE8Vthn_42X9PIixxLfW/exec";
+window.ARTYOU_BOOKING_ENDPOINT = "/api/artyou";
