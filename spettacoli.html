@@ -178,7 +178,7 @@ var COLORS={
   "Workshop":["#5B4010","#8A6200"]
 };
 var FALLBACK=[
- {slug:"shortyou",title:"ShortYou · show & aperitivo",cat:"Improvvisazione",poster:"img/shortyou-4-ottobre.jpg",desc:"Scene brevi, giochi e tanta complicità con il pubblico.",venue:"The Spot Improv",addr:"Via Giuseppe Bonaccorsi, 28 – Roma",dates:[{label:"Domenica 4 ottobre · dalle 19:30"}]},
+ {slug:"shortyou",title:"ShortYou · show & aperitivo",cat:"Improvvisazione",poster:"img/shortyou-4-ottobre.jpg",desc:"Scene brevi, giochi e tanta complicità con il pubblico: lo show di improvvisazione di Artyou, con aperitivo, al The Spot Improv.",venue:"The Spot Improv",addr:"Via Giuseppe Bonaccorsi, 28 – Roma (Valle Aurelia)",maps:"The Spot Improv, Via Giuseppe Bonaccorsi 28, Roma",price:12,pagaOnline:true,capienza:40,dates:[{label:"Domenica 4 ottobre · dalle 19:30",sold:0}],cast:[]},
  {slug:"spettacolo-9-ottobre",title:"Spettacolo di improvvisazione",cat:"Improvvisazione",poster:"",desc:"",venue:"Roma",addr:"",dates:[{label:"Venerdì 9 ottobre · 21:00"}]},
  {slug:"spettacolo-24-ottobre",title:"Spettacolo di teatro",cat:"Teatro",poster:"",desc:"",venue:"Roma",addr:"",dates:[{label:"Sabato 24 ottobre · 20:45"}]},
  {slug:"standup-bistrot68",title:"Stand-up comedy · lo spettacolo del corso",cat:"Stand-up",poster:"",desc:"Gli allievi del corso salgono sul palco con i loro monologhi.",venue:"Bistrot68 Centocelle",addr:"",tbd:true,dates:[{label:"Data da definire"}]}
@@ -209,13 +209,14 @@ function render(){
    var posterStyle=e.poster?'background-image:url("'+String(e.poster).replace(/"/g,"%22")+'");':'background-color:'+col[0]+';';
    var where=[e.venue,e.addr].filter(Boolean).join(" · ");
    var msg="Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".";
-   art.innerHTML='<div class="poster" style="'+posterStyle+'"><div class="badge"><strong>'+esc(b.day)+'</strong><span>'+esc(b.month)+'</span></div></div>'+
+   var detailHref="spettacolo.html#"+encodeURIComponent(e.slug||"");
+   art.innerHTML='<a href="'+detailHref+'" class="poster" style="'+posterStyle+';text-decoration:none"><div class="badge"><strong>'+esc(b.day)+'</strong><span>'+esc(b.month)+'</span></div></a>'+
      '<div class="card-body"><span class="cat" style="color:'+col[1]+'">'+esc(e.cat||"Evento")+'</span>'+
-     '<h2>'+esc(e.title||"Evento")+'</h2>'+
+     '<h2><a href="'+detailHref+'" style="color:inherit;text-decoration:none">'+esc(e.title||"Evento")+'</a></h2>'+
      '<div class="when">'+esc(first.label||"Data da definire")+'</div>'+
      (where?'<div class="where">'+esc(where)+'</div>':'')+
      (e.desc?'<p class="desc">'+esc(e.desc)+'</p>':'')+
-     '<div class="actions"><a class="btn primary" href="spettacolo.html#'+encodeURIComponent(e.slug||"")+'">Scopri e prenota</a>'+
+     '<div class="actions"><a class="btn primary" href="'+detailHref+'">Scopri e prenota</a>'+
      '<a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/393271881956?text='+encodeURIComponent(msg)+'">WhatsApp</a></div></div>';
    box.appendChild(art);
  });
