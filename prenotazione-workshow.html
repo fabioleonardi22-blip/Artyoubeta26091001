@@ -286,13 +286,33 @@ a{color:#1A6E99}a:hover{color:#12506F}
   function resolve(req){
     var cap=window.ARTYOU_CAP||{};
     if(Object.prototype.hasOwnProperty.call(cap,req)) return req;
-    var info=window.ARTYOU_EVENT_INFO||{}, keys=Object.keys(info), words=WORDS[req]||[];
-    for(var i=0;i<keys.length;i++){
-      var k=keys[i],x=info[k]||{};
+
+    var info=window.ARTYOU_EVENT_INFO||{};
+    var words=WORDS[req]||[];
+    var capKeys=Object.keys(cap||{});
+    var infoKeys=Object.keys(info||{});
+    var allKeys=capKeys.slice();
+    infoKeys.forEach(function(k){if(allKeys.indexOf(k)===-1)allKeys.push(k);});
+
+    function scoreKey(k){
+      var x=info[k]||{};
       var hay=(k+" "+(x.titolo||"")+" "+(x.descrizione||"")+" "+(x.tipo||"")+" "+(x.categoria||"")).toLowerCase();
-      for(var j=0;j<words.length;j++) if(hay.indexOf(words[j])!==-1) return k;
+      var score=0;
+      for(var j=0;j<words.length;j++){
+        var w=String(words[j]||"").toLowerCase();
+        if(w&&hay.indexOf(w)!==-1) score+=w.indexOf(" ")!==-1?4:2;
+      }
+      if(/workshow|workshop/.test(hay)) score+=1;
+      return score;
     }
-    return req;
+
+    var best="",bestScore=0;
+    allKeys.forEach(function(k){
+      var s=scoreKey(k);
+      if(s>bestScore){bestScore=s;best=k;}
+    });
+
+    return bestScore>0?best:req;
   }
   function render(){
     var req=requested(), eventId=resolve(req), cap=window.ARTYOU_CAP||{};
