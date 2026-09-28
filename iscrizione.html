@@ -234,15 +234,22 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 22px;">
 <sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
+<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Quale corso?</span>
 <div class="am-wrap" style="display: flex; flex-wrap: wrap; gap: 8px;">
 <sc-for list="{{courses}}" as="c" hint-placeholder-count="11">
 <button type="button" onClick="{{c.pick}}" class="am-fs-body" style="padding: 10px 14px; border-radius: 999px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-weight: 600; font-size: 14px; cursor: pointer; min-height: 44px;">{{c.label}}</button>
 </sc-for>
 </div></div>
+</sc-if>
+<sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 18px;border-radius:14px;background:#FDF1DE;border:1px solid #EADFCB;display:flex;flex-direction:column;gap:4px;"><span style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#9A5A00;">WorkshoW selezionato</span><strong style="font-size:18px;color:#13181D;">{{selLabel}}</strong></div>
+</sc-if>
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-sede" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Sede preferita</label><select id="f-sede" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit; background: #FFFFFF;"><option>Nessuna preferenza</option><option>San Giovanni</option><option>Eroi</option><option>Ionio</option><option>Valle Aurelia</option><option>Africano</option><option>Boccea</option></select></div>
+</sc-if>
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div></div>
+<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
 <div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
 <div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nascita" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Data di nascita</label><input id="f-nascita" type="date" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit;"></div>
 <div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-come" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Come ci hai conosciuto?</label><select id="f-come" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit; background: #FFFFFF;"><option>Passaparola</option><option>Instagram</option><option>Facebook</option><option>Google</option><option>Uno spettacolo</option><option>Altro</option></select></div>
@@ -259,14 +266,16 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3F474E; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho già la tessera associativa Artyou</label>
 </sc-if>
 </div>
-<button type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Invia l’iscrizione · {{selLabel}}</button>
+<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Invia l’iscrizione · {{selLabel}}</button></sc-if>
+<sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 800; font-size: 17px; cursor: pointer;">Conferma prenotazione WorkshoW</button></sc-if>
 </div>
 </sc-if>
 <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
 <span class="am-wrap" style="width: 60px; height: 60px; border-radius: 30px; background: {{accent}}; color: #1C1606; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg></span>
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Iscrizione inviata!</h2>
-<p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">Hai chiesto l’iscrizione a <strong>{{selLabel}}</strong>. Ti ricontattiamo a breve per confermare posto, quota e tessera.</p>
+<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}"><p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">Hai chiesto l’iscrizione a <strong>{{selLabel}}</strong>. Ti ricontattiamo a breve per confermare posto, quota e tessera.</p></sc-if>
+<sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">Abbiamo ricevuto la prenotazione per <strong>{{selLabel}}</strong>. Riceverai la conferma all’indirizzo email indicato.</p></sc-if>
 <button type="button" onClick="{{reset}}" class="am-fs-body" style="border: 1px solid #CFC8BA; background: #FFFFFF; border-radius: 12px; padding: 13px 18px; font-family: inherit; font-weight: 600; font-size: 15px; cursor: pointer; color: #13181D;">Invia un’altra iscrizione</button>
 </div>
 </sc-if>
