@@ -230,7 +230,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <nav aria-label="Percorso" class="am-wrap am-fs-body" style="font-size: 15px; color: #555D64; display: flex; gap: 10px;"><a href="index.html">Home</a><span>/</span><a href="improvvisazione.html">Corsi</a><span>/</span><span>Iscrizione</span></nav>
 <h1 class="am-fs-xxl" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 64px; line-height: 1; letter-spacing: -2px;">Iscriviti a un corso</h1>
-<p class="am-fs-lead" style="margin: 0; font-size: 19px; line-height: 1.6; color: #3F474E;">Compila il modulo: ti ricontattiamo per confermare il posto, la quota e la tessera associativa.</p>
+<p class="am-fs-lead" style="margin: 0; font-size: 19px; line-height: 1.6; color: #3F474E;">Compila il modulo per richiedere il posto. Per i WorkshoW chiediamo solo i dati essenziali e ti confermiamo la prenotazione via email.</p>
 <div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 22px;">
 <sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
@@ -240,6 +240,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <button type="button" onClick="{{c.pick}}" class="am-fs-body" style="padding: 10px 14px; border-radius: 999px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-weight: 600; font-size: 14px; cursor: pointer; min-height: 44px;">{{c.label}}</button>
 </sc-for>
 </div></div>
+<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-sede" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Sede preferita</label><select id="f-sede" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit; background: #FFFFFF;"><option>Nessuna preferenza</option><option>San Giovanni</option><option>Eroi</option><option>Ionio</option><option>Valle Aurelia</option><option>Africano</option><option>Boccea</option></select></div>
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div></div>
 <div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
@@ -247,11 +248,16 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-come" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Come ci hai conosciuto?</label><select id="f-come" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit; background: #FFFFFF;"><option>Passaparola</option><option>Instagram</option><option>Facebook</option><option>Google</option><option>Uno spettacolo</option><option>Altro</option></select></div>
 </div>
 <span class="am-fs-body" style="font-size: 14px; color: #555D64; margin-top: -8px;">Per Artyou Young inserisci i dati del genitore e indica nelle note nome ed età del ragazzo o della ragazza.</span>
+</sc-if>
+<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-note" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Note <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><textarea id="f-note" rows="3" style="border: 1px solid #CFC8BA; border-radius: 12px; padding: 12px 16px; font-size: 16px; font-family: inherit; resize: vertical;"></textarea></div>
+</sc-if>
 <div style="display: flex; flex-direction: column; gap: 12px;">
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3F474E; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy (obbligatorio)</label>
+<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3F474E; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Acconsento all’uso di foto e video delle lezioni e degli spettacoli sui canali di Artyou</label>
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3F474E; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho già la tessera associativa Artyou</label>
+</sc-if>
 </div>
 <button type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Invia l’iscrizione · {{selLabel}}</button>
 </div>
@@ -302,7 +308,9 @@ class Component extends DCLogic {
     var h = this.hash();
     var idx = st.pick != null ? st.pick : Math.max(0, C.map(function (c) { return c[0]; }).indexOf(h));
     var courses = C.map(function (c, i) { var on = i === idx; return { label: c[1], bg: on ? "#13181D" : "#FFFFFF", fg: on ? "#FFFFFF" : "#13181D", border: on ? "#13181D" : "#CFC8BA", pick: function () { self.setState({ pick: i }); } }; });
-    return { accent: this.props.accent ?? "#F09000", courses: courses, selLabel: C[idx][1], sent: !!st.sent, notSent: !st.sent,
+    var selId = C[idx][0];
+    var isWorkshow = /^ws-/.test(selId);
+    return { accent: this.props.accent ?? "#F09000", courses: courses, selLabel: C[idx][1], selId: selId, isWorkshow: isWorkshow, notWorkshow: !isWorkshow, sent: !!st.sent, notSent: !st.sent,
       send: function () { self.setState({ sent: true }); }, reset: function () { self.setState({ sent: false }); } };
   }
 }
@@ -373,7 +381,7 @@ class Component extends DCLogic {
     else if (MODULO === "Spettacolo" || MODULO === "Un Vortice di Emozioni") { var h1 = document.querySelector("h1"); if (h1) d.Evento = testo(h1); }
     var s = scelte(); if (s) d.Scelte = s;
     var posti = testo(b).match(/(\d+)\s+post/); if (posti) d.Posti = posti[1];
-    if (MODULO === "Iscrizioni") { var m = testo(b).split("·").slice(1).join("·").trim(); if (m) d.Corso = m; }
+    if (MODULO === "Iscrizioni") { var m = testo(b).split("·").slice(1).join("·").trim(); if (m) d.Corso = m; var wh = (location.hash || "").replace(/^#/, ""); if (/^ws-/.test(wh)) d.Evento = wh; }
     c.querySelectorAll("input, select, textarea").forEach(function(el){
       if (/^(f|p)-(nome|cognome|tel|mail)$/.test(el.id) || el.type === "hidden") return;
       var k = pulisci(etichetta(el));
