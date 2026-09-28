@@ -15,7 +15,8 @@ if(window.ARTYOU_BOOKING_DEFAULT_DATE)d["Data evento"]=window.ARTYOU_BOOKING_DEF
 if(window.ARTYOU_BOOKING_DEFAULT_TIME)d["Ora evento"]=window.ARTYOU_BOOKING_DEFAULT_TIME;
 var rs=document.getElementById("f-risorse"),sr=document.getElementById("f-scelta-rif"),sy=document.getElementById("f-scelta-yep");
 if(rs&&rs.value)d.Risorse=rs.value;
-if(sr&&sr.value)d.Scelte=sr.value;else if(sy&&sy.value)d.Scelte=sy.value;\nvar ny=document.getElementById("f-note-yep");if(ny&&ny.value)d.Note=ny.value;
+if(sr&&sr.value)d.Scelte=sr.value;else if(sy&&sy.value)d.Scelte=sy.value;
+var ny=document.getElementById("f-note-yep");if(ny&&ny.value)d.Note=ny.value;
 document.querySelectorAll("#f-camera,#f-cibo,#f-scuola").forEach(function(el){if(el&&el.value&&el.value.trim())d[el.id.replace(/^f-/,"")]=el.value.trim();});
 return d;
 }
