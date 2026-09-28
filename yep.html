@@ -530,5 +530,58 @@ class Component extends DCLogic {
 <script>window.ARTYOU_BOOKING_MODULE="YEP";window.ARTYOU_BOOKING_DEBUG=true;</script>
 <script src="js/artyou-booking-config.js"></script>
 <script src="js/artyou-booking-v2.js"></script>
+<script>
+(function(){
+  var ids=[
+    "yep-2027-livello-principianti",
+    "yep-2027-livello-intermedi",
+    "yep-2027-livello-avanzati",
+    "yep-2027-livello-tutti"
+  ];
+  function syncYep(){
+    var info=window.ARTYOU_EVENT_INFO||{};
+    var cap=window.ARTYOU_CAP||{};
+    var buttons=Array.from(document.querySelectorAll("button")).filter(function(b){
+      return /Livello\s*[1-4]|YEP 2027\s*[·-]\s*Livello/i.test((b.textContent||""));
+    });
+    ids.forEach(function(id,i){
+      var ev=info[id];
+      if(!ev) return;
+      var b=buttons[i];
+      if(b){
+        var left=b.children&&b.children[0], right=b.children&&b.children[1];
+        if(left && left.children && left.children[0]) left.children[0].textContent=ev.titolo||("Livello "+(i+1));
+        if(left && left.children && left.children[1]) {
+          left.children[1].textContent=ev.descrizione||[ev.data,ev.ora].filter(Boolean).join(" · ")||"";
+        }
+        if(right){
+          var n=Object.prototype.hasOwnProperty.call(cap,id)?Number(cap[id]):Number(ev.liberi);
+          right.textContent=Number.isFinite(n)?(n+" posti liberi"):(ev.stato||"Disponibile");
+        }
+      }
+    });
+
+    var h=Array.from(document.querySelectorAll("h3")).find(function(x){
+      return /I workshop e i loro insegnanti/i.test(x.textContent||"");
+    });
+    if(h){
+      var box=h.nextElementSibling;
+      var cards=box?Array.from(box.querySelectorAll("article")):[];
+      ids.forEach(function(id,i){
+        var ev=info[id], card=cards[i];
+        if(!ev||!card) return;
+        var spans=card.querySelectorAll("span");
+        for(var j=0;j<spans.length;j++){
+          if(/\[Titolo del workshop\]|^Livello\s*[1-4]$/i.test((spans[j].textContent||"").trim())){
+            spans[j].textContent=ev.titolo||spans[j].textContent;
+          }
+        }
+      });
+    }
+  }
+  window.addEventListener("artyou:capacity-updated",syncYep);
+  window.addEventListener("load",function(){setTimeout(syncYep,400);setTimeout(syncYep,1200);});
+})();
+</script>
 </body>
 </html>
