@@ -7,35 +7,40 @@
 <meta name="description" content="Calendario spettacoli, eventi, festival e serate Artyou Roma. Scopri le prossime date e prenota il tuo posto.">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script src="js/support.js"></script>
+<script src="js/enhancements.js"></script>
 <script src="js/artyou-events-config.js"></script>
 <script src="js/artyou-events.js"></script>
 <style>
 :root{--ink:#13181D;--paper:#F6F3EC;--line:#E4DED2;--orange:#F09000;--muted:#626C74;--white:#fff}
-*{box-sizing:border-box}html{background:#13181D}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
-.wrap{max-width:1200px;margin:0 auto;background:var(--paper);min-height:100vh}
-header{background:#13181D;color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:22px;position:sticky;top:0;z-index:20}
-.logo img{height:52px;width:auto;display:block}.nav{display:flex;gap:26px;align-items:center}.nav a{color:#E6EBEE;text-decoration:none;font-weight:700;font-size:15px}.nav a.active{color:#fff;border-bottom:2px solid var(--orange);padding-bottom:5px}
-.hero{padding:76px 64px 44px;background:#fff;border-bottom:1px solid var(--line)}.eyebrow{font-size:13px;letter-spacing:2px;text-transform:uppercase;font-weight:900;color:#1A6E99}.hero h1{font-size:58px;line-height:.98;margin:12px 0 16px;letter-spacing:-1.8px}.hero p{max-width:760px;font-size:19px;line-height:1.55;color:#46515A;margin:0}
-.controls{padding:24px 64px;background:#fff;border-bottom:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap;align-items:center}.filter{border:1px solid #CFC8BA;background:transparent;border-radius:999px;padding:11px 18px;font-weight:800;cursor:pointer}.filter.active{background:#13181D;color:#fff;border-color:#13181D}
-.content{padding:44px 64px 80px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:100%}.poster{height:290px;background:#26343D center/cover no-repeat;position:relative}.badge{position:absolute;top:16px;left:16px;background:#fff;border-radius:14px;padding:9px 12px;min-width:58px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.1)}.badge strong{display:block;font-size:26px;line-height:1}.badge span{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:900}.body{padding:20px;display:flex;flex-direction:column;gap:10px;flex:1}.cat{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;font-weight:900}.body h2{font-size:25px;line-height:1.05;margin:0}.when,.where{font-size:14px;color:var(--muted);line-height:1.45}.desc{font-size:15px;color:#3F474E;line-height:1.5;margin:2px 0 0}.actions{margin-top:auto;padding-top:10px;display:flex;gap:9px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:12px;padding:12px 15px;font-size:14px;font-weight:900}.primary{background:var(--orange);color:#201503}.wa{background:#25D366;color:#0B2E1A}.empty{padding:28px;border:1px dashed #CFC8BA;border-radius:16px;background:#fff;color:var(--muted);text-align:center}.footer{background:#0D1115;color:#9AA5AE;padding:28px 64px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:13px}.footer a{color:#9AA5AE}
+*{box-sizing:border-box}html{background:#C79A2B}body{margin:0;background:#C79A2B;color:var(--ink);font-family:'Instrument Sans','Helvetica Neue',Helvetica,Arial,sans-serif}
+.wrap{width:1200px;max-width:1200px;margin:0 auto;background:var(--paper);min-height:100vh;box-shadow:0 0 36px rgba(44,31,8,.30)}
+header{background:#13181D;color:#fff;padding:20px 120px;display:flex;align-items:center;justify-content:space-between;gap:22px;position:sticky;top:0;z-index:20}
+.logo img{height:56px;width:auto;display:block}.nav{display:flex;gap:36px;align-items:center}.nav a{color:#E6EBEE;text-decoration:none;font-weight:500;font-size:16px}.nav a.active{color:#fff;font-weight:700}
+.hero{padding:88px 120px 54px;background:#fff;border-bottom:1px solid var(--line)}.eyebrow{font-size:13px;letter-spacing:2px;text-transform:uppercase;font-weight:900;color:#1A6E99}.hero h1{font-size:58px;line-height:.98;margin:12px 0 16px;letter-spacing:-1.8px}.hero p{max-width:760px;font-size:19px;line-height:1.55;color:#46515A;margin:0}
+.controls{padding:24px 120px;background:#fff;border-bottom:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap;align-items:center}.filter{border:1px solid #CFC8BA;background:transparent;border-radius:999px;padding:11px 18px;font-weight:800;cursor:pointer}.filter.active{background:#13181D;color:#fff;border-color:#13181D}
+.content{padding:44px 120px 88px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:100%}.poster{height:290px;background:#26343D center/cover no-repeat;position:relative}.badge{position:absolute;top:16px;left:16px;background:#fff;border-radius:14px;padding:9px 12px;min-width:58px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.1)}.badge strong{display:block;font-size:26px;line-height:1}.badge span{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:900}.body{padding:20px;display:flex;flex-direction:column;gap:10px;flex:1}.cat{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;font-weight:900}.body h2{font-size:25px;line-height:1.05;margin:0}.when,.where{font-size:14px;color:var(--muted);line-height:1.45}.desc{font-size:15px;color:#3F474E;line-height:1.5;margin:2px 0 0}.actions{margin-top:auto;padding-top:10px;display:flex;gap:9px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:12px;padding:12px 15px;font-size:14px;font-weight:900}.primary{background:var(--orange);color:#201503}.wa{background:#25D366;color:#0B2E1A}.empty{padding:28px;border:1px dashed #CFC8BA;border-radius:16px;background:#fff;color:var(--muted);text-align:center}.footer{background:#0D1115;color:#9AA5AE;padding:32px 120px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:13px}.footer a{color:#9AA5AE}
 .menuBtn{display:none;background:transparent;border:1px solid #3A444D;color:#fff;border-radius:10px;padding:9px 11px;font-size:20px}
-@media(max-width:900px){.hero,.controls,.content{padding-left:22px;padding-right:22px}.hero{padding-top:48px}.hero h1{font-size:42px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{display:none}.menuBtn{display:block}.nav.open{display:flex;position:absolute;left:0;right:0;top:100%;background:#13181D;flex-direction:column;align-items:stretch;padding:12px 22px 20px;gap:0;border-top:1px solid #2A333B}.nav.open a{padding:13px 0;border-bottom:1px solid #2A333B}.footer{padding:26px 22px}}
-@media(max-width:620px){.grid{grid-template-columns:1fr}.poster{height:330px}.logo img{height:42px}}
+@media(max-width:1199px){html,body{background:#fff}.wrap{width:100%;max-width:100%;box-shadow:none}}\n@media(max-width:900px){header{padding:16px 20px}.hero,.controls,.content{padding-left:20px;padding-right:20px}.hero{padding-top:48px}.hero h1{font-size:42px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{display:none}.menuBtn{display:block}.nav.open{display:flex;position:absolute;left:0;right:0;top:100%;background:#13181D;flex-direction:column;align-items:stretch;padding:12px 22px 20px;gap:0;border-top:1px solid #2A333B}.nav.open a{padding:13px 0;border-bottom:1px solid #2A333B}.footer{padding:26px 22px}}
+@media(max-width:620px){.trialBtn{display:none!important}.grid{grid-template-columns:1fr}.poster{height:330px}.logo img{height:42px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-<a class="logo" href="index.html" aria-label="Artyou Roma Home"><img src="img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a>
+<a class="logo" href="index.html" aria-label="Artyou Roma – Home"><img src="img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a>
 <nav id="nav" class="nav">
-<a class="active" href="spettacoli.html">Spettacoli</a>
+<a class="active" href="index.html#spettacoli">Spettacoli</a>
 <a href="improvvisazione.html">Corsi</a>
 <a href="workshow-corso.html">Workshow</a>
 <a href="index.html#festival">Festival e Altro</a>
 <a href="chi-siamo.html">Chi Siamo</a>
 <a href="index.html#contatti">Contatti</a>
 </nav>
+<div style="display:flex;gap:12px;align-items:center">
+<a href="index.html#prova" class="trialBtn" style="background:#F09000;color:#1C1606;padding:14px 22px;border-radius:999px;font-weight:700;text-decoration:none;font-size:15px">Lezione di prova gratis</a>
 <button id="menuBtn" class="menuBtn" aria-label="Apri menu">☰</button>
+</div>
 </header>
 
 <section class="hero">
