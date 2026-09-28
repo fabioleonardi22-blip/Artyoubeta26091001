@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Spettacoli ed Eventi a Roma | Artyou Roma</title>
-<meta name="viewport" content="width=1440"><script id="artyou-viewport">(function(){try{var w=Math.min(screen.width,screen.height);if(w<=600){var m=document.querySelector('meta[name="viewport"]');m.setAttribute("content","width=device-width, initial-scale=1, viewport-fit=cover");document.documentElement.classList.add("am-mobile");}}catch(e){}})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><script id="artyou-viewport">(function(){try{if(window.matchMedia&&window.matchMedia("(max-width: 820px)").matches){document.documentElement.classList.add("am-mobile");}}catch(e){}})();</script>
 <meta name="description" content="Scopri il calendario di spettacoli, improvvisazione, teatro, stand-up, festival ed eventi Artyou a Roma e prenota il tuo posto.">
 <link rel="canonical" href="https://artyouroma.it/spettacoli/">
 <meta property="og:title" content="Spettacoli ed Eventi a Roma | Artyou Roma">
@@ -60,7 +60,11 @@ footer a{color:#9AA5AE}
 
   }
 @media(max-width:820px){
-  html,body{overflow-x:hidden;background:#F6F3EC}  #artyou-menu-toggle:checked~nav{display:flex;flex-direction:column;align-items:stretch;gap:0;position:absolute;left:0;right:0;top:100%;z-index:1000;background:#13181D;padding:8px 20px 20px;border-top:1px solid #2A333B;box-shadow:0 18px 30px rgba(0,0,0,.35)}
+  html,body{width:100%;max-width:100%;overflow-x:hidden;background:#F6F3EC}
+  body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
+  .hero,.filters,.content,footer{width:100%!important;max-width:100%!important;min-width:0!important;}
+  .grid{width:100%!important;max-width:100%!important;min-width:0!important;}
+  .card{width:100%!important;max-width:100%!important;min-width:0!important;}  #artyou-menu-toggle:checked~nav{display:flex;flex-direction:column;align-items:stretch;gap:0;position:absolute;left:0;right:0;top:100%;z-index:1000;background:#13181D;padding:8px 20px 20px;border-top:1px solid #2A333B;box-shadow:0 18px 30px rgba(0,0,0,.35)}
   #artyou-menu-toggle:checked~nav a{font-size:19px;padding:15px 0;border-bottom:1px solid #2A333B;color:#F6F3EC}
   #artyou-menu-toggle:checked~div .artyou-menu-btn .am-open{display:none}
   #artyou-menu-toggle:checked~div .artyou-menu-btn .am-close{display:block!important}
@@ -322,7 +326,7 @@ function render(){
    var first=e.dates&&e.dates.length?e.dates[0]:{label:"Data da definire"};
    var b=badge(first.label,e.tbd),col=COLORS[e.cat]||["#26343D","#415D6B"];
    var art=document.createElement("article");art.className="card";
-   var posterStyle=e.poster?'background-image:url("'+String(e.poster).replace(/"/g,"%22")+'");':'background-color:'+col[0]+';';
+   var posterStyle=e.poster?'background-image:url('+encodeURI(String(e.poster))+');background-color:'+col[0]+';':'background-color:'+col[0]+';';
    var where=[e.venue,e.addr].filter(Boolean).join(" · ");
    var msg="Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".";
    var detailHref="spettacolo.html#"+encodeURIComponent(e.slug||"");
