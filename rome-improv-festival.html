@@ -321,7 +321,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <button type="button" onClick="{{c.pick}}" class="am-fs-body" style="padding: 11px 16px; border-radius: 999px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer; min-height: 44px;">{{c.label}}</button>
 </sc-for>
 </div><span style="font-size: 13px; color: #555D64;">{{payNote}}</span></div>
-<div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-scuola" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Scuola o gruppo di provenienza <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-scuola" type="text" placeholder="Es. Artyou Roma" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
+<input id="f-evento-id" type="hidden" value="{{eventId}}">\n<input id="f-posti" type="hidden" value="{{bookingSeats}}">\n<div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-scuola" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Scuola o gruppo di provenienza <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-scuola" type="text" placeholder="Es. Artyou Roma" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
 <button type="button" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
 <a target="_blank" rel="noopener" href="{{wa}}" class="am-wrap" style="height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #25D366; color: #0B2E1A; border-radius: 14px; font-weight: 700; font-size: 16px; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.001c-5.523 0-10 4.477-10 10 0 1.762.464 3.479 1.345 4.997L2 22l5.161-1.352a9.953 9.953 0 0 0 4.879 1.253h.005c5.522 0 9.999-4.477 9.999-10 0-2.671-1.04-5.182-2.929-7.07A9.935 9.935 0 0 0 12.04 2Zm0 18.174h-.004a8.172 8.172 0 0 1-4.166-1.14l-.299-.177-3.096.812.827-3.016-.194-.31a8.163 8.163 0 0 1-1.253-4.343c0-4.508 3.669-8.176 8.19-8.176a8.14 8.14 0 0 1 5.79 2.398 8.13 8.13 0 0 1 2.397 5.788c0 4.508-3.669 8.164-8.192 8.164Zm4.484-6.13c-.246-.123-1.454-.718-1.68-.8-.226-.082-.39-.123-.554.123-.164.246-.635.8-.778.964-.144.165-.287.185-.533.062-.246-.123-1.037-.382-1.976-1.22-.73-.65-1.222-1.453-1.365-1.7-.144-.246-.015-.379.108-.501.11-.11.246-.287.369-.43.123-.144.164-.246.246-.41.082-.164.041-.308-.02-.43-.062-.123-.554-1.335-.76-1.828-.2-.48-.404-.415-.554-.423l-.472-.008a.906.906 0 0 0-.656.307c-.226.246-.862.842-.862 2.054 0 1.212.883 2.383 1.006 2.548.123.164 1.74 2.658 4.216 3.727.589.254 1.049.406 1.408.52.591.188 1.13.161 1.556.098.475-.071 1.454-.595 1.66-1.169.205-.574.205-1.066.144-1.169-.062-.102-.226-.164-.472-.287Z"></path></svg> Prenota su WhatsApp</a>
@@ -374,64 +374,143 @@ class Component extends DCLogic {
   }
   renderVals() {
     var self = this, st = this.state || {};
-    var wsCap = this.props.postiWorkshop ?? 16, showCap = this.props.postiSpettacolo ?? 120, maxPer = 6;
+    var maxPer = 6;
     var typeNames = ["Pass festival", "Solo workshop", "Spettacoli"];
     var type = st.type || 0;
-    var wsData = [
-      { label: "[Workshop 1]", sub: "con [Docente] · [Paese]", sold: 10 },
-      { label: "[Workshop 2]", sub: "con [Docente] · [Paese]", sold: 13 },
-      { label: "[Workshop 3]", sub: "con [Docente] · [Paese]", sold: 16 },
-      { label: "[Workshop 4]", sub: "con [Docente] · [Paese]", sold: 4 }
-    ];
-    var evData = [
-      { label: "Venerdì 12 marzo", sub: "Spettacolo serale · [ora]", sold: 60 },
-      { label: "Sabato 13 marzo", sub: "Spettacolo serale · [ora]", sold: 116 },
-      { label: "Domenica 14 marzo", sub: "Spettacolo serale · [ora]", sold: 30 }
-    ];
+    var capMap = window.ARTYOU_CAP || {};
+    var eventMap = window.ARTYOU_EVENT_INFO || {};
+    var keys = Object.keys(eventMap || {});
+
+    function isRif(k, info) {
+      var t = (k + " " + String((info && (info.titolo || info.descrizione || info.tipo)) || "")).toLowerCase();
+      return /(^|[-_ ])rif([-_ ]|$)|rome improv|roma improv|improv festival/.test(t);
+    }
+    function isShow(k, info) {
+      var t = (k + " " + String((info && (info.titolo || info.descrizione || info.tipo)) || "")).toLowerCase();
+      return /spettacolo|show|serata/.test(t);
+    }
+    function isWorkshop(k, info) {
+      var t = (k + " " + String((info && (info.titolo || info.descrizione || info.tipo)) || "")).toLowerCase();
+      return !isShow(k,info) && /workshop|laboratorio|corso/.test(t);
+    }
+    function sortIds(a,b) {
+      var A=eventMap[a]||{}, B=eventMap[b]||{};
+      var oa=Number(A.ordine||9999), ob=Number(B.ordine||9999);
+      if(oa!==ob) return oa-ob;
+      return String(A.data||"").localeCompare(String(B.data||"")) ||
+             String(A.ora||"").localeCompare(String(B.ora||"")) ||
+             a.localeCompare(b);
+    }
+    function labelFor(id, fallback) {
+      var x=eventMap[id]||{};
+      return x.titolo || fallback;
+    }
+    function subFor(id, fallback) {
+      var x=eventMap[id]||{};
+      return x.descrizione || [x.data,x.ora].filter(Boolean).join(" · ") || fallback;
+    }
+    function freeFor(id) {
+      if(Object.prototype.hasOwnProperty.call(capMap,id)) return Math.max(0,Number(capMap[id])||0);
+      var x=eventMap[id]||{};
+      if(typeof x.liberi==="number") return Math.max(0,Number(x.liberi)||0);
+      return null;
+    }
+
+    var wsIds=keys.filter(function(k){return isRif(k,eventMap[k])&&isWorkshop(k,eventMap[k]);}).sort(sortIds);
+    var evIds=keys.filter(function(k){return isRif(k,eventMap[k])&&isShow(k,eventMap[k]);}).sort(sortIds);
+
+    var legacyWs=["rif-workshop-1","rif-workshop-2","rif-workshop-3","rif-workshop-4"];
+    var legacyEv=["rif-spettacolo-venerdi","rif-spettacolo-sabato","rif-spettacolo-domenica"];
+    if(!wsIds.length) wsIds=legacyWs;
+    if(!evIds.length) evIds=legacyEv;
+
+    var wsData=wsIds.map(function(id,i){
+      return {id:id,label:labelFor(id,"Workshop "+(i+1)),sub:subFor(id,"Da configurare nel gestionale")};
+    });
+    var evData=evIds.map(function(id,i){
+      return {id:id,label:labelFor(id,"Spettacolo "+(i+1)),sub:subFor(id,"Da configurare nel gestionale")};
+    });
+
     var ws = st.ws || 0, ev = st.ev || 0;
-    var wsRem = wsData.map(function (w) { return Math.max(0, wsCap - Math.min(wsCap, w.sold)); });
-    var evRem = evData.map(function (e) { return Math.max(0, showCap - Math.min(showCap, e.sold)); });
+    if(ws>=wsData.length) ws=0;
+    if(ev>=evData.length) ev=0;
+
+    var wsRem=wsData.map(function(w){return freeFor(w.id);});
+    var evRem=evData.map(function(e){return freeFor(e.id);});
+
     var isShow = type === 2, isWs = !isShow;
     var rem = isShow ? evRem[ev] : wsRem[ws];
-    var maxAllowed = Math.min(rem, maxPer);
-    var seats = isShow ? Math.max(1, Math.min(st.seats || 2, Math.max(1, maxAllowed))) : 1;
+    var capacityReady = rem !== null && rem !== undefined;
+    var maxAllowed = capacityReady ? Math.min(rem,maxPer) : maxPer;
+    var seats = isShow ? Math.max(1,Math.min(st.seats||2,Math.max(1,maxAllowed))) : 1;
     var pay = st.pay == null ? 1 : st.pay;
-    var types = typeNames.map(function (l, i) { return Object.assign({ label: l, pick: function () { self.setState({ type: i }); } }, self.chip(i === type)); });
-    var wsMeta = [["#2CA8E0", "#0F4A66"], ["#F09000", "#5C3700"], ["#941880", "#4A1040"], ["#28B4A8", "#0E4A45"]];
-    var wsCards = wsData.map(function (w, i) {
-      var on = !isShow && i === ws, full = wsRem[i] === 0;
-      return Object.assign({ n: i + 1, label: w.label, color: wsMeta[i][0], tint: wsMeta[i][1], border: on ? "#13181D" : "#E4DED2",
-        btnLabel: full ? "Completo · lista d’attesa" : (on ? "Selezionato" : "Scegli questo workshop"),
-        btnBg: on ? "#13181D" : "#FFFFFF", btnFg: on ? "#FFFFFF" : "#13181D",
-        pick: function () { self.setState({ ws: i, type: type === 2 ? 1 : type }); } }, self.avail(wsRem[i]));
+
+    var types=typeNames.map(function(l,i){
+      return Object.assign({label:l,pick:function(){self.setState({type:i});}},self.chip(i===type));
     });
-    var workshops = wsData.map(function (w, i) { return Object.assign({ label: w.label, sub: w.sub, pick: function () { self.setState({ ws: i }); } }, self.avail(wsRem[i]), self.row(i === ws)); });
-    var evenings = evData.map(function (e, i) { return Object.assign({ label: e.label, sub: e.sub, pick: function () { self.setState({ ev: i }); } }, self.avail(evRem[i]), self.row(i === ev)); });
-    var payOpts = ["Paga ora online", "Riserva il posto"].map(function (l, i) { return Object.assign({ label: l, pick: function () { self.setState({ pay: i }); } }, self.chip(i === pay)); });
-    var what = isShow ? (seats === 1 ? "1 posto" : seats + " posti") + " per lo spettacolo di " + evData[ev].label.toLowerCase() : typeNames[type] + " · " + wsData[ws].label;
-    var wa = "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare al Rome Improv Festival: " + what + ".");
+
+    var wsMeta=[["#2CA8E0","#0F4A66"],["#F09000","#5C3700"],["#941880","#4A1040"],["#28B4A8","#0E4A45"]];
+    var wsCards=wsData.map(function(w,i){
+      var m=wsMeta[i%wsMeta.length], on=!isShow&&i===ws, n=wsRem[i], full=n===0;
+      var a=(n===null||n===undefined)?{left:"Da configurare",leftColor:"#555D64",leftWeight:500}:self.avail(n);
+      return Object.assign({
+        n:i+1,label:w.label,color:m[0],tint:m[1],border:on?"#13181D":"#E4DED2",
+        btnLabel:full?"Completo · lista d’attesa":(on?"Selezionato":"Scegli questo workshop"),
+        btnBg:on?"#13181D":"#FFFFFF",btnFg:on?"#FFFFFF":"#13181D",
+        pick:function(){self.setState({ws:i,type:type===2?1:type});}
+      },a);
+    });
+
+    var workshops=wsData.map(function(w,i){
+      var n=wsRem[i];
+      var a=(n===null||n===undefined)?{left:"Da configurare",leftColor:"#555D64",leftWeight:500}:self.avail(n);
+      return Object.assign({label:w.label,sub:w.sub,pick:function(){self.setState({ws:i});}},a,self.row(i===ws));
+    });
+
+    var evenings=evData.map(function(e,i){
+      var n=evRem[i];
+      var a=(n===null||n===undefined)?{left:"Da configurare",leftColor:"#555D64",leftWeight:500}:self.avail(n);
+      return Object.assign({label:e.label,sub:e.sub,pick:function(){self.setState({ev:i});}},a,self.row(i===ev));
+    });
+
+    var payOpts=["Paga ora online","Riserva il posto"].map(function(l,i){
+      return Object.assign({label:l,pick:function(){self.setState({pay:i});}},self.chip(i===pay));
+    });
+
+    var eventId=isShow?evData[ev].id:wsData[ws].id;
+    var what=isShow
+      ? (seats===1?"1 posto":seats+" posti")+" per "+evData[ev].label
+      : typeNames[type]+" · "+wsData[ws].label;
+    var wa="https://wa.me/393271881956?text="+encodeURIComponent("Ciao! Vorrei prenotare al Rome Improv Festival: "+what+".");
+
     return {
-      accent: this.props.accent ?? "#F09000",
-      wsCards: wsCards,
-      types: types, workshops: workshops, evenings: evenings, payOpts: payOpts,
-      isWs: isWs, isShow: isShow, showStepper: isShow,
-      seats: seats, maxNote: rem <= maxPer ? "Restano " + rem + " posti" : "Massimo " + maxPer + " a prenotazione",
-      plusOpacity: seats >= maxAllowed ? 0.35 : 1,
-      available: rem > 0, soldOut: rem === 0,
-      soldTitle: isShow ? "Serata esaurita" : "Workshop completo",
-      payNote: pay === 1 ? "Il posto resta bloccato per te per [7 giorni]: ricevi il link per pagare via email." : "Pagamento sicuro con carta o PayPal [da confermare].",
-      ctaLabel: pay === 1 ? "Riserva il posto" : "Prenota e paga · [€]",
-      wa: wa,
-      waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! " + what + " è al completo: potete mettermi in lista d’attesa?"),
-      confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
-      doneTitle: pay === 1 ? "Posto riservato!" : "Prenotazione confermata!",
-      summary: "Rome Improv Festival · " + what + ".",
-      doneNote: pay === 1 ? "Ti abbiamo inviato un’email con il link per completare il pagamento entro [7 giorni]." : "Ti abbiamo inviato un’email con la ricevuta e i dettagli.",
-      minus: function () { self.setState({ seats: Math.max(1, seats - 1) }); },
-      plus: function () { self.setState({ seats: Math.min(maxAllowed, seats + 1) }); },
-      confirm: function () { self.setState({ confirmed: true }); },
-      edit: function () { self.setState({ confirmed: false }); }
+      accent:this.props.accent ?? "#F09000",
+      eventId:eventId,
+      bookingSeats:seats,
+      wsCards:wsCards,
+      types:types,workshops:workshops,evenings:evenings,payOpts:payOpts,
+      isWs:isWs,isShow:isShow,showStepper:isShow,
+      seats:seats,
+      maxNote:!capacityReady?"Disponibilità da configurare":(rem<=maxPer?"Restano "+rem+" posti":"Massimo "+maxPer+" a prenotazione"),
+      plusOpacity:capacityReady&&seats>=maxAllowed?0.35:1,
+      available:capacityReady&&rem>0,
+      soldOut:capacityReady&&rem===0,
+      capacityPending:!capacityReady,
+      soldTitle:isShow?"Serata esaurita":"Workshop completo",
+      payNote:pay===1?"Il posto viene riservato nel gestionale Artyou.":"Pagamento online da configurare.",
+      ctaLabel:pay===1?"Riserva il posto":"Prenota",
+      wa:wa,
+      waWait:"https://wa.me/393271881956?text="+encodeURIComponent("Ciao! "+what+" è al completo: potete mettermi in lista d’attesa?"),
+      confirmed:!!st.confirmed,notConfirmed:!st.confirmed,
+      doneTitle:"Prenotazione confermata!",
+      summary:"Rome Improv Festival · "+what+".",
+      doneNote:"Ti abbiamo inviato un’email con i dettagli della prenotazione.",
+      minus:function(){self.setState({seats:Math.max(1,seats-1)});},
+      plus:function(){self.setState({seats:Math.min(maxAllowed,seats+1)});},
+      confirm:function(){self.setState({confirmed:true});},
+      edit:function(){self.setState({confirmed:false});}
     };
+
   }
 }
 </script>
@@ -440,164 +519,6 @@ class Component extends DCLogic {
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
-<script id="artyou-forms-js">
-(function(){
-  var ENDPOINT = "https://script.google.com/macros/s/AKfycbz7Uj6O7hUQ-X4kOAbeEv9DCYnfcDyZ20LURXtWqZBXvsvey9obP4JJbcbsQMfUEagT7w/exec";
-  var MODULO = "Rome Improv Festival";
-  var WA = "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei informazioni (" + MODULO + ").");
-  var ARANCIO = "rgb(240, 144, 0)";
-
-  function q(id){ return document.getElementById("f-" + id) || document.getElementById("p-" + id); }
-  function testo(el){ return (el && el.innerText || "").replace(/\s+/g, " ").trim(); }
-  function etichetta(el){
-    var L = el.closest("label"); if (L) return testo(L);
-    if (el.id) { var l = document.querySelector('label[for="' + el.id + '"]'); if (l) return testo(l); }
-    var p = el.parentElement;
-    for (var i = 0; i < 3 && p; i++) { var t = p.querySelector("label, span"); if (t && t !== el && testo(t)) return testo(t); p = p.parentElement; }
-    return el.id || "Campo";
-  }
-  function pulisci(k){ return k.replace(/\s*\((facoltativo|obbligatorio)\)\s*/gi, "").replace(/[:*]\s*$/, "").trim(); }
-  function isSubmit(b){
-    if (!b || b.tagName !== "BUTTON" || !q("nome")) return false;
-    if (getComputedStyle(b).backgroundColor !== ARANCIO) return false;
-    var c = b; while (c && !c.contains(q("nome"))) c = c.parentElement;
-    return !!c;
-  }
-  function contenitore(b){ var c = b; while (c && !c.contains(q("nome"))) c = c.parentElement; return c || document.body; }
-  function messaggio(b, tipo, html){
-    document.querySelectorAll(".artyou-form-msg").forEach(function(x){ x.remove(); });
-    if (!html) return null;
-    var box = document.createElement("div");
-    box.className = "artyou-form-msg " + tipo; box.setAttribute("role", tipo === "err" ? "alert" : "status"); box.innerHTML = html;
-    b.insertAdjacentElement("afterend", box);
-    return box;
-  }
-  function scelte(){
-    if (MODULO === "Lezione di prova" || MODULO === "Iscrizioni") return "";
-    var out = [];
-    document.querySelectorAll("button").forEach(function(b){
-      if (b.closest("header, nav, [role=dialog]") || isSubmit(b)) return;
-      var bg = getComputedStyle(b).backgroundColor;
-      if (bg !== "rgb(19, 24, 29)" && bg !== "rgb(230, 243, 250)") return;
-      var t = testo(b);
-      if (!t || /^(Tutti|Tutte|Accetta|Nega)$/i.test(t)) return;
-      if (/^Selezionato$/i.test(t)) return;
-      t = (b.innerText || "").split("\n").map(function(s){return s.trim();}).filter(Boolean)[0] || t;
-      if (out.indexOf(t) === -1) out.push(t);
-    });
-    return out.join(" · ");
-  }
-  function raccogli(b){
-    var c = contenitore(b), d = { Modulo: MODULO };
-    d.Nome = (q("nome").value || "").trim();
-    d.Cognome = (q("cognome") && q("cognome").value || "").trim();
-    d.Telefono = (q("tel") && q("tel").value || "").trim();
-    d.Email = (q("mail") && q("mail").value || "").trim();
-    var hEvento = document.getElementById("f-evento-id");
-    if (hEvento && hEvento.value) d.Evento = hEvento.value;
-    else if (MODULO === "Spettacolo" || MODULO === "Un Vortice di Emozioni") { var h1 = document.querySelector("h1"); if (h1) d.Evento = testo(h1); }
-    var s = scelte(); if (s) d.Scelte = s;
-    var posti = testo(b).match(/(\d+)\s+post/); if (posti) d.Posti = posti[1];
-    if (MODULO === "Iscrizioni") { var m = testo(b).split("·").slice(1).join("·").trim(); if (m) d.Corso = m; }
-    c.querySelectorAll("input, select, textarea").forEach(function(el){
-      if (/^(f|p)-(nome|cognome|tel|mail)$/.test(el.id) || el.type === "hidden") return;
-      var k = pulisci(etichetta(el));
-      if (el.type === "checkbox") {
-        if (/privacy/i.test(k)) k = "Privacy accettata";
-        else if (/foto e video/i.test(k)) k = "Consenso foto e video";
-        else if (/tessera/i.test(k)) k = "Ha già la tessera";
-        d[k] = el.checked ? "Sì" : "No";
-      } else if (el.tagName === "SELECT") {
-        d[k] = el.options[el.selectedIndex] ? el.options[el.selectedIndex].text : el.value;
-      } else if ((el.value || "").trim()) {
-        d[k] = el.value.trim();
-      }
-    });
-    var pagaEl = document.getElementById("f-paga-online"), prezzoEl = document.getElementById("f-prezzo");
-    var prezzo = prezzoEl ? parseFloat(prezzoEl.value) : NaN;
-    if (pagaEl && pagaEl.value === "true" && !isNaN(prezzo) && prezzo > 0) {
-      d.Pagamento = "PayPal (online)"; d.Importo = (prezzo * (parseInt(d.Posti, 10) || 1)).toFixed(2);
-    } else { d.Pagamento = "In cassa"; }
-    var hp = c.querySelector("input[name=_hp]"); d._hp = hp ? hp.value : "";
-    return d;
-  }
-  function valida(b, d){
-    var errori = [];
-    [["nome","il nome"],["cognome","il cognome"],["mail","un’email valida"],["tel","un numero di telefono valido"]].forEach(function(x){
-      var el = q(x[0]); if (!el) return;
-      var v = (el.value || "").trim(), ok = !!v;
-      if (x[0] === "mail") ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
-      if (x[0] === "tel") ok = v.replace(/\D/g, "").length >= 8;
-      el.classList.toggle("artyou-field-err", !ok);
-      if (!ok) errori.push(x[1]);
-    });
-    var priv = null;
-    contenitore(b).querySelectorAll("input[type=checkbox]").forEach(function(el){ if (/privacy/i.test(etichetta(el))) priv = el; });
-    if (priv && !priv.checked) { errori.push("l’accettazione della privacy policy"); priv.classList.add("artyou-field-err"); }
-    else if (priv) priv.classList.remove("artyou-field-err");
-    return errori;
-  }
-  function trappola(){
-    var n = q("nome"); if (!n) return;
-    var c = n.parentElement; if (!c || c.querySelector("input[name=_hp]")) return;
-    var i = document.createElement("input"); i.name = "_hp"; i.tabIndex = -1; i.autocomplete = "off"; i.setAttribute("aria-hidden", "true");
-    i.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;opacity:0;";
-    c.appendChild(i);
-  }
-  document.addEventListener("focusin", trappola);
-  document.addEventListener("input", function(e){ if (e.target.classList) e.target.classList.remove("artyou-field-err"); }, true);
-  document.addEventListener("change", function(e){ if (e.target.classList) e.target.classList.remove("artyou-field-err"); }, true);
-
-  document.addEventListener("click", function(e){
-    var b = e.target.closest && e.target.closest("button");
-    if (!isSubmit(b)) return;
-    if (b.getAttribute("data-artyou-ok") === "1") { b.removeAttribute("data-artyou-ok"); return; }
-    e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-    if (b.getAttribute("data-artyou-busy") === "1") return;
-    trappola();
-    var d = raccogli(b);
-    var errori = valida(b, d);
-    if (errori.length) { messaggio(b, "err", "Per inviare manca " + errori.join(", ") + "."); return; }
-    if (!ENDPOINT) { messaggio(b, "err", "Le prenotazioni online saranno attive a breve. Nel frattempo <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a>."); return; }
-    var ppWin = (d.Pagamento === "PayPal (online)") ? window.open("", "_blank") : null;
-    b.setAttribute("data-artyou-busy", "1"); b.style.opacity = "0.6";
-    messaggio(b, "wait", "Invio in corso…");
-    fetch(ENDPOINT, { method: "POST", body: JSON.stringify(d) })
-      .then(function(r){ return r.json(); })
-      .then(function(res){
-        if (res && res.ok) {
-          if (ppWin) {
-            var h1 = document.querySelector("h1");
-            var voce = (h1 ? testo(h1) : MODULO) + (d.Scelte ? " – " + d.Scelte : "");
-            var ppUrl = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=" + encodeURIComponent("info@artyouroma.it") +
-              "&item_name=" + encodeURIComponent(voce) + "&amount=" + parseFloat(d.Importo).toFixed(2) + "&currency_code=EUR&no_shipping=1";
-            try { ppWin.location.href = ppUrl; } catch (e) {}
-            messaggio(b, "wait", "Prenotazione registrata! Ti abbiamo aperto <b>PayPal</b> in una nuova scheda per pagare <b>" + d.Importo.replace(".", ",") + " €</b>. Se non si apre, <a href=\"" + ppUrl + "\" target=\"_blank\" rel=\"noopener\">clicca qui</a>.");
-            return;
-          }
-          messaggio(b, "", ""); b.setAttribute("data-artyou-ok", "1"); b.click(); return;
-        }
-        if (res && res.errore === "esaurito") {
-          if (ppWin) { try { ppWin.close(); } catch (e) {} }
-          if (d.Evento && typeof res.liberi === "number") { window.ARTYOU_CAP = window.ARTYOU_CAP || {}; window.ARTYOU_CAP[d.Evento] = res.liberi; window.dispatchEvent(new Event("hashchange")); }
-          messaggio(b, "err", res.liberi > 0 ? "Nel frattempo sono rimasti solo " + res.liberi + " posti: riduci il numero di posti oppure scegli un’altra data." : "Ci dispiace, i posti per questa data sono appena esauriti. Scegli un’altra data oppure <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a> per la lista d’attesa.");
-          return;
-        }
-        throw new Error(res && res.errore || "errore");
-      })
-      .catch(function(){
-        if (ppWin) { try { ppWin.close(); } catch (e) {} }
-        messaggio(b, "err", "Non siamo riusciti a inviare la richiesta. Riprova tra poco oppure <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a>.");
-      })
-      .then(function(){ b.removeAttribute("data-artyou-busy"); b.style.opacity = ""; });
-  }, true);
-
-  if (ENDPOINT) {
-    fetch(ENDPOINT + "?disponibilita=1").then(function(r){ return r.json(); }).then(function(res){
-      if (res && res.disponibilita) { window.ARTYOU_CAP = Object.assign({}, window.ARTYOU_CAP, res.disponibilita); window.dispatchEvent(new Event("hashchange")); }
-    }).catch(function(){});
-  }
-})();
-</script>
+<script>window.ARTYOU_BOOKING_MODULE="Rome Improv Festival";window.ARTYOU_BOOKING_DEBUG=true;</script>\n<script src="js/artyou-booking-config.js"></script>\n<script src="js/artyou-booking-v2.js"></script>
 </body>
 </html>
