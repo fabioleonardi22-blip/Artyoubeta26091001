@@ -79,6 +79,26 @@ h1 span{color:#F09000}
 .cart-summary p{font-size:12px;line-height:1.45;color:#6A7279}
 .photo-placeholder{opacity:.72}
 @media(max-width:560px){.shop-head{align-items:flex-start;flex-direction:column}.product-options{grid-template-columns:1fr}}
+
+.card{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(19,24,29,.10);border-color:#D7CBBB}
+.photo{background:linear-gradient(180deg,#F3EFE7 0%,#EAE4DA 100%);overflow:hidden}
+.photo:after{content:"";position:absolute;inset:auto -35px -45px auto;width:130px;height:130px;border-radius:50%;background:rgba(240,144,0,.10)}
+.merch-status{position:absolute;top:14px;right:14px;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}
+.merch-status.new{background:#FFF1CF;color:#875500}.merch-status.low{background:#FCE8EA;color:#8E2335}.merch-status.best{background:#E9F4FA;color:#0B6F94}
+.color-picker{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.color-label{font-size:12px;font-weight:800;color:#555D64;margin-right:2px}
+.color-dot{width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #CFC8BA;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.color-dot:hover{transform:scale(1.08)}
+.color-dot.active{box-shadow:0 0 0 3px #F09000}
+.size-picker{display:flex;gap:7px;flex-wrap:wrap}
+.size-btn{min-width:38px;border:1px solid #D7D0C3;background:#fff;color:#13181D;border-radius:9px;padding:8px 9px;font-weight:700;font-size:12px;cursor:pointer}
+.size-btn.active{background:#13181D;color:#fff;border-color:#13181D}
+.variant-block{display:flex;flex-direction:column;gap:8px;margin-top:2px}
+.btn{transition:transform .15s ease,background .15s ease,box-shadow .15s ease;box-shadow:0 7px 16px rgba(240,144,0,.18)}
+.btn:hover{background:#DD8200;transform:translateY(-1px)}
+.price{font-family:'Bricolage Grotesque',Georgia,sans-serif}
+.photo-placeholder{font-weight:700;color:#8C8479;z-index:1}
 </style>
 </head>
 <body>
@@ -146,13 +166,14 @@ h1 span{color:#F09000}
 <script>
 (function(){
   const PRODUCTS=[
-    {id:"tee-logo",cat:"tshirt",badge:"T-shirt",name:"T-shirt Artyou Logo",price:20,colors:["Nero","Bianco","Ocra"],sizes:["S","M","L","XL"],stock:18},
-    {id:"tee-improv",cat:"tshirt",badge:"T-shirt",name:"T-shirt Improv",price:22,colors:["Nero","Bordeaux"],sizes:["S","M","L","XL"],stock:12},
-    {id:"hoodie-classic",cat:"felpe",badge:"Felpa",name:"Felpa Artyou Classic",price:42,colors:["Nero","Grigio"],sizes:["S","M","L","XL"],stock:9},
-    {id:"pants-stage",cat:"pantaloni",badge:"Pantaloni",name:"Pantaloni Stage",price:34,colors:["Nero"],sizes:["S","M","L","XL"],stock:11},
-    {id:"socks-grip",cat:"calzini",badge:"Calzini",name:"Calzini antiscivolo Artyou",price:12,colors:["Nero","Arancio"],sizes:["35-38","39-42","43-46"],stock:24},
-    {id:"hoodie-festival",cat:"felpe",badge:"Felpa",name:"Felpa Festival",price:45,colors:["Bordeaux","Nero"],sizes:["S","M","L","XL"],stock:7}
+    {id:"tee-logo",cat:"tshirt",badge:"T-shirt",status:"best",statusLabel:"Best seller",name:"T-shirt Artyou Logo",price:20,colors:["Nero","Bianco","Ocra"],sizes:["S","M","L","XL"],stock:18},
+    {id:"tee-improv",cat:"tshirt",badge:"T-shirt",status:"new",statusLabel:"Nuovo",name:"T-shirt Improv",price:22,colors:["Nero","Bordeaux"],sizes:["S","M","L","XL"],stock:12},
+    {id:"hoodie-classic",cat:"felpe",badge:"Felpa",status:"low",statusLabel:"Pochi pezzi",name:"Felpa Artyou Classic",price:42,colors:["Nero","Grigio"],sizes:["S","M","L","XL"],stock:9},
+    {id:"pants-stage",cat:"pantaloni",badge:"Pantaloni",status:"",statusLabel:"",name:"Pantaloni Stage",price:34,colors:["Nero"],sizes:["S","M","L","XL"],stock:11},
+    {id:"socks-grip",cat:"calzini",badge:"Calzini",status:"best",statusLabel:"Best seller",name:"Calzini antiscivolo Artyou",price:12,colors:["Nero","Arancio"],sizes:["35-38","39-42","43-46"],stock:24},
+    {id:"hoodie-festival",cat:"felpe",badge:"Felpa",status:"new",statusLabel:"Nuovo",name:"Felpa Festival",price:45,colors:["Bordeaux","Nero"],sizes:["S","M","L","XL"],stock:7}
   ];
+  const COLOR_HEX={Nero:"#151719",Bianco:"#F7F5EF",Ocra:"#C79A2B",Bordeaux:"#7A1631",Grigio:"#8F969B",Arancio:"#F09000"};
   const cart=[];
   const grid=document.getElementById("productGrid");
   const count=document.getElementById("cartCount");
@@ -162,14 +183,15 @@ h1 span{color:#F09000}
 
   function euro(v){return new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"}).format(v);}
   function card(p){
-    const colors=p.colors.map(x=>'<option>'+x+'</option>').join("");
-    const sizes=p.sizes.map(x=>'<option>'+x+'</option>').join("");
-    return '<article class="card" data-cat="'+p.cat+'">'+
-      '<div class="photo"><span class="badge">'+p.badge+'</span><span class="photo-placeholder">Foto prodotto</span></div>'+
+    const colorDots=p.colors.map((x,i)=>'<button type="button" class="color-dot'+(i===0?' active':'')+'" data-color="'+x+'" title="'+x+'" aria-label="'+x+'" style="background:'+(COLOR_HEX[x]||'#ccc')+'"></button>').join("");
+    const sizes=p.sizes.map((x,i)=>'<button type="button" class="size-btn'+(i===0?' active':'')+'" data-size="'+x+'">'+x+'</button>').join("");
+    const status=p.statusLabel?'<span class="merch-status '+p.status+'">'+p.statusLabel+'</span>':'';
+    return '<article class="card" data-cat="'+p.cat+'" data-product="'+p.id+'" data-selected-color="'+p.colors[0]+'" data-selected-size="'+p.sizes[0]+'">'+
+      '<div class="photo"><span class="badge">'+p.badge+'</span>'+status+'<span class="photo-placeholder">Foto prodotto</span></div>'+
       '<div class="body"><div class="type">Artyou Original</div><h3 class="title">'+p.name+'</h3>'+
-      '<div class="product-options"><label>Colore<select data-role="color">'+colors+'</select></label><label>Taglia<select data-role="size">'+sizes+'</select></label></div>'+
+      '<div class="variant-block"><div class="color-picker"><span class="color-label">Colore</span>'+colorDots+'</div><div class="size-picker">'+sizes+'</div></div>'+
       '<div class="stock">'+p.stock+' disponibili</div>'+
-      '<div class="bottom"><span class="price">'+euro(p.price)+'</span><button class="btn" type="button" data-add="'+p.id+'">Aggiungi</button></div></div></article>';
+      '<div class="bottom"><span class="price">'+euro(p.price)+'</span><button class="btn" type="button" data-add="'+p.id+'">Aggiungi al carrello</button></div></div></article>';
   }
   function render(filter){
     grid.innerHTML=PRODUCTS.filter(p=>filter==="all"||p.cat===filter).map(card).join("");
@@ -185,9 +207,19 @@ h1 span{color:#F09000}
     document.querySelectorAll("#merchTabs .tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");render(b.dataset.filter);
   });
   grid.addEventListener("click",e=>{
+    const dot=e.target.closest("[data-color]");
+    if(dot){
+      const card=dot.closest(".card");
+      card.querySelectorAll(".color-dot").forEach(x=>x.classList.remove("active"));dot.classList.add("active");card.dataset.selectedColor=dot.dataset.color;return;
+    }
+    const size=e.target.closest("[data-size]");
+    if(size){
+      const card=size.closest(".card");
+      card.querySelectorAll(".size-btn").forEach(x=>x.classList.remove("active"));size.classList.add("active");card.dataset.selectedSize=size.dataset.size;return;
+    }
     const b=e.target.closest("[data-add]");if(!b)return;
-    const p=PRODUCTS.find(x=>x.id===b.dataset.add);const card=b.closest(".card");
-    const color=card.querySelector('[data-role="color"]').value,size=card.querySelector('[data-role="size"]').value;
+    const p=PRODUCTS.find(x=>x.id===b.dataset.add),card=b.closest(".card");
+    const color=card.dataset.selectedColor,size=card.dataset.selectedSize;
     const same=cart.find(x=>x.id===p.id&&x.color===color&&x.size===size);
     if(same)same.qty++;else cart.push({id:p.id,name:p.name,price:p.price,color,size,qty:1});
     renderCart();drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");
