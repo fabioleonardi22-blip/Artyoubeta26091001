@@ -339,9 +339,13 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <span class="am-fs-body" style="font-size: 15px; font-weight: 700; color: #6E1260;">Anticipo online, saldo in cassa</span>
 <span class="am-fs-body" style="font-size: 14px; line-height: 1.5; color: #3F474E;">{{payNote}}</span>
 </div>
+<input id="f-evento-id" type="hidden" value="">
+<input id="f-posti" type="hidden" value="2">
+<input id="f-paga-online" type="hidden" value="false">
+<input id="f-pagamento-modalita" type="hidden" value="Anticipo online, saldo in cassa">
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-allievo" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Chi vieni a vedere? <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-allievo" type="text" placeholder="Nome dell’allievo o della classe" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
-<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
-<button type="button" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
+<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input id="f-privacy" type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
+<button type="button" data-artyou-submit="1" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
 <a target="_blank" rel="noopener" href="{{wa}}" class="am-wrap" style="height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #25D366; color: #0B2E1A; border-radius: 14px; font-weight: 700; font-size: 16px; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.001c-5.523 0-10 4.477-10 10 0 1.762.464 3.479 1.345 4.997L2 22l5.161-1.352a9.953 9.953 0 0 0 4.879 1.253h.005c5.522 0 9.999-4.477 9.999-10 0-2.671-1.04-5.182-2.929-7.07A9.935 9.935 0 0 0 12.04 2Zm0 18.174h-.004a8.172 8.172 0 0 1-4.166-1.14l-.299-.177-3.096.812.827-3.016-.194-.31a8.163 8.163 0 0 1-1.253-4.343c0-4.508 3.669-8.176 8.19-8.176a8.14 8.14 0 0 1 5.79 2.398 8.13 8.13 0 0 1 2.397 5.788c0 4.508-3.669 8.164-8.192 8.164Zm4.484-6.13c-.246-.123-1.454-.718-1.68-.8-.226-.082-.39-.123-.554.123-.164.246-.635.8-.778.964-.144.165-.287.185-.533.062-.246-.123-1.037-.382-1.976-1.22-.73-.65-1.222-1.453-1.365-1.7-.144-.246-.015-.379.108-.501.11-.11.246-.287.369-.43.123-.144.164-.246.246-.41.082-.164.041-.308-.02-.43-.062-.123-.554-1.335-.76-1.828-.2-.48-.404-.415-.554-.423l-.472-.008a.906.906 0 0 0-.656.307c-.226.246-.862.842-.862 2.054 0 1.212.883 2.383 1.006 2.548.123.164 1.74 2.658 4.216 3.727.589.254 1.049.406 1.408.52.591.188 1.13.161 1.556.098.475-.071 1.454-.595 1.66-1.169.205-.574.205-1.066.144-1.169-.062-.102-.226-.164-.472-.287Z"></path></svg> Prenota su WhatsApp</a>
 </div>
 </sc-if>
@@ -439,163 +443,170 @@ class Component extends DCLogic {
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
-<script id="artyou-forms-js">
+
+
+<script>window.ARTYOU_BOOKING_MODULE="Un Vortice di Emozioni";window.ARTYOU_BOOKING_DEBUG=true;</script>
+<script src="/js/artyou-booking-config.js?v=20260929-vortice"></script>
+<script src="/js/artyou-booking-v2.js?v=20260929-vortice-live"></script>
+<script id="vortice-live-booking">
 (function(){
-  var ENDPOINT = "https://script.google.com/macros/s/AKfycbz7Uj6O7hUQ-X4kOAbeEv9DCYnfcDyZ20LURXtWqZBXvsvey9obP4JJbcbsQMfUEagT7w/exec";
-  var MODULO = "Un Vortice di Emozioni";
-  var WA = "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei informazioni (" + MODULO + ").");
-  var ARANCIO = "rgb(240, 144, 0)";
-
-  function q(id){ return document.getElementById("f-" + id) || document.getElementById("p-" + id); }
-  function testo(el){ return (el && el.innerText || "").replace(/\s+/g, " ").trim(); }
-  function etichetta(el){
-    var L = el.closest("label"); if (L) return testo(L);
-    if (el.id) { var l = document.querySelector('label[for="' + el.id + '"]'); if (l) return testo(l); }
-    var p = el.parentElement;
-    for (var i = 0; i < 3 && p; i++) { var t = p.querySelector("label, span"); if (t && t !== el && testo(t)) return testo(t); p = p.parentElement; }
-    return el.id || "Campo";
+  function norm(s){return String(s||"").toLowerCase();}
+  function dateKey(x){return String((x&&x.data)||"");}
+  function timeKey(x){return String((x&&x.ora)||"");}
+  function isVortice(k,x){
+    var t=norm(k+" "+(x&&((x.titolo||"")+" "+(x.descrizione||"")+" "+(x.tipo||""))));
+    var d=dateKey(x);
+    return /vortice|met[aà] anno|spettacol[oi].*alliev|alliev.*spettacol/.test(t) ||
+      /^2027-02-(1[5-9]|2[0-2])/.test(d);
   }
-  function pulisci(k){ return k.replace(/\s*\((facoltativo|obbligatorio)\)\s*/gi, "").replace(/[:*]\s*$/, "").trim(); }
-  function isSubmit(b){
-    if (!b || b.tagName !== "BUTTON" || !q("nome")) return false;
-    if (getComputedStyle(b).backgroundColor !== ARANCIO) return false;
-    var c = b; while (c && !c.contains(q("nome"))) c = c.parentElement;
-    return !!c;
-  }
-  function contenitore(b){ var c = b; while (c && !c.contains(q("nome"))) c = c.parentElement; return c || document.body; }
-  function messaggio(b, tipo, html){
-    document.querySelectorAll(".artyou-form-msg").forEach(function(x){ x.remove(); });
-    if (!html) return null;
-    var box = document.createElement("div");
-    box.className = "artyou-form-msg " + tipo; box.setAttribute("role", tipo === "err" ? "alert" : "status"); box.innerHTML = html;
-    b.insertAdjacentElement("afterend", box);
-    return box;
-  }
-  function scelte(){
-    if (MODULO === "Lezione di prova" || MODULO === "Iscrizioni") return "";
-    var out = [];
-    document.querySelectorAll("button").forEach(function(b){
-      if (b.closest("header, nav, [role=dialog]") || isSubmit(b)) return;
-      var bg = getComputedStyle(b).backgroundColor;
-      if (bg !== "rgb(19, 24, 29)" && bg !== "rgb(230, 243, 250)") return;
-      var t = testo(b);
-      if (!t || /^(Tutti|Tutte|Accetta|Nega)$/i.test(t)) return;
-      if (/^Selezionato$/i.test(t)) return;
-      t = (b.innerText || "").split("\n").map(function(s){return s.trim();}).filter(Boolean)[0] || t;
-      if (out.indexOf(t) === -1) out.push(t);
+  function sortIds(ids,info){
+    return ids.sort(function(a,b){
+      var A=info[a]||{},B=info[b]||{};
+      return dateKey(A).localeCompare(dateKey(B)) || timeKey(A).localeCompare(timeKey(B)) || a.localeCompare(b);
     });
-    return out.join(" · ");
   }
-  function raccogli(b){
-    var c = contenitore(b), d = { Modulo: MODULO };
-    d.Nome = (q("nome").value || "").trim();
-    d.Cognome = (q("cognome") && q("cognome").value || "").trim();
-    d.Telefono = (q("tel") && q("tel").value || "").trim();
-    d.Email = (q("mail") && q("mail").value || "").trim();
-    var hEvento = document.getElementById("f-evento-id");
-    if (hEvento && hEvento.value) d.Evento = hEvento.value;
-    else if (MODULO === "Spettacolo" || MODULO === "Un Vortice di Emozioni") { var h1 = document.querySelector("h1"); if (h1) d.Evento = testo(h1); }
-    var s = scelte(); if (s) d.Scelte = s;
-    var posti = testo(b).match(/(\d+)\s+post/); if (posti) d.Posti = posti[1];
-    if (MODULO === "Iscrizioni") { var m = testo(b).split("·").slice(1).join("·").trim(); if (m) d.Corso = m; }
-    c.querySelectorAll("input, select, textarea").forEach(function(el){
-      if (/^(f|p)-(nome|cognome|tel|mail)$/.test(el.id) || el.type === "hidden") return;
-      var k = pulisci(etichetta(el));
-      if (el.type === "checkbox") {
-        if (/privacy/i.test(k)) k = "Privacy accettata";
-        else if (/foto e video/i.test(k)) k = "Consenso foto e video";
-        else if (/tessera/i.test(k)) k = "Ha già la tessera";
-        d[k] = el.checked ? "Sì" : "No";
-      } else if (el.tagName === "SELECT") {
-        d[k] = el.options[el.selectedIndex] ? el.options[el.selectedIndex].text : el.value;
-      } else if ((el.value || "").trim()) {
-        d[k] = el.value.trim();
+  function fmtDate(iso){
+    var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso||""));
+    if(!m)return "";
+    var days=["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
+    var dt=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
+    return days[dt.getDay()]+" "+Number(m[3])+" febbraio";
+  }
+  function freeFor(id,info,cap){
+    if(Object.prototype.hasOwnProperty.call(cap,id))return Math.max(0,Number(cap[id])||0);
+    var x=info[id]||{};
+    if(typeof x.liberi==="number")return Math.max(0,Number(x.liberi)||0);
+    return null;
+  }
+  function status(n){
+    if(n===null||n===undefined)return "Caricamento…";
+    if(n===0)return "Completo";
+    if(n===1)return "1 posto libero";
+    return n+" posti liberi";
+  }
+  function sync(){
+    var info=window.ARTYOU_EVENT_INFO||{},cap=window.ARTYOU_CAP||{};
+    var ids=sortIds(Object.keys(info).filter(function(k){return isVortice(k,info[k]);}),info);
+    if(!ids.length)return;
+
+    // group events by date, max two shows per day
+    var byDate={};
+    ids.forEach(function(id){
+      var d=dateKey(info[id])||"";
+      (byDate[d]||(byDate[d]=[])).push(id);
+    });
+    Object.keys(byDate).forEach(function(d){byDate[d]=sortIds(byDate[d],info).slice(0,2);});
+    var dates=Object.keys(byDate).sort().slice(0,8);
+
+    // Left calendar rows
+    var calHeading=Array.from(document.querySelectorAll("h2")).find(function(h){return /Il calendario degli spettacoli/i.test(h.textContent||"");});
+    var calWrap=calHeading&&calHeading.parentElement?calHeading.parentElement.querySelector('div[style*="flex-direction: column"][style*="gap: 14px"]'):null;
+    var rows=calWrap?Array.from(calWrap.children):[];
+    dates.forEach(function(d,di){
+      var row=rows[di]; if(!row)return;
+      var dayBox=row.children&&row.children[0];
+      if(dayBox){
+        var spans=dayBox.querySelectorAll("span");
+        var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d);
+        if(m&&spans[0])spans[0].textContent=String(Number(m[3]));
+        if(m&&spans[2])spans[2].textContent=fmtDate(d).split(" ")[0].slice(0,3);
       }
-    });
-    var pagaEl = document.getElementById("f-paga-online"), prezzoEl = document.getElementById("f-prezzo");
-    var prezzo = prezzoEl ? parseFloat(prezzoEl.value) : NaN;
-    if (pagaEl && pagaEl.value === "true" && !isNaN(prezzo) && prezzo > 0) {
-      d.Pagamento = "PayPal (online)"; d.Importo = (prezzo * (parseInt(d.Posti, 10) || 1)).toFixed(2);
-    } else { d.Pagamento = "In cassa"; }
-    var hp = c.querySelector("input[name=_hp]"); d._hp = hp ? hp.value : "";
-    return d;
-  }
-  function valida(b, d){
-    var errori = [];
-    [["nome","il nome"],["cognome","il cognome"],["mail","un’email valida"],["tel","un numero di telefono valido"]].forEach(function(x){
-      var el = q(x[0]); if (!el) return;
-      var v = (el.value || "").trim(), ok = !!v;
-      if (x[0] === "mail") ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
-      if (x[0] === "tel") ok = v.replace(/\D/g, "").length >= 8;
-      el.classList.toggle("artyou-field-err", !ok);
-      if (!ok) errori.push(x[1]);
-    });
-    var priv = null;
-    contenitore(b).querySelectorAll("input[type=checkbox]").forEach(function(el){ if (/privacy/i.test(etichetta(el))) priv = el; });
-    if (priv && !priv.checked) { errori.push("l’accettazione della privacy policy"); priv.classList.add("artyou-field-err"); }
-    else if (priv) priv.classList.remove("artyou-field-err");
-    return errori;
-  }
-  function trappola(){
-    var n = q("nome"); if (!n) return;
-    var c = n.parentElement; if (!c || c.querySelector("input[name=_hp]")) return;
-    var i = document.createElement("input"); i.name = "_hp"; i.tabIndex = -1; i.autocomplete = "off"; i.setAttribute("aria-hidden", "true");
-    i.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;opacity:0;";
-    c.appendChild(i);
-  }
-  document.addEventListener("focusin", trappola);
-  document.addEventListener("input", function(e){ if (e.target.classList) e.target.classList.remove("artyou-field-err"); }, true);
-  document.addEventListener("change", function(e){ if (e.target.classList) e.target.classList.remove("artyou-field-err"); }, true);
-
-  document.addEventListener("click", function(e){
-    var b = e.target.closest && e.target.closest("button");
-    if (!isSubmit(b)) return;
-    if (b.getAttribute("data-artyou-ok") === "1") { b.removeAttribute("data-artyou-ok"); return; }
-    e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-    if (b.getAttribute("data-artyou-busy") === "1") return;
-    trappola();
-    var d = raccogli(b);
-    var errori = valida(b, d);
-    if (errori.length) { messaggio(b, "err", "Per inviare manca " + errori.join(", ") + "."); return; }
-    if (!ENDPOINT) { messaggio(b, "err", "Le prenotazioni online saranno attive a breve. Nel frattempo <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a>."); return; }
-    var ppWin = (d.Pagamento === "PayPal (online)") ? window.open("", "_blank") : null;
-    b.setAttribute("data-artyou-busy", "1"); b.style.opacity = "0.6";
-    messaggio(b, "wait", "Invio in corso…");
-    fetch(ENDPOINT, { method: "POST", body: JSON.stringify(d) })
-      .then(function(r){ return r.json(); })
-      .then(function(res){
-        if (res && res.ok) {
-          if (ppWin) {
-            var h1 = document.querySelector("h1");
-            var voce = (h1 ? testo(h1) : MODULO) + (d.Scelte ? " – " + d.Scelte : "");
-            var ppUrl = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=" + encodeURIComponent("info@artyouroma.it") +
-              "&item_name=" + encodeURIComponent(voce) + "&amount=" + parseFloat(d.Importo).toFixed(2) + "&currency_code=EUR&no_shipping=1";
-            try { ppWin.location.href = ppUrl; } catch (e) {}
-            messaggio(b, "wait", "Prenotazione registrata! Ti abbiamo aperto <b>PayPal</b> in una nuova scheda per pagare <b>" + d.Importo.replace(".", ",") + " €</b>. Se non si apre, <a href=\"" + ppUrl + "\" target=\"_blank\" rel=\"noopener\">clicca qui</a>.");
-            return;
-          }
-          messaggio(b, "", ""); b.setAttribute("data-artyou-ok", "1"); b.click(); return;
+      var btns=Array.from(row.querySelectorAll("button"));
+      byDate[d].forEach(function(id,si){
+        var b=btns[si]; if(!b)return;
+        var x=info[id]||{}, parts=b.querySelectorAll("span");
+        // structural spans inside button
+        var textWrap=b.children&&b.children[1];
+        if(textWrap){
+          var s=textWrap.children;
+          if(s[0])s[0].textContent=si===0?"Primo spettacolo":"Secondo spettacolo";
+          if(s[1])s[1].textContent=x.ora||"";
+          if(s[2])s[2].textContent=x.titolo||("Spettacolo "+(si+1));
+          if(s[3])s[3].textContent=x.descrizione||"";
+          if(s[4])s[4].textContent=status(freeFor(id,info,cap));
         }
-        if (res && res.errore === "esaurito") {
-          if (ppWin) { try { ppWin.close(); } catch (e) {} }
-          if (d.Evento && typeof res.liberi === "number") { window.ARTYOU_CAP = window.ARTYOU_CAP || {}; window.ARTYOU_CAP[d.Evento] = res.liberi; window.dispatchEvent(new Event("hashchange")); }
-          messaggio(b, "err", res.liberi > 0 ? "Nel frattempo sono rimasti solo " + res.liberi + " posti: riduci il numero di posti oppure scegli un’altra data." : "Ci dispiace, i posti per questa data sono appena esauriti. Scegli un’altra data oppure <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a> per la lista d’attesa.");
-          return;
-        }
-        throw new Error(res && res.errore || "errore");
-      })
-      .catch(function(){
-        if (ppWin) { try { ppWin.close(); } catch (e) {} }
-        messaggio(b, "err", "Non siamo riusciti a inviare la richiesta. Riprova tra poco oppure <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a>.");
-      })
-      .then(function(){ b.removeAttribute("data-artyou-busy"); b.style.opacity = ""; });
-  }, true);
+        b.dataset.eventId=id;
+        b.onclick=function(){
+          var h=document.getElementById("f-evento-id");if(h)h.value=id;
+          setTimeout(sync,0);
+        };
+      });
+      // Hide unused second button if only one event exists
+      btns.forEach(function(b,si){b.style.display=si<byDate[d].length?"":"none";});
+    });
+    rows.forEach(function(r,i){r.style.display=i<dates.length?"":"none";});
 
-  if (ENDPOINT) {
-    fetch(ENDPOINT + "?disponibilita=1").then(function(r){ return r.json(); }).then(function(res){
-      if (res && res.disponibilita) { window.ARTYOU_CAP = Object.assign({}, window.ARTYOU_CAP, res.disponibilita); window.dispatchEvent(new Event("hashchange")); }
-    }).catch(function(){});
+    // Right evening buttons
+    var choose=Array.from(document.querySelectorAll("span")).find(function(s){return (s.textContent||"").trim()==="Scegli la serata";});
+    var list=choose&&choose.parentElement?choose.parentElement.querySelector("div"):null;
+    var eBtns=list?Array.from(list.querySelectorAll("button")):[];
+    dates.forEach(function(d,i){
+      var b=eBtns[i];if(!b)return;
+      var idsDay=byDate[d], total=0, known=true;
+      idsDay.forEach(function(id){var n=freeFor(id,info,cap);if(n===null)known=false;else total+=n;});
+      var left=b.children&&b.children[0],right=b.children&&b.children[1];
+      if(left&&left.children&&left.children[0])left.children[0].textContent=fmtDate(d);
+      if(left&&left.children&&left.children[1])left.children[1].textContent=idsDay.length===2?"Primo e secondo spettacolo":"Spettacolo";
+      if(right)right.textContent=known?status(total):"Caricamento…";
+      b.dataset.date=d;
+      b.onclick=function(){
+        var first=idsDay[0],h=document.getElementById("f-evento-id");if(h&&first)h.value=first;
+        setTimeout(sync,0);
+      };
+    });
+    eBtns.forEach(function(b,i){b.style.display=i<dates.length?"":"none";});
+
+    // Right show option buttons: sync with selected date based on hidden event or first date
+    var hidden=document.getElementById("f-evento-id");
+    var current=hidden&&hidden.value;
+    var selectedDate=current&&info[current]?dateKey(info[current]):dates[0];
+    if(!selectedDate)selectedDate=dates[0];
+    var idsSel=byDate[selectedDate]||byDate[dates[0]]||[];
+    var shLabel=Array.from(document.querySelectorAll("span")).find(function(s){return (s.textContent||"").trim()==="Scegli lo spettacolo";});
+    var shBox=shLabel&&shLabel.parentElement?shLabel.parentElement.querySelector("div"):null;
+    var shBtns=shBox?Array.from(shBox.querySelectorAll("button")):[];
+    idsSel.forEach(function(id,i){
+      var b=shBtns[i];if(!b)return;
+      var x=info[id]||{},s=b.children;
+      if(s[0])s[0].textContent=i===0?"Primo spettacolo":"Secondo spettacolo";
+      if(s[1])s[1].textContent=x.ora||"";
+      if(s[2])s[2].textContent=status(freeFor(id,info,cap));
+      b.dataset.eventId=id;
+      b.onclick=function(){
+        var h=document.getElementById("f-evento-id");if(h)h.value=id;
+        setTimeout(sync,0);
+      };
+      b.style.display="";
+    });
+    shBtns.forEach(function(b,i){if(i>=idsSel.length)b.style.display="none";});
+
+    if(hidden&&!hidden.value&&idsSel[0])hidden.value=idsSel[0];
+
+    // keep seat count in sync with current UI number
+    var seatNum=Array.from(document.querySelectorAll("span")).find(function(s){
+      return s.classList.contains("am-fs-m") && /^\d+$/.test((s.textContent||"").trim()) && s.parentElement && s.parentElement.querySelector('button[aria-label="Togli un posto"]');
+    });
+    var hp=document.getElementById("f-posti");
+    if(hp&&seatNum)hp.value=String(parseInt(seatNum.textContent,10)||1);
   }
+
+  function loadAll(){
+    var ep=window.ARTYOU_BOOKING_ENDPOINT||"/api/artyou";
+    Promise.all([
+      fetch(ep+"?eventi=1&ts="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}),
+      fetch(ep+"?disponibilita=1&ts="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;})
+    ]).then(function(all){
+      var ev=all[0],cp=all[1],changed=false;
+      if(ev&&ev.eventi){window.ARTYOU_EVENT_INFO=Object.assign({},window.ARTYOU_EVENT_INFO||{},ev.eventi);changed=true;}
+      if(cp&&cp.disponibilita){window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},cp.disponibilita);changed=true;}
+      if(changed)window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{eventi:window.ARTYOU_EVENT_INFO||{},disponibilita:window.ARTYOU_CAP||{}}}));
+    });
+  }
+  window.addEventListener("artyou:capacity-updated",sync);
+  window.addEventListener("load",function(){setTimeout(loadAll,250);setTimeout(sync,900);setTimeout(sync,1800);});
+  document.addEventListener("click",function(e){
+    if(e.target.closest('button[aria-label="Aggiungi un posto"],button[aria-label="Togli un posto"]'))setTimeout(sync,0);
+  });
 })();
 </script>
 </body>
