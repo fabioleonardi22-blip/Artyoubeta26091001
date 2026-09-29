@@ -236,6 +236,24 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
   }
 }
 </script>
+<style id="rif-faq-wide-css">
+#rif-faq .rif-faq-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+#rif-faq .rif-faq-card{
+  min-height:0 !important;
+  padding:20px 24px !important;
+}
+@media (max-width:820px){
+  #rif-faq{padding-left:20px !important;padding-right:20px !important;}
+  #rif-faq .rif-faq-grid{grid-template-columns:minmax(0,1fr) !important;gap:12px !important;}
+  #rif-faq .rif-faq-card{padding:18px 20px !important;min-height:0 !important;}
+  #rif-faq .rif-faq-card h3{font-size:19px !important;}
+  #rif-faq .rif-faq-card p{font-size:15px !important;line-height:1.5 !important;}
+}
+</style>
 </head>
 <body>
 <x-dc>
@@ -380,33 +398,37 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div>
 </sc-if>
 </div>
-<section id="rif-faq" class="am-px am-py" style="padding:28px 120px 72px;background:#F6F3EC;">
+<section id="rif-faq" class="am-px am-py" style="padding:28px 72px 72px;background:#F6F3EC;">
 <div style="width:100%;margin:0;text-align:left;">
 <div style="margin-bottom:24px;">
 <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#0B6F94;">FAQ</span>
-<h2 class="am-fs-l" style="margin:8px 0 0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:34px;line-height:1.12;">Partecipare al Rome Improv Festival</h2>
+<h2 class="am-fs-l" style="margin:8px 0 0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:34px;line-height:1.12;text-align:left;">Partecipare al Rome Improv Festival</h2>
 </div>
 
-<div class="am-grid1" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#FFFFFF;border:1px solid #E4DED2;border-radius:18px;overflow:hidden;box-sizing:border-box;">
-<div style="padding:26px 24px;min-height:190px;box-sizing:border-box;text-align:left;border-right:1px solid #E4DED2;">
-<div style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;font-weight:800;line-height:1.2;color:#13181D;margin-bottom:12px;">Serve esperienza?</div>
-<p style="margin:0;font-size:15px;line-height:1.6;color:#3F474E;">Dipende dal workshop scelto: ogni percorso indica il livello richiesto e le competenze consigliate.</p>
-</div>
+<div class="rif-faq-grid">
+<article class="rif-faq-card" style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:16px;box-sizing:border-box;text-align:left;">
+<div style="width:42px;height:42px;border-radius:12px;background:#E6F3FA;color:#0B6F94;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;">01</div>
+<h3 style="margin:0 0 8px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;line-height:1.2;color:#13181D;text-align:left;">Serve esperienza?</h3>
+<p style="margin:0;font-size:15px;line-height:1.55;color:#3F474E;text-align:left;">Dipende dal workshop scelto: ogni percorso indica il livello richiesto e le competenze consigliate.</p>
+</article>
 
-<div style="padding:26px 24px;min-height:190px;box-sizing:border-box;text-align:left;border-right:1px solid #E4DED2;">
-<div style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;font-weight:800;line-height:1.2;color:#13181D;margin-bottom:12px;">Il festival è in inglese?</div>
-<p style="margin:0;font-size:15px;line-height:1.6;color:#3F474E;">I workshop e gli spettacoli internazionali sono pensati per un pubblico di improvvisatori provenienti da Paesi diversi e si svolgono in inglese.</p>
-</div>
+<article class="rif-faq-card" style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:16px;box-sizing:border-box;text-align:left;">
+<div style="width:42px;height:42px;border-radius:12px;background:#FFF1D8;color:#A85F00;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;">02</div>
+<h3 style="margin:0 0 8px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;line-height:1.2;color:#13181D;text-align:left;">Il festival è in inglese?</h3>
+<p style="margin:0;font-size:15px;line-height:1.55;color:#3F474E;text-align:left;">I workshop e gli spettacoli internazionali sono pensati per un pubblico di improvvisatori provenienti da Paesi diversi e si svolgono in inglese.</p>
+</article>
 
-<div style="padding:26px 24px;min-height:190px;box-sizing:border-box;text-align:left;border-right:1px solid #E4DED2;">
-<div style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;font-weight:800;line-height:1.2;color:#13181D;margin-bottom:12px;">Posso vedere solo gli spettacoli?</div>
-<p style="margin:0;font-size:15px;line-height:1.6;color:#3F474E;">Sì. Il programma comprende sia workshop sia spettacoli serali, prenotabili secondo le modalità indicate per l'edizione.</p>
-</div>
+<article class="rif-faq-card" style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:16px;box-sizing:border-box;text-align:left;">
+<div style="width:42px;height:42px;border-radius:12px;background:#F4E8F3;color:#7A176B;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;">03</div>
+<h3 style="margin:0 0 8px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;line-height:1.2;color:#13181D;text-align:left;">Posso vedere solo gli spettacoli?</h3>
+<p style="margin:0;font-size:15px;line-height:1.55;color:#3F474E;text-align:left;">Sì. Il programma comprende sia workshop sia spettacoli serali, prenotabili secondo le modalità indicate per l'edizione.</p>
+</article>
 
-<div style="padding:26px 24px;min-height:190px;box-sizing:border-box;text-align:left;">
-<div style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;font-weight:800;line-height:1.2;color:#13181D;margin-bottom:12px;">Posso partecipare da fuori Roma?</div>
-<p style="margin:0;font-size:15px;line-height:1.6;color:#3F474E;">Sì. Il Rome Improv Festival nasce proprio come punto d'incontro tra la scena romana e improvvisatori e docenti internazionali.</p>
-</div>
+<article class="rif-faq-card" style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:16px;box-sizing:border-box;text-align:left;">
+<div style="width:42px;height:42px;border-radius:12px;background:#E4F5F2;color:#16766D;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;">04</div>
+<h3 style="margin:0 0 8px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;line-height:1.2;color:#13181D;text-align:left;">Posso partecipare da fuori Roma?</h3>
+<p style="margin:0;font-size:15px;line-height:1.55;color:#3F474E;text-align:left;">Sì. Il Rome Improv Festival nasce proprio come punto d'incontro tra la scena romana e improvvisatori e docenti internazionali.</p>
+</article>
 </div>
 </div>
 </section>
