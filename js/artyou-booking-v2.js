@@ -33,6 +33,30 @@ return"";
 function post(d){return fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(d)}).then(function(r){return r.text().then(function(t){var j;try{j=JSON.parse(t);}catch(e){throw new Error("HTTP "+r.status+" · risposta non JSON: "+t.slice(0,160));}j.__http=r.status;return j;});});}
 function avail(){
 if(!ENDPOINT)return;
+var exact=String(window.ARTYOU_BOOKING_EVENT_ID||"").trim();
+
+if(exact){
+  fetch(ENDPOINT+"?evento="+encodeURIComponent(exact),{cache:"no-store"})
+    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();})
+    .then(function(res){
+      if(!res||res.ok===false||typeof res.liberi!=="number")throw new Error("evento_non_disponibile");
+      window.ARTYOU_CAP=window.ARTYOU_CAP||{};
+      window.ARTYOU_CAP[exact]=Math.max(0,Number(res.liberi)||0);
+      if(res.info){
+        window.ARTYOU_EVENT_INFO=window.ARTYOU_EVENT_INFO||{};
+        window.ARTYOU_EVENT_INFO[exact]=res.info;
+      }
+      window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{
+        disponibilita:window.ARTYOU_CAP,
+        eventi:window.ARTYOU_EVENT_INFO||{}
+      }}));
+    })
+    .catch(function(){
+      window.dispatchEvent(new CustomEvent("artyou:capacity-error",{detail:{endpoint:ENDPOINT,evento:exact}}));
+    });
+  return;
+}
+
 var fast=!!window.ARTYOU_BOOKING_CAPACITY_ONLY;
 var reqs=[
   fetch(ENDPOINT+"?disponibilita=1",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).catch(function(){return null;})
