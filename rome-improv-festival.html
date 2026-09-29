@@ -285,6 +285,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <sc-if value="{{notConfirmed}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Prenota o riserva</h2>
+<span style="font-size:13px;line-height:1.4;color:#6B737A;margin-top:-12px;">Attendi il caricamento in tempo reale delle disponibilità</span>
 <div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cosa vuoi prenotare?</span><div class="am-wrap" style="display: flex; gap: 8px; flex-wrap: wrap;">
 <sc-for list="{{types}}" as="c" hint-placeholder-count="3">
 <button type="button" data-artyou-no-submit="1" onClick="{{c.pick}}" class="am-fs-body" style="padding: 11px 16px; border-radius: 999px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer; min-height: 44px;">{{c.label}}</button>
