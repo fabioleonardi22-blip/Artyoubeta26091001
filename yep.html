@@ -434,7 +434,7 @@ class Component extends DCLogic {
     var roomData = [
       { label: "Camera doppia", sub: "Preferenza, non garantisce disponibilità" },
       { label: "Camera tripla", sub: "Preferenza, non garantisce disponibilità" },
-      { label: "Camera singola", sub: "Preferenza, eventuale supplemento da confermare" },
+      { label: "Camera singola", sub: "Preferenza camera singola · eventuale supplemento da confermare" },
       { label: "Nessuna preferenza", sub: "Sistemazione da definire con l’organizzazione" }
     ];
 
@@ -482,9 +482,9 @@ class Component extends DCLogic {
       return Object.assign({
         label: r.label,
         sub: r.sub,
-        left: i === 3 ? "Opzionale" : "Preferenza",
-        leftColor: "#555D64",
-        leftWeight: 600,
+        left: i === room ? "Selezionata" : (i === 3 ? "Opzionale" : "Preferenza"),
+        leftColor: i === room ? "#1A6E99" : "#555D64",
+        leftWeight: i === room ? 700 : 600,
         pick: function () { self.setState({ room: i }); }
       }, self.row(i === room));
     });
