@@ -246,13 +246,14 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div id="ws-payment-box" style="display:flex;flex-direction:column;gap:10px;">
   <span style="font-size:14px;font-weight:700;color:#13181D;">Come vuoi pagare?</span>
   <div style="display:flex;gap:8px;flex-wrap:wrap;">
-    <button id="ws-pay-deposit" type="button" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;">Paga l’iscrizione e salda prima del WorkshoW</button>
-    <button id="ws-pay-full" type="button" style="padding:11px 16px;border-radius:999px;border:2px solid #CFC8BA;background:#FFFFFF;color:#13181D;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;">Paga tutto</button>
+    <button id="ws-pay-deposit" type="button" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;">Paga l’iscrizione · 10 € e salda prima del WorkshoW</button>
+    <button id="ws-pay-full" type="button" style="padding:11px 16px;border-radius:999px;border:2px solid #CFC8BA;background:#FFFFFF;color:#13181D;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;">Paga tutto · 20 €</button>
   </div>
-  <span id="ws-pay-note" style="font-size:13px;line-height:1.5;color:#555D64;">Paghi ora l’iscrizione con PayPal a <strong>info@artyouroma.it</strong> e saldi il restante importo prima del WorkshoW.</span>
+  <span id="ws-pay-note" style="font-size:13px;line-height:1.5;color:#555D64;">Paghi ora <strong>10 €</strong> di iscrizione con PayPal a <strong>info@artyouroma.it</strong> e saldi il restante importo prima del WorkshoW.</span>
 </div>
 <input id="f-paga-online" type="hidden" value="true">
-<input id="f-pagamento-modalita" type="hidden" value="Iscrizione + saldo prima del WorkshoW">
+<input id="f-pagamento-modalita" type="hidden" value="Iscrizione 10 € + saldo prima del WorkshoW">
+<input id="f-prezzo" type="hidden" value="10">
 <label style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#3F474E;line-height:1.4;"><input id="f-privacy" type="checkbox" style="width:20px;height:20px;margin:0;flex-shrink:0;">Ho letto e accetto la privacy policy (obbligatorio)</label>
 <button id="ws-submit" type="button" onclick="workshowSuccess()" disabled style="height:58px;border:none;border-radius:14px;background:#F09000;color:#1C1606;font-family:inherit;font-weight:800;font-size:17px;cursor:not-allowed;opacity:.45;">Verifica disponibilità…</button>
 </div>
@@ -285,17 +286,19 @@ a{color:#1A6E99}a:hover{color:#12506F}
     function choose(mode){
       var isDeposit=mode==="deposit";
       hidden.value=isDeposit
-        ?"Iscrizione + saldo prima del WorkshoW"
-        :"Pagamento completo";
+        ?"Iscrizione 10 € + saldo prima del WorkshoW"
+        :"Pagamento completo 20 €";
       dep.style.background=isDeposit?"#13181D":"#FFFFFF";
       dep.style.color=isDeposit?"#FFFFFF":"#13181D";
       dep.style.borderColor=isDeposit?"#13181D":"#CFC8BA";
       full.style.background=isDeposit?"#FFFFFF":"#13181D";
       full.style.color=isDeposit?"#13181D":"#FFFFFF";
       full.style.borderColor=isDeposit?"#CFC8BA":"#13181D";
+      var price=document.getElementById("f-prezzo");
+      if(price) price.value=isDeposit?"10":"20";
       note.innerHTML=isDeposit
-        ?"Paghi ora l’iscrizione con PayPal a <strong>info@artyouroma.it</strong> e saldi il restante importo prima del WorkshoW."
-        :"Paghi ora l’intero importo con PayPal a <strong>info@artyouroma.it</strong>.";
+        ?"Paghi ora <strong>10 €</strong> di iscrizione con PayPal a <strong>info@artyouroma.it</strong> e saldi il restante importo prima del WorkshoW."
+        :"Paghi ora l’intero importo di <strong>20 €</strong> con PayPal a <strong>info@artyouroma.it</strong>.";
     }
 
     dep.addEventListener("click",function(){choose("deposit");});
