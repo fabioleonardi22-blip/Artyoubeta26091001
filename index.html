@@ -446,7 +446,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <option>ImproEnglish</option>
 <option>Non lo so ancora</option>
 </select></div>
-<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy</label>
+<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input id="p-privacy" type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy</label>
 <button type="button" onClick="{{sendTrial}}" style="height: 56px; border: none; border-radius: 14px; background: {{accent}}; color: #0B1A1F; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Prenota la lezione di prova</button>
 </div>
 </sc-if>
@@ -940,7 +940,62 @@ class Component extends DCLogic {
       filters: filters,
       sent: !!st.sent,
       notSent: !st.sent,
-      sendTrial: function () { self.setState({ sent: true }); },
+      sendTrial: function () {
+        var nome = (document.getElementById("p-nome") || {}).value || "";
+        var cognome = (document.getElementById("p-cognome") || {}).value || "";
+        var email = (document.getElementById("p-mail") || {}).value || "";
+        var telefono = (document.getElementById("p-tel") || {}).value || "";
+        var corso = (document.getElementById("p-corso") || {}).value || "";
+        var privacy = document.getElementById("p-privacy");
+
+        nome = nome.trim();
+        cognome = cognome.trim();
+        email = email.trim();
+        telefono = telefono.trim();
+        corso = corso.trim();
+
+        if (!nome || !email || !telefono) {
+          alert("Compila Nome, Email e Numero di telefono.");
+          return;
+        }
+        if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+          alert("Inserisci un indirizzo email valido.");
+          return;
+        }
+        if (!privacy || !privacy.checked) {
+          alert("Devi accettare la Privacy Policy per inviare la richiesta.");
+          return;
+        }
+
+        fetch("/api/artyou", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            Modulo: "Lezione di prova",
+            Nome: nome,
+            Cognome: cognome,
+            Email: email,
+            Telefono: telefono,
+            Corso: corso,
+            Note: "Richiesta inviata dalla homepage"
+          })
+        })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            if (!res.ok || !data || data.ok !== true) {
+              throw new Error((data && (data.errore || data.dettaglio)) || "Invio non riuscito");
+            }
+            return data;
+          });
+        })
+        .then(function () {
+          self.setState({ sent: true });
+        })
+        .catch(function (err) {
+          console.error("Errore invio lezione di prova:", err);
+          alert("Non siamo riusciti a inviare la richiesta. Riprova tra poco oppure scrivici su WhatsApp.");
+        });
+      },
       resetTrial: function () { self.setState({ sent: false }); }
     };
   }
