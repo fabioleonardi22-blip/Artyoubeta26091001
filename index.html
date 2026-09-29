@@ -435,6 +435,17 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <h3 class="am-fs-m" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:30px;">Scrivici su WhatsApp</h3>
 <p style="margin:0;font-size:15px;line-height:1.5;color:#555D64;">Scegli il corso e il tipo di richiesta: apriremo WhatsApp con il messaggio già pronto.</p>
 
+<div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+<div style="display:flex;flex-direction:column;gap:8px;">
+<label for="artyou-wa-nome" class="am-fs-body" style="font-size:14px;font-weight:700;">Nome</label>
+<input id="artyou-wa-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height:52px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;">
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;">
+<label for="artyou-wa-cognome" class="am-fs-body" style="font-size:14px;font-weight:700;">Cognome</label>
+<input id="artyou-wa-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height:52px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;">
+</div>
+</div>
+
 <div style="display:flex;flex-direction:column;gap:8px;">
 <label for="artyou-wa-course" class="am-fs-body" style="font-size:14px;font-weight:700;">Quale corso ti interessa?</label>
 <select id="artyou-wa-course" style="height:52px;border:1px solid #CFC8BA;border-radius:12px;padding:0 14px;font-size:16px;font-family:inherit;background:#FFFFFF;">
@@ -1152,6 +1163,8 @@ class Component extends DCLogic {
     if(!btn||btn.dataset.ready==="1") return;
     btn.dataset.ready="1";
     btn.addEventListener("click",function(){
+      var nome=(document.getElementById("artyou-wa-nome")||{}).value||"";
+      var cognome=(document.getElementById("artyou-wa-cognome")||{}).value||"";
       var corso=(document.getElementById("artyou-wa-course")||{}).value||"";
       var intento=(document.getElementById("artyou-wa-intent")||{}).value||"informazioni";
       var intro={
@@ -1160,7 +1173,8 @@ class Component extends DCLogic {
         iscrizione:"Ciao! Vorrei iscrivermi",
         parlare:"Ciao! Vorrei parlare con qualcuno"
       }[intento]||"Ciao! Vorrei informazioni";
-      var msg=intro+" per "+corso+".";
+      var persona=[nome.trim(),cognome.trim()].filter(Boolean).join(" ");
+      var msg=(persona?("Ciao, sono "+persona+". "):"")+intro.replace(/^Ciao!\s*/,"")+" per "+corso+".";
       window.open("https://wa.me/393271881956?text="+encodeURIComponent(msg),"_blank","noopener");
     });
   }
