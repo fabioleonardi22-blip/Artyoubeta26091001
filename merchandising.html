@@ -127,6 +127,64 @@ h1 span{color:#F09000}
 .product-window{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;padding:34px}
 .product-window .photo-placeholder{font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:21px;color:#736C63}
 .product-window small{font-size:12px;color:#9A9187}
+
+/* Restore original shop-style product windows */
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.card{
+  background:#FFFFFF;
+  border:1px solid #E4DED2;
+  border-radius:18px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height:500px;
+  box-shadow:none;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease
+}
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 26px rgba(19,24,29,.08);
+  border-color:#D7CBBB
+}
+.photo{
+  height:285px;
+  border-radius:0;
+  background:#ECE8E0;
+  box-shadow:none;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden
+}
+.card:hover .photo{transform:none;box-shadow:none}
+.body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.product-window{
+  position:relative;
+  z-index:1;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  text-align:center;
+  padding:28px
+}
+.product-window .photo-placeholder{
+  font-family:'Bricolage Grotesque',Georgia,sans-serif;
+  font-size:18px;
+  font-weight:800;
+  color:#736C63
+}
+.product-window small{font-size:12px;color:#9A9187}
+.bottom{border-top:0;margin-top:auto;padding-top:12px}
+.title{font-size:22px}
+.price{font-size:21px}
+.btn{border-radius:10px;padding:11px 15px}
+@media(max-width:920px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.photo{height:320px}}
 </style>
 </head>
 <body>
