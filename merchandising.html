@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Artyou Merch</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#0d171c;color:#f7f7f4;font-family:Arial,Helvetica,sans-serif}
+a{color:inherit}.page{max-width:1320px;margin:0 auto;padding:22px 28px 64px}
+.breadcrumb{font-size:14px;margin-bottom:22px}.breadcrumb a{text-decoration:underline}.hero{display:grid;grid-template-columns:.9fr 1.25fr;gap:54px;align-items:center;margin:6px 0 24px}
+.kicker{font-size:14px;font-weight:800;text-transform:uppercase;color:#ff9f00;margin-bottom:14px}
+h1{margin:0;font-size:68px;line-height:.97;letter-spacing:-2.6px;max-width:520px}h1 span{color:#ff9f00}
+.lead{font-size:18px;line-height:1.5;max-width:510px;margin-top:20px}
+.hero-image{height:350px;border-radius:26px;overflow:hidden;background:#8e8e8e url('/img/home-carousel-01.jpg') center/cover no-repeat}
+.tabs{display:flex;gap:42px;border-bottom:1px solid #445158;margin-top:12px}.tab{padding:15px 0 16px;text-decoration:none;font-size:15px;position:relative}.tab.active{color:#ff9f00;font-weight:800}.tab.active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:#ff9f00}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:24px}
+.card{background:#121f25;border:1px solid #2f3a40;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-height:500px}
+.photo{height:285px;background:#8f8f8f;position:relative;display:flex;align-items:center;justify-content:center;color:#d7d7d7;font-weight:700}
+.badge{position:absolute;top:14px;left:14px;background:#0d171c;color:#fff;border:1px solid #4a575d;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800;text-transform:uppercase}
+.card-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}.type{font-size:12px;text-transform:uppercase;letter-spacing:1.3px;color:#ff9f00;font-weight:800}
+.title{font-size:22px;font-weight:800;margin:0}.meta{font-size:14px;color:#b9c2c6}.row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:12px}.price{font-size:21px;font-weight:800}.add{border:0;background:#ff9f00;color:#141414;padding:11px 16px;border-radius:10px;font-weight:800;cursor:pointer}
+.notice{margin-top:26px;color:#aeb9be;font-size:13px}
+@media(max-width:920px){.hero{grid-template-columns:1fr;gap:24px}.hero-image{height:300px}h1{font-size:52px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.page{padding:18px 16px 42px}.tabs{gap:22px;overflow-x:auto}.grid{grid-template-columns:1fr}h1{font-size:44px}.hero-image{height:235px}}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="breadcrumb"><a href="/">Home</a> &nbsp;/&nbsp; Merch</div>
+  <section class="hero">
+    <div>
+      <div class="kicker">ARTYOU MERCH</div>
+      <h1>Porta Artyou anche <span>fuori dal palco.</span></h1>
+      <p class="lead">Abbigliamento ufficiale per chi vive il teatro, l’improvvisazione e la creatività ogni giorno, dentro e fuori dalla sala.</p>
+    </div>
+    <div class="hero-image" role="img" aria-label="Artyou merch"></div>
+  </section>
+
+  <nav class="tabs" aria-label="Categorie merchandising">
+    <a class="tab active" href="#tutti">Tutti</a>
+    <a class="tab" href="#tshirt">T-shirt</a>
+    <a class="tab" href="#felpe">Felpe</a>
+    <a class="tab" href="#pantaloni">Pantaloni</a>
+    <a class="tab" href="#calzini">Calzini</a>
+  </nav>
+
+  <section class="grid" id="tutti">
+    <article class="card" id="tshirt"><div class="photo"><span class="badge">T-shirt</span>Anteprima prodotto</div><div class="card-body"><div class="type">Artyou Original</div><h2 class="title">T-shirt Artyou</h2><div class="meta">Taglie e colori da definire</div><div class="row"><span class="price">€ —</span><button class="add">Aggiungi</button></div></div></article>
+    <article class="card" id="felpe"><div class="photo"><span class="badge">Felpa</span>Anteprima prodotto</div><div class="card-body"><div class="type">Artyou Original</div><h2 class="title">Felpa Artyou</h2><div class="meta">Modelli e colori da definire</div><div class="row"><span class="price">€ —</span><button class="add">Aggiungi</button></div></div></article>
+    <article class="card" id="pantaloni"><div class="photo"><span class="badge">Pantaloni</span>Anteprima prodotto</div><div class="card-body"><div class="type">Artyou Original</div><h2 class="title">Pantaloni Artyou</h2><div class="meta">Vestibilità da definire</div><div class="row"><span class="price">€ —</span><button class="add">Aggiungi</button></div></div></article>
+    <article class="card" id="calzini"><div class="photo"><span class="badge">Calzini</span>Anteprima prodotto</div><div class="card-body"><div class="type">Artyou Original</div><h2 class="title">Calzini antiscivolo</h2><div class="meta">Colori e taglie da definire</div><div class="row"><span class="price">€ —</span><button class="add">Aggiungi</button></div></div></article>
+  </section>
+  <div class="notice">Versione grafica di prova · branch merchandising</div>
+</main>
+</body>
+</html>
