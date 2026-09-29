@@ -278,7 +278,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div class="am-wrap" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
 <span style="background: #F6F3EC; color: #13181D; border-radius: 16px; padding: 12px 18px; display: flex; flex-direction: column; align-items: center;"><span class="am-fs-m" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px; line-height: 1;">15-22</span><span style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">Febbraio ’27</span></span>
 <span class="am-fs-body" style="border: 1px solid #C45DB0; border-radius: 999px; padding: 9px 16px; font-size: 15px; font-weight: 600;">Posti limitati</span>
-<span class="am-fs-body" style="border: 1px solid #C45DB0; border-radius: 999px; padding: 9px 16px; font-size: 15px; font-weight: 600;">Anticipo online, saldo in cassa</span>
+<span class="am-fs-body" style="border: 1px solid #C45DB0; border-radius: 999px; padding: 9px 16px; font-size: 15px; font-weight: 600;">Biglietto · 12 €</span>
 </div>
 </div>
 </section>
@@ -308,7 +308,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div>
 <div style="display: flex; flex-direction: column; gap: 12px;">
 <h2 class="am-fs-m" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px;">Come funziona la prenotazione</h2>
-<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #3F474E;">Scegli la serata e il numero di posti, poi versa online un <strong>anticipo di [€] a biglietto</strong>: il posto è tuo. Il resto si paga in cassa la sera dello spettacolo. I posti di ogni serata sono limitati e il contatore si aggiorna a ogni prenotazione.</p>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #3F474E;">Scegli la serata, lo spettacolo e il numero di posti. Il biglietto costa <strong>12 € a persona</strong>. I posti sono limitati e la disponibilità si aggiorna con le prenotazioni.</p>
 <p class="am-fs-body" style="margin: 0; font-size: 15px; line-height: 1.6; color: #555D64;">Dove: Teatro Primo Piano, Roma · Inizio: [ore 21:00] · Durata: [durata]</p>
 </div>
 </div>
@@ -347,7 +347,8 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <input id="f-evento-id" type="hidden" value="">
 <input id="f-posti" type="hidden" value="2">
 <input id="f-paga-online" type="hidden" value="false">
-<input id="f-pagamento-modalita" type="hidden" value="Anticipo online, saldo in cassa">
+<input id="f-pagamento-modalita" type="hidden" value="Pagamento spettacolo">
+<input id="f-prezzo" type="hidden" value="12">
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-allievo" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Chi vieni a vedere? <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-allievo" type="text" placeholder="Nome dell’allievo o della classe" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input id="f-privacy" type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
 <button type="button" data-artyou-submit="1" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
@@ -427,8 +428,8 @@ class Component extends DCLogic {
       seats: seats, maxNote: r <= maxPer ? "Restano " + r + " posti" : "Massimo " + maxPer + " a prenotazione",
       plusOpacity: seats >= maxAllowed ? 0.35 : 1,
       available: r > 0, soldOut: r === 0, soldTitle: "Spettacolo esaurito",
-      payNote: "Ora paghi [€] a biglietto (" + seatsLabel + "), il saldo in cassa prima dello spettacolo. Pagamento con carta o PayPal [da confermare].",
-      ctaLabel: "Prenota e paga l’anticipo · " + seatsLabel,
+      payNote: "Costo: 12 € a persona. Totale per " + seatsLabel + ": " + (12 * seats) + " €.",
+      ctaLabel: "Prenota · " + (12 * seats) + " €",
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare per Un Vortice di Emozioni: " + what + "."),
       waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Il " + shNames[sh].toLowerCase() + " di " + mk(ev).label.toLowerCase() + " di Un Vortice di Emozioni è esaurito: potete mettermi in lista d’attesa?"),
       confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
