@@ -240,6 +240,34 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
   #vortice-calendar button:has(.am-vortice-poster){flex-direction:column !important;}
 }
 </style>
+<style id="vortice-fixed-grid-css">
+#vortice-calendar .vortice-day-row{
+  display:grid !important;
+  grid-template-columns:72px minmax(0,1fr) minmax(0,1fr) !important;
+  gap:14px !important;
+  align-items:stretch !important;
+}
+#vortice-calendar .vortice-day-badge{
+  grid-column:auto !important;
+  width:auto !important;
+  min-width:72px !important;
+  height:auto !important;
+}
+#vortice-calendar .vortice-show-card{
+  display:flex !important;
+  grid-column:auto !important;
+  width:auto !important;
+  min-width:0 !important;
+}
+@media (max-width:700px){
+  #vortice-calendar .vortice-day-row{
+    grid-template-columns:64px minmax(0,1fr) !important;
+  }
+  #vortice-calendar .vortice-day-badge{
+    grid-row:1 / span 2 !important;
+  }
+}
+</style>
 </head>
 <body>
 <x-dc>
@@ -289,10 +317,10 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">Ogni sera due spettacoli, il primo e il secondo. Clicca su uno spettacolo per prenotarlo.</p>
 <div id="vortice-calendar" style="display: flex; flex-direction: column; gap: 14px;">
 <sc-for list="{{calendar}}" as="k" hint-placeholder-count="8">
-<div class="am-grid1" style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 20px; padding: 16px; display: grid; grid-template-columns: 72px minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: stretch;">
-<span style="border-radius: 14px; background: #941880; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;"><span class="am-fs-m" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 30px; line-height: 1;">{{k.day}}</span><span class="am-fs-tiny" style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">feb</span><span class="am-fs-tiny" style="font-size: 11px; color: #F3D3EA;">{{k.wd}}</span></span>
+<div class="am-grid1 vortice-day-row" style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 20px; padding: 16px; display: grid; grid-template-columns: 72px minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: stretch;">
+<span class="vortice-day-badge" style="border-radius: 14px; background: #941880; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;"><span class="am-fs-m" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 30px; line-height: 1;">{{k.day}}</span><span class="am-fs-tiny" style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">feb</span><span class="am-fs-tiny" style="font-size: 11px; color: #F3D3EA;">{{k.wd}}</span></span>
 <sc-for list="{{k.shows}}" as="p" hint-placeholder-count="2">
-<button type="button" onClick="{{p.pick}}" class="am-wrap" style="display: flex; gap: 14px; align-items: stretch; text-align: left; padding: 12px; border-radius: 14px; border: 2px solid {{p.border}}; background: {{p.bg}}; font-family: inherit; color: #13181D; cursor: pointer;">
+<button type="button" onClick="{{p.pick}}" class="am-wrap vortice-show-card" style="display: flex; gap: 14px; align-items: stretch; text-align: left; padding: 12px; border-radius: 14px; border: 2px solid {{p.border}}; background: {{p.bg}}; font-family: inherit; color: #13181D; cursor: pointer;">
 <span role="img" aria-label="Locandina {{p.title}}" class="am-vortice-poster" style="width: 108px; height: 144px; flex-shrink: 0; border-radius: 10px; background-color: #4A1040; background-image: {{p.posterCss}}; background-size: cover; background-position: center; color: #E9C9DF; display: flex; align-items: center; justify-content: center; font-size: 11px; text-align: center; padding: 6px; box-sizing: border-box;">{{p.posterFallback}}</span>
 <span style="display: flex; flex-direction: column; gap: 5px; min-width: 0; flex:1;">
 <span class="am-fs-tiny" style="font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #941880;">{{p.n}}</span>
@@ -571,10 +599,8 @@ class Component extends DCLogic {
           var h=document.getElementById("f-evento-id");if(h)h.value=id;
           setTimeout(sync,0);
         };
-      });
-      // Hide unused second button if only one event exists
+      });      // La struttura grafica resta fissa: il sync aggiorna solo i dati.
       btns.forEach(function(b,si){
-        b.style.display="flex";
         if(si>=byDate[d].length){
           var tw=b.children&&b.children[1];
           if(tw&&tw.children){
@@ -592,8 +618,6 @@ class Component extends DCLogic {
           b.style.cursor="pointer";
         }
       });
-    });
-    rows.forEach(function(r,i){r.style.display=i<dates.length?"grid":"none";});
 
     // Right evening buttons
     var choose=Array.from(document.querySelectorAll("span")).find(function(s){return (s.textContent||"").trim()==="Scegli la serata";});
@@ -613,7 +637,7 @@ class Component extends DCLogic {
         setTimeout(sync,0);
       };
     });
-    eBtns.forEach(function(b,i){b.style.display=i<dates.length?"flex":"none";});
+
 
     // Right show option buttons: sync with selected date based on hidden event or first date
     var hidden=document.getElementById("f-evento-id");
@@ -635,9 +659,9 @@ class Component extends DCLogic {
         var h=document.getElementById("f-evento-id");if(h)h.value=id;
         setTimeout(sync,0);
       };
-      b.style.display="flex";
+
     });
-    shBtns.forEach(function(b,i){if(i>=idsSel.length)b.style.display="none";});
+
 
     if(hidden&&!hidden.value&&idsSel[0])hidden.value=idsSel[0];
 
