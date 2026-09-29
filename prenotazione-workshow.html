@@ -243,12 +243,22 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <input id="f-evento-id" type="hidden" value="">
 <div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;"><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-nome" style="font-size:14px;font-weight:700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-cognome" style="font-size:14px;font-weight:700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div></div>
 <div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;"><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-mail" style="font-size:14px;font-weight:700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-tel" style="font-size:14px;font-weight:700;">Telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 ..." style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div></div>
+<div id="ws-payment-box" style="display:flex;flex-direction:column;gap:10px;">
+  <span style="font-size:14px;font-weight:700;color:#13181D;">Come vuoi pagare?</span>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <button id="ws-pay-deposit" type="button" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;">Paga l’iscrizione e salda prima del WorkshoW</button>
+    <button id="ws-pay-full" type="button" style="padding:11px 16px;border-radius:999px;border:2px solid #CFC8BA;background:#FFFFFF;color:#13181D;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;">Paga tutto</button>
+  </div>
+  <span id="ws-pay-note" style="font-size:13px;line-height:1.5;color:#555D64;">Paghi ora l’iscrizione con PayPal a <strong>info@artyouroma.it</strong> e saldi il restante importo prima del WorkshoW.</span>
+</div>
+<input id="f-paga-online" type="hidden" value="true">
+<input id="f-pagamento-modalita" type="hidden" value="Iscrizione + saldo prima del WorkshoW">
 <label style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#3F474E;line-height:1.4;"><input id="f-privacy" type="checkbox" style="width:20px;height:20px;margin:0;flex-shrink:0;">Ho letto e accetto la privacy policy (obbligatorio)</label>
 <button id="ws-submit" type="button" onclick="workshowSuccess()" disabled style="height:58px;border:none;border-radius:14px;background:#F09000;color:#1C1606;font-family:inherit;font-weight:800;font-size:17px;cursor:not-allowed;opacity:.45;">Verifica disponibilità…</button>
 </div>
 <div id="ws-success" style="display:none;background:#FFF;border:1px solid #E4DED2;border-radius:24px;padding:32px;flex-direction:column;gap:16px;"><h2 style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:32px;">Prenotazione inviata!</h2><p style="margin:0;font-size:17px;line-height:1.55;color:#3F474E;">Abbiamo ricevuto la tua richiesta per <strong id="ws-success-label">il WorkshoW</strong>. Riceverai la conferma via email.</p><a href="workshow-corso.html" style="font-weight:700;">Torna ai WorkshoW</a></div>
 </div>
-<aside style="display:flex;flex-direction:column;gap:20px;"><div style="background:#13181D;color:#F6F3EC;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:16px;"><h2 class="am-fs-m" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:28px;">Cosa succede dopo</h2><ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.5;color:#C4CCD2;"><li>Ricevi l’email di conferma della richiesta.</li><li>Verifichiamo la disponibilità del WorkshoW.</li><li>Ti confermiamo il posto e le eventuali indicazioni di pagamento.</li></ol></div></aside>
+<aside style="display:flex;flex-direction:column;gap:20px;"><div style="background:#13181D;color:#F6F3EC;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:16px;"><h2 class="am-fs-m" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:28px;">Cosa succede dopo</h2><ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.5;color:#C4CCD2;"><li>Ricevi l’email di conferma della richiesta.</li><li>Verifichiamo la disponibilità del WorkshoW.</li><li>Il pagamento viene gestito tramite PayPal a info@artyouroma.it secondo la modalità scelta.</li></ol></div></aside>
 </main>
 <footer class="am-px am-wrap am-fs-body" style="flex-grow: 1; background: #0D1115; color: #9AA5AE; padding: 32px 120px; display: flex; justify-content: space-between; align-items: flex-start; font-size: 14px;">
 <span>© 2026 Artyou Roma · Via La Spezia, 73 – Roma</span>
@@ -262,6 +272,39 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
+
+<script id="workshow-payment-mode">
+(function(){
+  function init(){
+    var dep=document.getElementById("ws-pay-deposit");
+    var full=document.getElementById("ws-pay-full");
+    var hidden=document.getElementById("f-pagamento-modalita");
+    var note=document.getElementById("ws-pay-note");
+    if(!dep||!full||!hidden||!note)return;
+
+    function choose(mode){
+      var isDeposit=mode==="deposit";
+      hidden.value=isDeposit
+        ?"Iscrizione + saldo prima del WorkshoW"
+        :"Pagamento completo";
+      dep.style.background=isDeposit?"#13181D":"#FFFFFF";
+      dep.style.color=isDeposit?"#FFFFFF":"#13181D";
+      dep.style.borderColor=isDeposit?"#13181D":"#CFC8BA";
+      full.style.background=isDeposit?"#FFFFFF":"#13181D";
+      full.style.color=isDeposit?"#13181D":"#FFFFFF";
+      full.style.borderColor=isDeposit?"#CFC8BA":"#13181D";
+      note.innerHTML=isDeposit
+        ?"Paghi ora l’iscrizione con PayPal a <strong>info@artyouroma.it</strong> e saldi il restante importo prima del WorkshoW."
+        :"Paghi ora l’intero importo con PayPal a <strong>info@artyouroma.it</strong>.";
+    }
+
+    dep.addEventListener("click",function(){choose("deposit");});
+    full.addEventListener("click",function(){choose("full");});
+    choose("deposit");
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
 
 <script id="workshow-page-init" data-watchdog="workshow-capacity-watchdog">
 (function(){
@@ -462,6 +505,6 @@ a{color:#1A6E99}a:hover{color:#12506F}
 })();
 </script>
 <script src="js/artyou-booking-config.js?v=20260929-0935"></script>
-<script src="js/artyou-booking-v2.js?v=20260929-all-workshow"></script>
+<script src="js/artyou-booking-v2.js?v=20260929-workshow-payments"></script>
 </body>
 </html>
