@@ -185,6 +185,48 @@ h1 span{color:#F09000}
 .btn{border-radius:10px;padding:11px 15px}
 @media(max-width:920px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.grid{grid-template-columns:1fr}.photo{height:320px}}
+
+/* Compact merchandising hero so product windows are visible immediately */
+.hero{
+  padding:34px 64px 36px;
+  grid-template-columns:1.15fr .85fr;
+  gap:34px;
+}
+.hero h1{font-size:50px;line-height:1}
+.hero .lead{font-size:17px;margin-top:14px}
+.heroimg{
+  height:210px;
+  background:#13181D !important;
+  border:0;
+  color:#F6F3EC;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+  padding:32px;
+  position:relative;
+  overflow:hidden
+}
+.heroimg:after{
+  content:"";
+  position:absolute;
+  right:-35px;
+  bottom:-60px;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  background:#F09000;
+  opacity:.95
+}
+.heroimg span{font-size:13px;letter-spacing:2px;font-weight:800;color:#F09000;z-index:1}
+.heroimg strong{font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:54px;line-height:.95;z-index:1}
+.heroimg small{margin-top:8px;font-size:14px;color:#C6CDD1;z-index:1}
+.shop{padding-top:30px}
+@media(max-width:820px){
+  .hero{padding:28px 20px 30px;grid-template-columns:1fr}
+  .heroimg{height:170px}
+  .hero h1{font-size:42px}
+}
 </style>
 </head>
 <body>
@@ -211,7 +253,7 @@ h1 span{color:#F09000}
     <h1>Porta Artyou anche <span>fuori dal palco.</span></h1>
     <p class="lead">Abbigliamento e accessori Artyou per chi vive il teatro, l’improvvisazione e la creatività dentro e fuori dalla sala.</p>
   </div>
-  <div class="heroimg" role="img" aria-label="Artyou merchandising"></div>
+  <div class="heroimg merch-hero-card" role="img" aria-label="Artyou merchandising"><span>ARTYOU</span><strong>MERCH</strong><small>Wear the stage.</small></div>
 </section>
 
 <section class="shop">
