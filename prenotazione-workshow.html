@@ -263,7 +263,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
 
-<script id="workshow-page-init">
+<script id="workshow-page-init" data-watchdog="workshow-capacity-watchdog">
 (function(){
   var LABELS={
     "ws-horror":"WorkshoW · Tra fiaba & horror – Un confine sottile",
@@ -399,11 +399,22 @@ a{color:#1A6E99}a:hover{color:#12506F}
   window.addEventListener("artyou:booking-success",function(){capacityError=false;render();});
   setTimeout(render,250);
   setTimeout(render,1000);
+  setTimeout(function workshowCapacityWatchdog(){
+    var cnt=document.getElementById("ws-capacity-count");
+    var btn=document.getElementById("ws-submit");
+    var meta=document.getElementById("ws-capacity-meta");
+    if(cnt && /Ricerca evento|Caricamento|Verifica disponibilità/i.test(cnt.textContent||"")){
+      capacityError=true;
+      if(cnt){cnt.textContent="Gestionale non raggiunto";cnt.style.color="#7A1631";}
+      if(meta){meta.textContent="La risposta del gestionale sta impiegando troppo tempo";}
+      if(btn){btn.disabled=true;btn.textContent="Riprova tra poco";btn.style.opacity=".45";btn.style.cursor="not-allowed";}
+    }
+  },8000);
 })();
 </script>
 
 <script>window.ARTYOU_BOOKING_MODULE="WorkshoW";window.ARTYOU_BOOKING_DEBUG=true;window.ARTYOU_BOOKING_CAPACITY_ONLY=true;window.ARTYOU_BOOKING_EVENT_ID="tra-fiaba-horror-un-confine-sottile-con-niko-di-felice";</script>
-<script src="js/artyou-booking-config.js"></script>
-<script src="js/artyou-booking-v2.js"></script>
+<script src="js/artyou-booking-config.js?v=20260929-0935"></script>
+<script src="js/artyou-booking-v2.js?v=20260929-0935"></script>
 </body>
 </html>
