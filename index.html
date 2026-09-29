@@ -1109,6 +1109,16 @@ class Component extends DCLogic {
       })
       .then(function(res){
         if (res && res.ok) {
+          if (MODULO === "Lezione di prova") {
+            var adminOk = !res.emailAdmin || res.emailAdmin.ok === true;
+            var userOk = !res.emailUtente || res.emailUtente.ok === true;
+            if (!adminOk || !userOk) {
+              var problemi = [];
+              if (!adminOk) problemi.push("email ad Artyou non inviata" + (res.emailAdmin && res.emailAdmin.errore ? " (" + res.emailAdmin.errore + ")" : ""));
+              if (!userOk) problemi.push("email di conferma all’utente non inviata" + (res.emailUtente && res.emailUtente.errore ? " (" + res.emailUtente.errore + ")" : ""));
+              throw new Error("Richiesta registrata, ma " + problemi.join(" e "));
+            }
+          }
           if (ppWin) {
             var h1 = document.querySelector("h1");
             var voce = (h1 ? testo(h1) : MODULO) + (d.Scelte ? " – " + d.Scelte : "");
