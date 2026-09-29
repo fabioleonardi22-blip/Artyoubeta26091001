@@ -294,14 +294,6 @@ class Component extends DCLogic {
     var META = {"Improvvisazione": ["#1A6E99", "#2CA8E0", "#0F4A66"], "Teatro": ["#941880", "#941880", "#4A1040"], "Stand-up": ["#C0145C", "#E41870", "#5A0F30"], "ImproEnglish": ["#127A70", "#28B4A8", "#0E4A45"], "Formazione docenti": ["#4F7A0A", "#94C01C", "#3D5410"]};
     var slug = this.hash();
     var cur = TEACH.filter(function (x) { return x.slug === slug; })[0] || TEACH[0];
-    if (cur.slug === "andrea-onori") {
-      cur = Object.assign({}, cur, {
-        quote: "Il mio lavoro è mettere gli allievi in condizioni di creare: tutto sta nel fargli scoprire, in qualche modo, il coraggio di tuffarsi e volare. Il resto sono solo parole imparate a memoria.",
-        bioTitle: "Biografia",
-        bio: "Ho incontrato il teatro un po’ per caso, dopo l’università, frequentando un laboratorio serale. Lì mi sono accorto che il mondo della recitazione abitava in me da sempre e mi chiedeva di dedicargli tutto me stesso. Il mio modo di insegnare deriva dalle esperienze che ho fatto in prima persona, dagli appunti presi dopo le prove, da quello che ho scoperto lavorando e imparando da chi mi ha insegnato. Mi piace studiare il processo, capire quello che funziona e condividerlo con gli altri.",
-        training: "Dopo un laboratorio presso la Scuola Internazionale di Teatro mi sono diplomato al biennio dell’Accademia Teatrale di Roma “Sofia Amendolea”. Nel corso degli anni ho poi approfondito la mia formazione frequentando workshop e laboratori di diverso genere, esplorando tecniche e metodi di recitazione diversi, sia teatrale che cinematografica. Ho lavorato con diverse compagnie indipendenti di teatro di Roma (Ondadurto, DoveComeQuando, Circomare), oltre ad aver scritto e diretto alcuni miei spettacoli. Ho partecipato a diversi film e serie tv (Christian, Il campione, Croce e delizia, Suburra), e numerosi cortometraggi. Dal 2022 sono tra gli insegnanti dei corsi di Teatro di testo di ArtYou."
-      });
-    }
     var bg = function (x) { return x.photo ? "url(" + x.photo + ")" : "none"; };
     var t = {
       name: cur.name, role: cur.role, ig: cur.ig, handle: cur.handle,
