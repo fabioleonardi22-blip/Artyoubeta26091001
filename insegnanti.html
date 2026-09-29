@@ -285,7 +285,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div class="am-grid2" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px;">
 <sc-for list="{{teachers}}" as="t" hint-placeholder-count="13">
 <article style="display: flex; flex-direction: column; background: #F6F3EC; border-radius: 20px; overflow: hidden;">
-<a href="/insegnante.html#{{t.slug}}" aria-label="Profilo di {{t.name}}" style="display: block; text-decoration: none;"><div role="img" aria-label="Ritratto di {{t.name}}" class="am-wrap am-himg am-fs-body" style="height: 340px; background-color: {{t.tint}}; background-image: {{t.bg}}; background-size: cover; background-position: center 20%; position: relative; display: flex; align-items: center; justify-content: center; color: #C9D2D8; font-size: 14px;"><span style="opacity: {{t.phOp}};">Ritratto</span></div></a>
+<a href="/insegnante.html#{{t.slug}}" aria-label="Profilo di {{t.name}}" style="display: block; text-decoration: none;"><div class="am-wrap am-himg am-fs-body" style="height: 340px; background-color: {{t.tint}}; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #C9D2D8; font-size: 14px;"><sc-if value="{{t.hasPhoto}}" hint-placeholder-val="{{ true }}"><img src="{{t.photo}}" alt="Ritratto di {{t.name}}" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;"></sc-if><sc-if value="{{t.noPhoto}}" hint-placeholder-val="{{ false }}"><span>Ritratto</span></sc-if></div></a>
 <div style="padding: 20px; display: flex; flex-direction: column; gap: 10px;">
 <a href="/insegnante.html#{{t.slug}}" class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 22px; color: #13181D; text-decoration: none;">{{t.name}}</a>
 <div class="am-wrap" style="display: flex; flex-wrap: wrap; gap: 6px;">
@@ -380,7 +380,7 @@ class Component extends DCLogic {
     ];
     var PHOTO = {"Cinzia Zadro":"/img/insegnanti/cinzia-zadro.jpg","Federica Forbicioni":"/img/insegnanti/federica-forbicioni.jpg","Francesco Parisi":"/img/insegnanti/francesco-parisi.jpg","Marco Masi":"/img/insegnanti/marco-masi.jpg","Francesca Giombini":"/img/insegnanti/francesca-giombini.jpg","Andrea Onori":"/img/insegnanti/andrea-onori.jpg","Giulia Scarpino":"/img/insegnanti/giulia-scarpino.jpg","Fabio Leonardi":"/img/insegnanti/fabio-leonardi.jpg","Sandro Canori":"/img/standup-sandro.jpg","Antonio Micali":"/img/standup-antonio.jpg","Velia Lalli":"/img/standup-velia.jpg"};
     var teachers = all.filter(function (t) { return filter === "Tutti" || t.disc.indexOf(filter) >= 0; }).map(function (t) {
-      var ph = PHOTO[t.name]; return { slug: t.name.toLowerCase().replace(/ /g, "-"), name: t.name, role: t.role, bg: ph ? "url(" + ph + ")" : "none", phOp: ph ? 0 : 1, ig: t.ig || "https://www.instagram.com/[username]/", handle: t.handle || "@[username]", tint: meta[t.disc[0]].tint, tags: t.disc.map(function (x) { return { label: x, color: meta[x].color, dot: meta[x].dot }; }) };
+      var ph = PHOTO[t.name]; return { slug: t.name.toLowerCase().replace(/ /g, "-"), name: t.name, role: t.role, photo: ph || "", hasPhoto: !!ph, noPhoto: !ph, ig: t.ig || "https://www.instagram.com/[username]/", handle: t.handle || "@[username]", tint: meta[t.disc[0]].tint, tags: t.disc.map(function (x) { return { label: x, color: meta[x].color, dot: meta[x].dot }; }) };
     });
     var filters = ["Tutti", "Improvvisazione", "Teatro", "Stand-up"].map(function (label) {
       var on = label === filter;
