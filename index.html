@@ -447,7 +447,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <option>Non lo so ancora</option>
 </select></div>
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input id="p-privacy" type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy</label>
-<button type="button" onClick="{{sendTrial}}" style="height: 56px; border: none; border-radius: 14px; background: {{accent}}; color: #0B1A1F; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Prenota la lezione di prova</button>
+<button type="button" data-artyou-no-submit="1" onClick="{{sendTrial}}" style="height: 56px; border: none; border-radius: 14px; background: {{accent}}; color: #0B1A1F; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Prenota la lezione di prova</button>
 </div>
 </sc-if>
 <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
@@ -969,8 +969,9 @@ class Component extends DCLogic {
 
         fetch("/api/artyou", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({
+            action: "prenota",
             Modulo: "Lezione di prova",
             Nome: nome,
             Cognome: cognome,
