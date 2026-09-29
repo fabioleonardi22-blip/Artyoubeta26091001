@@ -1085,7 +1085,6 @@ class Component extends DCLogic {
 
   document.addEventListener("click", function(e){
     var b = e.target.closest && e.target.closest("button");
-    if (b && b.getAttribute && b.getAttribute("data-trial-submit")==="1") return;
     if (!(b && b.getAttribute("data-trial-submit")==="1") && !isSubmit(b)) return;
     if (b.getAttribute("data-artyou-ok") === "1") { b.removeAttribute("data-artyou-ok"); return; }
     e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
