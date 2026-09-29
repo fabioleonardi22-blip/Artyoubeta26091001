@@ -513,7 +513,7 @@ class Component extends DCLogic {
       payNote:pay===0
         ?"Paghi ora <strong>10 €</strong> di iscrizione con PayPal a info@artyouroma.it e saldi il restante importo prima del Festival."
         :"Paghi ora l’intero importo di <strong>20 €</strong> con PayPal a info@artyouroma.it.",
-      ctaLabel:"Conferma prenotazione",
+      ctaLabel:"Conferma e paga con PayPal",
       wa:wa,
       waWait:"https://wa.me/393271881956?text="+encodeURIComponent("Ciao! "+what+" è al completo: potete mettermi in lista d’attesa?"),
       confirmed:!!st.confirmed,notConfirmed:!st.confirmed,
@@ -534,7 +534,7 @@ class Component extends DCLogic {
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
-<script>window.ARTYOU_BOOKING_MODULE="Rome Improv Festival";window.ARTYOU_BOOKING_DEBUG=true;</script>\n<script src="js/artyou-booking-config.js?v=20260929-rif-stable"></script>\n<script src="js/artyou-booking-v2.js?v=20260929-payments"></script>
+<script>window.ARTYOU_BOOKING_MODULE="Rome Improv Festival";window.ARTYOU_BOOKING_DEBUG=true;</script>\n<script src="js/artyou-booking-config.js?v=20260929-rif-stable"></script>\n<script src="js/artyou-booking-v2.js?v=20260929-paypal-test"></script>
 <script>
 (function(){
   function norm(s){return String(s||"").toLowerCase();}
