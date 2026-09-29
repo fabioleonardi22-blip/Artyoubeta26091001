@@ -1,8 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /gestionale.html
-Disallow: /scanner.html
-Disallow: /prenotazione-workshow.html
-Disallow: /versione.html
 
 Sitemap: https://artyouroma.it/sitemap.xml
