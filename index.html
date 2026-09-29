@@ -268,7 +268,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <a href="#spettacoli" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Spettacoli</a>
 <a href="improvvisazione.html" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Corsi</a>
 <a href="workshow-corso.html" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Workshow</a>
-<a id="festival-menu-trigger" href="#festival-menu" aria-expanded="false" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Festival</a>
+<a id="festival-menu-trigger" href="#" aria-expanded="false" onclick="event.preventDefault();event.stopPropagation();var s=document.getElementById('festival-subnav');if(s){var o=s.style.display==='flex';s.style.display=o?'none':'flex';this.setAttribute('aria-expanded',o?'false':'true');}return false;" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Festival</a>
 <a href="chi-siamo.html" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Chi Siamo</a>
 <a href="insegnanti.html" class="artyou-menu-extra" style="display: none; text-decoration: none;">I docenti</a>
 <a href="#contatti" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Contatti</a>
@@ -1138,41 +1138,6 @@ class Component extends DCLogic {
   }
 })();
 </script>
-<script id="festival-subnav-toggle">
-(function(){
-  var trigger=document.getElementById("festival-menu-trigger");
-  var sub=document.getElementById("festival-subnav");
-  if(!trigger||!sub)return;
 
-  function openMenu(){
-    sub.style.display="flex";
-    trigger.setAttribute("aria-expanded","true");
-  }
-
-  function closeMenu(){
-    sub.style.display="none";
-    trigger.setAttribute("aria-expanded","false");
-  }
-
-  trigger.addEventListener("click",function(e){
-    e.preventDefault();
-    e.stopPropagation();
-    var open=trigger.getAttribute("aria-expanded")==="true";
-    if(open) closeMenu(); else openMenu();
-  });
-
-  sub.addEventListener("click",function(e){
-    e.stopPropagation();
-  });
-
-  document.addEventListener("click",function(e){
-    if(!sub.contains(e.target)&&e.target!==trigger) closeMenu();
-  });
-
-  document.addEventListener("keydown",function(e){
-    if(e.key==="Escape") closeMenu();
-  });
-})();
-</script>
 </body>
 </html>
