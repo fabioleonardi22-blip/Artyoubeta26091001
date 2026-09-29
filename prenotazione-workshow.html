@@ -273,6 +273,9 @@ a{color:#1A6E99}a:hover{color:#12506F}
     "ws-shakespeare":"WorkshoW · Improv di una notte di mezza primavera",
     "ws-vulpio":"WorkshoW · Laboratorio avanzati"
   };
+  var IDS={
+    "ws-horror":"tra-fiaba-horror-un-confine-sottile-con-niko-di-felice"
+  };
   var WORDS={
     "ws-horror":["tra fiaba","horror","confine sottile","niko di felice"],
     "ws-maschera":["human comedy","fabio mangolini","maschera"],
@@ -296,6 +299,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
   }
 
   function resolve(req){
+    if(IDS[req]) return IDS[req];
     var cap=window.ARTYOU_CAP||{};
     var info=window.ARTYOU_EVENT_INFO||{};
     if(Object.prototype.hasOwnProperty.call(cap,req)) return req;
@@ -398,7 +402,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 })();
 </script>
 
-<script>window.ARTYOU_BOOKING_MODULE="WorkshoW";window.ARTYOU_BOOKING_DEBUG=true;</script>
+<script>window.ARTYOU_BOOKING_MODULE="WorkshoW";window.ARTYOU_BOOKING_DEBUG=true;window.ARTYOU_BOOKING_CAPACITY_ONLY=true;</script>
 <script src="js/artyou-booking-config.js"></script>
 <script src="js/artyou-booking-v2.js"></script>
 </body>
