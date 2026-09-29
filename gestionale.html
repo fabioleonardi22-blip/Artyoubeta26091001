@@ -57,9 +57,32 @@ label{font-size:13px;font-weight:800;display:flex;flex-direction:column;gap:7px}
         <label>Titolo<input id="title" placeholder="Es. ShortYou · show & aperitivo"></label>
         <label>Slug / codice evento<input id="slug" placeholder="es. shortyou"><span class="field-help">Codice unico, senza spazi. Viene usato anche per le prenotazioni.</span></label>
         <label>Categoria<select id="cat"><option>Improvvisazione</option><option>Teatro</option><option>Stand-up</option><option>ImproEnglish</option></select></label>
+<label>Tipo evento<select id="eventType"><option value="Spettacolo">Spettacolo</option><option value="Workshop">Workshop</option><option value="WorkshoW">WorkshoW</option><option value="Festival">Festival</option><option value="YEP">YEP</option><option value="SAGGI">SAGGI</option></select><span class="field-help">Per SAGGI puoi inserire due spettacoli nella stessa serata con capienza condivisa.</span></label>
         <label>Ordine<input id="ordine" type="number" value="100"><span class="field-help">Numero più basso = evento mostrato prima.</span></label>
       </div>
       <label style="margin-top:14px">Descrizione<textarea id="desc" placeholder="Descrivi lo spettacolo, il format e cosa aspettarsi."></textarea></label>
+    </section>
+
+    <section class="section" id="saggiFields" style="display:none">
+      <h2>Dettagli SAGGI</h2>
+      <div class="grid2">
+        <label>Orario inizio serata<input id="saggiStart" type="time" value="21:00"><span class="field-help">Un solo orario per l'intera serata.</span></label>
+      </div>
+      <div class="grid2" style="margin-top:16px">
+        <div>
+          <h3 style="margin:0 0 12px;font-size:16px">Spettacolo 1</h3>
+          <label>Titolo<input id="saggio1Title" placeholder="Titolo spettacolo 1"></label>
+          <label style="margin-top:10px">Insegnante<input id="saggio1Teacher" placeholder="Nome insegnante"></label>
+          <label style="margin-top:10px">Locandina<input id="saggio1Poster" placeholder="URL o percorso immagine"></label>
+        </div>
+        <div>
+          <h3 style="margin:0 0 12px;font-size:16px">Spettacolo 2</h3>
+          <label>Titolo<input id="saggio2Title" placeholder="Titolo spettacolo 2"></label>
+          <label style="margin-top:10px">Insegnante<input id="saggio2Teacher" placeholder="Nome insegnante"></label>
+          <label style="margin-top:10px">Locandina<input id="saggio2Poster" placeholder="URL o percorso immagine"></label>
+        </div>
+      </div>
+      <p class="field-help" style="margin-top:12px">Capienza, prezzo e disponibilità restano unici per tutta la serata.</p>
     </section>
 
     <section class="section">
@@ -113,6 +136,7 @@ function $(id){return document.getElementById(id)}
 function pin(){return $("pin").value.trim()}
 function setStatus(msg,type){var s=$("status");s.className="status "+(type||"info");s.textContent=msg}
 function slugify(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")}
+function toggleSaggiFields(){var on=$("eventType")&&$("eventType").value==="SAGGI";var box=$("saggiFields");if(box)box.style.display=on?"block":"none"}
 function apiGet(action){if(!endpoint) return Promise.reject(new Error("Endpoint Gestionale non configurato"));return fetch(endpoint+"?action="+encodeURIComponent(action)+"&pin="+encodeURIComponent(pin())+"&_="+Date.now()).then(r=>r.json())}
 function apiPost(body){if(!endpoint) return Promise.reject(new Error("Endpoint Gestionale non configurato"));body.pin=pin();return fetch(endpoint,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)}).then(r=>r.json())}
 function assert(res){if(!res||!res.ok)throw new Error((res&&res.errore)||"Operazione non riuscita");return res}
@@ -136,27 +160,33 @@ function castRow(v){
 function addCast(v){castRow(v||{name:"",slug:""})}
 
 function clearForm(){
-  currentId=""; $("id").value=""; $("title").value=""; $("slug").value=""; $("cat").value="Improvvisazione";
+  currentId=""; $("id").value=""; $("title").value=""; $("slug").value=""; $("cat").value="Improvvisazione";$("eventType").value="Spettacolo";
   $("ordine").value=100;$("desc").value="";$("venue").value="";$("addr").value="";$("maps").value="";
   $("price").value="";$("capienza").value=60;$("pagaOnline").checked=false;$("tbd").checked=false;$("attivo").checked=true;
   $("poster").value="";$("posterFile").value="";$("posterPreview").style.backgroundImage="";$("posterPreview").textContent="Anteprima locandina";
+  $("saggiStart").value="21:00";$("saggio1Title").value="";$("saggio1Teacher").value="";$("saggio1Poster").value="";$("saggio2Title").value="";$("saggio2Teacher").value="";$("saggio2Poster").value="";toggleSaggiFields();
   $("dates").innerHTML="";addDate();$("cast").innerHTML="";$("deleteBtn").style.display="none";$("formTitle").textContent="Nuovo evento";
   document.querySelectorAll(".event").forEach(x=>x.classList.remove("active"));updatePreviewLink();
 }
 function loadForm(e){
-  currentId=e.id||"";$("id").value=currentId;$("title").value=e.title||"";$("slug").value=e.slug||"";$("cat").value=e.cat||"Improvvisazione";
+  currentId=e.id||"";$("id").value=currentId;$("title").value=e.title||"";$("slug").value=e.slug||"";$("cat").value=e.cat||"Improvvisazione";$("eventType").value=e.eventType||"Spettacolo";
   $("ordine").value=e.ordine||100;$("desc").value=e.desc||"";$("venue").value=e.venue||"";$("addr").value=e.addr||"";$("maps").value=e.maps||"";
   $("price").value=e.price===""?"":e.price;$("capienza").value=e.capienza||0;$("pagaOnline").checked=!!e.pagaOnline;$("tbd").checked=!!e.tbd;$("attivo").checked=!!e.attivo;
-  $("poster").value=e.poster||"";$("dates").innerHTML="";(e.dates||[]).forEach(addDate);if(!$("dates").children.length)addDate();
+  $("poster").value=e.poster||"";
+  var sg=e.saggi||{};
+  $("saggiStart").value=sg.start||"21:00";$("saggio1Title").value=(sg.show1&&sg.show1.title)||"";$("saggio1Teacher").value=(sg.show1&&sg.show1.teacher)||"";$("saggio1Poster").value=(sg.show1&&sg.show1.poster)||"";
+  $("saggio2Title").value=(sg.show2&&sg.show2.title)||"";$("saggio2Teacher").value=(sg.show2&&sg.show2.teacher)||"";$("saggio2Poster").value=(sg.show2&&sg.show2.poster)||"";toggleSaggiFields();
+  $("dates").innerHTML="";(e.dates||[]).forEach(addDate);if(!$("dates").children.length)addDate();
   $("cast").innerHTML="";(e.cast||[]).forEach(addCast);$("deleteBtn").style.display="inline-block";$("formTitle").textContent=e.title||"Modifica evento";
   updatePoster();updatePreviewLink();renderList();
 }
 function collect(){
   var dates=[].slice.call(document.querySelectorAll(".date-label")).map(x=>({label:x.value.trim(),sold:0})).filter(x=>x.label);
   var cast=[].slice.call(document.querySelectorAll(".cast-row")).map(row=>({name:row.querySelector(".cast-name").value.trim(),slug:row.querySelector(".cast-slug").value.trim()})).filter(x=>x.name);
-  return {id:currentId,slug:$("slug").value.trim()||slugify($("title").value),title:$("title").value.trim(),cat:$("cat").value,ordine:Number($("ordine").value)||100,
+  return {id:currentId,slug:$("slug").value.trim()||slugify($("title").value),title:$("title").value.trim(),cat:$("cat").value,eventType:$("eventType").value,ordine:Number($("ordine").value)||100,
     desc:$("desc").value.trim(),venue:$("venue").value.trim(),addr:$("addr").value.trim(),maps:$("maps").value.trim(),price:$("price").value===""?"":Number($("price").value),
-    capienza:Number($("capienza").value)||0,pagaOnline:$("pagaOnline").checked,tbd:$("tbd").checked,attivo:$("attivo").checked,poster:$("poster").value.trim(),dates:dates,cast:cast};
+    capienza:Number($("capienza").value)||0,pagaOnline:$("pagaOnline").checked,tbd:$("tbd").checked,attivo:$("attivo").checked,poster:$("poster").value.trim(),dates:dates,cast:cast,
+    saggi:$("eventType").value==="SAGGI"?{start:$("saggiStart").value||"",show1:{title:$("saggio1Title").value.trim(),teacher:$("saggio1Teacher").value.trim(),poster:$("saggio1Poster").value.trim()},show2:{title:$("saggio2Title").value.trim(),teacher:$("saggio2Teacher").value.trim(),poster:$("saggio2Poster").value.trim()}}:null};
 }
 function renderList(){
   var box=$("eventList");box.innerHTML="";
@@ -174,6 +204,7 @@ function refresh(){
 }
 function save(){
   var e=collect();if(!e.title){setStatus("Inserisci il titolo.","err");return}if(!e.dates.length){setStatus("Inserisci almeno una data.","err");return}
+  if(e.eventType==="SAGGI"&&(!e.saggi.show1.title||!e.saggi.show2.title)){setStatus("Per SAGGI inserisci entrambi i titoli degli spettacoli.","err");return}
   setStatus("Salvataggio in corso…","info");
   apiPost({action:"save",event:e}).then(assert).then(function(r){currentId=r.event.id;setStatus("Evento salvato e sincronizzato con le prenotazioni.","ok");return apiGet("list")}).then(assert).then(function(r){events=r.events||[];var cur=events.find(x=>x.id===currentId);if(cur)loadForm(cur);else renderList()}).catch(function(e){setStatus(e.message,"err")});
 }
@@ -191,7 +222,7 @@ function upload(){
 }
 $("loginBtn").onclick=refresh;$("refreshBtn").onclick=refresh;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("deleteBtn").onclick=del;
 $("addDateBtn").onclick=function(){addDate()};$("addCastBtn").onclick=function(){addCast()};$("poster").oninput=updatePoster;$("uploadBtn").onclick=upload;
-$("title").oninput=function(){if(!currentId&&!$("slug").value.trim())$("slug").value=slugify(this.value);updatePreviewLink()};$("slug").oninput=updatePreviewLink;
+$("title").oninput=function(){if(!currentId&&!$("slug").value.trim())$("slug").value=slugify(this.value);updatePreviewLink()};$("slug").oninput=updatePreviewLink;$("eventType").onchange=toggleSaggiFields;
 clearForm();
 if(!endpoint)setStatus("Prima configurazione: inserisci l'URL /exec del Gestionale in js/artyou-events-config.js.","err");
 })();
