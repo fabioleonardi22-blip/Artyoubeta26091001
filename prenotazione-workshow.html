@@ -274,7 +274,29 @@ a{color:#1A6E99}a:hover{color:#12506F}
     "ws-vulpio":"WorkshoW · Laboratorio avanzati"
   };
   var IDS={
-    "ws-horror":"tra-fiaba-horror-un-confine-sottile-con-niko-di-felice"
+    "ws-horror":[
+      "tra-fiaba-horror-un-confine-sottile-con-niko-di-felice"
+    ],
+    "ws-parole":[
+      "from-text-to-next-con-federica-forbicioni",
+      "from-text-to-next"
+    ],
+    "ws-thriller":[
+      "thriller-con-cinzia-zadro",
+      "thriller"
+    ],
+    "ws-vulpio":[
+      "laboratorio-avanzati-con-antonio-vulpio",
+      "laboratorio-avanzati"
+    ],
+    "ws-maschera":[
+      "human-comedy-con-fabio-mangolini",
+      "human-comedy"
+    ],
+    "ws-shakespeare":[
+      "improv-di-una-notte-di-mezza-primavera-con-pierpaolo-buzza",
+      "improv-di-una-notte-di-mezza-primavera"
+    ]
   };
   var WORDS={
     "ws-horror":["tra fiaba","horror","confine sottile","niko di felice"],
@@ -299,8 +321,15 @@ a{color:#1A6E99}a:hover{color:#12506F}
   }
 
   function resolve(req){
-    if(IDS[req]) return IDS[req];
+    var resolved=String(window.ARTYOU_BOOKING_RESOLVED_EVENT_ID||"").trim();
+    if(resolved)return resolved;
     var cap=window.ARTYOU_CAP||{};
+    if(IDS[req]){
+      for(var ci=0;ci<IDS[req].length;ci++){
+        if(Object.prototype.hasOwnProperty.call(cap,IDS[req][ci])) return IDS[req][ci];
+      }
+      return IDS[req][0];
+    }
     var info=window.ARTYOU_EVENT_INFO||{};
     if(Object.prototype.hasOwnProperty.call(cap,req)) return req;
 
@@ -413,8 +442,26 @@ a{color:#1A6E99}a:hover{color:#12506F}
 })();
 </script>
 
-<script>window.ARTYOU_BOOKING_MODULE="WorkshoW";window.ARTYOU_BOOKING_DEBUG=true;window.ARTYOU_BOOKING_CAPACITY_ONLY=true;window.ARTYOU_BOOKING_EVENT_ID="tra-fiaba-horror-un-confine-sottile-con-niko-di-felice";</script>
+<script>
+(function(){
+  window.ARTYOU_BOOKING_MODULE="WorkshoW";
+  window.ARTYOU_BOOKING_DEBUG=true;
+  window.ARTYOU_BOOKING_CAPACITY_ONLY=true;
+  var h="";
+  try{h=decodeURIComponent((location.hash||"").replace(/^#/,""));}catch(e){}
+  var map={
+    "ws-horror":["tra-fiaba-horror-un-confine-sottile-con-niko-di-felice"],
+    "ws-parole":["from-text-to-next-con-federica-forbicioni","from-text-to-next"],
+    "ws-thriller":["thriller-con-cinzia-zadro","thriller"],
+    "ws-vulpio":["laboratorio-avanzati-con-antonio-vulpio","laboratorio-avanzati"],
+    "ws-maschera":["human-comedy-con-fabio-mangolini","human-comedy"],
+    "ws-shakespeare":["improv-di-una-notte-di-mezza-primavera-con-pierpaolo-buzza","improv-di-una-notte-di-mezza-primavera"]
+  };
+  window.ARTYOU_BOOKING_EVENT_IDS=map[h]||map["ws-horror"];
+  window.ARTYOU_BOOKING_EVENT_ID=window.ARTYOU_BOOKING_EVENT_IDS[0];
+})();
+</script>
 <script src="js/artyou-booking-config.js?v=20260929-0935"></script>
-<script src="js/artyou-booking-v2.js?v=20260929-0935"></script>
+<script src="js/artyou-booking-v2.js?v=20260929-all-workshow"></script>
 </body>
 </html>
