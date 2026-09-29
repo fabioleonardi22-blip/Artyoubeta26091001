@@ -573,9 +573,27 @@ class Component extends DCLogic {
         };
       });
       // Hide unused second button if only one event exists
-      btns.forEach(function(b,si){b.style.display=si<byDate[d].length?"":"none";});
+      btns.forEach(function(b,si){
+        b.style.display="flex";
+        if(si>=byDate[d].length){
+          var tw=b.children&&b.children[1];
+          if(tw&&tw.children){
+            if(tw.children[0])tw.children[0].textContent="Spettacolo";
+            if(tw.children[1])tw.children[1].textContent="";
+            if(tw.children[2])tw.children[2].textContent="In attesa dei dati dal gestionale";
+            if(tw.children[3])tw.children[3].innerHTML="<strong>Insegnante:</strong> —";
+          }
+          b.disabled=true;
+          b.style.opacity=".6";
+          b.style.cursor="default";
+        }else{
+          b.disabled=false;
+          b.style.opacity="1";
+          b.style.cursor="pointer";
+        }
+      });
     });
-    rows.forEach(function(r,i){r.style.display=i<dates.length?"":"none";});
+    rows.forEach(function(r,i){r.style.display=i<dates.length?"grid":"none";});
 
     // Right evening buttons
     var choose=Array.from(document.querySelectorAll("span")).find(function(s){return (s.textContent||"").trim()==="Scegli la serata";});
@@ -595,7 +613,7 @@ class Component extends DCLogic {
         setTimeout(sync,0);
       };
     });
-    eBtns.forEach(function(b,i){b.style.display=i<dates.length?"":"none";});
+    eBtns.forEach(function(b,i){b.style.display=i<dates.length?"flex":"none";});
 
     // Right show option buttons: sync with selected date based on hidden event or first date
     var hidden=document.getElementById("f-evento-id");
@@ -617,7 +635,7 @@ class Component extends DCLogic {
         var h=document.getElementById("f-evento-id");if(h)h.value=id;
         setTimeout(sync,0);
       };
-      b.style.display="";
+      b.style.display="flex";
     });
     shBtns.forEach(function(b,i){if(i>=idsSel.length)b.style.display="none";});
 
