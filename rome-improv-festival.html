@@ -508,7 +508,7 @@ class Component extends DCLogic {
       types:types,workshops:workshops,evenings:evenings,payOpts:payOpts,
       isWs:isWs,isShow:isShow,showStepper:isShow,
       seats:seats,
-      maxNote:!capacityReady?"Caricamento disponibilità…":(rem<=maxPer?"Restano "+rem+" posti":"Massimo "+maxPer+" a prenotazione"),
+      maxNote:!capacityReady?"Dato in arrivo LIVE…":(rem<=maxPer?"Restano "+rem+" posti":"Massimo "+maxPer+" a prenotazione"),
       plusOpacity:capacityReady&&seats>=maxAllowed?0.35:1,
       available:capacityReady&&rem>0,
       soldOut:capacityReady&&rem===0,
