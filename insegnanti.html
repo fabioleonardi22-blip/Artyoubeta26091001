@@ -285,9 +285,9 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div class="am-grid2" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px;">
 <sc-for list="{{teachers}}" as="t" hint-placeholder-count="13">
 <article style="display: flex; flex-direction: column; background: #F6F3EC; border-radius: 20px; overflow: hidden;">
-<a href="/insegnante.html#{{t.slug}}" aria-label="Profilo di {{t.name}}" style="display: block; text-decoration: none;"><div class="am-wrap am-himg am-fs-body" style="height: 340px; background-color: {{t.tint}}; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #C9D2D8; font-size: 14px;"><sc-if value="{{t.hasPhoto}}" hint-placeholder-val="{{ true }}"><img src="{{t.photo}}" alt="Ritratto di {{t.name}}" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;"></sc-if><sc-if value="{{t.noPhoto}}" hint-placeholder-val="{{ false }}"><span>Ritratto</span></sc-if></div></a>
+<sc-if value="{{t.hasProfile}}" hint-placeholder-val="{{ true }}"><a href="/insegnante.html#{{t.slug}}" aria-label="Profilo di {{t.name}}" style="display: block; text-decoration: none;"><div class="am-wrap am-himg am-fs-body" style="height: 340px; background-color: {{t.tint}}; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #C9D2D8; font-size: 14px;"><sc-if value="{{t.hasPhoto}}" hint-placeholder-val="{{ true }}"><img src="{{t.photo}}" alt="Ritratto di {{t.name}}" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;"></sc-if><sc-if value="{{t.noPhoto}}" hint-placeholder-val="{{ false }}"><span>Ritratto</span></sc-if></div></a></sc-if><sc-if value="{{t.noProfile}}" hint-placeholder-val="{{ false }}"><div class="am-wrap am-himg am-fs-body" style="height: 340px; background-color: {{t.tint}}; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #C9D2D8; font-size: 14px;"><sc-if value="{{t.hasPhoto}}" hint-placeholder-val="{{ false }}"><img src="{{t.photo}}" alt="Ritratto di {{t.name}}" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;"></sc-if><sc-if value="{{t.noPhoto}}" hint-placeholder-val="{{ true }}"><span>Foto in arrivo</span></sc-if></div></sc-if>
 <div style="padding: 20px; display: flex; flex-direction: column; gap: 10px;">
-<a href="/insegnante.html#{{t.slug}}" class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 22px; color: #13181D; text-decoration: none;">{{t.name}}</a>
+<sc-if value="{{t.hasProfile}}" hint-placeholder-val="{{ true }}"><a href="/insegnante.html#{{t.slug}}" class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 22px; color: #13181D; text-decoration: none;">{{t.name}}</a></sc-if><sc-if value="{{t.noProfile}}" hint-placeholder-val="{{ false }}"><span class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 22px; color: #13181D;">{{t.name}}</span></sc-if>
 <div class="am-wrap" style="display: flex; flex-wrap: wrap; gap: 6px;">
 <sc-for list="{{t.tags}}" as="g" hint-placeholder-count="2">
 <span class="am-wrap" style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: {{g.color}}; background: #FFFFFF; border-radius: 999px; padding: 5px 10px;"><span style="width: 8px; height: 8px; border-radius: 4px; background: {{g.dot}};"></span>{{g.label}}</span>
@@ -296,7 +296,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <span class="am-fs-body" style="font-size: 14px; color: #555D64;">{{t.role}}</span>
 <div class="am-wrap" style="display: flex; gap: 8px; margin-top: 4px;">
 <a href="{{t.ig}}" target="_blank" rel="noopener" class="am-wrap am-fs-body" style="flex-grow: 1; height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; background: #13181D; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"></circle></svg>{{t.handle}}</a>
-<a href="/insegnante.html#{{t.slug}}" class="am-wrap am-fs-body" style="height: 44px; padding: 0 14px; display: flex; align-items: center; border-radius: 12px; border: 1px solid #CFC8BA; color: #13181D; font-weight: 600; font-size: 14px; text-decoration: none;">Profilo</a>
+<sc-if value="{{t.hasProfile}}" hint-placeholder-val="{{ true }}"><a href="/insegnante.html#{{t.slug}}" class="am-wrap am-fs-body" style="height: 44px; padding: 0 14px; display: flex; align-items: center; border-radius: 12px; border: 1px solid #CFC8BA; color: #13181D; font-weight: 600; font-size: 14px; text-decoration: none;">Profilo</a></sc-if>
 </div>
 </div>
 </article>
@@ -372,6 +372,9 @@ class Component extends DCLogic {
       { name: "Marco Masi", role: "Triennio improvvisazione teatrale", disc: ["Improvvisazione"] },
       { name: "Francesca Giombini", role: "Triennio improvvisazione teatrale", disc: ["Improvvisazione"] },
       { name: "Andrea Onori", role: "Teatro di testo base e avanzato", disc: ["Teatro"] },
+      { name: "Alberto Bellandi", role: "Corsi Amatori · Movimento scenico", disc: ["Improvvisazione"], noProfile: true },
+      { name: "Giulia Bornacin", role: "Corsi Amatori · Movimento scenico", disc: ["Improvvisazione"], noProfile: true },
+      { name: "Livia Massimi", role: "Teatro di testo", disc: ["Teatro"], noProfile: true },
       { name: "Andrea Cecili", role: "Affiancatori Formazione Docenti", disc: ["Formazione docenti"] },
       { name: "Andrea Verteramo", role: "Affiancatori Formazione Docenti", disc: ["Formazione docenti"] },
       { name: "Sandro Canori", role: "Stand-up comedy", disc: ["Stand-up"], ig: "https://www.instagram.com/sandro_canori/", handle: "@sandro_canori" },
@@ -380,7 +383,7 @@ class Component extends DCLogic {
     ];
     var PHOTO = {"Cinzia Zadro":"/img/insegnanti/cinzia-zadro.jpg","Federica Forb":"/img/insegnanti/federica-forbicioni.jpg","Francesco Parisi":"/img/insegnanti/francesco-parisi.jpg","Marco Masi":"/img/insegnanti/marco-masi.jpg","Francesca Giombini":"/img/insegnanti/francesca-giombini.jpg","Andrea Onori":"/img/insegnanti/andrea-onori.jpg","Giulia Scarpino":"/img/insegnanti/giulia-scarpino.jpg","Fabio Leonardi":"/img/insegnanti/fabio-leonardi.jpg","Sandro Canori":"/img/standup-sandro.jpg","Antonio Micali":"/img/standup-antonio.jpg","Velia Lalli":"/img/standup-velia.jpg"};
     var teachers = all.filter(function (t) { return filter === "Tutti" || t.disc.indexOf(filter) >= 0; }).map(function (t) {
-      var ph = PHOTO[t.name]; return { slug: t.slug || t.name.toLowerCase().replace(/ /g, "-"), name: t.name, role: t.role, photo: ph || "", hasPhoto: !!ph, noPhoto: !ph, ig: t.ig || "https://www.instagram.com/[username]/", handle: t.handle || "@[username]", tint: meta[t.disc[0]].tint, tags: t.disc.map(function (x) { return { label: x, color: meta[x].color, dot: meta[x].dot }; }) };
+      var ph = PHOTO[t.name]; return { slug: t.slug || t.name.toLowerCase().replace(/ /g, "-"), name: t.name, role: t.role, photo: ph || "", hasPhoto: !!ph, noPhoto: !ph, hasProfile: !t.noProfile, noProfile: !!t.noProfile, ig: t.ig || "https://www.instagram.com/[username]/", handle: t.handle || "@[username]", tint: meta[t.disc[0]].tint, tags: t.disc.map(function (x) { return { label: x, color: meta[x].color, dot: meta[x].dot }; }) };
     });
     var filters = ["Tutti", "Improvvisazione", "Teatro", "Stand-up"].map(function (label) {
       var on = label === filter;
