@@ -1,7 +1,7 @@
 const CFG = {
   SHEET_PRENOTAZIONI: "Prenotazioni",
   SHEET_EVENTI: "Eventi",
-  EMAIL_ADMIN: "info@artyouroma.it",
+  EMAIL_ADMIN: "prenotazioni@artyouroma.it",
   EMAIL_BACKUP: "artyouroma@gmail.com",
   INVIA_EMAIL_UTENTE: true,
   HOLD_MINUTES: 15
@@ -122,16 +122,19 @@ function createGenericRequest_(data) {
 
   saveDynamicRow_(rowData);
 
-  sendAdminEmail_(rowData, id);
+  const emailAdmin = sendAdminEmail_(rowData, id);
 
+  let emailUtente = { ok: false, errore: "email_utente_non_inviata" };
   if (CFG.INVIA_EMAIL_UTENTE && isValidEmail_(data.Email)) {
-    sendUserEmail_(rowData, id);
+    emailUtente = sendUserEmail_(rowData, id);
   }
 
   return jsonResponse_({
     ok: true,
     id: id,
-    stato: "Nuova"
+    stato: "Nuova",
+    emailAdmin: emailAdmin,
+    emailUtente: emailUtente
   });
 }
 
@@ -192,10 +195,11 @@ function createEventBooking_(data) {
 
   saveDynamicRow_(rowData);
 
-  sendAdminEmail_(rowData, id, liberi - posti);
+  const emailAdmin = sendAdminEmail_(rowData, id, typeof liberi === "number" ? liberi - posti : null);
 
+  let emailUtente = { ok: false, errore: "email_utente_non_inviata" };
   if (CFG.INVIA_EMAIL_UTENTE && isValidEmail_(data.Email)) {
-    sendUserEmail_(rowData, id);
+    emailUtente = sendUserEmail_(rowData, id);
   }
 
   return jsonResponse_({
@@ -203,7 +207,9 @@ function createEventBooking_(data) {
     id: id,
     stato: stato,
     liberi: typeof liberi === "number" ? liberi - posti : null,
-    holdMinutes: online ? CFG.HOLD_MINUTES : 0
+    holdMinutes: online ? CFG.HOLD_MINUTES : 0,
+    emailAdmin: emailAdmin,
+    emailUtente: emailUtente
   });
 }
 
@@ -636,11 +642,14 @@ function sendAdminEmail_(data, id, liberiDopo) {
       cc: CFG.EMAIL_BACKUP || "",
       subject: subject,
       body: body,
-      htmlBody: html
+      htmlBody: html,
+      name: "Artyou Roma"
     });
+    return { ok: true };
 
   } catch (err) {
     console.log("Errore email admin: " + err.message);
+    return { ok: false, errore: String(err && err.message || err) };
   }
 }
 
@@ -697,11 +706,15 @@ function sendUserEmail_(data, id) {
       to: data.Email,
       subject: subject,
       body: body,
-      htmlBody: html
+      htmlBody: html,
+      name: "Artyou Roma",
+      replyTo: CFG.EMAIL_ADMIN
     });
+    return { ok: true };
 
   } catch (err) {
     console.log("Errore email utente: " + err.message);
+    return { ok: false, errore: String(err && err.message || err) };
   }
 }
 
