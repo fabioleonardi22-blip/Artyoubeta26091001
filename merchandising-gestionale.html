@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Gestionale Merchandising | Artyou Roma</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+*{box-sizing:border-box}html{background:#C79A2B}
+body{margin:0;background:#C79A2B;color:#13181D;font-family:Arial,Helvetica,sans-serif;display:flex;justify-content:center;min-height:100vh}
+.app{width:1200px;max-width:1200px;background:#F6F3EC;min-height:100vh;box-shadow:0 0 36px rgba(44,31,8,.30)}
+header{background:#13181D;color:#fff;padding:18px 34px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
+header img{height:48px}.head-actions{display:flex;gap:10px;align-items:center}.pill{border:1px solid #3A444D;background:#20282E;color:#fff;border-radius:999px;padding:10px 14px;font-size:13px}
+nav{display:flex;gap:12px;padding:18px 34px 0;background:#F6F3EC;border-bottom:1px solid #DDD5C8}
+nav button{border:0;background:transparent;padding:14px 18px;font-weight:700;cursor:pointer;color:#555D64;border-bottom:3px solid transparent}
+nav button.active{color:#7A1631;border-bottom-color:#F09000}
+main{padding:30px 34px 64px}
+.section{display:none}.section.active{display:block}
+.title-row{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:22px}
+.kicker{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;color:#F09000}
+h1,h2,h3{font-family:Georgia,serif}h1{font-size:42px;margin:5px 0 0}.sub{color:#6A7279;margin:6px 0 0}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.stat{background:#fff;border:1px solid #E4DED2;border-radius:18px;padding:20px}.stat strong{display:block;font-size:30px;margin-top:8px}.stat span{font-size:13px;color:#6A7279}
+.panel{background:#fff;border:1px solid #E4DED2;border-radius:20px;padding:22px;margin-top:20px}
+.panel h2{margin:0 0 16px;font-size:26px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+input,select{border:1px solid #D7D0C3;border-radius:10px;background:#fff;padding:10px 12px;font:inherit}
+button.primary{border:0;background:#F09000;color:#1C1606;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}
+button.dark{border:0;background:#13181D;color:#fff;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer}
+button.soft{border:1px solid #D7D0C3;background:#fff;border-radius:9px;padding:8px 11px;font-weight:700;cursor:pointer}
+button.danger{border:1px solid #D9BFC4;background:#FFF5F6;color:#7A1631;border-radius:9px;padding:8px 11px;font-weight:700;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;color:#6A7279;font-size:12px;text-transform:uppercase;letter-spacing:.7px;padding:11px;border-bottom:1px solid #E4DED2}td{padding:12px 11px;border-bottom:1px solid #EEE8DE;vertical-align:middle}.stock-low{color:#A45A00;font-weight:800}.stock-zero{color:#9B1C31;font-weight:800}
+.badge{display:inline-flex;border-radius:999px;padding:6px 9px;font-size:12px;font-weight:800}.badge.new{background:#FFF1CF;color:#875500}.badge.ready{background:#E5F5EA;color:#17603A}.badge.done{background:#ECEFF1;color:#48525A}.badge.paid{background:#E9F4FA;color:#0B6F94}
+.order-card{border:1px solid #E4DED2;border-radius:16px;padding:16px;margin-bottom:12px;background:#fff}.order-top{display:flex;justify-content:space-between;gap:12px}.order-lines{margin:10px 0;color:#555D64;font-size:14px;line-height:1.55}.order-actions{display:flex;gap:8px;flex-wrap:wrap}
+.modal{position:fixed;inset:0;background:rgba(13,17,21,.48);display:none;align-items:center;justify-content:center;z-index:50}.modal.open{display:flex}.modal-card{width:min(560px,92vw);background:#F6F3EC;border-radius:20px;padding:24px}.modal-card h2{margin:0 0 18px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.note{font-size:12px;color:#7A7F83;margin-top:18px}
+@media(max-width:900px){.app{width:100%;max-width:100%;box-shadow:none}.grid4{grid-template-columns:repeat(2,1fr)}table{min-width:800px}.table-wrap{overflow:auto}}
+@media(max-width:560px){header{padding:14px 16px}nav{padding:12px 16px 0;overflow:auto}main{padding:24px 16px 48px}.grid4{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <a href="/"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a>
+  <div class="head-actions"><span class="pill">Demo tecnica</span><a class="pill" href="/merchandising.html" style="text-decoration:none;">Apri shop</a></div>
+</header>
+<nav>
+  <button class="active" data-tab="dashboard">Dashboard</button>
+  <button data-tab="magazzino">Prodotti e Magazzino</button>
+  <button data-tab="ordini">Ordini</button>
+</nav>
+<main>
+<section id="dashboard" class="section active">
+  <div class="title-row"><div><div class="kicker">MERCHANDISING</div><h1>Dashboard</h1><p class="sub">Panoramica tecnica di prodotti, stock e ordini.</p></div></div>
+  <div class="grid4">
+    <div class="stat"><span>Prodotti attivi</span><strong id="statProducts">0</strong></div>
+    <div class="stat"><span>Pezzi in magazzino</span><strong id="statStock">0</strong></div>
+    <div class="stat"><span>Varianti esaurite</span><strong id="statZero">0</strong></div>
+    <div class="stat"><span>Ordini da preparare</span><strong id="statOrders">0</strong></div>
+  </div>
+  <div class="panel"><h2>Scorte basse</h2><div id="lowStock"></div></div>
+  <div class="panel"><h2>Ultimi ordini</h2><div id="recentOrders"></div></div>
+</section>
+
+<section id="magazzino" class="section">
+  <div class="title-row"><div><div class="kicker">CATALOGO</div><h1>Prodotti e Magazzino</h1><p class="sub">Ogni riga rappresenta una variante prodotto + colore + taglia.</p></div><button id="addProduct" class="primary">+ Nuovo prodotto</button></div>
+  <div class="panel">
+    <div class="toolbar"><input id="search" placeholder="Cerca prodotto..."><select id="categoryFilter"><option value="">Tutte le categorie</option><option>T-shirt</option><option>Felpa</option><option>Pantaloni</option><option>Calzini</option></select></div>
+    <div class="table-wrap"><table><thead><tr><th>Prodotto</th><th>Categoria</th><th>Colore</th><th>Taglia</th><th>Stock</th><th>Prezzo</th><th>Attivo</th><th>Azioni</th></tr></thead><tbody id="stockBody"></tbody></table></div>
+  </div>
+  <div class="note">In questa demo le modifiche restano solo nel browser e si azzerano ricaricando la pagina.</div>
+</section>
+
+<section id="ordini" class="section">
+  <div class="title-row"><div><div class="kicker">ORDINI</div><h1>Ordini</h1><p class="sub">Simulazione del flusso: Da preparare → Pronto → Consegnato.</p></div></div>
+  <div id="ordersList"></div>
+</section>
+</main>
+</div>
+
+<div id="productModal" class="modal">
+  <div class="modal-card">
+    <h2>Nuova variante</h2>
+    <div class="form-grid">
+      <label>Prodotto<input id="mName" value="T-shirt Artyou"></label>
+      <label>Categoria<select id="mCat"><option>T-shirt</option><option>Felpa</option><option>Pantaloni</option><option>Calzini</option></select></label>
+      <label>Colore<input id="mColor" value="Nero"></label>
+      <label>Taglia<input id="mSize" value="M"></label>
+      <label>Stock<input id="mStock" type="number" min="0" value="5"></label>
+      <label>Prezzo €<input id="mPrice" type="number" min="0" step=".01" value="20"></label>
+    </div>
+    <div class="modal-actions"><button id="modalClose" class="soft">Annulla</button><button id="modalSave" class="primary">Salva variante</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+let stock=[
+ {name:"T-shirt Artyou Logo",cat:"T-shirt",color:"Nero",size:"M",qty:12,price:20,active:true},
+ {name:"T-shirt Artyou Logo",cat:"T-shirt",color:"Nero",size:"L",qty:8,price:20,active:true},
+ {name:"T-shirt Artyou Logo",cat:"T-shirt",color:"Bianco",size:"M",qty:3,price:20,active:true},
+ {name:"Felpa Artyou Classic",cat:"Felpa",color:"Nero",size:"M",qty:7,price:42,active:true},
+ {name:"Felpa Artyou Classic",cat:"Felpa",color:"Bordeaux",size:"L",qty:2,price:42,active:true},
+ {name:"Pantaloni Stage",cat:"Pantaloni",color:"Nero",size:"M",qty:0,price:34,active:true},
+ {name:"Calzini antiscivolo",cat:"Calzini",color:"Nero",size:"39-42",qty:15,price:12,active:true},
+ {name:"Calzini antiscivolo",cat:"Calzini",color:"Arancio",size:"43-46",qty:4,price:12,active:true}
+];
+let orders=[
+ {id:"ORD-0027",name:"Mario Rossi",payment:"Pagato",delivery:"Ritiro Artyou",status:"Da preparare",total:82,lines:["2 × T-shirt Artyou Logo · Nero · M","1 × Felpa Artyou Classic · Bordeaux · L"]},
+ {id:"ORD-0026",name:"Giulia Bianchi",payment:"Pagato",delivery:"Spedizione",status:"Pronto",total:24,lines:["2 × Calzini antiscivolo · Nero · 39-42"]},
+ {id:"ORD-0025",name:"Luca Verdi",payment:"Pagato",delivery:"Ritiro Artyou",status:"Consegnato",total:42,lines:["1 × Felpa Artyou Classic · Nero · M"]}
+];
+const euro=v=>new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"}).format(v);
+function renderStock(){
+ const q=document.getElementById("search").value.toLowerCase(),cat=document.getElementById("categoryFilter").value;
+ document.getElementById("stockBody").innerHTML=stock.map((x,i)=>({...x,i})).filter(x=>(!q||x.name.toLowerCase().includes(q))&&(!cat||x.cat===cat)).map(x=>`<tr>
+ <td><strong>${x.name}</strong></td><td>${x.cat}</td><td>${x.color}</td><td>${x.size}</td>
+ <td class="${x.qty===0?'stock-zero':x.qty<=3?'stock-low':''}">${x.qty}</td><td>${euro(x.price)}</td><td>${x.active?'Sì':'No'}</td>
+ <td><button class="soft" data-inc="${x.i}">+1</button> <button class="soft" data-dec="${x.i}">-1</button> <button class="danger" data-toggle="${x.i}">${x.active?'Disattiva':'Attiva'}</button></td></tr>`).join("");
+ renderDashboard();
+}
+function statusBadge(s){return s==="Da preparare"?"new":s==="Pronto"?"ready":"done"}
+function renderOrders(){
+ document.getElementById("ordersList").innerHTML=orders.map((o,i)=>`<article class="order-card"><div class="order-top"><div><strong>${o.id} · ${o.name}</strong><div style="margin-top:6px"><span class="badge paid">${o.payment}</span> <span class="badge ${statusBadge(o.status)}">${o.status}</span></div></div><strong>${euro(o.total)}</strong></div><div class="order-lines">${o.lines.join("<br>")}<br><strong>Consegna:</strong> ${o.delivery}</div><div class="order-actions">${o.status==="Da preparare"?'<button class="dark" data-status="'+i+'" data-next="Pronto">Segna pronto</button>':""}${o.status==="Pronto"?'<button class="primary" data-status="'+i+'" data-next="Consegnato">Segna consegnato</button>':""}</div></article>`).join("");
+ renderDashboard();
+}
+function renderDashboard(){
+ document.getElementById("statProducts").textContent=new Set(stock.filter(x=>x.active).map(x=>x.name)).size;
+ document.getElementById("statStock").textContent=stock.reduce((s,x)=>s+x.qty,0);
+ document.getElementById("statZero").textContent=stock.filter(x=>x.qty===0).length;
+ document.getElementById("statOrders").textContent=orders.filter(x=>x.status==="Da preparare").length;
+ const low=stock.filter(x=>x.qty<=3);
+ document.getElementById("lowStock").innerHTML=low.length?low.map(x=>'<div style="padding:9px 0;border-bottom:1px solid #EEE8DE"><strong>'+x.name+'</strong> · '+x.color+' · '+x.size+' — <span class="'+(x.qty===0?'stock-zero':'stock-low')+'">'+x.qty+' pezzi</span></div>').join(""):"Nessuna scorta bassa.";
+ document.getElementById("recentOrders").innerHTML=orders.slice(0,3).map(o=>'<div style="padding:9px 0;border-bottom:1px solid #EEE8DE"><strong>'+o.id+'</strong> · '+o.name+' · '+euro(o.total)+' · '+o.status+'</div>').join("");
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")});
+document.getElementById("search").oninput=renderStock;document.getElementById("categoryFilter").onchange=renderStock;
+document.getElementById("stockBody").onclick=e=>{let b=e.target.closest("button");if(!b)return;let i=Number(b.dataset.inc??b.dataset.dec??b.dataset.toggle);if(b.dataset.inc!==undefined)stock[i].qty++;if(b.dataset.dec!==undefined)stock[i].qty=Math.max(0,stock[i].qty-1);if(b.dataset.toggle!==undefined)stock[i].active=!stock[i].active;renderStock()};
+document.getElementById("ordersList").onclick=e=>{let b=e.target.closest("[data-status]");if(!b)return;orders[Number(b.dataset.status)].status=b.dataset.next;renderOrders()};
+const modal=document.getElementById("productModal");document.getElementById("addProduct").onclick=()=>modal.classList.add("open");document.getElementById("modalClose").onclick=()=>modal.classList.remove("open");
+document.getElementById("modalSave").onclick=()=>{stock.push({name:mName.value.trim()||"Nuovo prodotto",cat:mCat.value,color:mColor.value.trim()||"—",size:mSize.value.trim()||"—",qty:Math.max(0,Number(mStock.value)||0),price:Math.max(0,Number(mPrice.value)||0),active:true});modal.classList.remove("open");renderStock()};
+renderStock();renderOrders();
+})();
+</script>
+</body>
+</html>
