@@ -534,7 +534,7 @@ class Component extends DCLogic {
       payNote: pay===0
         ? "Paghi ora <strong>10 €</strong> di iscrizione con PayPal a info@artyouroma.it e saldi il restante importo prima del Festival. La camera resta una preferenza."
         : "Paghi ora l’intero importo di <strong>20 €</strong> con PayPal a info@artyouroma.it. La camera resta una preferenza.",
-      ctaLabel: "Prenota il posto",
+      ctaLabel: "Conferma e paga con PayPal",
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare YEP 2027: " + what + "."),
       waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Per YEP 2027 (" + what + ") il workshop risulta completo: potete mettermi in lista d’attesa?"),
       confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
@@ -555,7 +555,7 @@ class Component extends DCLogic {
 
 <script>window.ARTYOU_BOOKING_MODULE="YEP";window.ARTYOU_BOOKING_DEBUG=true;</script>
 <script src="js/artyou-booking-config.js"></script>
-<script src="js/artyou-booking-v2.js?v=20260929-payments"></script>
+<script src="js/artyou-booking-v2.js?v=20260929-paypal-test"></script>
 <script>
 (function(){
   var ids=[
