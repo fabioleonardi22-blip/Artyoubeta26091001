@@ -34,21 +34,26 @@ function post(d){return fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"t
 function avail(){
 if(!ENDPOINT)return;
 Promise.all([
-  fetch(ENDPOINT+"?disponibilita=1").then(r=>r.json()).catch(()=>null),
-  fetch(ENDPOINT+"?eventi=1").then(r=>r.json()).catch(()=>null)
+  fetch(ENDPOINT+"?disponibilita=1",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).catch(function(){return null;}),
+  fetch(ENDPOINT+"?eventi=1",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).catch(function(){return null;})
 ]).then(function(all){
   var cap=all[0], ev=all[1], changed=false;
-  if(cap&&cap.disponibilita){
+  if(cap&&cap.disponibilita&&typeof cap.disponibilita==="object"){
     window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},cap.disponibilita);
     changed=true;
   }
-  if(ev&&ev.eventi){
+  if(ev&&ev.eventi&&typeof ev.eventi==="object"){
     window.ARTYOU_EVENT_INFO=Object.assign({},window.ARTYOU_EVENT_INFO||{},ev.eventi);
     changed=true;
   }
   if(changed){
     window.dispatchEvent(new Event("hashchange"));
-    window.dispatchEvent(new Event("artyou:capacity-updated"));
+    window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{
+      disponibilita:window.ARTYOU_CAP||{},
+      eventi:window.ARTYOU_EVENT_INFO||{}
+    }}));
+  }else{
+    window.dispatchEvent(new CustomEvent("artyou:capacity-error",{detail:{endpoint:ENDPOINT}}));
   }
 });
 }
