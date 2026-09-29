@@ -169,7 +169,7 @@ function clearForm(){
   document.querySelectorAll(".event").forEach(x=>x.classList.remove("active"));updatePreviewLink();
 }
 function loadForm(e){
-  currentId=e.id||"";$("id").value=currentId;$("title").value=e.title||"";$("slug").value=e.slug||"";$("cat").value=e.cat||"Improvvisazione";$("eventType").value=e.eventType||"Spettacolo";
+  currentId=e.id||"";$("id").value=currentId;$("title").value=e.title||"";$("slug").value=e.slug||"";$("cat").value=e.cat||"Improvvisazione";$("eventType").value=e.eventType||e.tipo||"Spettacolo";
   $("ordine").value=e.ordine||100;$("desc").value=e.desc||"";$("venue").value=e.venue||"";$("addr").value=e.addr||"";$("maps").value=e.maps||"";
   $("price").value=e.price===""?"":e.price;$("capienza").value=e.capienza||0;$("pagaOnline").checked=!!e.pagaOnline;$("tbd").checked=!!e.tbd;$("attivo").checked=!!e.attivo;
   $("poster").value=e.poster||"";
@@ -183,7 +183,7 @@ function loadForm(e){
 function collect(){
   var dates=[].slice.call(document.querySelectorAll(".date-label")).map(x=>({label:x.value.trim(),sold:0})).filter(x=>x.label);
   var cast=[].slice.call(document.querySelectorAll(".cast-row")).map(row=>({name:row.querySelector(".cast-name").value.trim(),slug:row.querySelector(".cast-slug").value.trim()})).filter(x=>x.name);
-  return {id:currentId,slug:$("slug").value.trim()||slugify($("title").value),title:$("title").value.trim(),cat:$("cat").value,eventType:$("eventType").value,ordine:Number($("ordine").value)||100,
+  return {id:currentId,slug:$("slug").value.trim()||slugify($("title").value),title:$("title").value.trim(),cat:$("cat").value,eventType:$("eventType").value,tipo:$("eventType").value,ordine:Number($("ordine").value)||100,
     desc:$("desc").value.trim(),venue:$("venue").value.trim(),addr:$("addr").value.trim(),maps:$("maps").value.trim(),price:$("price").value===""?"":Number($("price").value),
     capienza:Number($("capienza").value)||0,pagaOnline:$("pagaOnline").checked,tbd:$("tbd").checked,attivo:$("attivo").checked,poster:$("poster").value.trim(),dates:dates,cast:cast,
     saggi:$("eventType").value==="SAGGI"?{start:$("saggiStart").value||"",show1:{title:$("saggio1Title").value.trim(),teacher:$("saggio1Teacher").value.trim(),poster:$("saggio1Poster").value.trim()},show2:{title:$("saggio2Title").value.trim(),teacher:$("saggio2Teacher").value.trim(),poster:$("saggio2Poster").value.trim()}}:null};
@@ -193,7 +193,7 @@ function renderList(){
   if(!events.length){box.innerHTML='<div class="empty">Nessun evento nel gestionale.</div>';return}
   events.forEach(function(e){
     var d=document.createElement("div");d.className="event"+(e.id===currentId?" active":"");
-    d.innerHTML="<strong>"+escapeHtml(e.title||e.slug)+"</strong><div class='meta'>"+escapeHtml(e.cat||"")+" · "+(e.attivo?"Pubblicato":"Bozza")+" · "+escapeHtml((e.dates&&e.dates[0]&&e.dates[0].label)||"")+"</div>";
+    d.innerHTML="<strong>"+escapeHtml(e.title||e.slug)+"</strong><div class='meta'>"+escapeHtml(e.eventType||e.tipo||e.cat||"")+" · "+(e.attivo?"Pubblicato":"Bozza")+" · "+escapeHtml((e.dates&&e.dates[0]&&e.dates[0].label)||"")+"</div>";
     d.onclick=function(){loadForm(e)};box.appendChild(d);
   });
 }
