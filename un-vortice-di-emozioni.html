@@ -315,7 +315,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 22px; box-shadow: 0 20px 50px rgba(19,24,29,0.08);">
 <sc-if value="{{notConfirmed}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
-<h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Prenota il tuo posto</h2>
+<h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Prenota o riserva</h2>
 <span style="font-size:13px;line-height:1.4;color:#6B737A;margin-top:-12px;">Attendi il caricamento in tempo reale delle disponibilità</span>
 <div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Scegli la serata</span><div style="display: flex; flex-direction: column; gap: 10px;">
 <sc-for list="{{evenings}}" as="e" hint-placeholder-count="8">
@@ -342,11 +342,11 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <sc-if value="{{available}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <div style="display:flex;flex-direction:column;gap:10px;">
-<span class="am-fs-body" style="font-size:14px;font-weight:700;">Pagamento</span>
-<div style="display:flex;flex-direction:column;gap:6px;background:#F6EAF3;border:1px solid #E6C6DE;border-radius:14px;padding:16px 18px;">
-<span class="am-fs-body" style="font-size:15px;font-weight:700;color:#6E1260;">Biglietto · 12 € a persona</span>
-<span class="am-fs-body" style="font-size:14px;line-height:1.5;color:#3F474E;">{{payNote}}</span>
+<span class="am-fs-body" style="font-size:14px;font-weight:700;">Come vuoi procedere?</span>
+<div class="am-wrap" style="display:flex;gap:8px;flex-wrap:wrap;">
+<span class="am-fs-body" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-weight:700;font-size:14px;min-height:44px;display:inline-flex;align-items:center;">Paga tutto · 12 € a persona</span>
 </div>
+<span style="font-size:13px;line-height:1.5;color:#555D64;">{{payNote}}</span>
 </div>
 <input id="f-evento-id" type="hidden" value="">
 <input id="f-posti" type="hidden" value="2">
@@ -436,7 +436,7 @@ class Component extends DCLogic {
       plusOpacity: seats >= maxAllowed ? 0.35 : 1,
       available: true, soldOut: false, soldTitle: "Spettacolo esaurito",
       payNote: "Costo: 12 € a persona. Totale per " + seatsLabel + ": " + (12 * seats) + " €.",
-      ctaLabel: "Prenota e paga · " + (12 * seats) + " €",
+      ctaLabel: "Conferma e paga con PayPal",
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare per Un Vortice di Emozioni: " + what + "."),
       waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Il " + shNames[sh].toLowerCase() + " di " + mk(ev).label.toLowerCase() + " di Un Vortice di Emozioni è esaurito: potete mettermi in lista d’attesa?"),
       confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
