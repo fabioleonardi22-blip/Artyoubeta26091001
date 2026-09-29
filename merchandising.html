@@ -99,6 +99,34 @@ h1 span{color:#F09000}
 .btn:hover{background:#DD8200;transform:translateY(-1px)}
 .price{font-family:'Bricolage Grotesque',Georgia,sans-serif}
 .photo-placeholder{font-weight:700;color:#8C8479;z-index:1}
+
+/* Merch V3: product-first storefront */
+.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.card{border:0;background:transparent;border-radius:0;overflow:visible;min-height:0;box-shadow:none}
+.card:hover{transform:none;box-shadow:none;border-color:transparent}
+.photo{height:390px;border-radius:22px;background:#EEE9E0;box-shadow:inset 0 0 0 1px #E1DACF;transition:transform .2s ease,box-shadow .2s ease}
+.card:hover .photo{transform:translateY(-3px);box-shadow:inset 0 0 0 1px #D7CBBB,0 14px 26px rgba(19,24,29,.08)}
+.photo:after{display:none}
+.badge{top:16px;left:16px;background:rgba(19,24,29,.92);backdrop-filter:blur(4px)}
+.merch-status{top:16px;right:16px}
+.body{padding:16px 2px 0;gap:9px}
+.type{font-size:11px;letter-spacing:1.35px}
+.title{font-size:24px;line-height:1.06}
+.bottom{padding-top:12px;border-top:1px solid #EEE8DE;margin-top:6px}
+.price{font-size:23px}
+.variant-block{gap:10px}
+.color-picker{margin-top:2px}
+.color-dot{width:22px;height:22px}
+.size-btn{min-width:34px;padding:7px 8px;border-radius:8px}
+.stock{font-size:12px}
+.btn{border-radius:999px;padding:12px 17px;box-shadow:none}
+.photo-placeholder{font-size:13px;letter-spacing:.4px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.photo{height:350px}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.photo{height:420px}}
+
+.product-window{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;padding:34px}
+.product-window .photo-placeholder{font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:21px;color:#736C63}
+.product-window small{font-size:12px;color:#9A9187}
 </style>
 </head>
 <body>
@@ -187,7 +215,7 @@ h1 span{color:#F09000}
     const sizes=p.sizes.map((x,i)=>'<button type="button" class="size-btn'+(i===0?' active':'')+'" data-size="'+x+'">'+x+'</button>').join("");
     const status=p.statusLabel?'<span class="merch-status '+p.status+'">'+p.statusLabel+'</span>':'';
     return '<article class="card" data-cat="'+p.cat+'" data-product="'+p.id+'" data-selected-color="'+p.colors[0]+'" data-selected-size="'+p.sizes[0]+'">'+
-      '<div class="photo"><span class="badge">'+p.badge+'</span>'+status+'<span class="photo-placeholder">Foto prodotto</span></div>'+
+      '<div class="photo"><span class="badge">'+p.badge+'</span>'+status+'<div class="product-window"><span class="photo-placeholder">'+p.name+'</span><small>Anteprima prodotto</small></div></div>'+
       '<div class="body"><div class="type">Artyou Original</div><h3 class="title">'+p.name+'</h3>'+
       '<div class="variant-block"><div class="color-picker"><span class="color-label">Colore</span>'+colorDots+'</div><div class="size-picker">'+sizes+'</div></div>'+
       '<div class="stock">'+p.stock+' disponibili</div>'+
