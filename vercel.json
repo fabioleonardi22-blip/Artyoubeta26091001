@@ -1,0 +1,124 @@
+{
+  "redirects": [
+    {
+      "source": "/teatro",
+      "destination": "/teatro/",
+      "permanent": true
+    },
+    {
+      "source": "/improvvisazione-teatrale",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/stand-up",
+      "destination": "/stand-up/",
+      "permanent": true
+    },
+    {
+      "source": "/chi-siamo",
+      "destination": "/chi-siamo/",
+      "permanent": true
+    },
+    {
+      "source": "/insegnanti",
+      "destination": "/insegnanti/",
+      "permanent": true
+    },
+    {
+      "source": "/contatti",
+      "destination": "/contatti/",
+      "permanent": true
+    },
+    {
+      "source": "/rome-improv-festival",
+      "destination": "/rome-improv-festival/",
+      "permanent": true
+    },
+    {
+      "source": "/yep",
+      "destination": "/yep/",
+      "permanent": true
+    },
+    {
+      "source": "/workshow",
+      "destination": "/workshow/",
+      "permanent": true
+    },
+    {
+      "source": "/spettacoli",
+      "destination": "/spettacoli/",
+      "permanent": true
+    },
+    {
+      "source": "/un-vortice-di-emozioni",
+      "destination": "/un-vortice-di-emozioni/",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/privacy-policy/",
+      "permanent": true
+    },
+    {
+      "source": "/festival-e-workshop",
+      "destination": "/workshow/",
+      "permanent": true
+    },
+    {
+      "source": "/festival-e-workshop/",
+      "destination": "/workshow/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/teatro/",
+      "destination": "/teatro.html"
+    },
+    {
+      "source": "/improvvisazione-teatrale/",
+      "destination": "/improvvisazione.html"
+    },
+    {
+      "source": "/stand-up/",
+      "destination": "/stand-up.html"
+    },
+    {
+      "source": "/chi-siamo/",
+      "destination": "/chi-siamo.html"
+    },
+    {
+      "source": "/insegnanti/",
+      "destination": "/insegnanti.html"
+    },
+    {
+      "source": "/contatti/",
+      "destination": "/contatti.html"
+    },
+    {
+      "source": "/rome-improv-festival/",
+      "destination": "/rome-improv-festival.html"
+    },
+    {
+      "source": "/yep/",
+      "destination": "/yep.html"
+    },
+    {
+      "source": "/workshow/",
+      "destination": "/workshow-corso.html"
+    },
+    {
+      "source": "/spettacoli/",
+      "destination": "/spettacoli.html"
+    },
+    {
+      "source": "/un-vortice-di-emozioni/",
+      "destination": "/un-vortice-di-emozioni.html"
+    },
+    {
+      "source": "/privacy-policy/",
+      "destination": "/privacy-policy.html"
+    }
+  ]
+}
