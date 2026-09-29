@@ -1,0 +1,112 @@
+{
+  "rewrites": [
+    {
+      "source": "/chi-siamo",
+      "destination": "/chi-siamo.html"
+    },
+    {
+      "source": "/chi-siamo/",
+      "destination": "/chi-siamo.html"
+    },
+    {
+      "source": "/improvvisazione-teatrale",
+      "destination": "/improvvisazione.html"
+    },
+    {
+      "source": "/improvvisazione-teatrale/",
+      "destination": "/improvvisazione.html"
+    },
+    {
+      "source": "/teatro",
+      "destination": "/teatro.html"
+    },
+    {
+      "source": "/teatro/",
+      "destination": "/teatro.html"
+    },
+    {
+      "source": "/stand-up",
+      "destination": "/stand-up.html"
+    },
+    {
+      "source": "/stand-up/",
+      "destination": "/stand-up.html"
+    },
+    {
+      "source": "/spettacoli",
+      "destination": "/spettacoli.html"
+    },
+    {
+      "source": "/spettacoli/",
+      "destination": "/spettacoli.html"
+    },
+    {
+      "source": "/yep",
+      "destination": "/yep.html"
+    },
+    {
+      "source": "/yep/",
+      "destination": "/yep.html"
+    },
+    {
+      "source": "/festival-e-workshop",
+      "destination": "/festival-e-workshop.html"
+    },
+    {
+      "source": "/festival-e-workshop/",
+      "destination": "/festival-e-workshop.html"
+    },
+    {
+      "source": "/rome-improv-festival",
+      "destination": "/rome-improv-festival.html"
+    },
+    {
+      "source": "/rome-improv-festival/",
+      "destination": "/rome-improv-festival.html"
+    },
+    {
+      "source": "/workshow",
+      "destination": "/workshow-corso.html"
+    },
+    {
+      "source": "/workshow/",
+      "destination": "/workshow-corso.html"
+    },
+    {
+      "source": "/:slug(chi-siamo|improvvisazione-teatrale|teatro|stand-up|spettacoli|yep|festival-e-workshop|rome-improv-festival|workshow)/:path+",
+      "destination": "/:path+"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/yep-2026",
+      "destination": "/yep/",
+      "permanent": true
+    },
+    {
+      "source": "/yep-2026/",
+      "destination": "/yep/",
+      "permanent": true
+    },
+    {
+      "source": "/corsi-avanzati-2026",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/corsi-avanzati-2026/",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/contatti",
+      "destination": "/#contatti",
+      "permanent": true
+    },
+    {
+      "source": "/contatti/",
+      "destination": "/#contatti",
+      "permanent": true
+    }
+  ]
+}
