@@ -994,7 +994,7 @@ class Component extends DCLogic {
 </script>
 
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
-<script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
+<script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;if(id==="artyou-wa-course-menu"&&window.ARTYOU_CENTER_TRIAL){window.ARTYOU_CENTER_TRIAL("auto");return true;}var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
 <script id="artyou-forms-js">
 (function(){
@@ -1186,17 +1186,35 @@ class Component extends DCLogic {
 
 <script id="artyou-trial-center-scroll">
 (function(){
+  function centerTrial(behavior){
+    var section=document.getElementById("prova");
+    var form=document.getElementById("artyou-wa-course-menu");
+    var target=section||form;
+    if(!target) return;
+    var header=document.querySelector("header");
+    var headerH=header?header.getBoundingClientRect().height:0;
+    var rect=target.getBoundingClientRect();
+    var usable=Math.max(0,window.innerHeight-headerH);
+    var extra=Math.max(0,(usable-rect.height)/2);
+    var top=window.scrollY+rect.top-headerH-extra;
+    window.scrollTo({top:Math.max(0,top),behavior:behavior||"smooth"});
+  }
   function bind(){
     var b=document.getElementById("artyou-trial-header-cta");
-    var t=document.getElementById("artyou-wa-course-menu");
-    if(!b||!t||b.dataset.centerBound==="1") return;
-    b.dataset.centerBound="1";
-    b.addEventListener("click",function(e){
-      e.preventDefault();
-      t.scrollIntoView({behavior:"smooth",block:"center",inline:"nearest"});
-      if(history.replaceState) history.replaceState(null,"","#artyou-wa-course-menu");
-    });
+    if(b&&b.dataset.centerBound!=="1"){
+      b.dataset.centerBound="1";
+      b.addEventListener("click",function(e){
+        e.preventDefault();
+        if(history.replaceState) history.replaceState(null,"","#artyou-wa-course-menu");
+        centerTrial("smooth");
+      });
+    }
+    if(location.hash==="#artyou-wa-course-menu"){
+      setTimeout(function(){centerTrial("auto");},80);
+      setTimeout(function(){centerTrial("auto");},450);
+    }
   }
+  window.ARTYOU_CENTER_TRIAL=centerTrial;
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",bind);
   else bind();
 })();
