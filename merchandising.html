@@ -2,56 +2,114 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
+<title>Merchandising | Artyou Roma</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Artyou Merch</title>
 <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script src="/js/support.js"></script>
+<script src="/js/enhancements.js"></script>
 <style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#0d171c;color:#f7f7f4;font-family:Arial,Helvetica,sans-serif}
-a{color:inherit}.page{max-width:1320px;margin:0 auto;padding:22px 28px 64px}
-.breadcrumb{font-size:14px;margin-bottom:22px}.breadcrumb a{text-decoration:underline}.hero{display:grid;grid-template-columns:.9fr 1.25fr;gap:54px;align-items:center;margin:6px 0 24px}
-.kicker{font-size:14px;font-weight:800;text-transform:uppercase;color:#ff9f00;margin-bottom:14px}
-h1{margin:0;font-size:68px;line-height:.97;letter-spacing:-2.6px;max-width:520px}h1 span{color:#ff9f00}
-.lead{font-size:18px;line-height:1.5;max-width:510px;margin-top:20px}
-.hero-image{height:350px;border-radius:26px;overflow:hidden;background:#8e8e8e url('/img/home-carousel-01.jpg') center/cover no-repeat}
-.tabs{display:flex;gap:42px;border-bottom:1px solid #445158;margin-top:12px}.tab{padding:15px 0 16px;text-decoration:none;font-size:15px;position:relative}.tab.active{color:#ff9f00;font-weight:800}.tab.active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:#ff9f00}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:24px}
-.card{background:#121f25;border:1px solid #2f3a40;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-height:500px}
-.photo{height:285px;background:#8f8f8f;position:relative;display:flex;align-items:center;justify-content:center;color:#d7d7d7;font-weight:700}
-.badge{position:absolute;top:14px;left:14px;background:#0d171c;color:#fff;border:1px solid #4a575d;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800;text-transform:uppercase}
-.card-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}.type{font-size:12px;text-transform:uppercase;letter-spacing:1.3px;color:#ff9f00;font-weight:800}
-.title{font-size:22px;font-weight:800;margin:0}.meta{font-size:14px;color:#b9c2c6}.row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:12px}.price{font-size:21px;font-weight:800}.add{border:0;background:#ff9f00;color:#141414;padding:11px 16px;border-radius:10px;font-weight:800;cursor:pointer}
-.notice{margin-top:26px;color:#aeb9be;font-size:13px}
-@media(max-width:920px){.hero{grid-template-columns:1fr;gap:24px}.hero-image{height:300px}h1{font-size:52px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.page{padding:18px 16px 42px}.tabs{gap:22px;overflow-x:auto}.grid{grid-template-columns:1fr}h1{font-size:44px}.hero-image{height:235px}}
+*{box-sizing:border-box}
+html{background:#C79A2B}
+body{margin:0;background:#C79A2B;color:#13181D;font-family:'Instrument Sans',Arial,sans-serif;display:flex;justify-content:center;min-height:100vh}
+.site{width:1200px;max-width:1200px;background:#fff;min-height:100vh;box-shadow:0 0 36px rgba(44,31,8,.30)}
+a{color:inherit}
+.header{display:flex;align-items:center;justify-content:space-between;padding:20px 42px;position:sticky;top:0;z-index:20;background:#13181D;color:#E6EBEE}
+.header img{height:56px}
+.nav{display:flex;gap:28px;align-items:center}
+.nav a{color:#E6EBEE;text-decoration:none;font-size:15px;font-weight:500}
+.nav a.active{color:#F09000;font-weight:700}
+.cta{background:#25D366!important;color:#0B2E1A!important;border:2px solid #79FF9C;border-radius:999px;padding:11px 18px;font-weight:700!important}
+.hero{background:#F6F3EC;padding:54px 64px 58px;display:grid;grid-template-columns:1fr 1.15fr;gap:44px;align-items:center}
+.crumb{font-size:14px;color:#555D64;margin-bottom:22px}
+.kicker{font-size:14px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#F09000;margin-bottom:10px}
+h1{margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:62px;line-height:.98;letter-spacing:-1.8px}
+h1 span{color:#F09000}
+.lead{font-size:18px;line-height:1.55;color:#3F474E;margin:20px 0 0}
+.heroimg{height:330px;border-radius:24px;background:url('/img/home-carousel-01.jpg') center/cover no-repeat;border:1px solid #E4DED2}
+.shop{padding:44px 64px 70px;background:#fff}
+.tabs{display:flex;gap:28px;flex-wrap:wrap;border-bottom:1px solid #E4DED2;margin-bottom:26px}
+.tab{padding:0 0 14px;text-decoration:none;font-size:15px;font-weight:600;color:#555D64}
+.tab.active{color:#F09000;border-bottom:3px solid #F09000}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.card{background:#fff;border:1px solid #E4DED2;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:455px}
+.photo{height:265px;background:#ECE8E0;display:flex;align-items:center;justify-content:center;color:#8B8B87;position:relative;font-size:14px}
+.badge{position:absolute;top:14px;left:14px;background:#13181D;color:#fff;border-radius:999px;padding:7px 11px;font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}
+.body{padding:18px;display:flex;flex-direction:column;gap:9px;flex:1}
+.type{font-size:12px;color:#F09000;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+.title{font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:22px;line-height:1.1;margin:0}
+.meta{font-size:14px;color:#6A7279;line-height:1.45}
+.bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:10px}
+.price{font-weight:800;font-size:20px}
+.btn{border:0;background:#F09000;color:#1C1606;padding:12px 16px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer}
+.note{margin-top:24px;font-size:13px;color:#7A7F83}
+.footer{background:#0D1115;color:#D5DCE1;padding:64px 64px 36px}
+.footergrid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:36px}
+.footer img{height:116px}
+.footercol{display:flex;flex-direction:column;gap:9px;font-size:14px;line-height:1.45}
+.footercol strong{color:#F6F3EC}
+.footercol a{color:#D5DCE1}
+.footbottom{border-top:1px solid #262E35;margin-top:34px;padding-top:20px;display:flex;justify-content:space-between;font-size:13px;color:#9AA5AE}
+@media(max-width:1199px){html,body{background:#fff}.site{width:100%;max-width:100%;box-shadow:none}}
+@media(max-width:820px){.header{padding:16px 20px}.nav{gap:14px;flex-wrap:wrap}.nav a:not(.active):not(.cta){display:none}.hero{grid-template-columns:1fr;padding:36px 20px}.heroimg{height:240px}.shop{padding:34px 20px 54px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:48px}.footer{padding:48px 20px 30px}.footergrid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.footergrid{grid-template-columns:1fr}.footbottom{flex-direction:column;gap:10px}}
 </style>
 </head>
 <body>
-<main class="page">
-  <div class="breadcrumb"><a href="/">Home</a> &nbsp;/&nbsp; Merch</div>
-  <section class="hero">
-    <div>
-      <div class="kicker">ARTYOU MERCH</div>
-      <h1>Porta Artyou anche <span>fuori dal palco.</span></h1>
-      <p class="lead">Abbigliamento ufficiale per chi vive il teatro, l’improvvisazione e la creatività ogni giorno, dentro e fuori dalla sala.</p>
-    </div>
-    <div class="hero-image" role="img" aria-label="Artyou merch"></div>
-  </section>
+<div class="site">
+<header class="header">
+  <a href="/" aria-label="Artyou Roma – Home"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a>
+  <nav class="nav">
+    <a href="/spettacoli/">Spettacoli</a>
+    <a href="/improvvisazione-teatrale/">Corsi</a>
+    <a href="/workshow/">WorkshoW</a>
+    <a href="/rome-improv-festival/">Festival</a>
+    <a href="/chi-siamo/">Chi Siamo</a>
+    <a href="/merchandising.html" class="active">Merchandising</a>
+    <a href="#contatti">Contatti</a>
+    <a href="https://wa.me/393271881956" class="cta">Prova Gratuita</a>
+  </nav>
+</header>
 
-  <nav class="tabs" aria-label="Categorie merchandising">
+<main>
+<section class="hero">
+  <div>
+    <div class="crumb"><a href="/">Home</a> / Merchandising</div>
+    <div class="kicker">ARTYOU MERCH</div>
+    <h1>Porta Artyou anche <span>fuori dal palco.</span></h1>
+    <p class="lead">Abbigliamento e accessori Artyou per chi vive il teatro, l’improvvisazione e la creatività dentro e fuori dalla sala.</p>
+  </div>
+  <div class="heroimg" role="img" aria-label="Artyou merchandising"></div>
+</section>
+
+<section class="shop">
+  <div class="tabs">
     <a class="tab active" href="#tutti">Tutti</a>
     <a class="tab" href="#tshirt">T-shirt</a>
     <a class="tab" href="#felpe">Felpe</a>
     <a class="tab" href="#pantaloni">Pantaloni</a>
     <a class="tab" href="#calzini">Calzini</a>
-  </nav>
+  </div>
 
-  <section class="grid" id="tutti">
-    <article class="card" id="tshirt"><div class="photo"><span class="badge">T-shirt</span>Anteprima prodotto</div><div class="card-body"><div class="type">Artyou Original</div><h2 class="title">T-shirt Artyou</h2><div class="meta">Taglie e colori da definire</div><div class="row"><span class="price">€ —</span><button class="add">Aggiungi</button></div></div></article>
-    <article class="card" id="felpe"><div class="photo"><span class="badge">Felpa</span>Anteprima prodotto</div><div class="card-body"><div class="type">Artyou Original</div><h2 class="title">Felpa Artyou</h2><div class="meta">Modelli e colori da definire</div><div class="row"><span class="price">€ —</span><button class="add">Aggiungi</button></div></div></article>
-    <article class="card" id="pantaloni"><div class="photo"><span class="badge">Pantaloni</span>Anteprima prodotto</div><div class="card-body"><div class="type">Artyou Original</div><h2 class="title">Pantaloni Artyou</h2><div class="meta">Vestibilità da definire</div><div class="row"><span class="price">€ —</span><button class="add">Aggiungi</button></div></div></article>
-    <article class="card" id="calzini"><div class="photo"><span class="badge">Calzini</span>Anteprima prodotto</div><div class="card-body"><div class="type">Artyou Original</div><h2 class="title">Calzini antiscivolo</h2><div class="meta">Colori e taglie da definire</div><div class="row"><span class="price">€ —</span><button class="add">Aggiungi</button></div></div></article>
-  </section>
-  <div class="notice">Versione grafica di prova · branch merchandising</div>
+  <div class="grid" id="tutti">
+    <article class="card" id="tshirt"><div class="photo"><span class="badge">T-shirt</span>Anteprima prodotto</div><div class="body"><div class="type">Artyou Original</div><h2 class="title">T-shirt Artyou</h2><div class="meta">Taglie e colori da definire</div><div class="bottom"><span class="price">€ —</span><button class="btn">Aggiungi</button></div></div></article>
+    <article class="card" id="felpe"><div class="photo"><span class="badge">Felpa</span>Anteprima prodotto</div><div class="body"><div class="type">Artyou Original</div><h2 class="title">Felpa Artyou</h2><div class="meta">Modelli e colori da definire</div><div class="bottom"><span class="price">€ —</span><button class="btn">Aggiungi</button></div></div></article>
+    <article class="card" id="pantaloni"><div class="photo"><span class="badge">Pantaloni</span>Anteprima prodotto</div><div class="body"><div class="type">Artyou Original</div><h2 class="title">Pantaloni Artyou</h2><div class="meta">Vestibilità da definire</div><div class="bottom"><span class="price">€ —</span><button class="btn">Aggiungi</button></div></div></article>
+    <article class="card" id="calzini"><div class="photo"><span class="badge">Calzini</span>Anteprima prodotto</div><div class="body"><div class="type">Artyou Original</div><h2 class="title">Calzini antiscivolo</h2><div class="meta">Colori e taglie da definire</div><div class="bottom"><span class="price">€ —</span><button class="btn">Aggiungi</button></div></div></article>
+  </div>
+  <div class="note">Versione di prova · branch merchandising</div>
+</section>
 </main>
+
+<footer id="contatti" class="footer">
+  <div class="footergrid">
+    <div class="footercol"><img src="/img/logo-verticale-bianco.png" alt="Artyou Roma"><span>Associazione di Promozione Sociale. Improvvisazione teatrale, teatro di testo e stand-up comedy a Roma.</span></div>
+    <div class="footercol"><strong>Contatti</strong><span>Via La Spezia, 73 – Roma</span><span>Sedi: San Giovanni · Eroi · Ionio · Valle Aurelia · Africano · Boccea</span><a href="https://wa.me/393271881956">+39 327 188 1956</a><a href="mailto:info@artyouroma.it">info@artyouroma.it</a></div>
+    <div class="footercol"><strong>Esplora</strong><a href="/spettacoli/">Spettacoli</a><a href="/improvvisazione-teatrale/">Corsi</a><a href="/rome-improv-festival/">Festival</a><a href="https://artyou.infinitymundi.it/" target="_blank" rel="noopener">Diventa socio ↗</a></div>
+    <div class="footercol"><strong>Seguici</strong><a href="https://www.instagram.com/artyouroma/">Instagram</a><a href="https://www.facebook.com/artyouroma/">Facebook</a></div>
+  </div>
+  <div class="footbottom"><span>© 2026 Artyou Roma</span><a href="/privacy-policy/">Privacy Policy</a></div>
+</footer>
+</div>
 </body>
 </html>
