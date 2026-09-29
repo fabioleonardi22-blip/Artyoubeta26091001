@@ -372,14 +372,15 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div style="display:flex;flex-direction:column;gap:10px;">
 <span class="am-fs-body" style="font-size:14px;font-weight:700;">Come vuoi procedere?</span>
 <div class="am-wrap" style="display:flex;gap:8px;flex-wrap:wrap;">
-<span class="am-fs-body" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-weight:700;font-size:14px;min-height:44px;display:inline-flex;align-items:center;">Paga tutto · 12 € a persona</span>
+<button type="button" data-artyou-no-submit="1" id="payPaypal" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">Paga con PayPal</button>
+<button type="button" data-artyou-no-submit="1" id="payTeatro" style="padding:11px 16px;border-radius:999px;border:2px solid #CFC8BA;background:#FFFFFF;color:#13181D;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">Paga a teatro</button>
 </div>
-<span style="font-size:13px;line-height:1.5;color:#555D64;">{{payNote}}</span>
+<span id="paymentNote" style="font-size:13px;line-height:1.5;color:#555D64;">{{payNote}}</span>
 </div>
 <input id="f-evento-id" type="hidden" value="">
 <input id="f-posti" type="hidden" value="2">
 <input id="f-paga-online" type="hidden" value="true">
-<input id="f-pagamento-modalita" type="hidden" value="Pagamento completo · 12 € a persona">
+<input id="f-pagamento-modalita" type="hidden" value="PayPal">
 <input id="f-prezzo" type="hidden" value="12">
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-allievo" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Chi vieni a vedere? <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-allievo" type="text" placeholder="Nome dell’allievo o della classe" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input id="f-privacy" type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
@@ -690,6 +691,48 @@ class Component extends DCLogic {
   document.addEventListener("click",function(e){
     if(e.target.closest('button[aria-label="Aggiungi un posto"],button[aria-label="Togli un posto"]'))setTimeout(sync,0);
   });
+})();
+</script>
+<script id="vortice-payment-choice">
+(function(){
+  function setMode(mode){
+    var paypal=document.getElementById("payPaypal");
+    var teatro=document.getElementById("payTeatro");
+    var online=document.getElementById("f-paga-online");
+    var pm=document.getElementById("f-pagamento-modalita");
+    var note=document.getElementById("paymentNote");
+    var submit=document.getElementById("f-submit-booking")||document.querySelector('[data-artyou-submit="1"]');
+    var seatsEl=document.querySelector('span.am-fs-m');
+    var seats=1;
+    document.querySelectorAll('span.am-fs-m').forEach(function(s){
+      if(/^\d+$/.test((s.textContent||"").trim()) && s.parentElement && s.parentElement.querySelector('button[aria-label="Togli un posto"]')) seats=parseInt(s.textContent,10)||1;
+    });
+    var total=12*seats;
+    if(mode==="teatro"){
+      if(paypal){paypal.style.background="#FFFFFF";paypal.style.color="#13181D";paypal.style.borderColor="#CFC8BA";}
+      if(teatro){teatro.style.background="#13181D";teatro.style.color="#FFFFFF";teatro.style.borderColor="#13181D";}
+      if(online)online.value="false";
+      if(pm)pm.value="Pagamento a teatro";
+      if(note)note.textContent="Prenoti ora e paghi "+total+" € direttamente a teatro.";
+      if(submit)submit.textContent="Conferma prenotazione";
+    }else{
+      if(paypal){paypal.style.background="#13181D";paypal.style.color="#FFFFFF";paypal.style.borderColor="#13181D";}
+      if(teatro){teatro.style.background="#FFFFFF";teatro.style.color="#13181D";teatro.style.borderColor="#CFC8BA";}
+      if(online)online.value="true";
+      if(pm)pm.value="PayPal";
+      if(note)note.textContent="Paghi ora "+total+" € con PayPal.";
+      if(submit)submit.textContent="Conferma e paga con PayPal";
+    }
+    window.VORTICE_PAYMENT_MODE=mode;
+  }
+  document.addEventListener("click",function(e){
+    if(e.target&&e.target.id==="payPaypal")setMode("paypal");
+    if(e.target&&e.target.id==="payTeatro")setMode("teatro");
+    if(e.target&&e.target.closest&&e.target.closest('button[aria-label="Aggiungi un posto"],button[aria-label="Togli un posto"]')){
+      setTimeout(function(){setMode(window.VORTICE_PAYMENT_MODE||"paypal");},0);
+    }
+  });
+  window.addEventListener("load",function(){setTimeout(function(){setMode("paypal");},300);});
 })();
 </script>
 </body>
