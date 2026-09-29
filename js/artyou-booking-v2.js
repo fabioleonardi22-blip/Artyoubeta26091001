@@ -106,6 +106,17 @@ Promise.all(reqs).then(function(all){
   }
 });
 }
+function paypalUrl(d){
+  var amount=parseFloat(d&&d.Importo);
+  if(!d||!/^PayPal/i.test(String(d.Pagamento||""))||!Number.isFinite(amount)||amount<=0)return "";
+  var item=[window.ARTYOU_BOOKING_MODULE||"Artyou Roma",d.Evento||"",d.Pagamento||""].filter(Boolean).join(" - ");
+  return "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick"+
+    "&business="+encodeURIComponent("info@artyouroma.it")+
+    "&item_name="+encodeURIComponent(item)+
+    "&amount="+encodeURIComponent(amount.toFixed(2))+
+    "&currency_code=EUR";
+}
+
 document.addEventListener("click",function(e){var b=submitBtn(e.target);if(!b)return;if(b.dataset.artyouBookingBypass==="1"){delete b.dataset.artyouBookingBypass;return;}e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(!ENDPOINT){msg(b,"err",'Sistema prenotazioni non configurato. <a href="'+WA+'" target="_blank" rel="noopener">Scrivici su WhatsApp</a>.');return;}var d=collect(b),er=validate(d);if(er){msg(b,"err",er);return;}if(b.dataset.artyouBusy==="1")return;b.dataset.artyouBusy="1";b.style.opacity=".6";msg(b,"wait","Verifica disponibilità e invio in corso…");post(d).then(res=>{if(!res||!res.ok){
 if(res&&(res.errore==="esaurito"||res.errore==="posti_insufficienti"))throw new Error("Sono rimasti "+(res.liberi||0)+" posti disponibili.");
 if(res&&res.errore==="prenotazioni_chiuse")throw new Error("Le prenotazioni per questo evento sono chiuse.");
@@ -114,6 +125,11 @@ var base=(res&&res.errore)||"Invio non riuscito.";
 if(window.ARTYOU_BOOKING_DEBUG)base+=" [Evento: "+(d.Evento||"-")+" · HTTP: "+(res&&res.__http||"-")+"]";
 throw new Error(base);
 }if(window.ARTYOU_CAP&&d.Evento&&typeof res.liberi==="number"){window.ARTYOU_CAP[d.Evento]=res.liberi;window.dispatchEvent(new Event("hashchange"));}var codice=res.codice||res.id||"";var h=codice?'Prenotazione registrata. Codice: <b>'+codice+'</b>.':"Prenotazione registrata.";if(res.stato==="HOLD")h+=" I posti sono bloccati per <b>"+res.holdMinutes+" minuti</b> in attesa del pagamento.";else h+=" I posti sono stati riservati.";msg(b,"ok",h);if(codice){window.dispatchEvent(new CustomEvent("artyou-booking-code",{detail:codice}));}
+var pp=paypalUrl(d);
+if(pp){
+  window.dispatchEvent(new CustomEvent("artyou:paypal-redirect",{detail:{url:pp,amount:d.Importo,pagamento:d.Pagamento}}));
+  setTimeout(function(){window.location.href=pp;},700);
+}
 window.dispatchEvent(new CustomEvent("artyou:booking-success",{detail:res}));
 avail();
 b.dataset.artyouBookingBypass="1";
