@@ -479,10 +479,9 @@ a{color:#1A6E99}a:hover{color:#12506F}
     var btn=document.getElementById("ws-submit");
     var meta=document.getElementById("ws-capacity-meta");
     if(cnt && /Ricerca evento|Caricamento|Verifica disponibilità/i.test(cnt.textContent||"")){
-      capacityError=true;
-      if(cnt){cnt.textContent="Gestionale non raggiunto";cnt.style.color="#7A1631";}
-      if(meta){meta.textContent="La risposta del gestionale sta impiegando troppo tempo";}
-      if(btn){btn.disabled=true;btn.textContent="Riprova tra poco";btn.style.opacity=".45";btn.style.cursor="not-allowed";}
+      if(cnt){cnt.textContent="Connessione al gestionale…";cnt.style.color="#7A4A00";}
+      if(meta){meta.textContent="Sto riprovando automaticamente la lettura della disponibilità";}
+      if(btn){btn.disabled=true;btn.textContent="Verifica disponibilità…";btn.style.opacity=".45";btn.style.cursor="not-allowed";}
     }
   },8000);
 })();
@@ -508,6 +507,109 @@ a{color:#1A6E99}a:hover{color:#12506F}
 })();
 </script>
 <script src="js/artyou-booking-config.js?v=20260929-0935"></script>
-<script src="js/artyou-booking-v2.js?v=20260929-paypal-test"></script>
+<script src="js/artyou-booking-v2.js?v=20260929-workshow-retry"></script>
+<script id="workshow-capacity-retry">
+(function(){
+  var maxRounds=5;
+  var round=0;
+  var stopped=false;
+
+  function endpoint(){
+    return window.ARTYOU_BOOKING_ENDPOINT || "/api/artyou";
+  }
+
+  function candidates(){
+    var a=Array.isArray(window.ARTYOU_BOOKING_EVENT_IDS)
+      ? window.ARTYOU_BOOKING_EVENT_IDS.slice()
+      : [];
+    if(!a.length && window.ARTYOU_BOOKING_EVENT_ID) a=[window.ARTYOU_BOOKING_EVENT_ID];
+    return a.filter(Boolean);
+  }
+
+  function fetchWithTimeout(url,ms){
+    if(typeof AbortController==="undefined"){
+      return fetch(url,{cache:"no-store"});
+    }
+    var ctrl=new AbortController();
+    var t=setTimeout(function(){try{ctrl.abort();}catch(e){}},ms);
+    return fetch(url,{cache:"no-store",signal:ctrl.signal})
+      .finally(function(){clearTimeout(t);});
+  }
+
+  function publish(id,res){
+    stopped=true;
+    window.ARTYOU_BOOKING_EVENT_ID=id;
+    window.ARTYOU_BOOKING_RESOLVED_EVENT_ID=id;
+    var hidden=document.getElementById("f-evento-id");
+    if(hidden) hidden.value=id;
+
+    window.ARTYOU_CAP=window.ARTYOU_CAP||{};
+    window.ARTYOU_CAP[id]=Math.max(0,Number(res.liberi)||0);
+
+    if(res.info){
+      window.ARTYOU_EVENT_INFO=window.ARTYOU_EVENT_INFO||{};
+      window.ARTYOU_EVENT_INFO[id]=res.info;
+    }
+
+    window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{
+      disponibilita:window.ARTYOU_CAP,
+      eventi:window.ARTYOU_EVENT_INFO||{},
+      evento:id
+    }}));
+  }
+
+  function tryCandidate(ids,i){
+    if(stopped) return Promise.resolve(true);
+    if(i>=ids.length) return Promise.resolve(false);
+
+    var id=ids[i];
+    var url=endpoint()+"?evento="+encodeURIComponent(id)+"&_="+Date.now();
+
+    return fetchWithTimeout(url,7000)
+      .then(function(r){
+        if(!r.ok) throw new Error("HTTP "+r.status);
+        return r.json();
+      })
+      .then(function(res){
+        if(res && res.ok!==false && typeof res.liberi==="number"){
+          publish(id,res);
+          return true;
+        }
+        return tryCandidate(ids,i+1);
+      })
+      .catch(function(){
+        return tryCandidate(ids,i+1);
+      });
+  }
+
+  function retry(){
+    if(stopped) return;
+    var ids=candidates();
+    if(!ids.length) return;
+
+    round++;
+    tryCandidate(ids,0).then(function(ok){
+      if(ok || stopped) return;
+
+      var cnt=document.getElementById("ws-capacity-count");
+      var meta=document.getElementById("ws-capacity-meta");
+
+      if(round<maxRounds){
+        if(cnt){cnt.textContent="Connessione al gestionale…";cnt.style.color="#7A4A00";}
+        if(meta){meta.textContent="Nuovo tentativo automatico in corso";}
+        setTimeout(retry,1800);
+      }else{
+        window.dispatchEvent(new CustomEvent("artyou:capacity-error",{detail:{
+          endpoint:endpoint(),
+          eventi:ids
+        }}));
+      }
+    });
+  }
+
+  window.addEventListener("artyou:capacity-updated",function(){stopped=true;});
+  setTimeout(retry,1200);
+})();
+</script>
 </body>
 </html>
