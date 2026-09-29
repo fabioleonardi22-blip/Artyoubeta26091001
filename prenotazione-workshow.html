@@ -374,7 +374,6 @@ a{color:#1A6E99}a:hover{color:#12506F}
       for(var ci=0;ci<IDS[req].length;ci++){
         if(Object.prototype.hasOwnProperty.call(cap,IDS[req][ci])) return IDS[req][ci];
       }
-      return IDS[req][0];
     }
     var info=window.ARTYOU_EVENT_INFO||{};
     if(Object.prototype.hasOwnProperty.call(cap,req)) return req;
@@ -400,7 +399,8 @@ a{color:#1A6E99}a:hover{color:#12506F}
       if(score>bestScore){bestScore=score;best=k;}
     });
 
-    return bestScore>=8?best:req;
+    if(bestScore>=8)return best;
+    return (IDS[req]&&IDS[req][0])?IDS[req][0]:req;
   }
 
   function setButton(btn,enabled,text){
@@ -470,7 +470,18 @@ a{color:#1A6E99}a:hover{color:#12506F}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",render);else render();
   window.addEventListener("hashchange",render);
   window.addEventListener("artyou:capacity-updated",function(){capacityError=false;render();});
-  window.addEventListener("artyou:capacity-error",function(){capacityError=true;render();});
+  window.addEventListener("artyou:capacity-error",function(e){
+    var d=e&&e.detail||{};
+    if(d.discovery===false || d.discovery===undefined){
+      capacityError=false;
+      var cnt=document.getElementById("ws-capacity-count");
+      var meta=document.getElementById("ws-capacity-meta");
+      if(cnt){cnt.textContent="Ricerca nel gestionale…";cnt.style.color="#7A4A00";}
+      if(meta){meta.textContent="Sto cercando l’evento corretto nel gestionale";}
+      return;
+    }
+    capacityError=true;render();
+  });
   window.addEventListener("artyou:booking-success",function(){capacityError=false;render();});
   setTimeout(render,250);
   setTimeout(render,1000);
@@ -507,10 +518,10 @@ a{color:#1A6E99}a:hover{color:#12506F}
 })();
 </script>
 <script src="js/artyou-booking-config.js?v=20260929-0935"></script>
-<script src="js/artyou-booking-v2.js?v=20260929-workshow-retry"></script>
+<script src="js/artyou-booking-v2.js?v=20260929-workshow-discovery"></script>
 <script id="workshow-capacity-retry">
 (function(){
-  var maxRounds=5;
+  var maxRounds=4;
   var round=0;
   var stopped=false;
 
@@ -526,22 +537,29 @@ a{color:#1A6E99}a:hover{color:#12506F}
     return a.filter(Boolean);
   }
 
-  function fetchWithTimeout(url,ms){
+  function fetchJson(url,ms){
     if(typeof AbortController==="undefined"){
-      return fetch(url,{cache:"no-store"});
+      return fetch(url,{cache:"no-store"}).then(function(r){
+        if(!r.ok)throw new Error("HTTP "+r.status);
+        return r.json();
+      });
     }
     var ctrl=new AbortController();
     var t=setTimeout(function(){try{ctrl.abort();}catch(e){}},ms);
     return fetch(url,{cache:"no-store",signal:ctrl.signal})
+      .then(function(r){
+        if(!r.ok)throw new Error("HTTP "+r.status);
+        return r.json();
+      })
       .finally(function(){clearTimeout(t);});
   }
 
-  function publish(id,res){
+  function publishExact(id,res){
     stopped=true;
     window.ARTYOU_BOOKING_EVENT_ID=id;
     window.ARTYOU_BOOKING_RESOLVED_EVENT_ID=id;
     var hidden=document.getElementById("f-evento-id");
-    if(hidden) hidden.value=id;
+    if(hidden)hidden.value=id;
 
     window.ARTYOU_CAP=window.ARTYOU_CAP||{};
     window.ARTYOU_CAP[id]=Math.max(0,Number(res.liberi)||0);
@@ -559,56 +577,101 @@ a{color:#1A6E99}a:hover{color:#12506F}
   }
 
   function tryCandidate(ids,i){
-    if(stopped) return Promise.resolve(true);
-    if(i>=ids.length) return Promise.resolve(false);
+    if(stopped)return Promise.resolve(true);
+    if(i>=ids.length)return Promise.resolve(false);
 
     var id=ids[i];
-    var url=endpoint()+"?evento="+encodeURIComponent(id)+"&_="+Date.now();
-
-    return fetchWithTimeout(url,7000)
-      .then(function(r){
-        if(!r.ok) throw new Error("HTTP "+r.status);
-        return r.json();
-      })
+    return fetchJson(endpoint()+"?evento="+encodeURIComponent(id)+"&_="+Date.now(),7000)
       .then(function(res){
         if(res && res.ok!==false && typeof res.liberi==="number"){
-          publish(id,res);
+          publishExact(id,res);
           return true;
         }
         return tryCandidate(ids,i+1);
       })
-      .catch(function(){
-        return tryCandidate(ids,i+1);
-      });
+      .catch(function(){return tryCandidate(ids,i+1);});
   }
 
-  function retry(){
-    if(stopped) return;
-    var ids=candidates();
-    if(!ids.length) return;
+  function discover(){
+    var cnt=document.getElementById("ws-capacity-count");
+    var meta=document.getElementById("ws-capacity-meta");
+    if(cnt){cnt.textContent="Ricerca nel gestionale…";cnt.style.color="#7A4A00";}
+    if(meta){meta.textContent="Sto cercando il nome reale del WorkshoW nel gestionale";}
 
-    round++;
-    tryCandidate(ids,0).then(function(ok){
-      if(ok || stopped) return;
+    return Promise.all([
+      fetchJson(endpoint()+"?eventi=1&_="+Date.now(),10000).catch(function(){return null;}),
+      fetchJson(endpoint()+"?disponibilita=1&_="+Date.now(),10000).catch(function(){return null;})
+    ]).then(function(all){
+      var ev=all[0],cap=all[1],changed=false;
 
-      var cnt=document.getElementById("ws-capacity-count");
-      var meta=document.getElementById("ws-capacity-meta");
-
-      if(round<maxRounds){
-        if(cnt){cnt.textContent="Connessione al gestionale…";cnt.style.color="#7A4A00";}
-        if(meta){meta.textContent="Nuovo tentativo automatico in corso";}
-        setTimeout(retry,1800);
-      }else{
-        window.dispatchEvent(new CustomEvent("artyou:capacity-error",{detail:{
-          endpoint:endpoint(),
-          eventi:ids
-        }}));
+      if(ev&&ev.eventi&&typeof ev.eventi==="object"){
+        window.ARTYOU_EVENT_INFO=Object.assign({},window.ARTYOU_EVENT_INFO||{},ev.eventi);
+        changed=true;
       }
+      if(cap&&cap.disponibilita&&typeof cap.disponibilita==="object"){
+        window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},cap.disponibilita);
+        changed=true;
+      }
+      if(changed){
+        window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{
+          disponibilita:window.ARTYOU_CAP||{},
+          eventi:window.ARTYOU_EVENT_INFO||{}
+        }}));
+
+        var req=(function(){
+          var h="";
+          try{h=decodeURIComponent((location.hash||"").replace(/^#/,""));}catch(e){}
+          return h||"ws-horror";
+        })();
+
+        // Let the page's fuzzy resolver choose the actual slug, then pin it.
+        setTimeout(function(){
+          var hidden=document.getElementById("f-evento-id");
+          var id=hidden&&hidden.value?hidden.value:"";
+          if(id && Object.prototype.hasOwnProperty.call(window.ARTYOU_CAP||{},id)){
+            window.ARTYOU_BOOKING_RESOLVED_EVENT_ID=id;
+            window.ARTYOU_BOOKING_EVENT_ID=id;
+            stopped=true;
+            window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{
+              disponibilita:window.ARTYOU_CAP||{},
+              eventi:window.ARTYOU_EVENT_INFO||{},
+              evento:id
+            }}));
+          }
+        },50);
+      }
+      return changed;
     });
   }
 
-  window.addEventListener("artyou:capacity-updated",function(){stopped=true;});
-  setTimeout(retry,1200);
+  function retry(){
+    if(stopped)return;
+    round++;
+    var ids=candidates();
+
+    tryCandidate(ids,0).then(function(ok){
+      if(ok||stopped)return;
+      return discover().then(function(found){
+        if(stopped)return;
+        if(round<maxRounds){
+          setTimeout(retry,1800);
+        }else{
+          window.dispatchEvent(new CustomEvent("artyou:capacity-error",{detail:{
+            endpoint:endpoint(),
+            eventi:ids,
+            discovery:!!found
+          }}));
+        }
+      });
+    });
+  }
+
+  window.addEventListener("artyou:capacity-updated",function(e){
+    var detail=e&&e.detail||{};
+    if(detail.evento)stopped=true;
+  });
+
+  setTimeout(retry,900);
 })();
 </script>
 </body>
