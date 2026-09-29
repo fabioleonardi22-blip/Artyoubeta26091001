@@ -1200,15 +1200,15 @@ class Component extends DCLogic {
     window.scrollTo({top:Math.max(0,top),behavior:behavior||"smooth"});
   }
   function bind(){
-    var b=document.getElementById("artyou-trial-header-cta");
-    if(b&&b.dataset.centerBound!=="1"){
+    document.querySelectorAll('a[href="#artyou-wa-course-menu"]').forEach(function(b){
+      if(b.dataset.centerBound==="1") return;
       b.dataset.centerBound="1";
       b.addEventListener("click",function(e){
         e.preventDefault();
         if(history.replaceState) history.replaceState(null,"","#artyou-wa-course-menu");
         centerTrial("smooth");
       });
-    }
+    });
     if(location.hash==="#artyou-wa-course-menu"){
       setTimeout(function(){centerTrial("auto");},80);
       setTimeout(function(){centerTrial("auto");},450);
