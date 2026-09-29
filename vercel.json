@@ -69,6 +69,41 @@
       "source": "/festival-e-workshop/",
       "destination": "/workshow/",
       "permanent": true
+    },
+    {
+      "source": "/yep-2026",
+      "destination": "/yep/",
+      "permanent": true
+    },
+    {
+      "source": "/yep-2026/",
+      "destination": "/yep/",
+      "permanent": true
+    },
+    {
+      "source": "/corsi-avanzati-2026",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/corsi-avanzati-2026/",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/corsi/:path*",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/categoria_corsi/:path*",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
     }
   ],
   "rewrites": [
