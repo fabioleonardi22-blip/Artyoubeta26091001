@@ -318,7 +318,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div id="vortice-calendar" style="display: flex; flex-direction: column; gap: 14px;">
 <sc-for list="{{calendar}}" as="k" hint-placeholder-count="8">
 <div class="am-grid1 vortice-day-row" style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 20px; padding: 16px; display: grid; grid-template-columns: 72px minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: stretch;">
-<span class="vortice-day-badge" style="border-radius: 14px; background: #941880; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;"><span class="am-fs-m" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 30px; line-height: 1;">{{k.day}}</span><span class="am-fs-tiny" style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">feb</span><span class="am-fs-tiny" style="font-size: 11px; color: #F3D3EA;">{{k.wd}}</span></span>
+<span class="vortice-day-badge" style="border-radius: 14px; background: #941880; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;"><span class="am-fs-m" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 30px; line-height: 1;">{{k.day}}</span><span class="am-fs-tiny" style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">feb</span></span>
 <sc-for list="{{k.shows}}" as="p" hint-placeholder-count="2">
 <button type="button" onClick="{{p.pick}}" class="am-wrap vortice-show-card" style="display: flex; gap: 14px; align-items: stretch; text-align: left; padding: 12px; border-radius: 14px; border: 2px solid {{p.border}}; background: {{p.bg}}; font-family: inherit; color: #13181D; cursor: pointer;">
 <span role="img" aria-label="Locandina {{p.title}}" class="am-vortice-poster" style="width: 108px; height: 144px; flex-shrink: 0; border-radius: 10px; background-color: #4A1040; background-image: {{p.posterCss}}; background-size: cover; background-position: center; color: #E9C9DF; display: flex; align-items: center; justify-content: center; font-size: 11px; text-align: center; padding: 6px; box-sizing: border-box;">{{p.posterFallback}}</span>
@@ -565,7 +565,7 @@ class Component extends DCLogic {
         var spans=dayBox.querySelectorAll("span");
         var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d);
         if(m&&spans[0])spans[0].textContent=String(Number(m[3]));
-        if(m&&spans[2])spans[2].textContent=fmtDate(d).split(" ")[0].slice(0,3);
+        if(m&&spans[2])spans[2].textContent="";
       }
       var btns=Array.from(row.querySelectorAll("button"));
       byDate[d].forEach(function(id,si){
