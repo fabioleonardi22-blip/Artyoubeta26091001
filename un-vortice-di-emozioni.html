@@ -493,8 +493,6 @@ class Component extends DCLogic {
 <script src="/js/artyou-booking-v2.js?v=20260929-vortice-live"></script>
 <script id="vortice-live-booking">
 (function(){
-  function norm(s){return String(s||"").toLowerCase();}
-  function rawDate(x){return String((x&&x.data)||"").trim();}
   function normDate(v){
     v=String(v||"").trim().toLowerCase();
     var m;
@@ -503,35 +501,23 @@ class Component extends DCLogic {
     if((m=/^(\d{1,2})\s+feb(?:braio)?\s+(\d{4})/.exec(v))) return m[2]+"-02-"+String(m[1]).padStart(2,"0");
     return v.slice(0,10);
   }
-  function dateKey(x){return normDate(rawDate(x));}
-  function timeKey(x){
-    var v=String((x&&x.ora)||"").trim();
-    var m=/(\d{1,2})[:\.](\d{2})/.exec(v);
-    return m?String(m[1]).padStart(2,"0")+":"+m[2]:v;
-  }
-  function isVortice(k,x){
-    var d=dateKey(x);
-    return /^2027-02-(1[5-9]|2[0-2])$/.test(d);
-  }
-  function sortIds(ids,info){
-    return ids.sort(function(a,b){
-      var A=info[a]||{},B=info[b]||{};
-      return dateKey(A).localeCompare(dateKey(B)) || timeKey(A).localeCompare(timeKey(B)) || a.localeCompare(b);
-    });
+  function dateKey(x){return normDate(x&&x.data||"");}
+  function isSaggio(x){
+    return String(x&&x.tipo||"").trim().toUpperCase()==="SAGGI" &&
+      /^2027-02-(1[5-9]|2[0-2])$/.test(dateKey(x));
   }
   function fmtDate(iso){
     iso=normDate(iso);
-    var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso||""));
+    var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
     if(!m)return "";
     var days=["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
     var dt=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
     return days[dt.getDay()]+" "+Number(m[3])+" febbraio";
   }
   function freeFor(id,info,cap){
-    if(Object.prototype.hasOwnProperty.call(cap,id))return Math.max(0,Number(cap[id])||0);
+    if(Object.prototype.hasOwnProperty.call(cap,id)) return Math.max(0,Number(cap[id])||0);
     var x=info[id]||{};
-    if(typeof x.liberi==="number")return Math.max(0,Number(x.liberi)||0);
-    return null;
+    return typeof x.liberi==="number"?Math.max(0,Number(x.liberi)||0):null;
   }
   function status(n){
     if(n===null||n===undefined)return "Caricamento…";
@@ -539,139 +525,131 @@ class Component extends DCLogic {
     if(n===1)return "1 posto libero";
     return n+" posti liberi";
   }
+  function getShows(x){
+    var sg=(x&&x.saggi)||{};
+    return [
+      {title:(sg.show1&&sg.show1.title)||"",teacher:(sg.show1&&sg.show1.teacher)||""},
+      {title:(sg.show2&&sg.show2.title)||"",teacher:(sg.show2&&sg.show2.teacher)||""}
+    ];
+  }
+  function posterFor(dateIndex,showIndex){
+    var day=15+dateIndex;
+    return "/img/saggi/"+day+"-feb-spettacolo-"+(showIndex+1)+".jpg";
+  }
+  function setStatChoice(title,index){
+    var h=document.getElementById("f-saggio-stat");
+    if(h)h.value=title||("Spettacolo "+(index+1));
+    window.VORTICE_SAGGIO_STAT=h?h.value:"";
+  }
   function sync(){
     var info=window.ARTYOU_EVENT_INFO||{},cap=window.ARTYOU_CAP||{};
-    var ids=sortIds(Object.keys(info).filter(function(k){return isVortice(k,info[k]);}),info);
+    var ids=Object.keys(info).filter(function(k){return isSaggio(info[k]);}).sort(function(a,b){
+      return dateKey(info[a]).localeCompare(dateKey(info[b]));
+    });
     if(!ids.length)return;
+
     window.ARTYOU_BOOKING_EVENT_IDS=ids.slice();
     var liveStatus=document.getElementById("vortice-live-status");
-    if(liveStatus)liveStatus.textContent=ids.length+" spettacoli collegati al gestionale";
+    if(liveStatus)liveStatus.textContent=ids.length+" serate SAGGI collegate al gestionale";
 
-    // group events by date, max two shows per day
-    var byDate={};
-    ids.forEach(function(id){
-      var d=dateKey(info[id])||"";
-      (byDate[d]||(byDate[d]=[])).push(id);
-    });
-    Object.keys(byDate).forEach(function(d){byDate[d]=sortIds(byDate[d],info).slice(0,2);});
-    var dates=Object.keys(byDate).sort().slice(0,8);
-
-    // Left calendar rows
+    // Left calendar: one managed event per evening, two descriptive shows inside it.
     var calHeading=Array.from(document.querySelectorAll("h2")).find(function(h){return /Il calendario degli spettacoli/i.test(h.textContent||"");});
     var calWrap=calHeading&&calHeading.parentElement?calHeading.parentElement.querySelector('div[style*="flex-direction: column"][style*="gap: 14px"]'):null;
     var rows=calWrap?Array.from(calWrap.children):[];
-    dates.forEach(function(d,di){
-      var row=rows[di]; if(!row)return;
+
+    ids.forEach(function(id,di){
+      var x=info[id]||{},d=dateKey(x),shows=getShows(x),row=rows[di];
+      if(!row)return;
       var dayBox=row.children&&row.children[0];
       if(dayBox){
         var spans=dayBox.querySelectorAll("span");
         var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d);
         if(m&&spans[0])spans[0].textContent=String(Number(m[3]));
-        if(m&&spans[2])spans[2].textContent="";
+        if(spans[1])spans[1].textContent="FEB";
+        if(spans[2])spans[2].textContent="";
       }
       var btns=Array.from(row.querySelectorAll("button"));
-      byDate[d].forEach(function(id,si){
-        var b=btns[si]; if(!b)return;
-        var x=info[id]||{}, parts=b.querySelectorAll("span");
-        // structural spans inside button
-        var textWrap=b.children&&b.children[1];
-        if(textWrap){
-          var s=textWrap.children;
-          if(s[0])s[0].textContent="Spettacolo";
-          if(s[1])s[1].textContent=x.ora||"";
-          if(s[2])s[2].textContent=x.titolo||("Spettacolo "+(si+1));
-          if(s[3]){
-            var docente=x.insegnante||x.docente||x.teacher||x.referente||x.descrizione||"";
-            s[3].innerHTML="<strong>Insegnante:</strong> "+docente;
-          }
-          var poster=b.querySelector(".am-vortice-poster");
-          if(poster){
-            var src=x.locandina||x.poster||x.immagine||x.image||"";
-            if(src){
-              poster.style.backgroundImage='url("'+String(src).replace(/"/g,"%22")+'")';
-              poster.textContent="";
-            }else{
-              poster.style.backgroundImage="none";
-              poster.textContent="Locandina";
-            }
-          }
+      shows.forEach(function(show,si){
+        var b=btns[si];if(!b)return;
+        var tw=b.children&&b.children[1];
+        if(tw&&tw.children){
+          if(tw.children[0])tw.children[0].textContent=si===0?"PRIMO SPETTACOLO":"SECONDO SPETTACOLO";
+          if(tw.children[1])tw.children[1].textContent=x.ora||"";
+          if(tw.children[2])tw.children[2].textContent=show.title||("Spettacolo "+(si+1));
+          if(tw.children[3])tw.children[3].innerHTML="<strong>Insegnante:</strong> "+(show.teacher||"—");
         }
+        var poster=b.querySelector(".am-vortice-poster");
+        if(poster){
+          var src=posterFor(di,si);
+          poster.style.backgroundImage='url("'+src+'")';
+          poster.textContent="";
+          poster.onerror=null;
+        }
+        b.disabled=false;
+        b.style.opacity="1";
         b.dataset.eventId=id;
+        b.dataset.statShow=String(si+1);
         b.onclick=function(){
           var h=document.getElementById("f-evento-id");if(h)h.value=id;
+          setStatChoice(show.title,si);
           setTimeout(sync,0);
         };
-      });      // La struttura grafica resta fissa: il sync aggiorna solo i dati.
-      btns.forEach(function(b,si){
-        if(si>=byDate[d].length){
-          var tw=b.children&&b.children[1];
-          if(tw&&tw.children){
-            if(tw.children[0])tw.children[0].textContent="Spettacolo";
-            if(tw.children[1])tw.children[1].textContent="";
-            if(tw.children[2])tw.children[2].textContent="In attesa dei dati dal gestionale";
-            if(tw.children[3])tw.children[3].innerHTML="<strong>Insegnante:</strong> —";
-          }
-          b.disabled=true;
-          b.style.opacity=".6";
-          b.style.cursor="default";
-        }else{
-          b.disabled=false;
-          b.style.opacity="1";
-          b.style.cursor="pointer";
-        }
       });
+    });
 
-    // Right evening buttons
+    // Right evening selector: availability belongs to the evening only.
     var choose=Array.from(document.querySelectorAll("span")).find(function(s){return (s.textContent||"").trim()==="Scegli la serata";});
     var list=choose&&choose.parentElement?choose.parentElement.querySelector("div"):null;
     var eBtns=list?Array.from(list.querySelectorAll("button")):[];
-    dates.forEach(function(d,i){
+    ids.forEach(function(id,i){
       var b=eBtns[i];if(!b)return;
-      var idsDay=byDate[d], total=0, known=true;
-      idsDay.forEach(function(id){var n=freeFor(id,info,cap);if(n===null)known=false;else total+=n;});
-      var left=b.children&&b.children[0],right=b.children&&b.children[1];
-      if(left&&left.children&&left.children[0])left.children[0].textContent=fmtDate(d);
-      if(left&&left.children&&left.children[1])left.children[1].textContent=idsDay.length===2?"Primo e secondo spettacolo":"Spettacolo";
-      if(right)right.textContent=known?status(total):"Caricamento…";
-      b.dataset.date=d;
-      b.onclick=function(){
-        var first=idsDay[0],h=document.getElementById("f-evento-id");if(h&&first)h.value=first;
-        setTimeout(sync,0);
-      };
-    });
-
-
-    // Right show option buttons: sync with selected date based on hidden event or first date
-    var hidden=document.getElementById("f-evento-id");
-    var current=hidden&&hidden.value;
-    var selectedDate=current&&info[current]?dateKey(info[current]):dates[0];
-    if(!selectedDate)selectedDate=dates[0];
-    var idsSel=byDate[selectedDate]||byDate[dates[0]]||[];
-    var shLabel=Array.from(document.querySelectorAll("span")).find(function(s){return (s.textContent||"").trim()==="Scegli lo spettacolo";});
-    var shBox=shLabel&&shLabel.parentElement?shLabel.parentElement.querySelector("div"):null;
-    var shBtns=shBox?Array.from(shBox.querySelectorAll("button")):[];
-    idsSel.forEach(function(id,i){
-      var b=shBtns[i];if(!b)return;
-      var x=info[id]||{},s=b.children;
-      if(s[0])s[0].textContent=x.titolo||("Spettacolo "+(i+1));
-      if(s[1])s[1].textContent=x.ora||"";
-      if(s[2])s[2].textContent=status(freeFor(id,info,cap));
+      var x=info[id]||{},left=b.children&&b.children[0],right=b.children&&b.children[1];
+      if(left&&left.children&&left.children[0])left.children[0].textContent=fmtDate(dateKey(x));
+      if(left&&left.children&&left.children[1])left.children[1].textContent="Serata SAGGI · 2 spettacoli";
+      if(right)right.textContent=status(freeFor(id,info,cap));
       b.dataset.eventId=id;
       b.onclick=function(){
         var h=document.getElementById("f-evento-id");if(h)h.value=id;
+        var shows=getShows(x);setStatChoice(shows[0].title,0);
         setTimeout(sync,0);
       };
-
     });
 
+    var hidden=document.getElementById("f-evento-id");
+    var current=hidden&&hidden.value;
+    if(!current||!info[current]||!isSaggio(info[current])) current=ids[0];
+    if(hidden)hidden.value=current;
 
-    if(hidden&&!hidden.value&&idsSel[0])hidden.value=idsSel[0];
+    // Right show selector: statistical preference only; does not change capacity/event.
+    var xcur=info[current]||{},shows=getShows(xcur);
+    var shLabel=Array.from(document.querySelectorAll("span")).find(function(s){return (s.textContent||"").trim()==="Scegli lo spettacolo";});
+    if(shLabel)shLabel.textContent="Quale spettacolo sei venuto a vedere?";
+    var shBox=shLabel&&shLabel.parentElement?shLabel.parentElement.querySelector("div"):null;
+    var shBtns=shBox?Array.from(shBox.querySelectorAll("button")):[];
+    shows.forEach(function(show,i){
+      var b=shBtns[i];if(!b)return;
+      var s=b.children;
+      if(s[0])s[0].textContent=show.title||("Spettacolo "+(i+1));
+      if(s[1])s[1].textContent=show.teacher?("Insegnante: "+show.teacher):"";
+      if(s[2])s[2].textContent="Scelta statistica";
+      b.dataset.statShow=String(i+1);
+      b.onclick=function(){
+        setStatChoice(show.title,i);
+        shBtns.forEach(function(x){x.style.borderColor="#CFC8BA";x.style.background="#FFFFFF";});
+        b.style.borderColor="#1479A8";b.style.background="#EAF6FC";
+      };
+    });
+    if(!document.getElementById("f-saggio-stat")){
+      var hs=document.createElement("input");hs.type="hidden";hs.id="f-saggio-stat";hs.name="Saggio visto";
+      (document.getElementById("f-evento-id")||document.body).parentNode.insertBefore(hs,(document.getElementById("f-evento-id")||document.body).nextSibling);
+    }
+    var stat=document.getElementById("f-saggio-stat");
+    if(stat&&!stat.value&&shows[0])setStatChoice(shows[0].title,0);
 
-    // keep seat count in sync with current UI number
+    var hp=document.getElementById("f-posti");
     var seatNum=Array.from(document.querySelectorAll("span")).find(function(s){
       return s.classList.contains("am-fs-m") && /^\d+$/.test((s.textContent||"").trim()) && s.parentElement && s.parentElement.querySelector('button[aria-label="Togli un posto"]');
     });
-    var hp=document.getElementById("f-posti");
     if(hp&&seatNum)hp.value=String(parseInt(seatNum.textContent,10)||1);
   }
 
