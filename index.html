@@ -153,11 +153,11 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
   #artyou-menu-toggle:checked ~ div .artyou-menu-btn .am-close { display: block !important; }
 
   /* barre secondarie (Corsi, Chi siamo): scorrono in orizzontale */
-  nav[aria-label="Chi siamo"], header + div + nav, header + nav {
+  nav[aria-label="Chi siamo"], nav[aria-label="Festival"], header + div + nav, header + nav {
     overflow-x: auto; white-space: nowrap; flex-wrap: nowrap !important; gap: 22px !important;
     padding-left: 20px !important; padding-right: 20px !important; -webkit-overflow-scrolling: touch; scrollbar-width: none;
   }
-  nav[aria-label="Chi siamo"] > *, header + div + nav > *, header + nav > * { flex: 0 0 auto; }
+  nav[aria-label="Chi siamo"] > *, nav[aria-label="Festival"] > *, header + div + nav > *, header + nav > * { flex: 0 0 auto; }
 
   /* footer */
   footer * { column-gap: 16px; }
@@ -268,7 +268,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <a href="#spettacoli" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Spettacoli</a>
 <a href="improvvisazione.html" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Corsi</a>
 <a href="workshow-corso.html" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Workshow</a>
-<a href="#festival" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Festival e Altro</a>
+<a href="#festival" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Festival</a>
 <a href="chi-siamo.html" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Chi Siamo</a>
 <a href="insegnanti.html" class="artyou-menu-extra" style="display: none; text-decoration: none;">I docenti</a>
 <a href="#contatti" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Contatti</a>
@@ -279,6 +279,10 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <label for="artyou-menu-toggle" class="artyou-menu-btn" role="button" aria-label="Apri il menu" style="display: none;"><svg class="am-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg><svg class="am-close" style="display: none;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></label></div>
 </header>
 <div aria-hidden="true" style="height: 6px; background: #7A1631;"></div>
+<nav id="festival-subnav" aria-label="Festival" class="am-wrap" style="display:none;background:#FFFFFF;align-items:center;gap:30px;padding:0 120px;height:46px;border-bottom:1px solid #E4DED2;overflow-x:auto;white-space:nowrap;">
+  <a href="rome-improv-festival.html" style="height:46px;display:flex;align-items:center;text-decoration:none;font-size:14px;font-weight:700;color:#13181D;">Rome Improv Festival</a>
+  <a href="yep.html" style="height:46px;display:flex;align-items:center;text-decoration:none;font-size:14px;font-weight:500;color:#13181D;">YEP</a>
+</nav>
 <section style="background: #13181D; color: #F6F3EC; display: flex; flex-direction: column;">
 
 
@@ -661,7 +665,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <section id="festival" class="am-px am-py" style="background: #E2F4F2; padding: 112px 120px; display: flex; flex-direction: column; gap: 40px;">
 <div class="am-mwfull" style="display: flex; flex-direction: column; gap: 12px; max-width: 760px;">
 <p class="am-fs-body" style="margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #1A6E99;">Non solo corsi</p>
-<h2 class="am-fs-xl" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -1.5px;">Festival e Altro</h2>
+<h2 class="am-fs-xl" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -1.5px;">Festival</h2>
 <p class="am-fs-lead" style="margin: 0; font-size: 19px; line-height: 1.55; color: #3F474E;">L’improvvisazione non finisce con i corsi. Festival, raduni e workshop, durante l’anno e d’estate, sono l’occasione per conoscere altri allievi e nuovi docenti, approfondire strumenti e divertirsi insieme.</p>
 </div>
 <div class="am-grid2" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px;">
@@ -709,7 +713,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <span style="font-weight: 700; color: #F6F3EC;">Esplora</span>
 <a href="#spettacoli" style="color: #D5DCE1;">Spettacoli</a>
 <a href="#corsi" style="color: #D5DCE1;">Corsi</a>
-<a href="#festival" style="color: #D5DCE1;">Festival e Altro</a>
+<a href="#festival" style="color: #D5DCE1;">Festival</a>
 <a href="https://artyou.infinitymundi.it/" target="_blank" rel="noopener" style="color: #D5DCE1;">Diventa socio ↗</a>
 </div>
 <div class="am-fs-body" style="display: flex; flex-direction: column; gap: 10px; font-size: 15px;">
@@ -1132,6 +1136,21 @@ class Component extends DCLogic {
       if (res && res.disponibilita) { window.ARTYOU_CAP = Object.assign({}, window.ARTYOU_CAP, res.disponibilita); window.dispatchEvent(new Event("hashchange")); }
     }).catch(function(){});
   }
+})();
+</script>
+<script id="festival-subnav-toggle">
+(function(){
+  var sub=document.getElementById("festival-subnav");
+  if(!sub)return;
+  function sync(){
+    sub.style.display=(location.hash==="#festival")?"flex":"none";
+  }
+  document.addEventListener("click",function(e){
+    var a=e.target.closest&&e.target.closest('a[href="#festival"]');
+    if(a){sub.style.display="flex";}
+  });
+  window.addEventListener("hashchange",sync);
+  sync();
 })();
 </script>
 </body>
