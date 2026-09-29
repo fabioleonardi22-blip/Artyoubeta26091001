@@ -1098,8 +1098,16 @@ class Component extends DCLogic {
     var ppWin = (d.Pagamento === "PayPal (online)") ? window.open("", "_blank") : null;
     b.setAttribute("data-artyou-busy", "1"); b.style.opacity = "0.6";
     messaggio(b, "wait", "Invio in corso…");
-    fetch(ENDPOINT, { method: "POST", body: JSON.stringify(d) })
-      .then(function(r){ return r.json(); })
+    fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(d) })
+      .then(function(r){
+        return r.text().then(function(t){
+          var j;
+          try { j = JSON.parse(t); }
+          catch(e) { throw new Error("HTTP " + r.status + " · risposta non JSON: " + t.slice(0,180)); }
+          j.__http = r.status;
+          return j;
+        });
+      })
       .then(function(res){
         if (res && res.ok) {
           if (ppWin) {
@@ -1119,11 +1127,13 @@ class Component extends DCLogic {
           messaggio(b, "err", res.liberi > 0 ? "Nel frattempo sono rimasti solo " + res.liberi + " posti: riduci il numero di posti oppure scegli un’altra data." : "Ci dispiace, i posti per questa data sono appena esauriti. Scegli un’altra data oppure <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a> per la lista d’attesa.");
           return;
         }
-        throw new Error(res && res.errore || "errore");
+        throw new Error((res && (res.errore || res.dettaglio)) || ("Errore HTTP " + (res && res.__http || "?")));
       })
-      .catch(function(){
+      .catch(function(err){
         if (ppWin) { try { ppWin.close(); } catch (e) {} }
-        messaggio(b, "err", "Non siamo riusciti a inviare la richiesta. Riprova tra poco oppure <a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">scrivici su WhatsApp</a>.");
+        var dettaglio = (err && err.message) ? err.message : "errore sconosciuto";
+        console.error("Errore lezione di prova:", err);
+        messaggio(b, "err", "<strong>Errore invio:</strong> " + dettaglio + "<br><a href=\"" + WA + "\" target=\"_blank\" rel=\"noopener\">Scrivici su WhatsApp</a>.");
       })
       .then(function(){ b.removeAttribute("data-artyou-busy"); b.style.opacity = ""; });
   }, true);
