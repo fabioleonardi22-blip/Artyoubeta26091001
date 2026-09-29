@@ -233,9 +233,12 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <p class="am-fs-lead" style="margin:0;font-size:19px;line-height:1.6;color:#3F474E;">Inserisci i tuoi dati essenziali per richiedere il posto. Riceverai la conferma via email.</p>
 <div id="ws-form-box" style="background:#FFF;border:1px solid #E4DED2;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:22px;">
 <div style="padding:16px 18px;border-radius:14px;background:#FDF1DE;border:1px solid #EADFCB;display:flex;flex-direction:column;gap:4px;"><span style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#9A5A00;">WorkshoW selezionato</span><strong id="ws-label" style="font-size:18px;color:#13181D;">WorkshoW</strong></div>
-<div id="ws-capacity-box" style="padding:16px 18px;border-radius:14px;background:#F6F3EC;border:1px solid #E4DED2;display:flex;align-items:center;justify-content:space-between;gap:14px;">
-  <span style="font-size:14px;font-weight:700;color:#3F474E;">Disponibilità</span>
-  <strong id="ws-capacity-count" style="font-size:16px;color:#555D64;">Caricamento…</strong>
+<div id="ws-capacity-box" style="padding:18px 20px;border-radius:16px;background:#F6F3EC;border:1px solid #E4DED2;display:flex;align-items:center;justify-content:space-between;gap:18px;">
+  <div style="display:flex;flex-direction:column;gap:3px;">
+    <span style="font-size:12px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#6A5A3C;">Disponibilità live dal gestionale</span>
+    <span id="ws-capacity-meta" style="font-size:13px;color:#6C747B;">Aggiornamento automatico</span>
+  </div>
+  <strong id="ws-capacity-count" style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:24px;color:#555D64;white-space:nowrap;">Caricamento…</strong>
 </div>
 <input id="f-evento-id" type="hidden" value="">
 <div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;"><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-nome" style="font-size:14px;font-weight:700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-cognome" style="font-size:14px;font-weight:700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div></div>
@@ -263,92 +266,135 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <script id="workshow-page-init">
 (function(){
   var LABELS={
-    "ws-horror":"WorkshoW · Horror",
+    "ws-horror":"WorkshoW · Tra fiaba & horror – Un confine sottile",
     "ws-maschera":"WorkshoW · Human Comedy",
     "ws-thriller":"WorkshoW · Thriller",
     "ws-parole":"WorkshoW · From Text to Next",
-    "ws-shakespeare":"WorkshoW · Shakespeare",
+    "ws-shakespeare":"WorkshoW · Improv di una notte di mezza primavera",
     "ws-vulpio":"WorkshoW · Laboratorio avanzati"
   };
   var WORDS={
-    "ws-horror":["horror","fiaba"],
-    "ws-maschera":["human comedy","mangolini","maschera"],
-    "ws-thriller":["thriller","zadro"],
-    "ws-parole":["from text to next","forbicioni","text"],
-    "ws-shakespeare":["shakespeare","buzza","mezza primavera"],
-    "ws-vulpio":["vulpio","laboratorio avanzati","avanzati"]
+    "ws-horror":["tra fiaba","horror","confine sottile","niko di felice"],
+    "ws-maschera":["human comedy","fabio mangolini","maschera"],
+    "ws-thriller":["thriller","cinzia zadro"],
+    "ws-parole":["from text to next","federica forbicioni"],
+    "ws-shakespeare":["mezza primavera","shakespeare","pierpaolo buzza"],
+    "ws-vulpio":["laboratorio avanzati","antonio vulpio","vulpio"]
   };
+  var capacityError=false;
+
   function requested(){
     var h="";
     try{h=decodeURIComponent((location.hash||"").replace(/^#/,""));}catch(e){}
     return LABELS[h]?h:"ws-horror";
   }
+
+  function normalize(s){
+    return String(s||"").toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/[^a-z0-9]+/g," ").trim();
+  }
+
   function resolve(req){
     var cap=window.ARTYOU_CAP||{};
+    var info=window.ARTYOU_EVENT_INFO||{};
     if(Object.prototype.hasOwnProperty.call(cap,req)) return req;
 
-    var info=window.ARTYOU_EVENT_INFO||{};
     var words=WORDS[req]||[];
-    var capKeys=Object.keys(cap||{});
-    var infoKeys=Object.keys(info||{});
-    var allKeys=capKeys.slice();
-    infoKeys.forEach(function(k){if(allKeys.indexOf(k)===-1)allKeys.push(k);});
+    var all={};
+    Object.keys(cap).forEach(function(k){all[k]=true;});
+    Object.keys(info).forEach(function(k){all[k]=true;});
 
-    function scoreKey(k){
+    var best="",bestScore=-1;
+    Object.keys(all).forEach(function(k){
       var x=info[k]||{};
-      var hay=(k+" "+(x.titolo||"")+" "+(x.descrizione||"")+" "+(x.tipo||"")+" "+(x.categoria||"")).toLowerCase();
+      var hay=normalize([
+        k,x.slug,x.titolo,x.descrizione,x.tipo,x.data,x.ora,x.stato
+      ].join(" "));
       var score=0;
-      for(var j=0;j<words.length;j++){
-        var w=String(words[j]||"").toLowerCase();
-        if(w&&hay.indexOf(w)!==-1) score+=w.indexOf(" ")!==-1?4:2;
-      }
-      if(/workshow|workshop/.test(hay)) score+=1;
-      return score;
-    }
-
-    var best="",bestScore=0;
-    allKeys.forEach(function(k){
-      var s=scoreKey(k);
-      if(s>bestScore){bestScore=s;best=k;}
+      words.forEach(function(w,idx){
+        var n=normalize(w);
+        if(n&&hay.indexOf(n)!==-1) score+=idx===0?20:8;
+      });
+      if(/workshow|workshop/.test(hay)) score+=3;
+      if(Object.prototype.hasOwnProperty.call(cap,k)) score+=2;
+      if(score>bestScore){bestScore=score;best=k;}
     });
 
-    return bestScore>0?best:req;
+    return bestScore>=8?best:req;
   }
+
+  function setButton(btn,enabled,text){
+    if(!btn)return;
+    btn.disabled=!enabled;
+    btn.textContent=text;
+    btn.style.opacity=enabled?"1":".45";
+    btn.style.cursor=enabled?"pointer":"not-allowed";
+  }
+
   function render(){
-    var req=requested(), eventId=resolve(req), cap=window.ARTYOU_CAP||{};
+    var req=requested(), eventId=resolve(req), cap=window.ARTYOU_CAP||{}, info=window.ARTYOU_EVENT_INFO||{};
     var hidden=document.getElementById("f-evento-id"); if(hidden)hidden.value=eventId;
     var lab=document.getElementById("ws-label"); if(lab)lab.textContent=LABELS[req];
     var done=document.getElementById("ws-success-label"); if(done)done.textContent=LABELS[req];
-    var cnt=document.getElementById("ws-capacity-count"),box=document.getElementById("ws-capacity-box"),btn=document.getElementById("ws-submit");
+
+    var cnt=document.getElementById("ws-capacity-count");
+    var meta=document.getElementById("ws-capacity-meta");
+    var box=document.getElementById("ws-capacity-box");
+    var btn=document.getElementById("ws-submit");
+
     var ready=Object.prototype.hasOwnProperty.call(cap,eventId);
     var rem=ready?Math.max(0,Number(cap[eventId])||0):null;
+    var ev=info[eventId]||{};
+
     if(!ready){
-      if(cnt){cnt.textContent="Disponibilità da configurare";cnt.style.color="#7A4A00";}
+      if(cnt){cnt.textContent=capacityError?"Collegamento non disponibile":"Ricerca evento…";cnt.style.color="#7A4A00";}
+      if(meta){meta.textContent=capacityError?"Il gestionale non ha risposto":"Sto leggendo la capienza dal gestionale";}
       if(box){box.style.background="#FFF7E8";box.style.borderColor="#E8D2A8";}
-      if(btn){btn.disabled=true;btn.textContent="Disponibilità non configurata";btn.style.opacity=".45";btn.style.cursor="not-allowed";}
+      setButton(btn,false,capacityError?"Riprova tra poco":"Verifica disponibilità…");
       return;
     }
+
+    capacityError=false;
+    if(meta){
+      var detail=[];
+      if(ev.titolo)detail.push(ev.titolo);
+      if(ev.data)detail.push(ev.data);
+      meta.textContent=detail.length?detail.join(" · "):"Aggiornato dal gestionale";
+    }
+
     if(rem===0){
       if(cnt){cnt.textContent="Completo";cnt.style.color="#7A1631";}
       if(box){box.style.background="#F8E9ED";box.style.borderColor="#E7C3CD";}
-      if(btn){btn.disabled=true;btn.textContent="WorkshoW completo";btn.style.opacity=".45";btn.style.cursor="not-allowed";}
+      setButton(btn,false,"WorkshoW completo");
       return;
     }
-    if(cnt){cnt.textContent=rem<=5?("Ultimi "+rem+" posti"):(rem+" posti liberi");cnt.style.color=rem<=5?"#7A1631":"#3F474E";}
-    if(box){box.style.background=rem<=5?"#FFF1F2":"#F6F3EC";box.style.borderColor=rem<=5?"#E7C3CD":"#E4DED2";}
-    if(btn){btn.disabled=false;btn.textContent="Conferma prenotazione WorkshoW";btn.style.opacity="1";btn.style.cursor="pointer";}
+
+    if(cnt){
+      cnt.textContent=rem<=5?("Ultimi "+rem+" posti"):(rem+" posti liberi");
+      cnt.style.color=rem<=5?"#7A1631":"#1B684B";
+    }
+    if(box){
+      box.style.background=rem<=5?"#FFF1F2":"#EEF8F3";
+      box.style.borderColor=rem<=5?"#E7C3CD":"#BFDCCF";
+    }
+    setButton(btn,true,"Conferma prenotazione WorkshoW");
   }
+
   window.workshowSuccess=function(){
     var f=document.getElementById("ws-form-box"),s=document.getElementById("ws-success");
     if(f)f.style.display="none";
     if(s)s.style.display="flex";
     window.scrollTo({top:0,behavior:"smooth"});
   };
+
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",render);else render();
   window.addEventListener("hashchange",render);
-  window.addEventListener("artyou:capacity-updated",render);
-  window.addEventListener("artyou:booking-success",render);
-  setTimeout(render,250);setTimeout(render,1000);
+  window.addEventListener("artyou:capacity-updated",function(){capacityError=false;render();});
+  window.addEventListener("artyou:capacity-error",function(){capacityError=true;render();});
+  window.addEventListener("artyou:booking-success",function(){capacityError=false;render();});
+  setTimeout(render,250);
+  setTimeout(render,1000);
 })();
 </script>
 
