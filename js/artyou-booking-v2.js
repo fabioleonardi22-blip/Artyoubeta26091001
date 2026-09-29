@@ -33,11 +33,15 @@ return"";
 function post(d){return fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(d)}).then(function(r){return r.text().then(function(t){var j;try{j=JSON.parse(t);}catch(e){throw new Error("HTTP "+r.status+" · risposta non JSON: "+t.slice(0,160));}j.__http=r.status;return j;});});}
 function avail(){
 if(!ENDPOINT)return;
-Promise.all([
-  fetch(ENDPOINT+"?disponibilita=1",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).catch(function(){return null;}),
-  fetch(ENDPOINT+"?eventi=1",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).catch(function(){return null;})
-]).then(function(all){
-  var cap=all[0], ev=all[1], changed=false;
+var fast=!!window.ARTYOU_BOOKING_CAPACITY_ONLY;
+var reqs=[
+  fetch(ENDPOINT+"?disponibilita=1",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).catch(function(){return null;})
+];
+if(!fast){
+  reqs.push(fetch(ENDPOINT+"?eventi=1",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).catch(function(){return null;}));
+}
+Promise.all(reqs).then(function(all){
+  var cap=all[0], ev=fast?null:all[1], changed=false;
   if(cap&&cap.disponibilita&&typeof cap.disponibilita==="object"){
     window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},cap.disponibilita);
     changed=true;
