@@ -419,6 +419,17 @@ class Component extends DCLogic {
     var wsIds=keys.filter(function(k){return isRif(k,eventMap[k])&&isWorkshop(k,eventMap[k]);}).sort(sortIds);
     var evIds=keys.filter(function(k){return isRif(k,eventMap[k])&&isShow(k,eventMap[k]);}).sort(sortIds);
 
+    function excludedOtherProject(k,info){
+      var t=(k+" "+String((info&&(info.titolo||info.descrizione||info.tipo))||"")).toLowerCase();
+      return /yep|workshow|shortyou|terapia|lezione di prova|improyoung/.test(t);
+    }
+    if(!wsIds.length){
+      wsIds=keys.filter(function(k){return !excludedOtherProject(k,eventMap[k])&&isWorkshop(k,eventMap[k]);}).sort(sortIds);
+    }
+    if(!evIds.length){
+      evIds=keys.filter(function(k){return !excludedOtherProject(k,eventMap[k])&&isShow(k,eventMap[k]);}).sort(sortIds);
+    }
+
     var legacyWs=["rif-workshop-1","rif-workshop-2","rif-workshop-3","rif-workshop-4"];
     var legacyEv=["rif-spettacolo-venerdi","rif-spettacolo-sabato","rif-spettacolo-domenica"];
     if(!wsIds.length) wsIds=legacyWs;
@@ -520,5 +531,47 @@ class Component extends DCLogic {
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
 <script>window.ARTYOU_BOOKING_MODULE="Rome Improv Festival";window.ARTYOU_BOOKING_DEBUG=true;</script>\n<script src="js/artyou-booking-config.js"></script>\n<script src="js/artyou-booking-v2.js"></script>
+<script>
+(function(){
+  function norm(s){return String(s||"").toLowerCase();}
+  function isOther(k,x){var t=norm(k+" "+(x&&((x.titolo||"")+" "+(x.descrizione||"")+" "+(x.tipo||""))));return /yep|workshow|shortyou|terapia|lezione di prova|improyoung/.test(t);}
+  function isRif(k,x){var t=norm(k+" "+(x&&((x.titolo||"")+" "+(x.descrizione||"")+" "+(x.tipo||""))));return /(^|[-_ ])rif([-_ ]|$)|rome improv|roma improv|improv festival/.test(t);}
+  function isWs(k,x){var t=norm(k+" "+(x&&((x.titolo||"")+" "+(x.descrizione||"")+" "+(x.tipo||""))));return !/spettacolo|show|serata/.test(t)&&/workshop|laboratorio|corso/.test(t);}
+  function sortIds(ids,info){return ids.sort(function(a,b){var A=info[a]||{},B=info[b]||{};return String(A.data||"").localeCompare(String(B.data||""))||String(A.ora||"").localeCompare(String(B.ora||""))||a.localeCompare(b);});}
+  function syncRif(){
+    var info=window.ARTYOU_EVENT_INFO||{},cap=window.ARTYOU_CAP||{},keys=Object.keys(info);
+    var ids=sortIds(keys.filter(function(k){return isRif(k,info[k])&&isWs(k,info[k]);}),info);
+    if(!ids.length) ids=sortIds(keys.filter(function(k){return !isOther(k,info[k])&&isWs(k,info[k]);}),info);
+    if(!ids.length) return;
+
+    var heading=Array.from(document.querySelectorAll("span")).find(function(s){return (s.textContent||"").trim()==="Scegli il workshop";});
+    if(!heading) return;
+    var wrap=heading.parentElement;
+    var list=wrap&&wrap.querySelector("div");
+    if(!list) return;
+    var buttons=Array.from(list.querySelectorAll("button"));
+
+    ids.forEach(function(id,i){
+      var b=buttons[i],x=info[id]||{};
+      if(!b) return;
+      var left=b.children&&b.children[0],right=b.children&&b.children[1];
+      if(left&&left.children&&left.children[0]) left.children[0].textContent=x.titolo||id;
+      if(left&&left.children&&left.children[1]) left.children[1].textContent=x.descrizione||[x.data,x.ora].filter(Boolean).join(" · ")||"";
+      var n=Object.prototype.hasOwnProperty.call(cap,id)?Number(cap[id]):Number(x.liberi);
+      if(right&&Number.isFinite(n)) right.textContent=n===1?"1 posto libero":n+" posti liberi";
+      b.dataset.eventId=id;
+      b.addEventListener("click",function(){
+        var h=document.getElementById("f-evento-id"); if(h) h.value=id;
+        var p=document.getElementById("f-posti"); if(p) p.value="1";
+      },{once:false});
+      if(i===0){
+        var h=document.getElementById("f-evento-id"); if(h) h.value=id;
+      }
+    });
+  }
+  window.addEventListener("artyou:capacity-updated",syncRif);
+  window.addEventListener("load",function(){setTimeout(syncRif,300);setTimeout(syncRif,1200);});
+})();
+</script>
 </body>
 </html>
