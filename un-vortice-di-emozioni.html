@@ -415,7 +415,7 @@ class Component extends DCLogic {
         return Object.assign({ n: shNames[j], time: shTimes[j], title: "[Titolo spettacolo]", teacher: "[Insegnante di riferimento]", posterCss: "none", posterFallback: "Locandina", bg: on ? "#F6EAF3" : "#FFFFFF", border: on ? "#941880" : "#E4DED2", pick: function () { self.setState({ ev: i, sh: j }); } }, self.avail(remS[i][j]));
       }) };
     });
-    var showOpts = [0, 1].map(function (j) { return Object.assign({ label: shNames[j], time: shTimes[j], pick: function () { self.setState({ sh: j }); } }, self.avail(remS[ev][j]), self.row(j === sh)); });
+    var showOpts = [0, 1].map(function (j) { return Object.assign({ label: "[Titolo spettacolo]", time: shTimes[j], pick: function () { self.setState({ sh: j }); } }, self.avail(remS[ev][j]), self.row(j === sh)); });
     var r = remS[ev][sh];
     var maxAllowed = Math.min(r, maxPer);
     var seats = Math.max(1, Math.min(st.seats || 2, Math.max(1, maxAllowed)));
@@ -601,7 +601,7 @@ class Component extends DCLogic {
     idsSel.forEach(function(id,i){
       var b=shBtns[i];if(!b)return;
       var x=info[id]||{},s=b.children;
-      if(s[0])s[0].textContent=i===0?"Primo spettacolo":"Secondo spettacolo";
+      if(s[0])s[0].textContent=x.titolo||("Spettacolo "+(i+1));
       if(s[1])s[1].textContent=x.ora||"";
       if(s[2])s[2].textContent=status(freeFor(id,info,cap));
       b.dataset.eventId=id;
