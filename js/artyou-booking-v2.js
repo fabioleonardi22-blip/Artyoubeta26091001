@@ -10,7 +10,9 @@ function evento(){var h=document.getElementById("f-evento-id");if(h&&h.value)ret
 function posti(b){var h=document.getElementById("f-posti");if(h&&h.value)return parseInt(h.value,10)||1;var m=txt(b).match(/(\d+)\s+post/i);if(m)return parseInt(m[1],10)||1;var s=document.querySelector('select[id*="posti"],select[name*="posti"]');return s?(parseInt(s.value,10)||1):1;}
 function collect(b){
 var pe=document.getElementById("f-paga-online"),pr=document.getElementById("f-prezzo"),n=posti(b),p=pr?parseFloat(pr.value):NaN,on=!!(pe&&pe.value==="true");
-var d={action:"prenota",Modulo:window.ARTYOU_BOOKING_MODULE||"Prenotazione",Evento:evento(),Nome:q("nome")?q("nome").value.trim():"",Cognome:q("cognome")?q("cognome").value.trim():"",Telefono:q("tel")?q("tel").value.trim():"",Email:q("mail")?q("mail").value.trim():"",Posti:n,Pagamento:on?"PayPal (online)":"In cassa",Importo:(!isNaN(p)&&p>0)?(p*n).toFixed(2):""};
+var pm=document.getElementById("f-pagamento-modalita");
+var pagamento=pm&&pm.value?("PayPal - "+pm.value):(on?"PayPal (online)":"In cassa");
+var d={action:"prenota",Modulo:window.ARTYOU_BOOKING_MODULE||"Prenotazione",Evento:evento(),Nome:q("nome")?q("nome").value.trim():"",Cognome:q("cognome")?q("cognome").value.trim():"",Telefono:q("tel")?q("tel").value.trim():"",Email:q("mail")?q("mail").value.trim():"",Posti:n,Pagamento:pagamento,Importo:(!isNaN(p)&&p>0)?(p*n).toFixed(2):""};
 if(window.ARTYOU_BOOKING_DEFAULT_DATE)d["Data evento"]=window.ARTYOU_BOOKING_DEFAULT_DATE;
 if(window.ARTYOU_BOOKING_DEFAULT_TIME)d["Ora evento"]=window.ARTYOU_BOOKING_DEFAULT_TIME;
 var rs=document.getElementById("f-risorse"),sr=document.getElementById("f-scelta-rif"),sy=document.getElementById("f-scelta-yep");
