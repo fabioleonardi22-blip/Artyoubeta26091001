@@ -431,33 +431,43 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <a target="_blank" rel="noopener" href="https://wa.me/393271881956?text=Ciao!%20Vorrei%20prenotare%20una%20lezione%20di%20prova." class="am-wrap" style="align-self: flex-start; margin-top: 12px; display: flex; align-items: center; gap: 10px; background: #25D366; color: #0B2E1A; padding: 16px 24px; border-radius: 999px; font-weight: 700; font-size: 16px; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.001c-5.523 0-10 4.477-10 10 0 1.762.464 3.479 1.345 4.997L2 22l5.161-1.352a9.953 9.953 0 0 0 4.879 1.253h.005c5.522 0 9.999-4.477 9.999-10 0-2.671-1.04-5.182-2.929-7.07A9.935 9.935 0 0 0 12.04 2Zm0 18.174h-.004a8.172 8.172 0 0 1-4.166-1.14l-.299-.177-3.096.812.827-3.016-.194-.31a8.163 8.163 0 0 1-1.253-4.343c0-4.508 3.669-8.176 8.19-8.176a8.14 8.14 0 0 1 5.79 2.398 8.13 8.13 0 0 1 2.397 5.788c0 4.508-3.669 8.164-8.192 8.164Zm4.484-6.13c-.246-.123-1.454-.718-1.68-.8-.226-.082-.39-.123-.554.123-.164.246-.635.8-.778.964-.144.165-.287.185-.533.062-.246-.123-1.037-.382-1.976-1.22-.73-.65-1.222-1.453-1.365-1.7-.144-.246-.015-.379.108-.501.11-.11.246-.287.369-.43.123-.144.164-.246.246-.41.082-.164.041-.308-.02-.43-.062-.123-.554-1.335-.76-1.828-.2-.48-.404-.415-.554-.423l-.472-.008a.906.906 0 0 0-.656.307c-.226.246-.862.842-.862 2.054 0 1.212.883 2.383 1.006 2.548.123.164 1.74 2.658 4.216 3.727.589.254 1.049.406 1.408.52.591.188 1.13.161 1.556.098.475-.071 1.454-.595 1.66-1.169.205-.574.205-1.066.144-1.169-.062-.102-.226-.164-.472-.287Z"></path></svg>Prenota su WhatsApp</a>
 </div>
 <div style="background: #FFFFFF; color: #13181D; border-radius: 24px; padding: 40px; display: flex; flex-direction: column; gap: 20px;">
-<sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
-<div style="display: flex; flex-direction: column; gap: 20px;">
-<h3 class="am-fs-m" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 30px;">Prenota la tua prova</h3>
-<div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="p-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="p-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 52px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="p-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="p-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 52px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
-<div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="p-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="p-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 52px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="p-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="p-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 52px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
-<div style="display: flex; flex-direction: column; gap: 8px;"><label for="p-corso" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Quale corso vuoi provare?</label>
-<select id="p-corso" style="height: 52px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit; background: #FFFFFF;">
+<div id="artyou-wa-course-menu" style="display:flex;flex-direction:column;gap:18px;">
+<h3 class="am-fs-m" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:30px;">Scrivici su WhatsApp</h3>
+<p style="margin:0;font-size:15px;line-height:1.5;color:#555D64;">Scegli il corso e il tipo di richiesta: apriremo WhatsApp con il messaggio già pronto.</p>
+
+<div style="display:flex;flex-direction:column;gap:8px;">
+<label for="artyou-wa-course" class="am-fs-body" style="font-size:14px;font-weight:700;">Quale corso ti interessa?</label>
+<select id="artyou-wa-course" style="height:52px;border:1px solid #CFC8BA;border-radius:12px;padding:0 14px;font-size:16px;font-family:inherit;background:#FFFFFF;">
 <option>Improvvisazione – primo anno</option>
+<option>Improvvisazione – secondo anno</option>
+<option>Improvvisazione – terzo anno</option>
 <option>Improvvisazione – laboratori avanzati</option>
-<option>Artyou Young – bambini e ragazzi</option>
 <option>Teatro di testo</option>
 <option>Stand-up comedy</option>
-<option>ImproEnglish</option>
+<option>Artyou Young – bambini e ragazzi</option>
+<option>WorkshoW</option>
+<option>YEP</option>
+<option>Rome Improv Festival</option>
 <option>Non lo so ancora</option>
-</select></div>
-<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy</label>
-<button type="button" onClick="{{sendTrial}}" style="height: 56px; border: none; border-radius: 14px; background: {{accent}}; color: #0B1A1F; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Prenota la lezione di prova</button>
+</select>
 </div>
-</sc-if>
-<sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
-<div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px 0;">
-<span class="am-wrap" style="width: 56px; height: 56px; border-radius: 28px; background: {{accent}}; color: #0B1A1F; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg></span>
-<h3 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Richiesta inviata!</h3>
-<p style="margin: 0; font-size: 17px; line-height: 1.5; color: #3F474E;">Ti ricontatteremo a breve per fissare la tua lezione di prova. Intanto puoi scriverci su WhatsApp per qualsiasi domanda.</p>
-<button type="button" onClick="{{resetTrial}}" class="am-fs-body" style="border: 1px solid #CFC8BA; background: #FFFFFF; border-radius: 12px; padding: 12px 18px; font-family: inherit; font-weight: 600; font-size: 15px; cursor: pointer; color: #13181D;">Invia un’altra richiesta</button>
+
+<div style="display:flex;flex-direction:column;gap:8px;">
+<label for="artyou-wa-intent" class="am-fs-body" style="font-size:14px;font-weight:700;">Come possiamo aiutarti?</label>
+<select id="artyou-wa-intent" style="height:52px;border:1px solid #CFC8BA;border-radius:12px;padding:0 14px;font-size:16px;font-family:inherit;background:#FFFFFF;">
+<option value="informazioni">Vorrei informazioni</option>
+<option value="prova">Vorrei fare una lezione di prova</option>
+<option value="iscrizione">Vorrei iscrivermi</option>
+<option value="parlare">Vorrei parlare con qualcuno</option>
+</select>
 </div>
-</sc-if>
+
+<button id="artyou-wa-course-go" type="button" style="height:56px;border:none;border-radius:14px;background:#25D366;color:#0B2E1A;font-family:inherit;font-weight:700;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.001c-5.523 0-10 4.477-10 10 0 1.762.464 3.479 1.345 4.997L2 22l5.161-1.352a9.953 9.953 0 0 0 4.879 1.253h.005c5.522 0 9.999-4.477 9.999-10 0-2.671-1.04-5.182-2.929-7.07A9.935 9.935 0 0 0 12.04 2Zm0 18.174h-.004a8.172 8.172 0 0 1-4.166-1.14l-.299-.177-3.096.812.827-3.016-.194-.31a8.163 8.163 0 0 1-1.253-4.343c0-4.508 3.669-8.176 8.19-8.176a8.14 8.14 0 0 1 5.79 2.398 8.13 8.13 0 0 1 2.397 5.788c0 4.508-3.669 8.164-8.192 8.164Z"></path></svg>
+Continua su WhatsApp
+</button>
+<span style="font-size:12px;line-height:1.4;color:#777;">WhatsApp si aprirà solo dopo la tua scelta.</span>
+</div>
 </div>
 </section>
 
@@ -1132,6 +1142,31 @@ class Component extends DCLogic {
       if (res && res.disponibilita) { window.ARTYOU_CAP = Object.assign({}, window.ARTYOU_CAP, res.disponibilita); window.dispatchEvent(new Event("hashchange")); }
     }).catch(function(){});
   }
+})();
+</script>
+
+<script id="artyou-wa-course-menu-js">
+(function(){
+  function init(){
+    var btn=document.getElementById("artyou-wa-course-go");
+    if(!btn||btn.dataset.ready==="1") return;
+    btn.dataset.ready="1";
+    btn.addEventListener("click",function(){
+      var corso=(document.getElementById("artyou-wa-course")||{}).value||"";
+      var intento=(document.getElementById("artyou-wa-intent")||{}).value||"informazioni";
+      var intro={
+        informazioni:"Ciao! Vorrei informazioni",
+        prova:"Ciao! Vorrei fare una lezione di prova",
+        iscrizione:"Ciao! Vorrei iscrivermi",
+        parlare:"Ciao! Vorrei parlare con qualcuno"
+      }[intento]||"Ciao! Vorrei informazioni";
+      var msg=intro+" per "+corso+".";
+      window.open("https://wa.me/393271881956?text="+encodeURIComponent(msg),"_blank","noopener");
+    });
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init);
+  else init();
+  setTimeout(init,500);
 })();
 </script>
 
