@@ -234,6 +234,12 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
   }
 }
 </script>
+<style id="vortice-poster-css">
+@media (max-width: 520px){
+  .am-vortice-poster{width:100% !important;height:220px !important;}
+  #vortice-calendar button:has(.am-vortice-poster){flex-direction:column !important;}
+}
+</style>
 </head>
 <body>
 <x-dc>
@@ -281,18 +287,18 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div style="display: flex; flex-direction: column; gap: 18px;">
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 40px;">Il calendario degli spettacoli</h2>
 <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">Ogni sera due spettacoli, il primo e il secondo. Clicca su uno spettacolo per prenotarlo.</p>
-<div style="display: flex; flex-direction: column; gap: 14px;">
+<div id="vortice-calendar" style="display: flex; flex-direction: column; gap: 14px;">
 <sc-for list="{{calendar}}" as="k" hint-placeholder-count="8">
 <div class="am-grid1" style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 20px; padding: 16px; display: grid; grid-template-columns: 72px minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: stretch;">
 <span style="border-radius: 14px; background: #941880; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;"><span class="am-fs-m" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 30px; line-height: 1;">{{k.day}}</span><span class="am-fs-tiny" style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">feb</span><span class="am-fs-tiny" style="font-size: 11px; color: #F3D3EA;">{{k.wd}}</span></span>
 <sc-for list="{{k.shows}}" as="p" hint-placeholder-count="2">
-<button type="button" onClick="{{p.pick}}" class="am-wrap" style="display: flex; gap: 12px; align-items: stretch; text-align: left; padding: 10px; border-radius: 14px; border: 2px solid {{p.border}}; background: {{p.bg}}; font-family: inherit; color: #13181D; cursor: pointer;">
-<span class="am-wrap am-fs-tiny" style="width: 88px; height: 110px; flex-shrink: 0; border-radius: 8px; background: #4A1040; color: #E9C9DF; display: flex; align-items: center; justify-content: center; font-size: 11px; text-align: center; padding: 6px; box-sizing: border-box;">Locandina</span>
-<span style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+<button type="button" onClick="{{p.pick}}" class="am-wrap" style="display: flex; gap: 14px; align-items: stretch; text-align: left; padding: 12px; border-radius: 14px; border: 2px solid {{p.border}}; background: {{p.bg}}; font-family: inherit; color: #13181D; cursor: pointer;">
+<span role="img" aria-label="Locandina {{p.title}}" class="am-vortice-poster" style="width: 108px; height: 144px; flex-shrink: 0; border-radius: 10px; background-color: #4A1040; background-image: {{p.posterCss}}; background-size: cover; background-position: center; color: #E9C9DF; display: flex; align-items: center; justify-content: center; font-size: 11px; text-align: center; padding: 6px; box-sizing: border-box;">{{p.posterFallback}}</span>
+<span style="display: flex; flex-direction: column; gap: 5px; min-width: 0; flex:1;">
 <span class="am-fs-tiny" style="font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #941880;">{{p.n}}</span>
 <span style="font-size: 13px; font-weight: 600; color: #3F474E;">{{p.time}}</span>
-<span style="font-size: 16px; font-weight: 700; line-height: 1.2;">{{p.title}}</span>
-<span style="font-size: 13px; color: #555D64;">{{p.teacher}}</span>
+<span style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:17px;font-weight:800;line-height:1.15;">{{p.title}}</span>
+<span style="font-size: 13px; line-height:1.35; color: #555D64;"><strong>Insegnante:</strong> {{p.teacher}}</span>
 <span style="margin-top: auto; font-size: 13px; font-weight: {{p.leftWeight}}; color: {{p.leftColor}};">{{p.left}}</span>
 </span>
 </button>
@@ -407,7 +413,7 @@ class Component extends DCLogic {
     var calendar = names.map(function (n, i) {
       return { day: String(15 + i), wd: n.slice(0, 3), shows: [0, 1].map(function (j) {
         var on = i === ev && j === sh;
-        return Object.assign({ n: shNames[j], time: shTimes[j], title: "[Titolo spettacolo]", teacher: "[Classe · insegnante]", bg: on ? "#F6EAF3" : "#FFFFFF", border: on ? "#941880" : "#E4DED2", pick: function () { self.setState({ ev: i, sh: j }); } }, self.avail(remS[i][j]));
+        return Object.assign({ n: shNames[j], time: shTimes[j], title: "[Titolo spettacolo]", teacher: "[Insegnante di riferimento]", posterCss: "none", posterFallback: "Locandina", bg: on ? "#F6EAF3" : "#FFFFFF", border: on ? "#941880" : "#E4DED2", pick: function () { self.setState({ ev: i, sh: j }); } }, self.avail(remS[i][j]));
       }) };
     });
     var showOpts = [0, 1].map(function (j) { return Object.assign({ label: shNames[j], time: shTimes[j], pick: function () { self.setState({ sh: j }); } }, self.avail(remS[ev][j]), self.row(j === sh)); });
@@ -522,8 +528,22 @@ class Component extends DCLogic {
           if(s[0])s[0].textContent=si===0?"Primo spettacolo":"Secondo spettacolo";
           if(s[1])s[1].textContent=x.ora||"";
           if(s[2])s[2].textContent=x.titolo||("Spettacolo "+(si+1));
-          if(s[3])s[3].textContent=x.descrizione||"";
+          if(s[3]){
+            var docente=x.insegnante||x.docente||x.teacher||x.referente||x.descrizione||"";
+            s[3].innerHTML="<strong>Insegnante:</strong> "+docente;
+          }
           if(s[4])s[4].textContent=status(freeFor(id,info,cap));
+          var poster=b.querySelector(".am-vortice-poster");
+          if(poster){
+            var src=x.locandina||x.poster||x.immagine||x.image||"";
+            if(src){
+              poster.style.backgroundImage='url("'+String(src).replace(/"/g,"%22")+'")';
+              poster.textContent="";
+            }else{
+              poster.style.backgroundImage="none";
+              poster.textContent="Locandina";
+            }
+          }
         }
         b.dataset.eventId=id;
         b.onclick=function(){
