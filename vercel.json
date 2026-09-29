@@ -69,6 +69,76 @@
       "source": "/festival-e-workshop/",
       "destination": "/workshow/",
       "permanent": true
+    },
+    {
+      "source": "/yep-2026",
+      "destination": "/yep/",
+      "permanent": true
+    },
+    {
+      "source": "/yep-2026/",
+      "destination": "/yep/",
+      "permanent": true
+    },
+    {
+      "source": "/corsi-avanzati-2026",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/corsi-avanzati-2026/",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/corsi/:path*",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/categoria_corsi/:path*",
+      "destination": "/improvvisazione-teatrale/",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap-posts-page-1.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap-posts-portfolio-1.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap-posts-corsi-1.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap-taxonomies-categoria_corsi-1.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap-taxonomies-portfolio-cat-1.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap-taxonomies-portfolio-tag-1.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap-taxonomies-portfolio-filter-1.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
     }
   ],
   "rewrites": [

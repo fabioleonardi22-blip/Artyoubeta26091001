@@ -5,8 +5,8 @@
 <title>Gestionale Eventi | Artyou Roma</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<link rel="icon" href="favicon.ico" sizes="any">
-<script src="js/artyou-events-config.js"></script>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<script src="/js/artyou-events-config.js"></script>
 <style>
 :root{--ink:#13181D;--paper:#F6F3EC;--line:#DED7CA;--orange:#F09000;--blue:#2CA8E0;--green:#28B4A8;--muted:#66717A;--white:#fff;--red:#9E2942}
 *{box-sizing:border-box} body{margin:0;background:#ECE7DE;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
@@ -31,7 +31,7 @@ label{font-size:13px;font-weight:800;display:flex;flex-direction:column;gap:7px}
 </style>
 </head>
 <body>
-<header><div><strong>ARTYOU · Gestionale Eventi</strong><br><span>Spettacoli, workshop, festival e prenotazioni</span></div><a href="index.html" style="color:#fff;font-weight:700">← Torna al sito</a></header>
+<header><div><strong>ARTYOU · Gestionale Eventi</strong><br><span>Spettacoli, workshop, festival e prenotazioni</span></div><a href="/index.html" style="color:#fff;font-weight:700">← Torna al sito</a></header>
 <div class="app">
   <aside class="panel sidebar">
     <div>
@@ -46,7 +46,7 @@ label{font-size:13px;font-weight:800;display:flex;flex-direction:column;gap:7px}
   <main class="panel main">
     <div class="topline">
       <div><h1 id="formTitle">Nuovo evento</h1><p>Compila i campi e salva. Il sito userà automaticamente i dati pubblicati dal gestionale.</p></div>
-      <div class="toolbar"><a class="btn soft" id="previewBtn" href="spettacolo.html" target="_blank" style="text-decoration:none">Anteprima</a><button class="btn primary" id="saveBtn">Salva evento</button><button class="btn danger" id="deleteBtn" style="display:none">Elimina</button></div>
+      <div class="toolbar"><a class="btn soft" id="previewBtn" href="/spettacolo.html" target="_blank" style="text-decoration:none">Anteprima</a><button class="btn primary" id="saveBtn">Salva evento</button><button class="btn danger" id="deleteBtn" style="display:none">Elimina</button></div>
     </div>
 
     <input id="id" type="hidden">
@@ -182,7 +182,7 @@ function del(){
   apiPost({action:"delete",id:currentId}).then(assert).then(function(){setStatus("Evento eliminato.","ok");clearForm();refresh()}).catch(function(e){setStatus(e.message,"err")});
 }
 function updatePoster(){var u=$("poster").value.trim();if(u){$("posterPreview").style.backgroundImage='url("'+u.replace(/"/g,"%22")+'")';$("posterPreview").textContent=""}else{$("posterPreview").style.backgroundImage="";$("posterPreview").textContent="Anteprima locandina"}}
-function updatePreviewLink(){var s=$("slug").value.trim()||slugify($("title").value);$("previewBtn").href="spettacolo.html"+(s?"#"+encodeURIComponent(s):"")}
+function updatePreviewLink(){var s=$("slug").value.trim()||slugify($("title").value);$("previewBtn").href="/spettacolo.html"+(s?"#"+encodeURIComponent(s):"")}
 function upload(){
   var file=$("posterFile").files[0];if(!file){setStatus("Scegli prima un'immagine.","err");return}
   if(file.size>5*1024*1024){setStatus("Immagine troppo grande: massimo 5 MB.","err");return}
