@@ -259,7 +259,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div>
 <div style="display: flex; flex-direction: column; gap: 12px;">
 <h2 class="am-fs-m" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px;">Prenotare o riservare</h2>
-<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #3F474E;">I posti nei workshop e le camere sono limitati. Puoi <strong>pagare subito l’acconto</strong> oppure <strong>riservare il posto</strong> e versare l’acconto entro [data]: se non arriva, il posto torna disponibile.</p>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #3F474E;">I posti nei workshop e le camere sono limitati. Puoi scegliere se <strong>pagare l’iscrizione e saldare prima del Festival</strong> oppure <strong>pagare subito l’intero importo</strong>. I pagamenti vengono gestiti tramite PayPal all’indirizzo <strong>info@artyouroma.it</strong>.</p>
 <div style="display: flex; flex-direction: column; gap: 16px;">
 <h3 class="am-fs-s" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 24px;">I workshop e i loro insegnanti</h3>
 <div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
@@ -308,13 +308,22 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div></div>
 <sc-if value="{{available}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
+<div style="display:flex;flex-direction:column;gap:10px;">
+  <span class="am-fs-body" style="font-size:14px;font-weight:700;">Come vuoi pagare?</span>
+  <div class="am-wrap" style="display:flex;gap:8px;flex-wrap:wrap;">
+    <sc-for list="{{payOpts}}" as="c" hint-placeholder-count="2">
+      <button type="button" onClick="{{c.pick}}" class="am-fs-body" style="padding:11px 16px;border-radius:999px;border:2px solid {{c.border}};background:{{c.bg}};color:{{c.fg}};font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">{{c.label}}</button>
+    </sc-for>
+  </div>
+</div>
 <div style="font-size:13px;line-height:1.5;color:#555D64;">{{payNote}}</div>
 <input id="f-evento-id" type="hidden" value="{{eventId}}">
 <input id="f-risorse" type="hidden" value="{{bookingResources}}">
 <input id="f-posti" type="hidden" value="{{bookingSeats}}">
 <input id="f-scelta-yep" type="hidden" value="{{bookingChoice}}">
 <input id="f-note-yep" type="hidden" value="{{bookingNote}}">
-<input id="f-paga-online" type="hidden" value="false">
+<input id="f-paga-online" type="hidden" value="true">
+<input id="f-pagamento-modalita" type="hidden" value="{{paymentMode}}">
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-camera" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Con chi vuoi condividere la camera? <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-camera" type="text" placeholder="Nome e cognome" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cibo" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Esigenze alimentari <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-cibo" type="text" placeholder="Es. vegetariano" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
 <button id="f-submit-booking" type="button" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
@@ -361,7 +370,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { type: 0, lv: 0, room: 0, confirmed: false };
+    this.state = { type: 0, lv: 0, room: 0, pay: 0, confirmed: false };
   }
   componentDidMount() {
     var self = this;
@@ -394,7 +403,7 @@ class Component extends DCLogic {
   renderVals() {
     var self = this, st = this.state || {};
     var typeNames = ["Workshop + soggiorno", "Solo soggiorno"];
-    var type = st.type || 0, lv = st.lv || 0, room = st.room || 0;
+    var type = st.type || 0, lv = st.lv || 0, room = st.room || 0, pay = st.pay == null ? 0 : st.pay;
     var capMap = window.ARTYOU_CAP || {};
     var eventMap = window.ARTYOU_EVENT_INFO || {};
     var keys = Object.keys(eventMap || {});
@@ -490,6 +499,16 @@ class Component extends DCLogic {
       }, self.row(i === room));
     });
 
+    var payOpts = [
+      "Paga l’iscrizione e salda prima del Festival",
+      "Paga tutto"
+    ].map(function(l,i){
+      return Object.assign({
+        label:l,
+        pick:function(){ self.setState({pay:i}); }
+      },self.chip(i===pay));
+    });
+
     var what = typeNames[type] + (isWs ? " · " + lvData[lv].label : "") + " · " + roomData[room].label;
     var eventId = isWs ? levelIds[lv] : "yep-2027-solo-soggiorno";
 
@@ -500,7 +519,9 @@ class Component extends DCLogic {
       bookingChoice: what,
       bookingNote: "Preferenza camera: " + roomData[room].label,
       bookingSeats: 1,
-      payOnline: false,
+      payOnline: true,
+      paymentMode: pay===0 ? "Iscrizione + saldo prima del Festival" : "Pagamento completo",
+      payOpts: payOpts,
       wsCards: wsCards,
       types: types, levels: levels, rooms: rooms,
       isWs: isWs,
@@ -508,7 +529,9 @@ class Component extends DCLogic {
       soldOut: capacityReady && rem === 0,
       capacityPending: !capacityReady,
       soldTitle: "Workshop al completo",
-      payNote: "La camera è una preferenza e non scala alcuna disponibilità. Il posto viene conteggiato solo sul workshop scelto.",
+      payNote: pay===0
+        ? "Paghi ora l’iscrizione con PayPal a info@artyouroma.it e saldi il restante importo prima del Festival. La camera resta una preferenza."
+        : "Paghi ora l’intero importo con PayPal a info@artyouroma.it. La camera resta una preferenza.",
       ctaLabel: "Prenota il posto",
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare YEP 2027: " + what + "."),
       waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Per YEP 2027 (" + what + ") il workshop risulta completo: potete mettermi in lista d’attesa?"),
@@ -530,7 +553,7 @@ class Component extends DCLogic {
 
 <script>window.ARTYOU_BOOKING_MODULE="YEP";window.ARTYOU_BOOKING_DEBUG=true;</script>
 <script src="js/artyou-booking-config.js"></script>
-<script src="js/artyou-booking-v2.js"></script>
+<script src="js/artyou-booking-v2.js?v=20260929-payments"></script>
 <script>
 (function(){
   var ids=[
