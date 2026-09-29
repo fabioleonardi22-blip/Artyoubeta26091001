@@ -18,3 +18,13 @@
   },true);
   new MutationObserver(function(){if(saved())hide()}).observe(document.documentElement,{childList:true,subtree:true});
 })();
+
+
+(function(){
+  var id='artyou-fixed-top-accent';
+  if(document.getElementById(id)) return;
+  var style=document.createElement('style');
+  style.id=id;
+  style.textContent='body::before{content:"";position:fixed;top:0;left:0;width:100%;height:6px;background:#7A1631;z-index:2147483646;pointer-events:none;}';
+  (document.head||document.documentElement).appendChild(style);
+})();
