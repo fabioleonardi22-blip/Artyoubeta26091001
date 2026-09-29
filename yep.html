@@ -308,7 +308,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <sc-if value="{{notConfirmed}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Prenota o riserva</h2>
-<span style="font-size:13px;line-height:1.4;color:#7A1631;margin-top:-12px;font-weight:700;" style="font-size:13px;line-height:1.4;color:#7A1631;font-weight:700;">Attendi il caricamento in tempo reale delle disponibilità</span>
+<span style="font-size:13px;line-height:1.4;color:#7A1631;margin-top:-12px;font-weight:700;" style="font-size:13px;line-height:1.4;color:#7A1631;font-weight:700;">Attendi il caricamento in tempo reale delle disponibilità <span aria-hidden="true" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#D96A72;margin-left:5px;vertical-align:middle;"></span></span>
 <div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Formula</span><div class="am-wrap" style="display: flex; gap: 8px; flex-wrap: wrap;">
 <sc-for list="{{types}}" as="c" hint-placeholder-count="3">
 <button type="button" onClick="{{c.pick}}" class="am-fs-body" style="padding: 11px 16px; border-radius: 999px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer; min-height: 44px;">{{c.label}}</button>
