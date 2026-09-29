@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=1440"><script id="artyou-viewport">(function(){try{var w=Math.min(screen.width,screen.height);if(w<=600){var m=document.querySelector('meta[name="viewport"]');m.setAttribute("content","width=device-width, initial-scale=1, viewport-fit=cover");document.documentElement.classList.add("am-mobile");}}catch(e){}})();</script>
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<script src="js/support.js"></script>
-<script src="js/enhancements.js"></script>
+<script src="js/support.js" defer></script>
+<script src="js/enhancements.js" defer></script>
 
 <style id="artyou-centered-layout">
 html{background:#C79A2B!important;}
@@ -390,7 +390,7 @@ class Component extends DCLogic {
 </script>
 <script id="artyou-forms-js">
 (function(){
-  var ENDPOINT = "https://script.google.com/macros/s/AKfycbyGHySayrDhjw78H2jJjI-hCkus_NkcFWFLu980vh-Pr0vQeE8Vthn_42X9PIixxLfW/exec";
+  var ENDPOINT = "/api/artyou";
   var MODULO = "Iscrizioni";
   var WA = "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei informazioni (" + MODULO + ").");
   var ARANCIO = "rgb(240, 144, 0)";
@@ -513,8 +513,8 @@ class Component extends DCLogic {
     var ppWin = (d.Pagamento === "PayPal (online)") ? window.open("", "_blank") : null;
     b.setAttribute("data-artyou-busy", "1"); b.style.opacity = "0.6";
     messaggio(b, "wait", "Invio in corso…");
-    fetch(ENDPOINT, { method: "POST", mode: "no-cors", body: JSON.stringify(d) })
-      .then(function(r){ return r.type === "opaque" ? { ok: true } : r.json(); })
+    fetch(ENDPOINT, { method: "POST", headers: {"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(d) })
+      .then(function(r){ return r.json(); })
       .then(function(res){
         if (res && res.ok) {
           if (ppWin) {
@@ -543,10 +543,24 @@ class Component extends DCLogic {
       .then(function(){ b.removeAttribute("data-artyou-busy"); b.style.opacity = ""; });
   }, true);
 
-  if (ENDPOINT) {
-    fetch(ENDPOINT + "?disponibilita=1").then(function(r){ return r.json(); }).then(function(res){
-      if (res && res.disponibilita) { window.ARTYOU_CAP = Object.assign({}, window.ARTYOU_CAP, res.disponibilita); window.dispatchEvent(new Event("hashchange")); }
-    }).catch(function(){});
+  function caricaDisponibilitaWorkshow(){
+    var h="";
+    try{ h=decodeURIComponent((location.hash||"").replace(/^#/,"")); }catch(e){}
+    if (!ENDPOINT || !/^ws-/.test(h)) return;
+    fetch(ENDPOINT + "?disponibilita=1", {cache:"no-store"})
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if (res && res.disponibilita) {
+          window.ARTYOU_CAP = Object.assign({}, window.ARTYOU_CAP, res.disponibilita);
+          window.dispatchEvent(new Event("hashchange"));
+        }
+      })
+      .catch(function(){});
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", caricaDisponibilitaWorkshow, {once:true});
+  } else {
+    caricaDisponibilitaWorkshow();
   }
 })();
 </script>
