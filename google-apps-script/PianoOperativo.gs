@@ -327,11 +327,34 @@ function PO_siteEvents_() {
   return out;
 }
 
+function PO_eventFingerprint_(e) {
+  return [
+    String(e.title||'').trim().toLowerCase(),
+    String(e.date||''),
+    String(e.start||''),
+    String(e.end||'')
+  ].join('|');
+}
+
+function PO_normalizeCalendarEventId_(id) {
+  return String(id||'').trim().replace(/^gcal_/,'').replace(/@google\.com$/,'');
+}
+
 function PO_listEvents(email,from,to) {
   PO_requireUser_(email);
   const stored=PO_listTasks();
-  const linked={}; stored.forEach(e=>{if(e.googleEventId) linked[e.googleEventId]=true;});
-  const googleOnly=PO_calendarEvents_(from,to).filter(e=>!linked[e.googleEventId]);
+  const linked={}, fingerprints={};
+  stored.forEach(function(e){
+    const gid=PO_normalizeCalendarEventId_(e.googleEventId);
+    if(gid) linked[gid]=true;
+    fingerprints[PO_eventFingerprint_(e)]=true;
+  });
+  const googleOnly=PO_calendarEvents_(from,to).filter(function(e){
+    const gid=PO_normalizeCalendarEventId_(e.googleEventId);
+    if(gid && linked[gid]) return false;
+    if(fingerprints[PO_eventFingerprint_(e)]) return false;
+    return true;
+  });
   const siteEvents=PO_siteEvents_();
   const all=stored.concat(siteEvents,googleOnly);
   return all.filter(e=>(!from||!e.date||e.date>=from)&&(!to||!e.date||e.date<=to));
