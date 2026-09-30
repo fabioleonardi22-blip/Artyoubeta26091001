@@ -559,7 +559,7 @@ Continua su WhatsApp
 <h3 class="am-fs-s" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 22px; line-height: 1.1;"><a href="{{s.href}}" style="color: #13181D; text-decoration: none;">{{s.title}}</a></h3>
 <p class="am-fs-body" style="margin: 0; color: #555D64; font-size: 15px; line-height: 1.5;">{{s.when}}<br>{{s.where}}</p>
 <div class="am-wrap" style="display: flex; gap: 10px; margin-top: 8px;">
-<a href="{{s.href}}" class="am-fs-body" style="flex-grow: 1; text-align: center; background: {{accent}}; color: #1C1606; padding: 14px 16px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 15px;">Prenota</a>
+<a href="{{s.href}}" class="am-fs-body" style="flex-grow: 1; text-align: center; background: {{accent}}; color: #1C1606; padding: 14px 16px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 15px;">{{s.ctaLabel}}</a>
 <a target="_blank" rel="noopener" href="{{s.wa}}" class="am-wrap am-fs-body" style="display: flex; align-items: center; gap: 8px; padding: 14px 16px; border-radius: 12px; border: 1px solid #CFC8BA; color: #13181D; font-weight: 600; text-decoration: none; font-size: 15px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.001c-5.523 0-10 4.477-10 10 0 1.762.464 3.479 1.345 4.997L2 22l5.161-1.352a9.953 9.953 0 0 0 4.879 1.253h.005c5.522 0 9.999-4.477 9.999-10 0-2.671-1.04-5.182-2.929-7.07A9.935 9.935 0 0 0 12.04 2Zm0 18.174h-.004a8.172 8.172 0 0 1-4.166-1.14l-.299-.177-3.096.812.827-3.016-.194-.31a8.163 8.163 0 0 1-1.253-4.343c0-4.508 3.669-8.176 8.19-8.176a8.14 8.14 0 0 1 5.79 2.398 8.13 8.13 0 0 1 2.397 5.788c0 4.508-3.669 8.164-8.192 8.164Zm4.484-6.13c-.246-.123-1.454-.718-1.68-.8-.226-.082-.39-.123-.554.123-.164.246-.635.8-.778.964-.144.165-.287.185-.533.062-.246-.123-1.037-.382-1.976-1.22-.73-.65-1.222-1.453-1.365-1.7-.144-.246-.015-.379.108-.501.11-.11.246-.287.369-.43.123-.144.164-.246.246-.41.082-.164.041-.308-.02-.43-.062-.123-.554-1.335-.76-1.828-.2-.48-.404-.415-.554-.423l-.472-.008a.906.906 0 0 0-.656.307c-.226.246-.862.842-.862 2.054 0 1.212.883 2.383 1.006 2.548.123.164 1.74 2.658 4.216 3.727.589.254 1.049.406 1.408.52.591.188 1.13.161 1.556.098.475-.071 1.454-.595 1.66-1.169.205-.574.205-1.066.144-1.169-.062-.102-.226-.164-.472-.287Z"></path></svg>WhatsApp</a>
 </div>
 </div>
@@ -782,7 +782,7 @@ class Component extends DCLogic {
     var tags = { "Improvvisazione": "#1A6E99", "Teatro": "#941880", "Stand-up": "#C0145C", "ImproEnglish": "#127A70", "Eventi": "#4F7A0A", "Festival": "#7A1631", "Workshop": "#8A6200" };
     var fallbackShows = [
       { cat: "Improvvisazione", day: "04", month: "ott", when: "Domenica 4 ottobre · dalle 19:30", slug: "shortyou", title: "ShortYou · show & aperitivo", where: "The Spot Improv · Via G. Bonaccorsi, 28", img: "img/shortyou-4-ottobre.jpg" },
-      { cat: "Improvvisazione", day: "09", month: "ott", when: "Venerdì 9 ottobre · 21:00", slug: "spettacolo-9-ottobre" },
+      { cat: "Stand-up", day: "25", month: "ott", when: "Dal 25 ottobre al 13 dicembre · 7 giornate", title: "Corso di Stand-up Comedy · 8ª edizione", where: "Docenti: Antonio Micali · Sandro Canori · Velia Lalli", img: "img/standup-group.jpg", href: "stand-up.html", ctaLabel: "Scopri il corso", waText: "Ciao volevo informazioni sul corso di Stand up!" },
       { cat: "Teatro", day: "24", month: "ott", when: "Sabato 24 ottobre · 20:45", slug: "spettacolo-24-ottobre" },
       { cat: "Stand-up", day: "?", month: "presto", when: "Data da definire", title: "Stand-up comedy · lo spettacolo del corso", where: "Bistrot68 Centocelle", slug: "standup-bistrot68" },
       { cat: "Improvvisazione", day: "30", month: "ott", when: "Venerdì 30 ottobre · 21:00" },
@@ -824,17 +824,18 @@ class Component extends DCLogic {
     var all = managed.length ? managed : fallbackShows;
     var venues = { "Improvvisazione": "[Teatro], Roma", "Teatro": "[Teatro], Roma", "Stand-up": "[Locale], Roma", "ImproEnglish": "[Teatro], Roma", "Eventi": "Roma", "Festival": "Roma", "Workshop": "Roma" };
     var shows = all.filter(function (s) { return filter === "Tutti" || s.cat === filter; }).map(function (s) {
-      var msg = "Ciao! Vorrei informazioni su " + (s.title || "l'evento") + " · " + s.when + ".";
+      var msg = s.waText || ("Ciao! Vorrei informazioni su " + (s.title || "l'evento") + " · " + s.when + ".");
       return {
         cat: s.cat, day: s.day, month: s.month, when: s.when,
         title: s.title || "[Titolo spettacolo]", where: s.where || venues[s.cat] || "Roma",
         bgImg: s.img ? "url(" + s.img + ")" : "none",
-        href: "spettacolo.html#" + (s.slug || ""),
+        href: s.href || ("spettacolo.html#" + (s.slug || "")),
         phOp: s.img ? 0 : 1,
         badgeDisp: s.img ? "none" : "flex",
         tint: tints[s.cat] || "#26343D",
         tagColor: tags[s.cat] || "#415D6B",
-        wa: "https://wa.me/393271881956?text=" + encodeURIComponent(msg)
+        wa: "https://wa.me/393271881956?text=" + encodeURIComponent(msg),
+        ctaLabel: s.ctaLabel || "Prenota"
       };
     });
     shows = shows.slice(0, 4);
