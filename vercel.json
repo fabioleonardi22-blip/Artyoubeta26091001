@@ -144,6 +144,11 @@
       "source": "/calendario-docenti",
       "destination": "/calendario-docenti/",
       "permanent": true
+    },
+    {
+      "source": "/lezione-gratuita",
+      "destination": "/lezione-gratuita/",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -198,6 +203,10 @@
     {
       "source": "/calendario-docenti/",
       "destination": "/calendario-docenti.html"
+    },
+    {
+      "source": "/lezione-gratuita/",
+      "destination": "/lezione-gratuita.html"
     }
   ]
 }
