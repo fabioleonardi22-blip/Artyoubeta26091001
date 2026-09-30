@@ -1,1 +1,1 @@
-window.ARTYOU_CALENDAR_ENDPOINT = "";\n
+window.ARTYOU_CALENDAR_ENDPOINT = "/api/plan";\n
