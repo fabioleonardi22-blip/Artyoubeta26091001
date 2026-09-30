@@ -206,12 +206,81 @@ function PO_calendarEvents_(from,to) {
   }));
 }
 
+function PO_inferSiteType_(e) {
+  const raw=(String(e.eventType||e.tipo||'')+' '+String(e.title||'')+' '+String(e.cat||'')).toLowerCase();
+  if(raw.indexOf('yep')!==-1) return 'YEP';
+  if(raw.indexOf('festival')!==-1) return 'Festival';
+  if(raw.indexOf('workshop')!==-1 || raw.indexOf('workshow')!==-1) return 'Workshop';
+  return 'Spettacolo';
+}
+
+function PO_parseSiteDate_(label) {
+  label=String(label||'').trim();
+  if(!label || /definire/i.test(label)) return {date:'',start:''};
+
+  const iso=label.match(/(20\d{2})-(\d{1,2})-(\d{1,2})/);
+  const time=label.match(/(?:^|[^0-9])(\d{1,2}):(\d{2})(?:[^0-9]|$)/);
+  if(iso) {
+    return {
+      date:iso[1]+'-'+String(Number(iso[2])).padStart(2,'0')+'-'+String(Number(iso[3])).padStart(2,'0'),
+      start:time?String(Number(time[1])).padStart(2,'0')+':'+time[2]:''
+    };
+  }
+
+  const months={gennaio:1,febbraio:2,marzo:3,aprile:4,maggio:5,giugno:6,luglio:7,agosto:8,settembre:9,ottobre:10,novembre:11,dicembre:12};
+  const m=label.toLowerCase().match(/(?:^|\s)(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)(?:\s+(20\d{2}))?/i);
+  if(!m) return {date:'',start:time?String(Number(time[1])).padStart(2,'0')+':'+time[2]:''};
+
+  const now=new Date(), day=Number(m[1]), month=months[m[2].toLowerCase()];
+  let year=m[3]?Number(m[3]):now.getFullYear();
+  if(!m[3]) {
+    const candidate=new Date(year,month-1,day);
+    const delta=(candidate-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/86400000;
+    if(delta < -180) year++;
+  }
+  return {
+    date:year+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0'),
+    start:time?String(Number(time[1])).padStart(2,'0')+':'+time[2]:''
+  };
+}
+
+function PO_siteEvents_() {
+  if(typeof gestAdminEvents_!=='function') return [];
+  let site=[];
+  try { site=gestAdminEvents_().filter(e=>e.attivo); } catch(err) { return []; }
+
+  const out=[];
+  site.forEach(function(e){
+    const dates=Array.isArray(e.dates)&&e.dates.length?e.dates:[{label:'Data da definire'}];
+    dates.forEach(function(d,i){
+      const parsed=PO_parseSiteDate_(d&&d.label);
+      out.push({
+        id:'site_'+String(e.id||e.slug||'evento')+'_'+i,
+        title:String(e.title||e.slug||'Evento sito'),
+        type:PO_inferSiteType_(e),
+        phase:'Evento dal Gestionale',
+        teacher:'',team:'',
+        date:parsed.date,start:parsed.start,end:'',
+        venue:String(e.venue||''),visibility:'public',
+        taskStatus:'todo',repeat:'none',
+        notes:'Evento già presente nel Gestionale Eventi. Modificalo dal Gestionale, non dal Piano Operativo.',
+        publicTitle:String(e.title||''),price:e.price===''?null:Number(e.price),
+        capacity:e.capienza==null?null:Number(e.capienza),slug:String(e.slug||''),
+        publishSite:true,reminderDays:0,reminderChannel:'email',
+        googleEventId:'',source:'site',siteEventId:String(e.id||''),siteDateLabel:String((d&&d.label)||'')
+      });
+    });
+  });
+  return out;
+}
+
 function PO_listEvents(email,from,to) {
   PO_requireUser_(email);
   const stored=PO_listTasks();
   const linked={}; stored.forEach(e=>{if(e.googleEventId) linked[e.googleEventId]=true;});
   const googleOnly=PO_calendarEvents_(from,to).filter(e=>!linked[e.googleEventId]);
-  const all=stored.concat(googleOnly);
+  const siteEvents=PO_siteEvents_();
+  const all=stored.concat(siteEvents,googleOnly);
   return all.filter(e=>(!from||!e.date||e.date>=from)&&(!to||!e.date||e.date<=to));
 }
 
