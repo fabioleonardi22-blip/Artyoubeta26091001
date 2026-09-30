@@ -52,7 +52,25 @@ function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function getJSON(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})}
 function statusFor(free,cap){if(free<=0)return{label:"Sold out",cls:"full"};if(cap>0&&free/cap<=.2)return{label:"Quasi pieno",cls:"warn"};return{label:"Aperto",cls:"ok"}}
-function categoryOf(title){var t=String(title||"").toLowerCase();if(t.indexOf("yep")>=0)return"YEP";if(t.indexOf("festival")>=0||t.indexOf("rif")>=0)return"Festival";if(t.indexOf("workshow")>=0)return"WorkshoW";if(t.indexOf("workshop")>=0)return"Workshop";return"Spettacoli"}
+function categoryOf(title,id){
+  var t=(String(id||"")+" "+String(title||"")).toLowerCase();
+  var workshowIds=[
+    "tra-fiaba-horror-un-confine-sottile-con-niko-di-felice",
+    "from-text-to-next-con-federica-forbicioni","from-text-to-next",
+    "thriller-con-cinzia-zadro","thriller",
+    "laboratorio-avanzati-con-antonio-vulpio","laboratorio-avanzati",
+    "human-comedy-con-fabio-mangolini","human-comedy",
+    "improv-di-una-notte-di-mezza-primavera-con-pierpaolo-buzza",
+    "improv-di-una-notte-di-mezza-primavera"
+  ];
+  if(workshowIds.indexOf(String(id||"").toLowerCase())>=0)return"WorkshoW";
+  if(t.indexOf("niko di felice")>=0&&t.indexOf("horror")>=0)return"WorkshoW";
+  if(t.indexOf("yep")>=0)return"YEP";
+  if(t.indexOf("festival")>=0||t.indexOf("rif")>=0)return"Festival";
+  if(t.indexOf("workshow")>=0)return"WorkshoW";
+  if(t.indexOf("workshop")>=0)return"Workshop";
+  return"Spettacoli"
+}
 function renderFilters(){
   var defs=[
     {id:"all",label:"Tutti"},
@@ -98,7 +116,7 @@ function refresh(){
  Promise.all([getJSON(endpoint+"?eventi=1&_="+Date.now()),getJSON(endpoint+"?disponibilita=1&_="+Date.now())]).then(function(r){
    if(!r[0].ok||!r[1].ok)throw new Error((r[0].errore||r[1].errore||"Errore dati"));
    var events=r[0].eventi||{},free=r[1].disponibilita||{};
-   data=Object.keys(events).map(function(id){var e=events[id]||{},cap=Math.max(0,parseInt(e.capienza||0,10)||0),f=Math.max(0,parseInt(free[id]||0,10)||0);return{id:id,title:e.titolo||id,date:e.data||"",cap:cap,free:f,booked:Math.max(0,cap-f),category:categoryOf(e.titolo||id)}}).sort(function(a,b){return a.date.localeCompare(b.date)});
+   data=Object.keys(events).map(function(id){var e=events[id]||{},cap=Math.max(0,parseInt(e.capienza||0,10)||0),f=Math.max(0,parseInt(free[id]||0,10)||0);return{id:id,title:e.titolo||id,date:e.data||"",cap:cap,free:f,booked:Math.max(0,cap-f),category:categoryOf(e.titolo||id,id)}}).sort(function(a,b){return a.date.localeCompare(b.date)});
    var booked=data.reduce(function(s,x){return s+x.booked},0),available=data.reduce(function(s,x){return s+x.free},0),sold=data.filter(function(x){return x.free<=0}).length;
    $("sBooked").textContent=booked;$("sFree").textContent=available;$("sEvents").textContent=data.length;$("sSold").textContent=sold;
    $("updated").textContent="Aggiornato "+new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
