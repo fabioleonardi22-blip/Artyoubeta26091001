@@ -1,0 +1,1 @@
+window.ARTYOU_CALENDAR_ENDPOINT = "";\n
