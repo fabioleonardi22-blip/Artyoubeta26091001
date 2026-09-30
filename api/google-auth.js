@@ -29,6 +29,7 @@ module.exports = async function handler(req, res) {
       name:identity.name,
       picture:identity.picture,
       admin:!!session.admin,
+      accessLevel:String(session.accessLevel || (session.admin ? "Amministratore" : "Docente")),
       person:session.person || null
     });
   } catch (err) {
