@@ -304,8 +304,12 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
     box-shadow:0 18px 45px rgba(0,0,0,.38)!important;z-index:9998!important;
   }
   #artyou-menu-toggle:checked~nav a{padding:15px 2px!important;font-size:18px!important;line-height:1.2!important;}
-  #am-wa-float{right:18px!important;bottom:calc(92px + env(safe-area-inset-bottom,0px))!important;z-index:9000!important;}
+  #am-wa-float{display:none!important;}
 }
+</style>
+
+<style id="artyou-mobile-hide-floating-whatsapp">
+@media(max-width:820px){#am-wa-float{display:none!important;}}
 </style>
 </head>
 <body>
