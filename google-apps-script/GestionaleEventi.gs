@@ -13,10 +13,10 @@ function doGet(e) {
     // Compatibilità con il Gestionale Prenotazioni storico e la dashboard live.
     // Queste route esistevano già nel vecchio Code.gs e sono ancora usate dal sito.
     if (String(p.disponibilita || "") === "1") {
-      return gestJson_({ok:true, disponibilita: (typeof leggiDisponibilita === "function" ? leggiDisponibilita() : {})});
+      return gestJson_({ok:true, disponibilita: (typeof getDisponibilita_ === "function" ? getDisponibilita_() : {})});
     }
     if (String(p.eventi || "") === "1") {
-      return gestJson_({ok:true, eventi: (typeof leggiEventiPubblici_ === "function" ? leggiEventiPubblici_() : {})});
+      return gestJson_({ok:true, eventi: (typeof getEventiPubblici_ === "function" ? getEventiPubblici_() : {})});
     }
 
     const action = String(p.action || "public").toLowerCase();
