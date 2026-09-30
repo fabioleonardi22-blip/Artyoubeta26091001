@@ -1437,7 +1437,7 @@ class Component extends DCLogic {
     window.scrollTo({top:Math.max(0,top),behavior:behavior||"smooth"});
   }
   function bind(){
-    document.querySelectorAll('a[href="/lezione-gratuita/"]').forEach(function(b){
+    document.querySelectorAll('a[href="#artyou-wa-course-menu"]').forEach(function(b){
       if(b.dataset.centerBound==="1") return;
       b.dataset.centerBound="1";
       b.addEventListener("click",function(e){
