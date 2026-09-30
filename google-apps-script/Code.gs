@@ -22,7 +22,7 @@ function setup() {
   ]);
 }
 
-function doGet(e) {
+function bookingLegacyDoGet_(e) {
   try {
     cleanupExpiredHolds_();
 
