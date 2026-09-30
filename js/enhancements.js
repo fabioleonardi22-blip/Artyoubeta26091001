@@ -40,3 +40,19 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',apply);
   else apply();
 })();
+
+/* artyou-remove-header-whatsapp: remove WhatsApp icon from every site header */
+(function(){
+  function apply(){
+    if(document.getElementById('artyou-remove-header-whatsapp')) return;
+    var s=document.createElement('style');
+    s.id='artyou-remove-header-whatsapp';
+    s.textContent=
+      'header a[aria-label="Scrivici su WhatsApp"],'+
+      'header .artyou-header-wa,'+
+      'header > div > div[aria-hidden="true"]{display:none!important;}';
+    document.head.appendChild(s);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',apply);
+  else apply();
+})();
