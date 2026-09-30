@@ -245,6 +245,10 @@ function PO_parseSiteDate_(label) {
     };
   }
 
+  const numeric=label.match(/(?:^|[^0-9])(\d{1,2})[\/.-](\d{1,2})[\/.-](20\d{2})(?:[^0-9]|$)/);
+  if(numeric){
+    return {date:numeric[3]+'-'+String(Number(numeric[2])).padStart(2,'0')+'-'+String(Number(numeric[1])).padStart(2,'0'),start:time?String(Number(time[1])).padStart(2,'0')+':'+time[2]:''};
+  }
   const months={gennaio:1,febbraio:2,marzo:3,aprile:4,maggio:5,giugno:6,luglio:7,agosto:8,settembre:9,ottobre:10,novembre:11,dicembre:12};
   const m=label.toLowerCase().match(/(?:^|\s)(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)(?:\s+(20\d{2}))?/i);
   if(!m) return {date:'',start:time?String(Number(time[1])).padStart(2,'0')+':'+time[2]:''};
