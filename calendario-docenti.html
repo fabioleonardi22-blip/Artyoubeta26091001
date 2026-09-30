@@ -7,6 +7,8 @@
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <script src="/js/artyou-calendar-config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="/js/artyou-google-auth.js"></script>
 <style>
 :root{--ink:#13181D;--paper:#F6F3EC;--line:#DED7CA;--orange:#F09000;--blue:#2CA8E0;--green:#28B4A8;--violet:#7C5CE7;--red:#B5445B;--muted:#68737D;--white:#fff;--shadow:0 14px 38px rgba(25,20,15,.08)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#ECE7DE;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
@@ -46,11 +48,10 @@ header{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding
 </header>
 
 <section id="accessScreen" class="access">
-  <h1>Accesso docenti</h1>
-  <p class="mini">Questa pagina è riservata ai docenti Artyou. Nella versione collegata a Google Calendar l'accesso viene verificato dal backend tramite email autorizzata.</p>
-  <label>Email docente<input id="loginEmail" type="email" placeholder="nome@esempio.it" autocomplete="email"></label>
-  <button class="btn dark full" id="loginBtn">Accedi</button>
-  <div id="loginStatus" class="status warn">Modalità test della branch: gli appuntamenti vengono salvati solo in questo browser finché non colleghiamo l'endpoint Google Calendar.</div>
+  <h1>Area riservata Artyou</h1>
+  <p class="mini">Accedi con il tuo account Google. L'accesso viene consentito solo se la tua email è presente tra i docenti o collaboratori autorizzati e la scheda è attiva.</p>
+  <div id="googleLoginButton" style="display:flex;justify-content:center;margin:18px 0 8px"></div>
+  <div id="loginStatus" class="status warn">Caricamento accesso Google…</div>
 </section>
 
 <div id="app" class="shell hidden">
@@ -299,27 +300,21 @@ function loadLinkedForEvent(e){
   renderLinkedTasks()
 }
 function api(action,payload){
-  if(!endpoint)return Promise.reject(new Error("demo"));
-  var opts={method:payload?"POST":"GET",headers:{"Content-Type":"text/plain;charset=utf-8"}};
-  var url=endpoint+"?action="+encodeURIComponent(action)+"&email="+encodeURIComponent(email)+"&_="+Date.now();
-  if(payload){payload.action=action;payload.email=email;opts.body=JSON.stringify(payload)}
-  return fetch(url,opts).then(function(r){return r.json()});
+  if(!endpoint)return Promise.reject(new Error("backend_non_configurato"));
+  var opts={method:payload?"POST":"GET",headers:ArtyouGoogleAuth.authHeaders({"Content-Type":"text/plain;charset=utf-8"})};
+  var url=endpoint+"?action="+encodeURIComponent(action)+"&_="+Date.now();
+  if(payload){payload.action=action;opts.body=JSON.stringify(payload)}
+  return fetch(url,opts).then(function(r){return r.json().then(function(j){if(r.status===401){ArtyouGoogleAuth.clear()}return j})});
 }
 function setSync(msg,type){$("syncStatus").className="status "+(type||"warn");$("syncStatus").textContent=msg}
-function login(){
-  email=$("loginEmail").value.trim().toLowerCase();
-  if(!email){$("loginStatus").textContent="Inserisci l'email.";return}
-  if(!endpoint){
-    sessionStorage.setItem("artyouCalendarEmail",email);loadDemo();openApp();setSync("Modalità test: dati salvati solo in questo browser.","warn");return
-  }
-  $("loginStatus").textContent="Verifica accesso…";
-  api("session").then(function(r){
-    if(!r||!r.ok)throw new Error((r&&r.errore)||"Accesso non autorizzato");
-    sessionStorage.setItem("artyouCalendarEmail",email);openApp();refresh();
-  }).catch(function(e){$("loginStatus").textContent=e.message});
+function googleAuthorized(session){
+  email=String((session&&session.email)||"").toLowerCase();
+  sessionStorage.setItem("artyouCalendarEmail",email);
+  openApp();
+  refresh();
 }
 function openApp(){$("accessScreen").classList.add("hidden");$("app").classList.remove("hidden");$("logoutBtn").classList.remove("hidden");render()}
-function logout(){sessionStorage.removeItem("artyouCalendarEmail");location.reload()}
+function logout(){ArtyouGoogleAuth.clear();sessionStorage.removeItem("artyouCalendarEmail");location.reload()}
 function refresh(){
   if(!endpoint){loadDemo();render();return}
   setSync("Sincronizzazione con Google Calendar…","warn");
@@ -444,10 +439,10 @@ function remove(){
   if(!endpoint){events=events.filter(function(x){return x.id!==id});saveDemo();closeModal();render();return}
   api("delete",{id:id}).then(function(r){if(!r||!r.ok)throw new Error((r&&r.errore)||"Eliminazione non riuscita");closeModal();refresh()}).catch(function(err){alert(err.message)})
 }
-$("peopleCloseBtn").onclick=function(){$("peopleModalWrap").classList.remove("open")};$("peopleModalWrap").onclick=function(e){if(e.target===$("peopleModalWrap"))$("peopleModalWrap").classList.remove("open")};$("addPersonBtn").onclick=function(){var name=$("personName").value.trim();if(!name){alert("Inserisci il nome.");return}people.push({id:"p_"+Date.now(),name:name,role:$("personRole").value.trim(),email:$("personEmail").value.trim(),phone:$("personPhone").value.trim(),emailOn:$("personEmailOn").checked,whatsappOn:$("personWhatsappOn").checked});savePeople();$("personName").value="";$("personRole").value="";$("personEmail").value="";$("personPhone").value="";};$("loginBtn").onclick=login;$("logoutBtn").onclick=logout;$("newBtn").onclick=function(){openModal({date:isoDate(new Date())})};$("closeBtn").onclick=closeModal;$("cancelBtn").onclick=closeModal;$("saveBtn").onclick=save;$("deleteBtn").onclick=remove;$("generatePlanBtn").onclick=generatePlan;$("addLinkedTaskBtn").onclick=function(){addLinkedTask({date:$("date").value})};$("generateStandardTasksBtn").onclick=generateStandardLinkedTasks;$("selectAllMeetingBtn").onclick=function(){meetingSelected=people.filter(function(p){return p.active!==false}).map(function(p){return p.id});renderMeetingPeople()};$("clearMeetingBtn").onclick=function(){meetingSelected=[];renderMeetingPeople()};$("visibility").onchange=togglePublic;$("type").onchange=toggleTaskBox;$("applyPresetBtn").onclick=function(){var start=$("courseStart").value,p=$("coursePreset").value;if(!start||!p){alert("Scegli attività e data di partenza del corso.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value="Avvio corsi";$("taskStatus").value="todo";};$("applyYepPresetBtn").onclick=function(){var start=$("yepDate").value,p=$("yepPreset").value;if(!start||!p){alert("Scegli attività e data YEP.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value=parts[2]||"YEP";$("taskStatus").value="todo";};$("refreshBtn").onclick=refresh;
+$("peopleCloseBtn").onclick=function(){$("peopleModalWrap").classList.remove("open")};$("peopleModalWrap").onclick=function(e){if(e.target===$("peopleModalWrap"))$("peopleModalWrap").classList.remove("open")};$("addPersonBtn").onclick=function(){var name=$("personName").value.trim();if(!name){alert("Inserisci il nome.");return}people.push({id:"p_"+Date.now(),name:name,role:$("personRole").value.trim(),email:$("personEmail").value.trim(),phone:$("personPhone").value.trim(),emailOn:$("personEmailOn").checked,whatsappOn:$("personWhatsappOn").checked});savePeople();$("personName").value="";$("personRole").value="";$("personEmail").value="";$("personPhone").value="";};$("logoutBtn").onclick=logout;$("newBtn").onclick=function(){openModal({date:isoDate(new Date())})};$("closeBtn").onclick=closeModal;$("cancelBtn").onclick=closeModal;$("saveBtn").onclick=save;$("deleteBtn").onclick=remove;$("generatePlanBtn").onclick=generatePlan;$("addLinkedTaskBtn").onclick=function(){addLinkedTask({date:$("date").value})};$("generateStandardTasksBtn").onclick=generateStandardLinkedTasks;$("selectAllMeetingBtn").onclick=function(){meetingSelected=people.filter(function(p){return p.active!==false}).map(function(p){return p.id});renderMeetingPeople()};$("clearMeetingBtn").onclick=function(){meetingSelected=[];renderMeetingPeople()};$("visibility").onchange=togglePublic;$("type").onchange=toggleTaskBox;$("applyPresetBtn").onclick=function(){var start=$("courseStart").value,p=$("coursePreset").value;if(!start||!p){alert("Scegli attività e data di partenza del corso.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value="Avvio corsi";$("taskStatus").value="todo";};$("applyYepPresetBtn").onclick=function(){var start=$("yepDate").value,p=$("yepPreset").value;if(!start||!p){alert("Scegli attività e data YEP.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value=parts[2]||"YEP";$("taskStatus").value="todo";};$("refreshBtn").onclick=refresh;
 $("prevBtn").onclick=function(){current.setMonth(current.getMonth()-1);render();if(endpoint)refresh()};$("nextBtn").onclick=function(){current.setMonth(current.getMonth()+1);render();if(endpoint)refresh()};$("todayBtn").onclick=function(){current=new Date();current.setDate(1);render();if(endpoint)refresh()};
 document.querySelectorAll(".type-filter").forEach(function(x){x.onchange=render});document.querySelectorAll(".view-switch button").forEach(function(b){b.onclick=function(){document.querySelectorAll(".view-switch button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");var v=b.dataset.view;$("monthView").classList.toggle("hidden",v!=="month");$("agendaView").classList.toggle("active",v==="agenda");$("boardView").classList.toggle("active",v==="board")}});$("modalWrap").onclick=function(e){if(e.target===$("modalWrap"))closeModal()};
-document.querySelectorAll("[data-board-filter]").forEach(function(b){b.onclick=function(){boardFilter=b.dataset.boardFilter;document.querySelectorAll("[data-board-filter]").forEach(function(x){x.classList.remove("active")});b.classList.add("active");renderBoard()}});loadPeople();var saved=sessionStorage.getItem("artyouCalendarEmail");if(saved){email=saved;$("loginEmail").value=saved;loadDemo();openApp();if(endpoint)refresh()}
+document.querySelectorAll("[data-board-filter]").forEach(function(b){b.onclick=function(){boardFilter=b.dataset.boardFilter;document.querySelectorAll("[data-board-filter]").forEach(function(x){x.classList.remove("active")});b.classList.add("active");renderBoard()}});loadPeople();ArtyouGoogleAuth.init({buttonId:"googleLoginButton",statusId:"loginStatus",onAuthorized:googleAuthorized});
 })();
 </script>
 </body>
