@@ -303,16 +303,94 @@ function PO_parseSiteDate_(label) {
   };
 }
 
-function PO_siteEvents_() {
-  if(typeof gestAdminEvents_!=='function') return [];
-  let site=[];
-  try { site=gestAdminEvents_().filter(e=>e.attivo); } catch(err) { return []; }
+function PO_headerIndex_(headers,names){
+  const normalized=headers.map(h=>String(h||'').trim().toLowerCase());
+  for(let i=0;i<names.length;i++){
+    const ix=normalized.indexOf(String(names[i]||'').trim().toLowerCase());
+    if(ix!==-1)return ix;
+  }
+  return -1;
+}
 
+function PO_bookingSourceEvents_() {
+  const ss=PO_getSpreadsheet_();
+  if(!ss)return [];
+  const sh=ss.getSheetByName('Eventi');
+  if(!sh || sh.getLastRow()<2)return [];
+  const values=sh.getDataRange().getValues();
+  const h=values[0].map(String);
+  const iId=PO_headerIndex_(h,['Evento','ID','Id','Slug','Codice']);
+  const iTitle=PO_headerIndex_(h,['Titolo','Evento titolo','Nome']);
+  const iDate=PO_headerIndex_(h,['Data','Data evento']);
+  const iTime=PO_headerIndex_(h,['Ora','Orario']);
+  const iCap=PO_headerIndex_(h,['Capienza','Posti']);
+  const iPrice=PO_headerIndex_(h,['Prezzo','Costo']);
+  const iType=PO_headerIndex_(h,['Tipo','Tipo evento','Categoria']);
+  const iVenue=PO_headerIndex_(h,['Luogo','Venue','Sede']);
+
+  const out=[];
+  values.slice(1).forEach(function(r,rowIndex){
+    const rawId=iId>=0?r[iId]:'';
+    const rawTitle=iTitle>=0?r[iTitle]:'';
+    const rawDate=iDate>=0?r[iDate]:'';
+    if(!rawId && !rawTitle)return;
+
+    const baseId=String(rawId||rawTitle||('riga-'+(rowIndex+2))).trim();
+    const title=String(rawTitle||rawId||'Evento').trim();
+    let dateLabel='';
+    if(rawDate instanceof Date && !isNaN(rawDate.getTime())){
+      dateLabel=Utilities.formatDate(rawDate,Session.getScriptTimeZone(),'dd/MM/yyyy');
+    }else{
+      dateLabel=String(rawDate||'').trim();
+    }
+    const rawTime=iTime>=0?String(r[iTime]||'').trim():'';
+    if(rawTime && dateLabel && dateLabel.indexOf(rawTime)===-1) dateLabel+=' · '+rawTime;
+
+    out.push({
+      id:'booking:'+baseId,
+      slug:baseId,
+      title:title,
+      cat:iType>=0?String(r[iType]||''):'',
+      eventType:iType>=0?String(r[iType]||''):'',
+      tipo:iType>=0?String(r[iType]||''):'',
+      venue:iVenue>=0?String(r[iVenue]||''):'',
+      price:iPrice>=0&&r[iPrice]!==''?Number(r[iPrice]):'',
+      capienza:iCap>=0&&r[iCap]!==''?Number(r[iCap]):0,
+      dates:[{label:dateLabel||'Data da definire'}],
+      attivo:true,
+      sourceKind:'booking'
+    });
+  });
+  return out;
+}
+
+function PO_operationalSourceEvents_() {
+  let site=[];
+  if(typeof gestAdminEvents_==='function'){
+    try{site=gestAdminEvents_().filter(e=>e.attivo);}catch(err){site=[];}
+  }
+  const booking=PO_bookingSourceEvents_();
+  const seen={};
+  const out=[];
+  site.concat(booking).forEach(function(e){
+    const dates=Array.isArray(e.dates)&&e.dates.length?e.dates:[{label:'Data da definire'}];
+    const first=PO_parseSiteDate_(dates[0]&&dates[0].label);
+    const key=(String(e.slug||e.id||e.title||'').toLowerCase()+'|'+String(first.date||''));
+    if(seen[key])return;
+    seen[key]=true;
+    out.push(e);
+  });
+  return out;
+}
+
+function PO_siteEvents_() {
+  const site=PO_operationalSourceEvents_();
   const out=[];
   site.forEach(function(e){
     const dates=Array.isArray(e.dates)&&e.dates.length?e.dates:[{label:'Data da definire'}];
     dates.forEach(function(d,i){
       const parsed=PO_parseSiteDate_(d&&d.label);
+      const fromBooking=String(e.id||'').indexOf('booking:')===0 || e.sourceKind==='booking';
       out.push({
         id:'site_'+String(e.id||e.slug||'evento')+'_'+i,
         title:String(e.title||e.slug||'Evento sito'),
@@ -322,10 +400,10 @@ function PO_siteEvents_() {
         date:parsed.date,start:parsed.start,end:'',
         venue:String(e.venue||''),visibility:'public',
         taskStatus:'todo',repeat:'none',
-        notes:'Evento già presente nel Gestionale Eventi. Modificalo dal Gestionale, non dal Piano Operativo.',
+        notes:fromBooking?'Evento già presente nel Gestionale Prenotazioni.':'Evento già presente nel Gestionale Eventi.',
         publicTitle:String(e.title||''),price:e.price===''?null:Number(e.price),
         capacity:e.capienza==null?null:Number(e.capienza),slug:String(e.slug||''),
-        publishSite:true,reminderDays:0,reminderChannel:'email',
+        publishSite:!fromBooking,reminderDays:0,reminderChannel:'email',
         googleEventId:'',source:'site',siteEventId:String(e.id||''),siteDateIndex:i,siteDateLabel:String((d&&d.label)||'')
       });
     });
@@ -430,8 +508,7 @@ function PO_planTemplates_(type) {
 }
 
 function PO_getSiteEvent_(siteEventId) {
-  if(typeof gestAdminEvents_!=='function') throw new Error('gestionale_non_disponibile');
-  const ev=gestAdminEvents_().find(e=>String(e.id||'')===String(siteEventId||''));
+  const ev=PO_operationalSourceEvents_().find(e=>String(e.id||'')===String(siteEventId||''));
   if(!ev) throw new Error('evento_gestionale_non_trovato');
   return ev;
 }
