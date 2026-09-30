@@ -109,20 +109,29 @@ function PO_adminEmails_() {
     .split(',').map(PO_normalizeEmail_).filter(Boolean);
 }
 
+function PO_peopleCache_(){return CacheService.getScriptCache()}
+function PO_clearPeopleCache_(){try{PO_peopleCache_().remove('po_people_v1')}catch(e){}}
 function PO_listPeople() {
+  const cache=PO_peopleCache_();
+  try{
+    const hit=cache.get('po_people_v1');
+    if(hit)return JSON.parse(hit);
+  }catch(e){}
   const sh = PO_getPeopleSheet_();
   if (sh.getLastRow() < 2) return [];
   const values = sh.getDataRange().getValues(), h = values[0].map(String);
-  return values.slice(1).filter(r=>r[0]).map(r=>{
+  const list=values.slice(1).filter(r=>r[0]).map(r=>{
     const o={}; h.forEach((k,i)=>o[k]=r[i]);
     return {
       id:String(o.id||''), name:String(o.nome||''), kind:String(o.tipo||'Docente'), role:String(o.ruolo||''),
       accessLevel:String(o.livelloAccesso||'Docente'), skills:(typeof gestParseJson_==='function'?gestParseJson_(o.competenzeJSON,[]):PO_parseJson_(o.competenzeJSON,[])),
       email:String(o.email||''), phone:String(o.whatsapp||''),
       emailOn:PO_bool_(o.emailAttiva,true), whatsappOn:PO_bool_(o.whatsappAttivo,false),
-      active:PO_bool_(o.attivo,true), notes:String(o.note||''), updatedAt:o.updatedAt||''
+      active:PO_bool_(o.attivo,true), notes:String(o.note||''), updatedAt:String(o.updatedAt||'')
     };
   });
+  try{cache.put('po_people_v1',JSON.stringify(list),60)}catch(e){}
+  return list;
 }
 
 function PO_findPersonById_(id) {
@@ -191,13 +200,14 @@ function PO_savePerson(email, p) {
   if(phoneIx>=0) sh.getRange(targetRow,phoneIx+1).setNumberFormat('@');
   sh.getRange(targetRow,1,1,h.length).setValues([arr]);
   PO_audit_(email,row>0?'modifica':'crea','persona',id,obj.nome+' · '+obj.livelloAccesso);
+  PO_clearPeopleCache_();
   return PO_listPeople().find(x=>x.id===id);
 }
 
 function PO_deletePerson(email,id) {
   PO_requireAdmin_(email);
   const sh=PO_getPeopleSheet_(), values=sh.getDataRange().getValues(), h=values[0].map(String), ix=h.indexOf('id');
-  for(let i=1;i<values.length;i++) if(String(values[i][ix])===String(id)){PO_audit_(email,'elimina','persona',id,String(values[i][h.indexOf('nome')]||''));sh.deleteRow(i+1);return true;}
+  for(let i=1;i<values.length;i++) if(String(values[i][ix])===String(id)){PO_audit_(email,'elimina','persona',id,String(values[i][h.indexOf('nome')]||''));sh.deleteRow(i+1);PO_clearPeopleCache_();return true;}
   return true;
 }
 
