@@ -71,12 +71,15 @@ function isWorkshow(title,id){
   }
   return false;
 }
-function categoryOf(title,id){
+function categoryOf(title,id,tipo){
   var t=(String(id||"")+" "+String(title||"")).toLowerCase();
-  if(isWorkshow(title,id))return"WorkshoW";
+  var backendType=String(tipo||"").trim().toLowerCase();
+  if(isWorkshow(title,id)||backendType==="workshow")return"WorkshoW";
   if(t.indexOf("yep")>=0)return"YEP";
   if(t.indexOf("festival")>=0||t.indexOf("rif")>=0)return"Festival";
-  if(t.indexOf("workshop")>=0)return"Workshop";
+  if(backendType==="saggi")return"Spettacoli";
+  if(backendType==="spettacolo"||backendType==="spettacoli")return"Spettacoli";
+  if(backendType==="workshop")return"Workshop";
   return"Spettacoli"
 }
 function renderFilters(){
@@ -124,7 +127,28 @@ function refresh(){
  Promise.all([getJSON(endpoint+"?eventi=1&_="+Date.now()),getJSON(endpoint+"?disponibilita=1&_="+Date.now())]).then(function(r){
    if(!r[0].ok||!r[1].ok)throw new Error((r[0].errore||r[1].errore||"Errore dati"));
    var events=r[0].eventi||{},free=r[1].disponibilita||{};
-   data=Object.keys(events).map(function(id){var e=events[id]||{},cap=Math.max(0,parseInt(e.capienza||0,10)||0),f=Math.max(0,parseInt(free[id]||0,10)||0);return{id:id,title:e.titolo||id,date:e.data||"",cap:cap,free:f,booked:Math.max(0,cap-f),category:categoryOf(e.titolo||id,id)}}).sort(function(a,b){return a.date.localeCompare(b.date)});
+   data=Object.keys(events).map(function(id){
+     var e=events[id]||{},
+         cap=Math.max(0,parseInt(e.capienza||0,10)||0),
+         f=Math.max(0,parseInt(free[id]||0,10)||0),
+         sortDate=String(e.dataInput||""),
+         sortTime=String(e.oraInput||"");
+     return{
+       id:id,
+       title:e.titolo||id,
+       date:e.data||"",
+       cap:cap,
+       free:f,
+       booked:Math.max(0,cap-f),
+       category:categoryOf(e.titolo||id,id,e.tipo),
+       sortDate:sortDate,
+       sortTime:sortTime
+     };
+   }).sort(function(a,b){
+     var da=a.sortDate||"9999-12-31",db=b.sortDate||"9999-12-31";
+     if(da!==db)return da.localeCompare(db);
+     return (a.sortTime||"").localeCompare(b.sortTime||"");
+   });
    var booked=data.reduce(function(s,x){return s+x.booked},0),available=data.reduce(function(s,x){return s+x.free},0),sold=data.filter(function(x){return x.free<=0}).length;
    $("sBooked").textContent=booked;$("sFree").textContent=available;$("sEvents").textContent=data.length;$("sSold").textContent=sold;
    $("updated").textContent="Aggiornato "+new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
