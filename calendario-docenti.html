@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Calendario Docenti | Artyou Roma</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<script src="/js/artyou-calendar-config.js"></script>
+<style>
+:root{--ink:#13181D;--paper:#F6F3EC;--line:#DED7CA;--orange:#F09000;--blue:#2CA8E0;--green:#28B4A8;--violet:#7C5CE7;--red:#B5445B;--muted:#68737D;--white:#fff;--shadow:0 14px 38px rgba(25,20,15,.08)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#ECE7DE;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+header{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:4px solid #cf334f}
+.brand strong{font-size:21px}.brand span{display:block;margin-top:3px;color:#BFC8CF;font-size:12px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.header-actions a,.header-actions button{color:#fff;text-decoration:none;border:1px solid #4A555E;background:transparent;border-radius:10px;padding:9px 12px;font-weight:800}
+.shell{max-width:1500px;margin:0 auto;padding:22px;display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.sidebar{padding:18px;height:calc(100vh - 98px);position:sticky;top:88px;overflow:auto}
+.sidebar h3{margin:0 0 12px;font-size:15px}.mini{font-size:12px;color:var(--muted);line-height:1.45}
+.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:900;display:inline-flex;gap:8px;align-items:center;justify-content:center}
+.btn.primary{background:var(--orange);color:#241A05}.btn.dark{background:var(--ink);color:#fff}.btn.soft{background:var(--paper);color:var(--ink);border:1px solid var(--line)}.btn.full{width:100%}
+.legend{display:grid;gap:8px;margin-top:18px}.legend-row{display:flex;align-items:center;gap:9px;font-size:13px}.dot{width:11px;height:11px;border-radius:50%}
+.filters{display:grid;gap:8px;margin-top:20px}.filters label{display:flex;align-items:center;gap:8px;font-size:13px}.filters input{width:auto}
+.status{margin-top:18px;padding:11px 12px;border-radius:11px;font-size:12px;line-height:1.45;background:#EEF5F8;color:#24576C}.status.ok{background:#EAF8F2;color:#12634E}.status.warn{background:#FFF4DD;color:#75520B}.status.err{background:#FCEDEF;color:#8A2438}
+.main{padding:18px;min-width:0}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}.left-tools,.right-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.month-title{min-width:190px;text-align:center;font-size:24px;font-weight:900;text-transform:capitalize}
+.view-switch{display:flex;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:3px}.view-switch button{border:0;background:transparent;border-radius:8px;padding:8px 10px;font-weight:800}.view-switch button.active{background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.weekdays,.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}.weekdays div{padding:9px;text-align:center;color:var(--muted);font-size:12px;font-weight:900;text-transform:uppercase}
+.calendar{border-top:1px solid var(--line);border-left:1px solid var(--line);border-radius:14px;overflow:hidden}.day{min-height:132px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;background:#fff;overflow:hidden}.day.muted{background:#FAF8F3;color:#AAA}.day.today{box-shadow:inset 0 0 0 2px var(--orange)}.day-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}.day-num{font-weight:900;font-size:13px}.add-mini{border:0;background:transparent;color:var(--muted);font-size:18px;padding:0 3px;line-height:1}
+.event{border-radius:8px;padding:6px 7px;margin:5px 0;font-size:11px;line-height:1.25;font-weight:800;cursor:pointer;border-left:4px solid currentColor;background:#F4F5F6;color:#334}.event small{display:block;font-weight:500;opacity:.85;margin-top:2px}.event[data-type="Lezione"]{background:#EAF7FC;color:#16709A}.event[data-type="Prova"]{background:#F1ECFF;color:#5E48B5}.event[data-type="Riunione"]{background:#F1F2F3;color:#4F5A63}.event[data-type="Spettacolo"]{background:#FFF0DF;color:#A15A00}.event[data-type="Workshop"]{background:#E9F8F4;color:#1E7469}.event[data-type="Festival"]{background:#FCECEF;color:#9E2942}.event[data-type="Altro"]{background:#F7F1E6;color:#6D5A34}
+.agenda{display:none}.agenda.active{display:block}.agenda-day{border-top:1px solid var(--line);padding:16px 4px}.agenda-day:first-child{border-top:0}.agenda-date{font-weight:900;margin-bottom:9px}.agenda-event{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:11px;margin:7px 0}.agenda-event strong{display:block}.agenda-event small{color:var(--muted)}
+.modal-wrap{position:fixed;inset:0;background:rgba(10,14,17,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}.modal-wrap.open{display:flex}.modal{width:min(720px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 26px 70px rgba(0,0,0,.35);padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.modal-head h2{margin:0}.close{border:0;background:#F1F2F3;border-radius:50%;width:38px;height:38px;font-size:22px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:900}input,select,textarea{width:100%;border:1px solid #CCC5B8;border-radius:10px;padding:11px;background:#fff}textarea{min-height:95px;resize:vertical}.checks{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}.checks label{flex-direction:row;align-items:center}.checks input{width:auto}.public-box{display:none;margin-top:14px;padding:14px;border-radius:13px;background:#FFF8E9;border:1px solid #F0D9A4}.public-box.show{display:block}.actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:20px}.danger{background:#FCEDEF;color:#8A2438}
+.access{max-width:520px;margin:70px auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}.access h1{margin-top:0}.access .btn{margin-top:12px}
+.hidden{display:none!important}
+@media(max-width:980px){.shell{grid-template-columns:1fr;padding:12px}.sidebar{position:static;height:auto}.main{padding:12px}.day{min-height:110px}.event{font-size:10px}}
+@media(max-width:700px){header{padding:12px 14px}.brand span{display:none}.shell{padding:8px}.sidebar{border-radius:14px}.main{border-radius:14px}.weekdays div{font-size:10px;padding:7px 2px}.calendar{grid-template-columns:repeat(7,minmax(78px,1fr));overflow-x:auto}.weekdays{grid-template-columns:repeat(7,minmax(78px,1fr));overflow-x:auto}.day{min-height:105px;padding:5px}.month-title{font-size:20px;min-width:145px}.grid2{grid-template-columns:1fr}.modal{padding:16px}.header-actions a{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><strong>ARTYOU · Calendario Docenti</strong><span>Area interna · lezioni, prove, riunioni, spettacoli e festival</span></div>
+  <div class="header-actions"><a href="/gestionale.html">Gestionale eventi</a><a href="/index.html">Torna al sito</a><button id="logoutBtn" class="hidden">Esci</button></div>
+</header>
+
+<section id="accessScreen" class="access">
+  <h1>Accesso docenti</h1>
+  <p class="mini">Questa pagina è riservata ai docenti Artyou. Nella versione collegata a Google Calendar l'accesso viene verificato dal backend tramite email autorizzata.</p>
+  <label>Email docente<input id="loginEmail" type="email" placeholder="nome@esempio.it" autocomplete="email"></label>
+  <button class="btn dark full" id="loginBtn">Accedi</button>
+  <div id="loginStatus" class="status warn">Modalità test della branch: gli appuntamenti vengono salvati solo in questo browser finché non colleghiamo l'endpoint Google Calendar.</div>
+</section>
+
+<div id="app" class="shell hidden">
+  <aside class="panel sidebar">
+    <button class="btn primary full" id="newBtn">＋ Nuovo appuntamento</button>
+    <div class="legend">
+      <h3>Categorie</h3>
+      <div class="legend-row"><span class="dot" style="background:#2CA8E0"></span>Lezione</div>
+      <div class="legend-row"><span class="dot" style="background:#7C5CE7"></span>Prova</div>
+      <div class="legend-row"><span class="dot" style="background:#68737D"></span>Riunione</div>
+      <div class="legend-row"><span class="dot" style="background:#F09000"></span>Spettacolo</div>
+      <div class="legend-row"><span class="dot" style="background:#28B4A8"></span>Workshop</div>
+      <div class="legend-row"><span class="dot" style="background:#B5445B"></span>Festival</div>
+    </div>
+    <div class="filters">
+      <h3>Mostra</h3>
+      <label><input type="checkbox" class="type-filter" value="Lezione" checked> Lezioni</label>
+      <label><input type="checkbox" class="type-filter" value="Prova" checked> Prove</label>
+      <label><input type="checkbox" class="type-filter" value="Riunione" checked> Riunioni</label>
+      <label><input type="checkbox" class="type-filter" value="Spettacolo" checked> Spettacoli</label>
+      <label><input type="checkbox" class="type-filter" value="Workshop" checked> Workshop</label>
+      <label><input type="checkbox" class="type-filter" value="Festival" checked> Festival</label>
+      <label><input type="checkbox" class="type-filter" value="Altro" checked> Altro</label>
+    </div>
+    <div id="syncStatus" class="status warn">Google Calendar non ancora collegato a questa branch.</div>
+  </aside>
+
+  <main class="panel main">
+    <div class="topbar">
+      <div class="left-tools">
+        <button class="btn soft" id="prevBtn">←</button>
+        <button class="btn soft" id="todayBtn">Oggi</button>
+        <button class="btn soft" id="nextBtn">→</button>
+        <div class="month-title" id="monthTitle"></div>
+      </div>
+      <div class="right-tools">
+        <button class="btn soft" id="refreshBtn">↻ Aggiorna</button>
+        <div class="view-switch"><button data-view="month" class="active">Mese</button><button data-view="agenda">Agenda</button></div>
+      </div>
+    </div>
+    <div id="monthView">
+      <div class="weekdays"><div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div></div>
+      <div class="calendar" id="calendar"></div>
+    </div>
+    <div class="agenda" id="agendaView"></div>
+  </main>
+</div>
+
+<div class="modal-wrap" id="modalWrap">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head"><h2 id="modalTitle">Nuovo appuntamento</h2><button class="close" id="closeBtn" aria-label="Chiudi">×</button></div>
+    <input id="eventId" type="hidden">
+    <div class="grid2">
+      <label>Titolo<input id="title" placeholder="Es. Prove ShortYou"></label>
+      <label>Categoria<select id="type"><option>Lezione</option><option>Prova</option><option>Riunione</option><option>Spettacolo</option><option>Workshop</option><option>Festival</option><option>Altro</option></select></label>
+      <label>Data<input id="date" type="date"></label>
+      <label>Ora inizio<input id="start" type="time" value="20:00"></label>
+      <label>Ora fine<input id="end" type="time" value="22:00"></label>
+      <label>Sede / luogo<input id="venue" placeholder="Es. Teatro Antigone"></label>
+      <label>Docente / responsabile<input id="teacher" placeholder="Nome e cognome"></label>
+      <label>Visibilità<select id="visibility"><option value="internal">Solo docenti</option><option value="public">Pubblicabile sul sito</option></select></label>
+    </div>
+    <label style="margin-top:13px">Note<textarea id="notes" placeholder="Informazioni interne, indicazioni, esigenze tecniche…"></textarea></label>
+    <div id="publicBox" class="public-box">
+      <strong>Pubblicazione sul sito</strong>
+      <p class="mini">Questi dati saranno usati quando collegheremo il calendario al Gestionale Eventi.</p>
+      <div class="grid2">
+        <label>Titolo pubblico<input id="publicTitle" placeholder="Titolo da mostrare sul sito"></label>
+        <label>Prezzo €<input id="price" type="number" min="0" step="0.01" placeholder="15"></label>
+        <label>Posti disponibili<input id="capacity" type="number" min="0" placeholder="60"></label>
+        <label>Slug evento<input id="slug" placeholder="es. shortyou-29-novembre"></label>
+      </div>
+      <div class="checks"><label><input id="publishSite" type="checkbox"> Crea/aggiorna evento sul sito</label></div>
+    </div>
+    <div class="actions"><button class="btn danger hidden" id="deleteBtn">Elimina</button><button class="btn soft" id="cancelBtn">Annulla</button><button class="btn primary" id="saveBtn">Salva appuntamento</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var endpoint=window.ARTYOU_CALENDAR_ENDPOINT||"";
+var current=new Date();current.setDate(1);
+var events=[];
+var email="";
+var LS="artyouCalendarDemoEvents_v1";
+
+function $(id){return document.getElementById(id)}
+function isoDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function escapeHtml(s){return String(s||"").replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function slugify(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")}
+function enabledTypes(){return [].slice.call(document.querySelectorAll(".type-filter:checked")).map(function(x){return x.value})}
+function visibleEvents(){var ok=enabledTypes();return events.filter(function(e){return ok.indexOf(e.type||"Altro")!==-1})}
+function loadDemo(){try{events=JSON.parse(localStorage.getItem(LS)||"[]")}catch(e){events=[]}}
+function saveDemo(){localStorage.setItem(LS,JSON.stringify(events))}
+function api(action,payload){
+  if(!endpoint)return Promise.reject(new Error("demo"));
+  var opts={method:payload?"POST":"GET",headers:{"Content-Type":"text/plain;charset=utf-8"}};
+  var url=endpoint+"?action="+encodeURIComponent(action)+"&email="+encodeURIComponent(email)+"&_="+Date.now();
+  if(payload){payload.action=action;payload.email=email;opts.body=JSON.stringify(payload)}
+  return fetch(url,opts).then(function(r){return r.json()});
+}
+function setSync(msg,type){$("syncStatus").className="status "+(type||"warn");$("syncStatus").textContent=msg}
+function login(){
+  email=$("loginEmail").value.trim().toLowerCase();
+  if(!email){$("loginStatus").textContent="Inserisci l'email.";return}
+  if(!endpoint){
+    sessionStorage.setItem("artyouCalendarEmail",email);loadDemo();openApp();setSync("Modalità test: dati salvati solo in questo browser.","warn");return
+  }
+  $("loginStatus").textContent="Verifica accesso…";
+  api("session").then(function(r){
+    if(!r||!r.ok)throw new Error((r&&r.errore)||"Accesso non autorizzato");
+    sessionStorage.setItem("artyouCalendarEmail",email);openApp();refresh();
+  }).catch(function(e){$("loginStatus").textContent=e.message});
+}
+function openApp(){$("accessScreen").classList.add("hidden");$("app").classList.remove("hidden");$("logoutBtn").classList.remove("hidden");render()}
+function logout(){sessionStorage.removeItem("artyouCalendarEmail");location.reload()}
+function refresh(){
+  if(!endpoint){loadDemo();render();return}
+  setSync("Sincronizzazione con Google Calendar…","warn");
+  var start=new Date(current.getFullYear(),current.getMonth()-1,1),end=new Date(current.getFullYear(),current.getMonth()+2,0);
+  api("list",{from:isoDate(start),to:isoDate(end)}).then(function(r){
+    if(!r||!r.ok)throw new Error((r&&r.errore)||"Errore sincronizzazione");
+    events=r.events||[];render();setSync("Google Calendar sincronizzato · "+events.length+" appuntamenti","ok");
+  }).catch(function(e){setSync(e.message,"err")});
+}
+function render(){
+  $("monthTitle").textContent=current.toLocaleDateString("it-IT",{month:"long",year:"numeric"});
+  renderMonth();renderAgenda();
+}
+function renderMonth(){
+  var box=$("calendar");box.innerHTML="";
+  var y=current.getFullYear(),m=current.getMonth(),first=new Date(y,m,1),offset=(first.getDay()+6)%7;
+  var start=new Date(y,m,1-offset);
+  for(var i=0;i<42;i++){
+    var d=new Date(start);d.setDate(start.getDate()+i);
+    var cell=document.createElement("div");cell.className="day"+(d.getMonth()!==m?" muted":"")+(isoDate(d)===isoDate(new Date())?" today":"");
+    cell.innerHTML='<div class="day-head"><span class="day-num">'+d.getDate()+'</span><button class="add-mini" title="Aggiungi">＋</button></div>';
+    (visibleEvents().filter(function(e){return e.date===isoDate(d)})).sort(function(a,b){return (a.start||"").localeCompare(b.start||"")}).forEach(function(e){
+      var el=document.createElement("div");el.className="event";el.dataset.type=e.type||"Altro";el.innerHTML=escapeHtml((e.start?e.start+" ":"")+e.title)+(e.venue?'<small>'+escapeHtml(e.venue)+'</small>':"");el.onclick=function(ev){ev.stopPropagation();openModal(e)};cell.appendChild(el)
+    });
+    (function(date){cell.querySelector(".add-mini").onclick=function(ev){ev.stopPropagation();openModal({date:isoDate(date)})}})(d);
+    box.appendChild(cell)
+  }
+}
+function renderAgenda(){
+  var box=$("agendaView");box.innerHTML="";
+  var filtered=visibleEvents().slice().sort(function(a,b){return (a.date+" "+(a.start||"")).localeCompare(b.date+" "+(b.start||""))});
+  var by={};filtered.forEach(function(e){(by[e.date]||(by[e.date]=[])).push(e)});
+  Object.keys(by).forEach(function(date){
+    var wrap=document.createElement("div");wrap.className="agenda-day";
+    var dd=new Date(date+"T12:00:00");wrap.innerHTML='<div class="agenda-date">'+dd.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})+'</div>';
+    by[date].forEach(function(e){var row=document.createElement("div");row.className="agenda-event";row.innerHTML='<div><strong>'+escapeHtml(e.title)+'</strong><small>'+escapeHtml((e.start||"")+" "+(e.end?"– "+e.end:"")+" · "+(e.type||"Altro")+(e.venue?" · "+e.venue:""))+'</small></div><button class="btn soft">Apri</button>';row.querySelector("button").onclick=function(){openModal(e)};wrap.appendChild(row)});
+    box.appendChild(wrap)
+  });
+  if(!filtered.length)box.innerHTML='<div class="mini" style="padding:22px">Nessun appuntamento da mostrare.</div>'
+}
+function openModal(e){
+  e=e||{};$("modalTitle").textContent=e.id?"Modifica appuntamento":"Nuovo appuntamento";$("eventId").value=e.id||"";$("title").value=e.title||"";$("type").value=e.type||"Lezione";$("date").value=e.date||isoDate(new Date());$("start").value=e.start||"20:00";$("end").value=e.end||"22:00";$("venue").value=e.venue||"";$("teacher").value=e.teacher||"";$("visibility").value=e.visibility||"internal";$("notes").value=e.notes||"";$("publicTitle").value=e.publicTitle||"";$("price").value=e.price==null?"":e.price;$("capacity").value=e.capacity==null?"":e.capacity;$("slug").value=e.slug||"";$("publishSite").checked=!!e.publishSite;$("deleteBtn").classList.toggle("hidden",!e.id);togglePublic();$("modalWrap").classList.add("open")
+}
+function closeModal(){$("modalWrap").classList.remove("open")}
+function togglePublic(){$("publicBox").classList.toggle("show",$("visibility").value==="public")}
+function collect(){
+  var title=$("title").value.trim();
+  return{id:$("eventId").value||("evt_"+Date.now()),title:title,type:$("type").value,date:$("date").value,start:$("start").value,end:$("end").value,venue:$("venue").value.trim(),teacher:$("teacher").value.trim(),visibility:$("visibility").value,notes:$("notes").value.trim(),publicTitle:$("publicTitle").value.trim(),price:$("price").value===""?null:Number($("price").value),capacity:$("capacity").value===""?null:Number($("capacity").value),slug:$("slug").value.trim()||slugify($("publicTitle").value||title),publishSite:$("publishSite").checked}
+}
+function save(){
+  var e=collect();if(!e.title||!e.date){alert("Inserisci almeno titolo e data.");return}
+  if(!endpoint){var i=events.findIndex(function(x){return x.id===e.id});if(i>=0)events[i]=e;else events.push(e);saveDemo();closeModal();render();return}
+  api("save",{event:e}).then(function(r){if(!r||!r.ok)throw new Error((r&&r.errore)||"Salvataggio non riuscito");closeModal();refresh()}).catch(function(err){alert(err.message)})
+}
+function remove(){
+  var id=$("eventId").value;if(!id)return;if(!confirm("Eliminare questo appuntamento?"))return;
+  if(!endpoint){events=events.filter(function(x){return x.id!==id});saveDemo();closeModal();render();return}
+  api("delete",{id:id}).then(function(r){if(!r||!r.ok)throw new Error((r&&r.errore)||"Eliminazione non riuscita");closeModal();refresh()}).catch(function(err){alert(err.message)})
+}
+$("loginBtn").onclick=login;$("logoutBtn").onclick=logout;$("newBtn").onclick=function(){openModal()};$("closeBtn").onclick=closeModal;$("cancelBtn").onclick=closeModal;$("saveBtn").onclick=save;$("deleteBtn").onclick=remove;$("visibility").onchange=togglePublic;$("refreshBtn").onclick=refresh;
+$("prevBtn").onclick=function(){current.setMonth(current.getMonth()-1);render();if(endpoint)refresh()};$("nextBtn").onclick=function(){current.setMonth(current.getMonth()+1);render();if(endpoint)refresh()};$("todayBtn").onclick=function(){current=new Date();current.setDate(1);render();if(endpoint)refresh()};
+document.querySelectorAll(".type-filter").forEach(function(x){x.onchange=render});document.querySelectorAll(".view-switch button").forEach(function(b){b.onclick=function(){document.querySelectorAll(".view-switch button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");var agenda=b.dataset.view==="agenda";$("monthView").classList.toggle("hidden",agenda);$("agendaView").classList.toggle("active",agenda)}});$("modalWrap").onclick=function(e){if(e.target===$("modalWrap"))closeModal()};
+var saved=sessionStorage.getItem("artyouCalendarEmail");if(saved){email=saved;$("loginEmail").value=saved;loadDemo();openApp();if(endpoint)refresh()}
+})();
+</script>
+</body>
+</html>
