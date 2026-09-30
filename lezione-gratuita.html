@@ -467,6 +467,37 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
   }
 </style>
 
+
+<style id="lezione-gratuita-page">
+#lg-hero{background:#13181D;color:#F6F3EC;padding:56px 120px 64px;display:grid;grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);gap:52px;align-items:center}
+#lg-hero .lg-kicker,#lg-faq .lg-kicker{margin:0;font-size:15px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#F09000}
+#lg-hero h1{margin:16px 0 22px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:62px;line-height:1;letter-spacing:-1.8px}
+#lg-hero .lg-lead{margin:0;font-size:19px;line-height:1.58;color:#C4CCD2}
+#lg-steps{display:flex;flex-direction:column;gap:16px;margin-top:28px}
+.lg-step{display:flex;align-items:center;gap:14px;font-size:16px}.lg-num{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 40px;font-weight:800;color:#10161B}.lg-n1{background:#2CA8E0}.lg-n2{background:#F09000}.lg-n3{background:#A8D11E}
+.lg-yellow{display:inline-flex;align-items:center;justify-content:center;margin-top:30px;padding:14px 24px;border-radius:999px;background:#F6B82B;border:2px solid #FFD75F;color:#1C1606;text-decoration:none;font-weight:800}
+#lg-form{background:#FFFFFF;color:#13181D;border-radius:24px;padding:32px;box-shadow:0 22px 50px rgba(0,0,0,.24)}
+#lg-form h2{margin:0 0 10px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:31px}
+#lg-form>p{margin:0 0 20px;color:#555D64;font-size:15px;line-height:1.5}
+.lg-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.lg-field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}.lg-field label{font-size:13px;font-weight:800}
+.lg-field input,.lg-field select{width:100%;height:52px;border:1px solid #CFC8BA;border-radius:12px;padding:0 14px;background:#FFFFFF;font:inherit;font-size:15px;color:#13181D}
+#lg-wa-go{width:100%;height:56px;border:0;border-radius:14px;background:#25D366;color:#0B2E1A;font:inherit;font-weight:800;font-size:16px;cursor:pointer}
+#lg-form .lg-note{font-size:12px;color:#777;margin-top:12px}
+#lg-photo{background:#090C0F}#lg-photo img{display:block;width:100%;height:auto;max-height:760px;object-fit:cover;object-position:center}
+#lg-faq{background:#F6F3EC;padding:74px 120px 24px;text-align:center}
+#lg-faq h2{margin:10px auto 12px;max-width:800px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:48px;line-height:1.04;letter-spacing:-1.2px;color:#13181D}
+#lg-faq>p:last-child{margin:0 auto;max-width:760px;color:#555D64;font-size:17px;line-height:1.55}
+#lg-cards{background:#F6F3EC;padding:22px 120px 78px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.lg-card{background:#FFFFFF;border:1px solid #E4DED2;border-radius:20px;padding:24px;min-height:245px}.lg-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:800;margin-bottom:14px}.lg-i1{background:#DDF3FF;color:#0D7FB8}.lg-i2{background:#FFF1C9;color:#C27A00}.lg-i3{background:#DFF7E7;color:#10803C}.lg-i4{background:#FFE1E1;color:#BC2020}.lg-i5{background:#EAE0FF;color:#6D3BC2}.lg-i6{background:#DDF9F4;color:#118B7D}
+.lg-card h3{margin:0 0 10px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:23px;line-height:1.12;color:#13181D}.lg-card p{margin:0;color:#3F474E;font-size:15px;line-height:1.58}
+#lg-final{background:#13181D;color:#F6F3EC;text-align:center;padding:66px 120px 72px}
+#lg-final h2{margin:0 auto 14px;max-width:870px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:40px;line-height:1.08}#lg-final h2 strong{color:#F09000}
+#lg-final p{margin:0 auto 26px;max-width:830px;color:#C4CCD2;font-size:17px;line-height:1.6}.lg-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.lg-primary,.lg-whatsapp{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 22px;border-radius:999px;text-decoration:none;font-weight:800}.lg-primary{background:#F6B82B;color:#1C1606}.lg-whatsapp{background:#25D366;color:#0B2E1A}
+@media(max-width:820px){
+#lg-hero{grid-template-columns:1fr;padding:38px 18px 44px;gap:30px}#lg-hero h1{font-size:43px}.lg-grid2{grid-template-columns:1fr}#lg-form{padding:22px 18px}
+#lg-photo img{max-height:none}#lg-faq{padding:48px 18px 18px}#lg-faq h2{font-size:36px}#lg-cards{grid-template-columns:1fr;padding:18px 18px 48px}.lg-card{min-height:0}#lg-final{padding:48px 18px}#lg-final h2{font-size:31px}
+}
+</style>
 </head>
 <body>
 <x-dc>
@@ -499,13 +530,79 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </header>
 <div aria-hidden="true" style="height: 6px; background: #7A1631;"></div>
 <main>
-<section class="am-px am-py" style="background:#13181D;color:#F6F3EC;padding:88px 120px 96px;display:flex;flex-direction:column;gap:18px;">
-  <nav aria-label="Percorso" class="am-wrap am-fs-body" style="font-size:14px;color:#9AA5AE;display:flex;gap:10px;">
-    <a href="/" style="color:#C4CCD2;">Home</a><span>/</span><span>Lezione di prova gratuita</span>
-  </nav>
-  <p class="am-fs-body" style="margin:0;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F09000;">Lezione di prova gratuita</p>
-  <h1 class="am-fs-xxl" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:64px;line-height:1;letter-spacing:-2px;">Lezione di Prova Gratuita</h1>
-  <p class="am-fs-lead" style="margin:0;max-width:760px;font-size:19px;line-height:1.55;color:#C4CCD2;">Pagina pronta per i contenuti definitivi.</p>
+<section id="lg-hero">
+  <div>
+    <p class="lg-kicker">Lezione di prova gratuita</p>
+    <h1>Vieni a provare,<br>senza impegno.</h1>
+    <p class="lg-lead">Non serve esperienza, solo la voglia di giocare. E se pensi di non avere fantasia o di essere troppo timido, ti sbagli: la creatività ce l’abbiamo tutti, a volte è solo sepolta. Lascia i tuoi contatti e ti diciamo quando è la prossima lezione aperta.</p>
+    <div id="lg-steps">
+      <div class="lg-step"><span class="lg-num lg-n1">1</span><span>Compila il modulo o scrivici su WhatsApp</span></div>
+      <div class="lg-step"><span class="lg-num lg-n2">2</span><span>Ti ricontattiamo per fissare la data</span></div>
+      <div class="lg-step"><span class="lg-num lg-n3">3</span><span>Vieni a giocare con noi: serve solo curiosità</span></div>
+    </div>
+    <a class="lg-yellow" href="#artyou-wa-course-menu">Vieni a provare compila il form →</a>
+  </div>
+
+  <div id="lg-form">
+    <div id="artyou-wa-course-menu" style="display:flex;flex-direction:column;gap:0;">
+      <h2>Scrivici su WhatsApp</h2>
+      <p>Scegli il corso e il tipo di richiesta: apriremo WhatsApp con il messaggio già pronto.</p>
+      <div class="lg-grid2">
+        <div class="lg-field"><label for="lg-nome">Nome</label><input id="lg-nome" type="text" autocomplete="given-name" placeholder="Mario"></div>
+        <div class="lg-field"><label for="lg-cognome">Cognome</label><input id="lg-cognome" type="text" autocomplete="family-name" placeholder="Rossi"></div>
+      </div>
+      <div class="lg-field"><label for="lg-corso">Quale corso ti interessa?</label>
+        <select id="lg-corso">
+          <option>Improvvisazione – primo anno</option>
+          <option>Improvvisazione – secondo anno</option>
+          <option>Improvvisazione – terzo anno</option>
+          <option>Corsi Amatori</option>
+          <option>Teatro di testo</option>
+          <option>Stand-up comedy</option>
+          <option>Artyou Young – bambini e ragazzi</option>
+          <option>Non lo so ancora</option>
+        </select>
+      </div>
+      <div class="lg-field"><label for="lg-intento">Come possiamo aiutarti?</label>
+        <select id="lg-intento">
+          <option value="informazioni">Vorrei informazioni</option>
+          <option value="prova">Vorrei fare una lezione di prova</option>
+          <option value="iscrizione">Vorrei iscrivermi</option>
+          <option value="parlare">Vorrei parlare con qualcuno</option>
+        </select>
+      </div>
+      <button id="lg-wa-go" type="button">Continua su WhatsApp</button>
+      <div class="lg-note">WhatsApp si aprirà solo dopo la tua scelta.</div>
+    </div>
+  </div>
+</section>
+
+<section id="lg-photo">
+  <img src="/img/lezione-gratuita-gruppo.jpg" alt="Allievi e insegnanti Artyou Roma sul palco">
+</section>
+
+<section id="lg-faq">
+  <p class="lg-kicker">Per chi è questa prova</p>
+  <h2>Pensi che l’improvvisazione non faccia per te?</h2>
+  <p>Se almeno una di queste frasi ti è passata per la testa, sei esattamente nel posto giusto.</p>
+</section>
+
+<section id="lg-cards">
+  <article class="lg-card"><div class="lg-icon lg-i1">◎</div><h3>Sono troppo timido.</h3><p>L’improvvisazione non ti chiede di diventare estroverso. Ti aiuta a prendere spazio poco alla volta, ascoltare gli altri e sentirti più libero di esprimerti.</p></article>
+  <article class="lg-card"><div class="lg-icon lg-i2">◉</div><h3>Non ho fantasia.</h3><p>Non devi inventare tutto da solo. Le idee nascono da quello che succede in scena, dalle proposte degli altri e da piccoli stimoli. La creatività si allena.</p></article>
+  <article class="lg-card"><div class="lg-icon lg-i3">☺</div><h3>Non sono divertente.</h3><p>Non devi essere un comico. Spesso le situazioni più divertenti nascono proprio quando smetti di cercare la battuta e inizi semplicemente ad ascoltare e reagire.</p></article>
+  <article class="lg-card"><div class="lg-icon lg-i4">×</div><h3>Ho paura di sbagliare.</h3><p>Nell’improvvisazione l’errore non è qualcosa da evitare: può diventare l’inizio di una scena, di un personaggio o di un’idea nuova.</p></article>
+  <article class="lg-card"><div class="lg-icon lg-i5">◌</div><h3>Non ho mai fatto teatro.</h3><p>È proprio per questo che esistono i corsi per principianti. Non servono esperienze precedenti: si parte dalle basi, attraverso giochi ed esercizi progressivi.</p></article>
+  <article class="lg-card"><div class="lg-icon lg-i6">♡</div><h3>Ho paura di sentirmi fuori posto.</h3><p>L’improvvisazione si costruisce insieme. Ascolto, collaborazione e sostegno del gruppo fanno parte del lavoro fin dalla prima lezione.</p></article>
+</section>
+
+<section id="lg-final">
+  <h2>Non devi sentirti pronto per iniziare.<br><strong>Puoi iniziare proprio per sentirti più pronto.</strong></h2>
+  <p>La nostra lezione di prova gratuita è un’occasione per conoscerci, vivere l’atmosfera dei nostri corsi e scoprire se l’improvvisazione fa per te. Nessun impegno, solo il piacere di mettersi in gioco.</p>
+  <div class="lg-actions">
+    <a class="lg-primary" href="#artyou-wa-course-menu">Prenota la tua lezione di prova gratuita →</a>
+    <a class="lg-whatsapp" target="_blank" rel="noopener" href="https://wa.me/393271881956?text=Ciao%21%20Vorrei%20informazioni%20sulla%20lezione%20di%20prova%20gratuita.">Scrivici su WhatsApp</a>
+  </div>
 </section>
 </main>
 <footer id="contatti" class="am-px am-py" style="flex-grow: 1; background: #0D1115; color: #D5DCE1; padding: 80px 120px 48px; display: flex; flex-direction: column; gap: 48px;">
@@ -1017,6 +1114,19 @@ class Component extends DCLogic {
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",bind);
   else bind();
 })();
+</script>
+
+<script id="lezione-gratuita-wa">
+document.getElementById('lg-wa-go').addEventListener('click',function(){
+  var nome=(document.getElementById('lg-nome').value||'').trim();
+  var cognome=(document.getElementById('lg-cognome').value||'').trim();
+  var corso=document.getElementById('lg-corso').value;
+  var intento=document.getElementById('lg-intento').value;
+  var intro={informazioni:'vorrei informazioni',prova:'vorrei fare una lezione di prova gratuita',iscrizione:'vorrei iscrivermi',parlare:'vorrei parlare con qualcuno'}[intento]||'vorrei informazioni';
+  var persona=[nome,cognome].filter(Boolean).join(' ');
+  var msg=(persona?('Ciao, sono '+persona+'. '):'Ciao! ')+intro+' per '+corso+'.';
+  window.open('https://wa.me/393271881956?text='+encodeURIComponent(msg),'_blank','noopener');
+});
 </script>
 </body>
 </html>
