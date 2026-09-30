@@ -322,7 +322,7 @@ function PO_bookingSourceEvents_() {
     if(skipNames[sh.getName()] || sh.getLastRow()<2 || sh.getLastColumn()<2)return;
     const values=sh.getDataRange().getValues();
     const h=values[0].map(String);
-    const iId=PO_headerIndex_(h,['Evento','ID','Id','Slug','Codice']);
+    const iId=PO_headerIndex_(h,['Evento','Evento (slug)','ID','Id','Slug','Codice']);
     const iTitle=PO_headerIndex_(h,['Titolo','Evento titolo','Nome']);
     const iDate=PO_headerIndex_(h,['Data','Data evento']);
     const iTime=PO_headerIndex_(h,['Ora','Orario']);
@@ -330,11 +330,11 @@ function PO_bookingSourceEvents_() {
     const iPrice=PO_headerIndex_(h,['Prezzo','Costo']);
     const iType=PO_headerIndex_(h,['Tipo','Tipo evento','Categoria']);
     const iVenue=PO_headerIndex_(h,['Luogo','Venue','Sede']);
-    const iSlug=PO_headerIndex_(h,['Slug','Codice']);
+    const iSlug=PO_headerIndex_(h,['Slug','Evento (slug)','Codice']);
     const iDesc=PO_headerIndex_(h,['Descrizione','Note interne','Note']);
 
     // Riconosce automaticamente le tabelle del Gestionale Prenotazioni,
-    // anche se il foglio non si chiama "Eventi".
+    // incluso il foglio storico "Capienza" con colonna "Evento (slug)".
     if(iTitle<0 || iDate<0 || iCap<0 || (iId<0 && iSlug<0))return;
 
     values.slice(1).forEach(function(r,rowIndex){
