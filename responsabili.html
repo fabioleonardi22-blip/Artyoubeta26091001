@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <script src="/js/artyou-calendar-config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="/js/artyou-google-auth.js"></script>
 <style>
 :root{--ink:#13181D;--paper:#F6F3EC;--line:#DED7CA;--orange:#F09000;--muted:#68737D;--white:#fff;--shadow:0 14px 38px rgba(25,20,15,.08)}
 *{box-sizing:border-box}body{margin:0;background:#ECE7DE;color:var(--ink);font-family:Arial,Helvetica,sans-serif}button,input,select,textarea{font:inherit}
@@ -27,7 +29,15 @@ header strong{font-size:21px}.actions{display:flex;gap:8px;flex-wrap:wrap}.actio
   <strong>ARTYOU · Anagrafica Docenti e Staff</strong>
   <div class="actions"><a href="/calendario-docenti/">Piano Operativo</a><a href="/gestionale.html">Gestionale Eventi</a></div>
 </header>
-<div class="shell">
+<div id="accessGate" class="shell">
+  <section class="panel" style="max-width:520px;margin:55px auto;text-align:center">
+    <h1>Accesso riservato</h1>
+    <p class="mini">Accedi con un account Google autorizzato da Artyou.</p>
+    <div id="googleLoginButton" style="display:flex;justify-content:center;margin:18px 0"></div>
+    <div id="loginStatus" class="status">Verifica accesso…</div>
+  </section>
+</div>
+<div id="registryApp" class="shell" style="display:none">
   <section class="panel">
     <div class="top">
       <div><h1>Docenti e Staff</h1><div class="mini">Archivio unico per assegnazioni, riunioni, Google Calendar e promemoria.</div></div>
@@ -51,7 +61,8 @@ header strong{font-size:21px}.actions{display:flex;gap:8px;flex-wrap:wrap}.actio
       <label>Nome e cognome<input id="name" placeholder="Nome e cognome"></label>
       <label>Tipo<select id="kind"><option>Docente</option><option>Staff</option><option>Collaboratore</option></select></label>
       <label>Ruolo<input id="role" placeholder="Es. Docente improv, Grafica, Segreteria"></label>
-      <label>Email<input id="email" type="email" placeholder="nome@esempio.it"></label>
+      <label>Livello di accesso<select id="accessLevel"><option>Amministratore</option><option>Staff</option><option selected>Docente</option></select></label>
+      <label>Email Google autorizzata<input id="email" type="email" placeholder="nome@gmail.com"></label>
       <label>WhatsApp<input id="phone" placeholder="+39 ..."></label>
       <label>Stato<select id="active"><option value="true">Attivo</option><option value="false">Non attivo</option></select></label>
     </div>
@@ -80,7 +91,7 @@ header strong{font-size:21px}.actions{display:flex;gap:8px;flex-wrap:wrap}.actio
 (function(){
 "use strict";
 var endpoint=window.ARTYOU_CALENDAR_ENDPOINT||"";
-var LS="artyouCalendarPeople_v1",people=[],sessionEmail=sessionStorage.getItem("artyouCalendarEmail")||"";
+var LS="artyouCalendarPeople_v1",people=[],sessionEmail="",currentSession=null,isAdmin=false;
 
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s||"").replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
@@ -88,9 +99,9 @@ function loadLocal(){try{people=JSON.parse(localStorage.getItem(LS)||"[]")}catch
 function saveLocal(){localStorage.setItem(LS,JSON.stringify(people))}
 function api(action,payload){
   if(!endpoint)return Promise.reject(new Error("demo"));
-  var opts={method:payload?"POST":"GET",headers:{"Content-Type":"text/plain;charset=utf-8"}};
-  var url=endpoint+"?action="+encodeURIComponent(action)+"&email="+encodeURIComponent(sessionEmail)+"&_="+Date.now();
-  if(payload){payload.action=action;payload.email=sessionEmail;opts.body=JSON.stringify(payload)}
+  var opts={method:payload?"POST":"GET",headers:ArtyouGoogleAuth.authHeaders({"Content-Type":"text/plain;charset=utf-8"})};
+  var url=endpoint+"?action="+encodeURIComponent(action)+"&_="+Date.now();
+  if(payload){payload.action=action;opts.body=JSON.stringify(payload)}
   return fetch(url,opts).then(function(r){return r.json()})
 }
 function load(){
@@ -99,18 +110,21 @@ function load(){
 }
 function selectedSkills(){return [].slice.call(document.querySelectorAll("#skills input:checked")).map(function(x){return x.value})}
 function openPerson(p){
-  p=p||{};$("personId").value=p.id||"";$("name").value=p.name||"";$("kind").value=p.kind||"Docente";$("role").value=p.role||"";$("email").value=p.email||"";$("phone").value=p.phone||"";$("active").value=p.active===false?"false":"true";$("emailOn").checked=p.emailOn!==false;$("whatsappOn").checked=!!p.whatsappOn;$("notes").value=p.notes||"";
+  if(!isAdmin)return;
+  p=p||{};$("personId").value=p.id||"";$("name").value=p.name||"";$("kind").value=p.kind||"Docente";$("role").value=p.role||"";$("accessLevel").value=p.accessLevel||"Docente";$("email").value=p.email||"";$("phone").value=p.phone||"";$("active").value=p.active===false?"false":"true";$("emailOn").checked=p.emailOn!==false;$("whatsappOn").checked=!!p.whatsappOn;$("notes").value=p.notes||"";
   document.querySelectorAll("#skills input").forEach(function(x){x.checked=(p.skills||[]).indexOf(x.value)!==-1});
   $("modalTitle").textContent=p.id?"Modifica anagrafica":"Nuova anagrafica";$("modalWrap").classList.add("open")
 }
 function close(){$("modalWrap").classList.remove("open")}
-function collect(){return{id:$("personId").value||("p_"+Date.now()),name:$("name").value.trim(),kind:$("kind").value,role:$("role").value.trim(),email:$("email").value.trim().toLowerCase(),phone:$("phone").value.trim(),active:$("active").value==="true",skills:selectedSkills(),emailOn:$("emailOn").checked,whatsappOn:$("whatsappOn").checked,notes:$("notes").value.trim()}}
+function collect(){return{id:$("personId").value||("p_"+Date.now()),name:$("name").value.trim(),kind:$("kind").value,role:$("role").value.trim(),accessLevel:$("accessLevel").value,email:$("email").value.trim().toLowerCase(),phone:$("phone").value.trim(),active:$("active").value==="true",skills:selectedSkills(),emailOn:$("emailOn").checked,whatsappOn:$("whatsappOn").checked,notes:$("notes").value.trim()}}
 function save(){
+  if(!isAdmin){alert("Solo un amministratore può modificare le anagrafiche.");return}
   var p=collect();if(!p.name){alert("Inserisci nome e cognome.");return}
   if(!endpoint){var i=people.findIndex(function(x){return x.id===p.id});if(i>=0)people[i]=p;else people.push(p);saveLocal();close();render();return}
   api("save_person",{person:p}).then(function(r){if(!r||!r.ok)throw new Error((r&&r.errore)||"Salvataggio non riuscito");close();load()}).catch(function(e){alert(e.message)})
 }
 function remove(p){
+  if(!isAdmin){alert("Solo un amministratore può eliminare le anagrafiche.");return}
   if(!confirm("Eliminare l'anagrafica di "+p.name+"?"))return;
   if(!endpoint){people=people.filter(function(x){return x.id!==p.id});saveLocal();render();return}
   api("delete_person",{id:p.id}).then(function(r){if(!r||!r.ok)throw new Error((r&&r.errore)||"Eliminazione non riuscita");load()}).catch(function(e){alert(e.message)})
@@ -128,13 +142,21 @@ function render(){
   list.forEach(function(p){
     var card=document.createElement("div");card.className="card"+(p.active===false?" off":"");
     var tags=(p.skills||[]).map(function(s){return '<span class="tag">'+esc(s)+'</span>'}).join("");
-    card.innerHTML='<h3>'+esc(p.name)+'</h3><div class="meta"><strong>'+esc(p.kind||"Docente")+'</strong>'+(p.role?' · '+esc(p.role):'')+'<br>'+esc(p.email||"Email non inserita")+'<br>'+esc(p.phone||"WhatsApp non inserito")+'</div><div>'+tags+'</div><div class="row"><button class="btn soft edit">Modifica</button><button class="btn soft del">Elimina</button></div>';
-    card.querySelector(".edit").onclick=function(){openPerson(p)};card.querySelector(".del").onclick=function(){remove(p)};box.appendChild(card)
+    card.innerHTML='<h3>'+esc(p.name)+'</h3><div class="meta"><strong>'+esc(p.kind||"Docente")+'</strong>'+(p.role?' · '+esc(p.role):'')+'<br>Accesso: <strong>'+esc(p.accessLevel||"Docente")+'</strong><br>'+esc(p.email||"Email non inserita")+'<br>'+esc(p.phone||"WhatsApp non inserito")+'</div><div>'+tags+'</div>'+(isAdmin?'<div class="row"><button class="btn soft edit">Modifica</button><button class="btn soft del">Elimina</button></div>':'');
+    if(isAdmin){card.querySelector(".edit").onclick=function(){openPerson(p)};card.querySelector(".del").onclick=function(){remove(p)}}box.appendChild(card)
   })
 }
 $("newPerson").onclick=function(){openPerson()};$("closeBtn").onclick=close;$("cancelBtn").onclick=close;$("saveBtn").onclick=save;$("modalWrap").onclick=function(e){if(e.target===$("modalWrap"))close()};
 ["search","kindFilter","activeFilter"].forEach(function(id){$(id).oninput=render;$(id).onchange=render});
-load();
+ArtyouGoogleAuth.init({buttonId:"googleLoginButton",statusId:"loginStatus",onAuthorized:function(session){
+  currentSession=session||{};
+  sessionEmail=String(currentSession.email||"").toLowerCase();
+  isAdmin=!!currentSession.admin||String(currentSession.accessLevel||"")==="Amministratore";
+  document.getElementById("newPerson").style.display=isAdmin?"":"none";
+  document.getElementById("accessGate").style.display="none";
+  document.getElementById("registryApp").style.display="block";
+  load();
+}});
 })();
 </script>
 </body>

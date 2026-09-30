@@ -6,6 +6,7 @@
 
 const PO_SHEET_TASKS = 'PianoOperativo';
 const PO_SHEET_PEOPLE = 'Responsabili';
+const PO_SHEET_AUDIT = 'PianoOperativoAudit';
 const PO_PROP_CALENDAR_ID = 'PO_CALENDAR_ID';
 const PO_PROP_ADMIN_EMAILS = 'PO_ADMIN_EMAILS';
 const PO_PROP_WHATSAPP_TOKEN = 'PO_WHATSAPP_TOKEN';
@@ -19,7 +20,7 @@ const PO_TASK_HEADERS = [
 ];
 
 const PO_PEOPLE_HEADERS = [
-  'id','nome','tipo','ruolo','competenzeJSON','email','whatsapp','emailAttiva','whatsappAttivo','attivo','note','updatedAt'
+  'id','nome','tipo','ruolo','livelloAccesso','competenzeJSON','email','whatsapp','emailAttiva','whatsappAttivo','attivo','note','updatedAt'
 ];
 
 function PO_getSpreadsheet_() {
@@ -45,10 +46,13 @@ function PO_getOrCreateSheet_(name, headers) {
 
 function PO_getPeopleSheet_() { return PO_getOrCreateSheet_(PO_SHEET_PEOPLE, PO_PEOPLE_HEADERS); }
 function PO_getTasksSheet_() { return PO_getOrCreateSheet_(PO_SHEET_TASKS, PO_TASK_HEADERS); }
+function PO_getAuditSheet_() { return PO_getOrCreateSheet_(PO_SHEET_AUDIT,['timestamp','email','azione','entita','id','dettaglio']); }
+function PO_audit_(email,azione,entita,id,dettaglio){try{PO_getAuditSheet_().appendRow([new Date(),PO_normalizeEmail_(email),String(azione||''),String(entita||''),String(id||''),String(dettaglio||'')]);}catch(e){}}
 
 function PO_setup(adminEmail) {
   PO_getPeopleSheet_();
   PO_getTasksSheet_();
+  PO_getAuditSheet_();
   const props = PropertiesService.getScriptProperties();
   if (adminEmail) props.setProperty(PO_PROP_ADMIN_EMAILS, String(adminEmail).trim().toLowerCase());
   if (!props.getProperty(PO_PROP_CALENDAR_ID)) {
@@ -57,6 +61,12 @@ function PO_setup(adminEmail) {
   }
   PO_installDailyReminderTrigger();
   return {ok:true, calendarId:props.getProperty(PO_PROP_CALENDAR_ID)};
+}
+
+function PO_calendarInfo() {
+  const cal=PO_calendar_();
+  if(!cal) throw new Error('calendario_piano_operativo_non_configurato');
+  return {ok:true,calendarId:cal.getId(),name:cal.getName()};
 }
 
 function PO_json_(o) {
@@ -70,26 +80,58 @@ function PO_bool_(v, def) {
 }
 
 function PO_normalizeEmail_(s) { return String(s||'').trim().toLowerCase(); }
+function PO_emailFromGoogleToken_(token) {
+  token=String(token||'').trim();
+  if(!token) throw new Error('google_token_mancante');
+  const cache=CacheService.getScriptCache();
+  const cacheKey='po_gt_'+Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,token)).slice(0,40);
+  const cached=cache.get(cacheKey);
+  if(cached) return PO_normalizeEmail_(cached);
+
+  const url='https://oauth2.googleapis.com/tokeninfo?id_token='+encodeURIComponent(token);
+  const res=UrlFetchApp.fetch(url,{muteHttpExceptions:true});
+  if(res.getResponseCode()!==200) throw new Error('google_token_non_valido');
+  let info={};
+  try{info=JSON.parse(res.getContentText()||'{}');}catch(e){throw new Error('google_token_non_valido');}
+  if(!info.email || String(info.email_verified)!=='true') throw new Error('google_email_non_verificata');
+
+  const expected=String(PropertiesService.getScriptProperties().getProperty('PO_GOOGLE_CLIENT_ID')||'').trim();
+  if(expected && String(info.aud||'')!==expected) throw new Error('google_audience_non_valida');
+
+  const email=PO_normalizeEmail_(info.email);
+  cache.put(cacheKey,email,300);
+  return email;
+}
+
 
 function PO_adminEmails_() {
   return String(PropertiesService.getScriptProperties().getProperty(PO_PROP_ADMIN_EMAILS)||'')
     .split(',').map(PO_normalizeEmail_).filter(Boolean);
 }
 
+function PO_peopleCache_(){return CacheService.getScriptCache()}
+function PO_clearPeopleCache_(){try{PO_peopleCache_().remove('po_people_v1')}catch(e){}}
 function PO_listPeople() {
+  const cache=PO_peopleCache_();
+  try{
+    const hit=cache.get('po_people_v1');
+    if(hit)return JSON.parse(hit);
+  }catch(e){}
   const sh = PO_getPeopleSheet_();
   if (sh.getLastRow() < 2) return [];
   const values = sh.getDataRange().getValues(), h = values[0].map(String);
-  return values.slice(1).filter(r=>r[0]).map(r=>{
+  const list=values.slice(1).filter(r=>r[0]).map(r=>{
     const o={}; h.forEach((k,i)=>o[k]=r[i]);
     return {
       id:String(o.id||''), name:String(o.nome||''), kind:String(o.tipo||'Docente'), role:String(o.ruolo||''),
-      skills:(typeof gestParseJson_==='function'?gestParseJson_(o.competenzeJSON,[]):PO_parseJson_(o.competenzeJSON,[])),
+      accessLevel:String(o.livelloAccesso||'Docente'), skills:(typeof gestParseJson_==='function'?gestParseJson_(o.competenzeJSON,[]):PO_parseJson_(o.competenzeJSON,[])),
       email:String(o.email||''), phone:String(o.whatsapp||''),
       emailOn:PO_bool_(o.emailAttiva,true), whatsappOn:PO_bool_(o.whatsappAttivo,false),
-      active:PO_bool_(o.attivo,true), notes:String(o.note||''), updatedAt:o.updatedAt||''
+      active:PO_bool_(o.attivo,true), notes:String(o.note||''), updatedAt:String(o.updatedAt||'')
     };
   });
+  try{cache.put('po_people_v1',JSON.stringify(list),60)}catch(e){}
+  return list;
 }
 
 function PO_findPersonById_(id) {
@@ -108,10 +150,12 @@ function PO_isAdmin_(email) {
 function PO_requireUser_(email) {
   email=PO_normalizeEmail_(email);
   if (!email) throw new Error('email_mancante');
-  if (PO_isAdmin_(email)) return {email:email,admin:true};
+  if (PO_isAdmin_(email)) return {email:email,admin:true,accessLevel:'Amministratore'};
   const person=PO_findPersonByEmail_(email);
   if (!person) throw new Error('accesso_non_autorizzato');
-  return {email:email,admin:false,person:person};
+  const accessLevel=String(person.accessLevel||'Docente');
+  if (accessLevel === 'Amministratore') return {email:email,admin:true,accessLevel:'Amministratore',person:person};
+  return {email:email,admin:false,accessLevel:accessLevel,person:person};
 }
 
 function PO_requireAdmin_(email) {
@@ -120,9 +164,15 @@ function PO_requireAdmin_(email) {
   return u;
 }
 
+function PO_requireEditor_(email) {
+  const u=PO_requireUser_(email);
+  if (u.admin || String(u.accessLevel||'') === 'Staff') return u;
+  throw new Error('permesso_modifica_richiesto');
+}
+
 function PO_session(email) {
   const u=PO_requireUser_(email);
-  return {ok:true, admin:!!u.admin, person:u.person||null};
+  return {ok:true, admin:!!u.admin, accessLevel:u.admin?'Amministratore':String(u.accessLevel||'Docente'), person:u.person||null};
 }
 
 function PO_savePerson(email, p) {
@@ -132,23 +182,32 @@ function PO_savePerson(email, p) {
   const id=String(p.id||Utilities.getUuid());
   const obj={
     id:id,nome:String(p.name||p.nome||'').trim(),tipo:String(p.kind||p.tipo||'Docente').trim(),ruolo:String(p.role||p.ruolo||'').trim(),
-    competenzeJSON:JSON.stringify(Array.isArray(p.skills)?p.skills:[]),
+    livelloAccesso:String(p.accessLevel||p.livelloAccesso||'Docente').trim(),competenzeJSON:JSON.stringify(Array.isArray(p.skills)?p.skills:[]),
     email:PO_normalizeEmail_(p.email),whatsapp:String(p.phone||p.whatsapp||'').trim(),
     emailAttiva:p.emailOn!==false,whatsappAttivo:!!p.whatsappOn,attivo:p.active!==false,
     note:String(p.notes||p.note||'').trim(),updatedAt:new Date()
   };
   if(!obj.nome) throw new Error('nome_mancante');
+  if(!obj.email) throw new Error('email_mancante');
+  if(['Amministratore','Staff','Docente'].indexOf(obj.livelloAccesso)===-1) obj.livelloAccesso='Docente';
+  const dup=PO_listPeople().find(x=>PO_normalizeEmail_(x.email)===obj.email&&String(x.id)!==id);
+  if(dup) throw new Error('email_gia_autorizzata');
   let row=-1, idIx=h.indexOf('id');
   for(let i=1;i<values.length;i++) if(String(values[i][idIx])===id){row=i+1;break;}
   const arr=h.map(k=>Object.prototype.hasOwnProperty.call(obj,k)?obj[k]:'');
-  if(row>0) sh.getRange(row,1,1,h.length).setValues([arr]); else sh.appendRow(arr);
+  const targetRow=row>0?row:Math.max(2,sh.getLastRow()+1);
+  const phoneIx=h.indexOf('whatsapp');
+  if(phoneIx>=0) sh.getRange(targetRow,phoneIx+1).setNumberFormat('@');
+  sh.getRange(targetRow,1,1,h.length).setValues([arr]);
+  PO_audit_(email,row>0?'modifica':'crea','persona',id,obj.nome+' · '+obj.livelloAccesso);
+  PO_clearPeopleCache_();
   return PO_listPeople().find(x=>x.id===id);
 }
 
 function PO_deletePerson(email,id) {
   PO_requireAdmin_(email);
   const sh=PO_getPeopleSheet_(), values=sh.getDataRange().getValues(), h=values[0].map(String), ix=h.indexOf('id');
-  for(let i=1;i<values.length;i++) if(String(values[i][ix])===String(id)){sh.deleteRow(i+1);return true;}
+  for(let i=1;i<values.length;i++) if(String(values[i][ix])===String(id)){PO_audit_(email,'elimina','persona',id,String(values[i][h.indexOf('nome')]||''));sh.deleteRow(i+1);PO_clearPeopleCache_();return true;}
   return true;
 }
 
@@ -233,6 +292,10 @@ function PO_parseSiteDate_(label) {
     };
   }
 
+  const numeric=label.match(/(?:^|[^0-9])(\d{1,2})[\/.-](\d{1,2})[\/.-](20\d{2})(?:[^0-9]|$)/);
+  if(numeric){
+    return {date:numeric[3]+'-'+String(Number(numeric[2])).padStart(2,'0')+'-'+String(Number(numeric[1])).padStart(2,'0'),start:time?String(Number(time[1])).padStart(2,'0')+':'+time[2]:''};
+  }
   const months={gennaio:1,febbraio:2,marzo:3,aprile:4,maggio:5,giugno:6,luglio:7,agosto:8,settembre:9,ottobre:10,novembre:11,dicembre:12};
   const m=label.toLowerCase().match(/(?:^|\s)(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)(?:\s+(20\d{2}))?/i);
   if(!m) return {date:'',start:time?String(Number(time[1])).padStart(2,'0')+':'+time[2]:''};
@@ -250,16 +313,120 @@ function PO_parseSiteDate_(label) {
   };
 }
 
-function PO_siteEvents_() {
-  if(typeof gestAdminEvents_!=='function') return [];
-  let site=[];
-  try { site=gestAdminEvents_().filter(e=>e.attivo); } catch(err) { return []; }
+function PO_headerIndex_(headers,names){
+  const normalized=headers.map(h=>String(h||'').trim().toLowerCase());
+  for(let i=0;i<names.length;i++){
+    const ix=normalized.indexOf(String(names[i]||'').trim().toLowerCase());
+    if(ix!==-1)return ix;
+  }
+  return -1;
+}
 
+function PO_bookingSourceEvents_() {
+  const ss=PO_getSpreadsheet_();
+  if(!ss)return [];
+  const skipNames={'PianoOperativo':true,'Responsabili':true,'PianoOperativoAudit':true,'EventiSito':true};
+  const out=[];
+
+  ss.getSheets().forEach(function(sh){
+    if(skipNames[sh.getName()] || sh.getLastRow()<2 || sh.getLastColumn()<2)return;
+    const values=sh.getDataRange().getValues();
+    const h=values[0].map(String);
+    const iId=PO_headerIndex_(h,['Evento','Evento (slug)','ID','Id','Slug','Codice']);
+    const iTitle=PO_headerIndex_(h,['Titolo','Evento titolo','Nome']);
+    const iDate=PO_headerIndex_(h,['Data','Data evento']);
+    const iTime=PO_headerIndex_(h,['Ora','Orario']);
+    const iCap=PO_headerIndex_(h,['Capienza','Posti']);
+    const iPrice=PO_headerIndex_(h,['Prezzo','Costo']);
+    const iType=PO_headerIndex_(h,['Tipo','Tipo evento','Categoria']);
+    const iVenue=PO_headerIndex_(h,['Luogo','Venue','Sede']);
+    const iSlug=PO_headerIndex_(h,['Slug','Evento (slug)','Codice']);
+    const iDesc=PO_headerIndex_(h,['Descrizione','Note interne','Note']);
+
+    // Riconosce automaticamente le tabelle del Gestionale Prenotazioni,
+    // incluso il foglio storico "Capienza" con colonna "Evento (slug)".
+    if(iTitle<0 || iDate<0 || iCap<0 || (iId<0 && iSlug<0))return;
+
+    values.slice(1).forEach(function(r,rowIndex){
+      const rawId=iId>=0?r[iId]:(iSlug>=0?r[iSlug]:'');
+      const rawSlug=iSlug>=0?r[iSlug]:rawId;
+      const rawTitle=iTitle>=0?r[iTitle]:'';
+      const rawDate=iDate>=0?r[iDate]:'';
+      if(!rawId && !rawTitle)return;
+
+      const baseId=String(rawId||rawSlug||rawTitle||('riga-'+(rowIndex+2))).trim();
+      const slug=String(rawSlug||baseId).trim();
+      const title=String(rawTitle||baseId||'Evento').trim();
+      let dateLabel='';
+      if(rawDate instanceof Date && !isNaN(rawDate.getTime())){
+        dateLabel=Utilities.formatDate(rawDate,Session.getScriptTimeZone(),'dd/MM/yyyy');
+      }else{
+        dateLabel=String(rawDate||'').trim();
+      }
+      let rawTime=iTime>=0?r[iTime]:'';
+      let timeLabel='';
+      if(rawTime instanceof Date && !isNaN(rawTime.getTime())){
+        timeLabel=Utilities.formatDate(rawTime,Session.getScriptTimeZone(),'HH:mm');
+      }else{
+        timeLabel=String(rawTime||'').trim();
+      }
+      if(timeLabel && dateLabel && dateLabel.indexOf(timeLabel)===-1) dateLabel+=' · '+timeLabel;
+
+      out.push({
+        id:'booking:'+baseId,
+        slug:slug,
+        title:title,
+        cat:iType>=0?String(r[iType]||''):'',
+        eventType:iType>=0?String(r[iType]||''):'',
+        tipo:iType>=0?String(r[iType]||''):'',
+        venue:iVenue>=0?String(r[iVenue]||''):'',
+        desc:iDesc>=0?String(r[iDesc]||''):'',
+        price:iPrice>=0&&r[iPrice]!==''?Number(r[iPrice]):'',
+        capienza:iCap>=0&&r[iCap]!==''?Number(r[iCap]):0,
+        dates:[{label:dateLabel||'Data da definire'}],
+        attivo:true,
+        sourceKind:'booking',
+        sourceSheet:sh.getName()
+      });
+    });
+  });
+
+  return out;
+}
+
+function PO_operationalSourceEvents_() {
+  const cache=CacheService.getScriptCache();
+  try{
+    const hit=cache.get('po_operational_events_v1');
+    if(hit)return JSON.parse(hit);
+  }catch(e){}
+  let site=[];
+  if(typeof gestAdminEvents_==='function'){
+    try{site=gestAdminEvents_().filter(e=>e.attivo);}catch(err){site=[];}
+  }
+  const booking=PO_bookingSourceEvents_();
+  const seen={};
+  const out=[];
+  site.concat(booking).forEach(function(e){
+    const dates=Array.isArray(e.dates)&&e.dates.length?e.dates:[{label:'Data da definire'}];
+    const first=PO_parseSiteDate_(dates[0]&&dates[0].label);
+    const key=(String(e.slug||e.id||e.title||'').toLowerCase()+'|'+String(first.date||''));
+    if(seen[key])return;
+    seen[key]=true;
+    out.push(e);
+  });
+  try{cache.put('po_operational_events_v1',JSON.stringify(out),15)}catch(e){}
+  return out;
+}
+
+function PO_siteEvents_() {
+  const site=PO_operationalSourceEvents_();
   const out=[];
   site.forEach(function(e){
     const dates=Array.isArray(e.dates)&&e.dates.length?e.dates:[{label:'Data da definire'}];
     dates.forEach(function(d,i){
       const parsed=PO_parseSiteDate_(d&&d.label);
+      const fromBooking=String(e.id||'').indexOf('booking:')===0 || e.sourceKind==='booking';
       out.push({
         id:'site_'+String(e.id||e.slug||'evento')+'_'+i,
         title:String(e.title||e.slug||'Evento sito'),
@@ -269,10 +436,10 @@ function PO_siteEvents_() {
         date:parsed.date,start:parsed.start,end:'',
         venue:String(e.venue||''),visibility:'public',
         taskStatus:'todo',repeat:'none',
-        notes:'Evento già presente nel Gestionale Eventi. Modificalo dal Gestionale, non dal Piano Operativo.',
+        notes:fromBooking?'Evento già presente nel Gestionale Prenotazioni.':'Evento già presente nel Gestionale Eventi.',
         publicTitle:String(e.title||''),price:e.price===''?null:Number(e.price),
         capacity:e.capienza==null?null:Number(e.capienza),slug:String(e.slug||''),
-        publishSite:true,reminderDays:0,reminderChannel:'email',
+        publishSite:!fromBooking,reminderDays:0,reminderChannel:'email',
         googleEventId:'',source:'site',siteEventId:String(e.id||''),siteDateIndex:i,siteDateLabel:String((d&&d.label)||'')
       });
     });
@@ -280,11 +447,34 @@ function PO_siteEvents_() {
   return out;
 }
 
+function PO_eventFingerprint_(e) {
+  return [
+    String(e.title||'').trim().toLowerCase(),
+    String(e.date||''),
+    String(e.start||''),
+    String(e.end||'')
+  ].join('|');
+}
+
+function PO_normalizeCalendarEventId_(id) {
+  return String(id||'').trim().replace(/^gcal_/,'').replace(/@google\.com$/,'');
+}
+
 function PO_listEvents(email,from,to) {
   PO_requireUser_(email);
   const stored=PO_listTasks();
-  const linked={}; stored.forEach(e=>{if(e.googleEventId) linked[e.googleEventId]=true;});
-  const googleOnly=PO_calendarEvents_(from,to).filter(e=>!linked[e.googleEventId]);
+  const linked={}, fingerprints={};
+  stored.forEach(function(e){
+    const gid=PO_normalizeCalendarEventId_(e.googleEventId);
+    if(gid) linked[gid]=true;
+    fingerprints[PO_eventFingerprint_(e)]=true;
+  });
+  const googleOnly=PO_calendarEvents_(from,to).filter(function(e){
+    const gid=PO_normalizeCalendarEventId_(e.googleEventId);
+    if(gid && linked[gid]) return false;
+    if(fingerprints[PO_eventFingerprint_(e)]) return false;
+    return true;
+  });
   const siteEvents=PO_siteEvents_();
   const all=stored.concat(siteEvents,googleOnly);
   return all.filter(e=>(!from||!e.date||e.date>=from)&&(!to||!e.date||e.date<=to));
@@ -354,14 +544,13 @@ function PO_planTemplates_(type) {
 }
 
 function PO_getSiteEvent_(siteEventId) {
-  if(typeof gestAdminEvents_!=='function') throw new Error('gestionale_non_disponibile');
-  const ev=gestAdminEvents_().find(e=>String(e.id||'')===String(siteEventId||''));
+  const ev=PO_operationalSourceEvents_().find(e=>String(e.id||'')===String(siteEventId||''));
   if(!ev) throw new Error('evento_gestionale_non_trovato');
   return ev;
 }
 
 function PO_generatePlanForSiteEvent(email, siteEventId, dateIndex) {
-  PO_requireUser_(email);
+  PO_requireEditor_(email);
   const ev=PO_getSiteEvent_(siteEventId);
   const dates=Array.isArray(ev.dates)&&ev.dates.length?ev.dates:[];
   const ix=Math.max(0,Number(dateIndex)||0);
@@ -383,7 +572,7 @@ function PO_generatePlanForSiteEvent(email, siteEventId, dateIndex) {
     d.setDate(d.getDate()-Number(t.days||0));
     PO_saveTask(email,{
       title:t.title+' · '+String(ev.title||''),
-      type:type==='Festival'?'YEP':type,
+      type:type,
       phase:t.phase||'',
       teacher:t.owner||'',
       team:t.owner||'',
@@ -408,7 +597,7 @@ function PO_generatePlanForSiteEvent(email, siteEventId, dateIndex) {
 }
 
 function PO_saveTask(email,e) {
-  PO_requireUser_(email);
+  PO_requireEditor_(email);
   e=e||{};
   if(!String(e.title||'').trim()) throw new Error('titolo_mancante');
   if(!String(e.date||'').trim()) throw new Error('data_mancante');
@@ -439,25 +628,31 @@ function PO_saveTask(email,e) {
   if(old){
     obj.reminderKeyInviati=String(old.reminderKeyInviati||'');
     if(!obj.googleEventId) obj.googleEventId=String(old.googleEventId||'');
+    if(!String(e.source||'').trim()) obj.source=String(old.source||obj.source||'plan');
+    if(!String(e.parentEventId||'').trim()) obj.parentEventId=String(old.parentEventId||'');
+    if(!String(e.templateKey||'').trim()) obj.templateKey=String(old.templateKey||'');
+  }
+  if(obj.source==='plan' && !obj.parentEventId && /Generato automaticamente dal Gestionale Eventi/i.test(obj.note||'')){
+    obj.source='generated';
   }
 
   obj.googleEventId=PO_syncTaskToCalendar_(obj);
   if(String(obj.tipo)==='Riunione' && e.notifyAttendees) PO_notifyMeetingAttendees_(obj);
   const arr=h.map(k=>Object.prototype.hasOwnProperty.call(obj,k)?obj[k]:'');
   if(row>0) sh.getRange(row,1,1,h.length).setValues([arr]); else sh.appendRow(arr);
-
+  PO_audit_(email,row>0?'modifica':'crea','attivita',id,obj.titolo);
   return PO_listTasks().find(x=>x.id===id);
 }
 
 function PO_deleteTask(email,id) {
-  PO_requireUser_(email);
+  PO_requireEditor_(email);
   const sh=PO_getTasksSheet_(), values=sh.getDataRange().getValues(), h=values[0].map(String);
   const idIx=h.indexOf('id'), gIx=h.indexOf('googleEventId');
   for(let i=1;i<values.length;i++){
     if(String(values[i][idIx])!==String(id)) continue;
     const gid=String(values[i][gIx]||'');
     if(gid){try{const ev=PO_calendar_().getEventById(gid);if(ev)ev.deleteEvent();}catch(e){}}
-    sh.deleteRow(i+1); return true;
+    PO_audit_(email,'elimina','attivita',id,String(values[i][h.indexOf('titolo')]||''));sh.deleteRow(i+1); return true;
   }
   if(String(id).indexOf('gcal_')===0){
     const gid=String(id).slice(5);try{const ev=PO_calendar_().getEventById(gid);if(ev)ev.deleteEvent();}catch(e){}
@@ -509,7 +704,14 @@ function PO_syncTaskToCalendar_(task) {
   const desc=['Piano Operativo Artyou','Area: '+(task.tipo||''),'Fase: '+(task.fase||''),'Responsabile: '+(task.responsabileNome||''),'Stato: '+(task.stato||''),'',task.note||''].join('\n');
 
   const attendeeIds=PO_parseJson_(task.attendeeIdsJSON||'[]',[]);
-  const guests=attendeeIds.map(PO_findPersonById_).filter(Boolean).map(p=>p.email).filter(Boolean);
+  // L'account dell'associazione vede già il calendario condiviso:
+  // non va invitato anche come guest, altrimenti Google Calendar mostra il doppione.
+  const associationEmail='artyouroma@gmail.com';
+  const guests=attendeeIds
+    .map(PO_findPersonById_)
+    .filter(Boolean)
+    .map(p=>PO_normalizeEmail_(p.email))
+    .filter(mail=>mail && mail!==associationEmail);
 
   if(ev){
     ev.setTitle(task.titolo||'Attività Artyou');ev.setTime(start,end);ev.setLocation(task.luogo||'');ev.setDescription(desc);
@@ -544,6 +746,26 @@ function PO_notifyMeetingAttendees_(task){
     }
   });
 }
+function PO_sendMeetingReminder_(task,daysLeft){
+  const ids=PO_parseJson_(task.attendeeIdsJSON||'[]',[]);
+  if(!ids.length)return false;
+  const people=ids.map(PO_findPersonById_).filter(p=>p&&p.active);
+  const channel=String(task.meetingChannel||'calendar').toLowerCase();
+  const when=Utilities.formatDate(new Date(String(task.data)+'T'+(task.oraInizio||'09:00')+':00'),Session.getScriptTimeZone(),'dd/MM/yyyy HH:mm');
+  const timing=daysLeft===0?'oggi':(daysLeft===1?'domani':'tra '+daysLeft+' giorni');
+  const body=['Promemoria riunione Artyou','',task.titolo||'Riunione','Quando: '+when+' ('+timing+')','Dove: '+(task.luogo||'-'),'',task.note||''].join('\n');
+  let sent=false;
+  people.forEach(function(p){
+    if((channel==='calendar'||channel==='email'||channel==='both')&&p.email&&p.emailOn){
+      MailApp.sendEmail({to:p.email,subject:'Artyou · Promemoria riunione: '+(task.titolo||''),body:body,name:'Artyou Roma'});sent=true;
+    }
+    if((channel==='whatsapp'||channel==='both')&&p.phone&&p.whatsappOn){
+      sent=PO_sendWhatsAppReminder_(p,{titolo:task.titolo||'Riunione'},body)||sent;
+    }
+  });
+  return sent;
+}
+
 function PO_runDailyReminders() {
   const sh=PO_getTasksSheet_(), values=sh.getDataRange().getValues();
   if(values.length<2)return;
@@ -552,9 +774,15 @@ function PO_runDailyReminders() {
     const row=values[r]; if(!row[ix.id]||!row[ix.data])continue;
     const state=String(row[ix.stato]||'').toLowerCase(); if(state==='fatto'||state==='done')continue;
     const due=new Date(row[ix.data]), daysLeft=PO_daysBetween_(today,due), configuredDays=Number(row[ix.reminderDays]||6);
+    const sentKeys=String(row[ix.reminderKeyInviati]||'').split(',').filter(Boolean);
+    const task={};headers.forEach((h,i)=>task[h]=row[i]);
+    const meetingKey='meeting_'+String(daysLeft), meetingDays=Number(task.meetingReminderDays||0);
+    if(String(task.tipo||'')==='Riunione' && meetingDays>0 && daysLeft===meetingDays && sentKeys.indexOf(meetingKey)===-1){
+      if(PO_sendMeetingReminder_(task,daysLeft)){sentKeys.push(meetingKey);sh.getRange(r+1,ix.reminderKeyInviati+1).setValue(sentKeys.join(','));}
+    }
     const schedule=[...new Set([configuredDays,3,1,0,-1])]; if(!schedule.includes(daysLeft))continue;
-    const sentKeys=String(row[ix.reminderKeyInviati]||'').split(',').filter(Boolean), key=String(daysLeft); if(sentKeys.includes(key))continue;
-    const task={};headers.forEach((h,i)=>task[h]=row[i]); const person=PO_findPersonById_(task.responsabileId); if(!person)continue;
+    const key='task_'+String(daysLeft); if(sentKeys.includes(key))continue;
+    const person=PO_findPersonById_(task.responsabileId); if(!person)continue;
     const msg=PO_buildReminderMessage_(task,person,daysLeft), channel=String(task.reminderChannel||'email').toLowerCase();
     let sent=false;
     if(channel==='email'||channel==='both')sent=PO_sendEmailReminder_(person,task,msg)||sent;
