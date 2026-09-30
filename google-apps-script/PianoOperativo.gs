@@ -19,7 +19,7 @@ const PO_TASK_HEADERS = [
 ];
 
 const PO_PEOPLE_HEADERS = [
-  'id','nome','ruolo','email','whatsapp','emailAttiva','whatsappAttivo','attivo','updatedAt'
+  'id','nome','tipo','ruolo','competenzeJSON','email','whatsapp','emailAttiva','whatsappAttivo','attivo','note','updatedAt'
 ];
 
 function PO_getSpreadsheet_() {
@@ -83,10 +83,11 @@ function PO_listPeople() {
   return values.slice(1).filter(r=>r[0]).map(r=>{
     const o={}; h.forEach((k,i)=>o[k]=r[i]);
     return {
-      id:String(o.id||''), name:String(o.nome||''), role:String(o.ruolo||''),
+      id:String(o.id||''), name:String(o.nome||''), kind:String(o.tipo||'Docente'), role:String(o.ruolo||''),
+      skills:(typeof gestParseJson_==='function'?gestParseJson_(o.competenzeJSON,[]):PO_parseJson_(o.competenzeJSON,[])),
       email:String(o.email||''), phone:String(o.whatsapp||''),
       emailOn:PO_bool_(o.emailAttiva,true), whatsappOn:PO_bool_(o.whatsappAttivo,false),
-      active:PO_bool_(o.attivo,true), updatedAt:o.updatedAt||''
+      active:PO_bool_(o.attivo,true), notes:String(o.note||''), updatedAt:o.updatedAt||''
     };
   });
 }
@@ -130,9 +131,11 @@ function PO_savePerson(email, p) {
   const sh=PO_getPeopleSheet_(), values=sh.getDataRange().getValues(), h=values[0].map(String);
   const id=String(p.id||Utilities.getUuid());
   const obj={
-    id:id,nome:String(p.name||p.nome||'').trim(),ruolo:String(p.role||p.ruolo||'').trim(),
+    id:id,nome:String(p.name||p.nome||'').trim(),tipo:String(p.kind||p.tipo||'Docente').trim(),ruolo:String(p.role||p.ruolo||'').trim(),
+    competenzeJSON:JSON.stringify(Array.isArray(p.skills)?p.skills:[]),
     email:PO_normalizeEmail_(p.email),whatsapp:String(p.phone||p.whatsapp||'').trim(),
-    emailAttiva:p.emailOn!==false,whatsappAttivo:!!p.whatsappOn,attivo:p.active!==false,updatedAt:new Date()
+    emailAttiva:p.emailOn!==false,whatsappAttivo:!!p.whatsappOn,attivo:p.active!==false,
+    note:String(p.notes||p.note||'').trim(),updatedAt:new Date()
   };
   if(!obj.nome) throw new Error('nome_mancante');
   let row=-1, idIx=h.indexOf('id');
@@ -165,7 +168,7 @@ function PO_taskRowToEvent_(h,r) {
     yepPreset:String(o.yepPreset||''), reminderDays:Number(o.reminderDays||0),
     reminderChannel:String(o.reminderChannel||'email'), googleEventId:String(o.googleEventId||''),
     source:String(o.source||'plan'), parentEventId:String(o.parentEventId||''), templateKey:String(o.templateKey||''),
-    attendeeIds:gestParseJson_?gestParseJson_(o.attendeeIdsJSON,[]):PO_parseJson_(o.attendeeIdsJSON,[]),
+    attendeeIds:(typeof gestParseJson_==='function'?gestParseJson_(o.attendeeIdsJSON,[]):PO_parseJson_(o.attendeeIdsJSON,[])),
     meetingChannel:String(o.meetingChannel||'calendar'), meetingReminderDays:Number(o.meetingReminderDays||0)
   };
 }
