@@ -59,8 +59,27 @@ function PO_setup(adminEmail) {
     const cal = CalendarApp.createCalendar('Artyou · Piano Operativo');
     props.setProperty(PO_PROP_CALENDAR_ID, cal.getId());
   }
+  PO_shareCalendarWithAssociation_();
   PO_installDailyReminderTrigger();
   return {ok:true, calendarId:props.getProperty(PO_PROP_CALENDAR_ID)};
+}
+
+function PO_shareCalendarWithAssociation_() {
+  const cal=PO_calendar_();
+  if(!cal) throw new Error('calendario_piano_operativo_non_configurato');
+  const email='artyouroma@gmail.com';
+  try {
+    cal.addViewer(email);
+    return {ok:true,email:email,calendarId:cal.getId()};
+  } catch(err) {
+    const msg=String(err&&err.message||err);
+    if(/already|già|owner|propriet/i.test(msg)) return {ok:true,email:email,calendarId:cal.getId(),alreadyShared:true};
+    throw err;
+  }
+}
+
+function PO_shareCalendarWithAssociation() {
+  return PO_shareCalendarWithAssociation_();
 }
 
 function PO_json_(o) {
