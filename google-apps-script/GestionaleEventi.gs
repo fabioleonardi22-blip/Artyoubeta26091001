@@ -127,7 +127,8 @@ function setupGestionale() {
 }
 
 function gestSpreadsheet_() {
-  const id = PropertiesService.getScriptProperties().getProperty(GEST_CFG.SHEET_ID_PROPERTY);
+  const props = PropertiesService.getScriptProperties();
+  const id = String(props.getProperty(GEST_CFG.SHEET_ID_PROPERTY) || "1yFCurleYqseZGab3RQOznaBhqDSNRXTNIRN1ZeD9YBQ").trim();
   if (!id) throw new Error("Configura la Script Property ARTOYOU_SHEET_ID");
   return SpreadsheetApp.openById(id);
 }
