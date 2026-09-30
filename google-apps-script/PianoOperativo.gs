@@ -584,9 +584,15 @@ function PO_runDailyReminders() {
     const row=values[r]; if(!row[ix.id]||!row[ix.data])continue;
     const state=String(row[ix.stato]||'').toLowerCase(); if(state==='fatto'||state==='done')continue;
     const due=new Date(row[ix.data]), daysLeft=PO_daysBetween_(today,due), configuredDays=Number(row[ix.reminderDays]||6);
+    const sentKeys=String(row[ix.reminderKeyInviati]||'').split(',').filter(Boolean);
+    const task={};headers.forEach((h,i)=>task[h]=row[i]);
+    const meetingKey='meeting_'+String(daysLeft), meetingDays=Number(task.meetingReminderDays||0);
+    if(String(task.tipo||'')==='Riunione' && meetingDays>0 && daysLeft===meetingDays && sentKeys.indexOf(meetingKey)===-1){
+      if(PO_sendMeetingReminder_(task,daysLeft)){sentKeys.push(meetingKey);sh.getRange(r+1,ix.reminderKeyInviati+1).setValue(sentKeys.join(','));}
+    }
     const schedule=[...new Set([configuredDays,3,1,0,-1])]; if(!schedule.includes(daysLeft))continue;
-    const sentKeys=String(row[ix.reminderKeyInviati]||'').split(',').filter(Boolean), key=String(daysLeft); if(sentKeys.includes(key))continue;
-    const task={};headers.forEach((h,i)=>task[h]=row[i]); const person=PO_findPersonById_(task.responsabileId); if(!person)continue;
+    const key='task_'+String(daysLeft); if(sentKeys.includes(key))continue;
+    const person=PO_findPersonById_(task.responsabileId); if(!person)continue;
     const msg=PO_buildReminderMessage_(task,person,daysLeft), channel=String(task.reminderChannel||'email').toLowerCase();
     let sent=false;
     if(channel==='email'||channel==='both')sent=PO_sendEmailReminder_(person,task,msg)||sent;
