@@ -74,6 +74,9 @@ function doPost(e) {
       PO_deletePerson(data.email, String(data.id || ""));
       return gestJson_({ok:true});
     }
+    if (action === "po_generate_plan") {
+      return gestJson_(PO_generatePlanForSiteEvent(data.email, String(data.siteEventId || ""), Number(data.siteDateIndex || 0)));
+    }
 
     gestRequirePin_(data.pin);
 
