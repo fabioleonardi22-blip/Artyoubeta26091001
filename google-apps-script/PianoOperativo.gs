@@ -15,7 +15,7 @@ const PO_TASK_HEADERS = [
   'id','titolo','tipo','fase','responsabileId','responsabileNome','data','oraInizio','oraFine',
   'luogo','visibilita','stato','ripeti','note','publicTitle','price','capacity','slug','publishSite',
   'courseStart','coursePreset','yepDate','yepPreset','reminderDays','reminderChannel',
-  'reminderKeyInviati','googleEventId','source','updatedAt'
+  'reminderKeyInviati','googleEventId','source','parentEventId','templateKey','updatedAt'
 ];
 
 const PO_PEOPLE_HEADERS = [
@@ -164,7 +164,7 @@ function PO_taskRowToEvent_(h,r) {
     coursePreset:String(o.coursePreset||''), yepDate:PO_dateISO_(o.yepDate),
     yepPreset:String(o.yepPreset||''), reminderDays:Number(o.reminderDays||0),
     reminderChannel:String(o.reminderChannel||'email'), googleEventId:String(o.googleEventId||''),
-    source:String(o.source||'plan')
+    source:String(o.source||'plan'), parentEventId:String(o.parentEventId||''), templateKey:String(o.templateKey||'')
   };
 }
 
@@ -267,7 +267,7 @@ function PO_siteEvents_() {
         publicTitle:String(e.title||''),price:e.price===''?null:Number(e.price),
         capacity:e.capienza==null?null:Number(e.capienza),slug:String(e.slug||''),
         publishSite:true,reminderDays:0,reminderChannel:'email',
-        googleEventId:'',source:'site',siteEventId:String(e.id||''),siteDateLabel:String((d&&d.label)||'')
+        googleEventId:'',source:'site',siteEventId:String(e.id||''),siteDateIndex:i,siteDateLabel:String((d&&d.label)||'')
       });
     });
   });
@@ -282,6 +282,123 @@ function PO_listEvents(email,from,to) {
   const siteEvents=PO_siteEvents_();
   const all=stored.concat(siteEvents,googleOnly);
   return all.filter(e=>(!from||!e.date||e.date>=from)&&(!to||!e.date||e.date<=to));
+}
+
+
+function PO_planTemplates_(type) {
+  const commonShow = [
+    {key:'format',title:'Scelta format, cast e regia',phase:'Direzione',owner:'Direzione artistica',days:45},
+    {key:'venue',title:'Conferma teatro / venue e accordo economico',phase:'Produzione',owner:'Staff Eventi',days:40},
+    {key:'communication_launch',title:'Lancio evento: social, newsletter e comunicazione',phase:'Comunicazione',owner:'Comunicazione',days:28},
+    {key:'rehearsals',title:'Definizione calendario prove',phase:'Prove',owner:'Compagnia / Docenti',days:21},
+    {key:'siae',title:'SIAE, permessi e adempimenti',phase:'Amministrazione',owner:'Segreteria',days:14},
+    {key:'tech',title:'Scheda tecnica luci / audio',phase:'Tecnica',owner:'Staff Eventi',days:10},
+    {key:'reminder',title:'Reminder comunicazione spettacolo',phase:'Comunicazione',owner:'Comunicazione',days:7},
+    {key:'logistics',title:'Check logistica, pagamenti e materiali',phase:'Logistica',owner:'Staff Eventi',days:5},
+    {key:'general_rehearsal',title:'Prova generale',phase:'Prove',owner:'Cast / Responsabile compagnia',days:2},
+    {key:'final_check',title:'Check finale venue, tecnica e accoglienza',phase:'Evento',owner:'Staff Eventi',days:1},
+    {key:'event_day',title:'Coordinamento spettacolo',phase:'Evento',owner:'Staff Eventi',days:0},
+    {key:'post',title:'Recap, foto/video e chiusura post-evento',phase:'Post evento',owner:'Comunicazione',days:-2}
+  ];
+
+  const workshop = [
+    {key:'teacher',title:'Conferma docente e contenuti workshop',phase:'Programmazione',owner:'Direzione didattica',days:35},
+    {key:'venue',title:'Conferma sala, orari e capienza',phase:'Logistica',owner:'Staff Eventi',days:30},
+    {key:'page',title:'Pubblicazione pagina e apertura iscrizioni',phase:'Iscrizioni',owner:'Comunicazione',days:28},
+    {key:'graphics',title:'Grafiche e locandina workshop',phase:'Comunicazione',owner:'Grafica',days:25},
+    {key:'launch',title:'Lancio social e newsletter',phase:'Comunicazione',owner:'Comunicazione',days:21},
+    {key:'check_sales',title:'Controllo iscritti e andamento vendite',phase:'Iscrizioni',owner:'Segreteria',days:10},
+    {key:'reminder',title:'Reminder partecipanti e comunicazione finale',phase:'Comunicazione',owner:'Comunicazione',days:5},
+    {key:'materials',title:'Check materiali, sala e necessità docente',phase:'Logistica',owner:'Staff Eventi',days:2},
+    {key:'event_day',title:'Accoglienza e coordinamento workshop',phase:'Evento',owner:'Staff Eventi',days:0},
+    {key:'feedback',title:'Feedback, foto e follow-up',phase:'Post evento',owner:'Comunicazione',days:-2}
+  ];
+
+  const yep = [
+    {key:'concept',title:'Definire concept, titolo e linea artistica',phase:'Concept',owner:'Direzione',days:90},
+    {key:'budget',title:'Budget preventivo, sponsor e bandi',phase:'Budget',owner:'Amministrazione',days:85},
+    {key:'patrocini',title:'Richiesta patrocini e contributi',phase:'Istituzioni',owner:'Presidenza',days:80},
+    {key:'venue',title:'Conferma location, sale e permessi',phase:'Location',owner:'Staff Eventi',days:75},
+    {key:'call_open',title:'Apertura call artisti / compagnie',phase:'Programma',owner:'Direzione artistica',days:70},
+    {key:'call_close',title:'Chiusura call e selezione artisti',phase:'Programma',owner:'Direzione artistica',days:55},
+    {key:'program',title:'Programma definitivo',phase:'Programma',owner:'Direzione',days:50},
+    {key:'contracts',title:'Accordi artisti, ospitalità e viaggi',phase:'Programma',owner:'Staff Eventi',days:45},
+    {key:'identity',title:'Immagine coordinata e materiali grafici',phase:'Comunicazione',owner:'Grafica',days:42},
+    {key:'tickets',title:'Apertura biglietteria / iscrizioni',phase:'Biglietteria',owner:'Segreteria',days:40},
+    {key:'comms',title:'Piano comunicazione, social e newsletter',phase:'Comunicazione',owner:'Comunicazione',days:35},
+    {key:'press',title:'Comunicato stampa e ufficio stampa',phase:'Comunicazione',owner:'Comunicazione',days:28},
+    {key:'volunteers',title:'Reclutamento e formazione volontari',phase:'Persone',owner:'Staff Eventi',days:21},
+    {key:'safety',title:'SIAE, assicurazioni e piano sicurezza',phase:'Sicurezza',owner:'Segreteria',days:18},
+    {key:'tech',title:'Raccolta schede tecniche per giornata',phase:'Tecnica',owner:'Staff Eventi',days:14},
+    {key:'runshow',title:'Riunione operativa e run of show',phase:'Coordinamento',owner:'Direttivo',days:7},
+    {key:'participant_info',title:'Invio informazioni pratiche ai partecipanti',phase:'Comunicazione',owner:'Comunicazione',days:5},
+    {key:'brief',title:'Brief finale staff e docenti',phase:'Coordinamento',owner:'Direzione',days:2},
+    {key:'setup',title:'Allestimento, segnaletica e check spazi',phase:'Allestimento',owner:'Staff Eventi',days:1},
+    {key:'event_day',title:'Coordinamento giornata / festival',phase:'Evento',owner:'Staff Eventi',days:0},
+    {key:'teardown',title:'Smontaggio e riconsegna spazi',phase:'Post evento',owner:'Staff Eventi',days:-1},
+    {key:'thanks',title:'Ringraziamenti e questionario feedback',phase:'Post evento',owner:'Comunicazione',days:-2},
+    {key:'payments',title:'Pagamenti artisti e fornitori',phase:'Post evento',owner:'Amministrazione',days:-5},
+    {key:'recap',title:'Carosello foto e Reel Recap',phase:'Post evento',owner:'Comunicazione',days:-7},
+    {key:'report',title:'Rendicontazione, debrief e report finale',phase:'Report',owner:'Direttivo',days:-10}
+  ];
+
+  if(type==='YEP' || type==='Festival') return yep;
+  if(type==='Workshop') return workshop;
+  return commonShow;
+}
+
+function PO_getSiteEvent_(siteEventId) {
+  if(typeof gestAdminEvents_!=='function') throw new Error('gestionale_non_disponibile');
+  const ev=gestAdminEvents_().find(e=>String(e.id||'')===String(siteEventId||''));
+  if(!ev) throw new Error('evento_gestionale_non_trovato');
+  return ev;
+}
+
+function PO_generatePlanForSiteEvent(email, siteEventId, dateIndex) {
+  PO_requireUser_(email);
+  const ev=PO_getSiteEvent_(siteEventId);
+  const dates=Array.isArray(ev.dates)&&ev.dates.length?ev.dates:[];
+  const ix=Math.max(0,Number(dateIndex)||0);
+  if(!dates[ix]) throw new Error('data_evento_non_trovata');
+
+  const parsed=PO_parseSiteDate_(dates[ix].label);
+  if(!parsed.date) throw new Error('data_evento_non_definita');
+
+  const type=PO_inferSiteType_(ev);
+  const parentEventId=String(ev.id||'')+'#'+ix;
+  const templates=PO_planTemplates_(type);
+  const existing=PO_listTasks().filter(t=>t.parentEventId===parentEventId);
+  const existingKeys={}; existing.forEach(t=>existingKeys[t.templateKey]=true);
+
+  let created=0, skipped=0;
+  templates.forEach(function(t){
+    if(existingKeys[t.key]) { skipped++; return; }
+    const d=new Date(parsed.date+'T12:00:00');
+    d.setDate(d.getDate()-Number(t.days||0));
+    PO_saveTask(email,{
+      title:t.title+' · '+String(ev.title||''),
+      type:type==='Festival'?'YEP':type,
+      phase:t.phase||'',
+      teacher:t.owner||'',
+      team:t.owner||'',
+      date:PO_dateISO_(d),
+      start:'09:00',
+      end:'10:00',
+      venue:String(ev.venue||''),
+      visibility:'internal',
+      taskStatus:'todo',
+      repeat:'none',
+      notes:'Generato automaticamente dal Gestionale Eventi: '+String(ev.title||'')+'.',
+      reminderDays:6,
+      reminderChannel:'email',
+      source:'generated',
+      parentEventId:parentEventId,
+      templateKey:t.key
+    });
+    created++;
+  });
+
+  return {ok:true, created:created, skipped:skipped, total:templates.length, eventTitle:String(ev.title||''), eventDate:parsed.date, type:type};
 }
 
 function PO_saveTask(email,e) {
@@ -305,7 +422,7 @@ function PO_saveTask(email,e) {
     courseStart:String(e.courseStart||''),coursePreset:String(e.coursePreset||''),yepDate:String(e.yepDate||''),
     yepPreset:String(e.yepPreset||''),reminderDays:Number(e.reminderDays||0),
     reminderChannel:String(e.reminderChannel||'email'),reminderKeyInviati:'',
-    googleEventId:String(e.googleEventId||''),source:'plan',updatedAt:new Date()
+    googleEventId:String(e.googleEventId||''),source:String(e.source||'plan'),parentEventId:String(e.parentEventId||''),templateKey:String(e.templateKey||''),updatedAt:new Date()
   };
 
   // Preserve reminder history and existing Google ID on update.
