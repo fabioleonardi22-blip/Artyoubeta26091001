@@ -6,6 +6,7 @@
 
 const PO_SHEET_TASKS = 'PianoOperativo';
 const PO_SHEET_PEOPLE = 'Responsabili';
+const PO_SHEET_AUDIT = 'PianoOperativoAudit';
 const PO_PROP_CALENDAR_ID = 'PO_CALENDAR_ID';
 const PO_PROP_ADMIN_EMAILS = 'PO_ADMIN_EMAILS';
 const PO_PROP_WHATSAPP_TOKEN = 'PO_WHATSAPP_TOKEN';
@@ -45,10 +46,13 @@ function PO_getOrCreateSheet_(name, headers) {
 
 function PO_getPeopleSheet_() { return PO_getOrCreateSheet_(PO_SHEET_PEOPLE, PO_PEOPLE_HEADERS); }
 function PO_getTasksSheet_() { return PO_getOrCreateSheet_(PO_SHEET_TASKS, PO_TASK_HEADERS); }
+function PO_getAuditSheet_() { return PO_getOrCreateSheet_(PO_SHEET_AUDIT,['timestamp','email','azione','entita','id','dettaglio']); }
+function PO_audit_(email,azione,entita,id,dettaglio){try{PO_getAuditSheet_().appendRow([new Date(),PO_normalizeEmail_(email),String(azione||''),String(entita||''),String(id||''),String(dettaglio||'')]);}catch(e){}}
 
 function PO_setup(adminEmail) {
   PO_getPeopleSheet_();
   PO_getTasksSheet_();
+  PO_getAuditSheet_();
   const props = PropertiesService.getScriptProperties();
   if (adminEmail) props.setProperty(PO_PROP_ADMIN_EMAILS, String(adminEmail).trim().toLowerCase());
   if (!props.getProperty(PO_PROP_CALENDAR_ID)) {
