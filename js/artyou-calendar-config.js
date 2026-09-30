@@ -1,0 +1,1 @@
+// Attivare dopo il deploy del backend Apps Script del Piano Operativo.\nwindow.ARTYOU_CALENDAR_ENDPOINT = "";\n

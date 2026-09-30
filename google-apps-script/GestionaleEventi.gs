@@ -11,6 +11,18 @@ function doGet(e) {
     const p = (e && e.parameter) || {};
     const action = String(p.action || "public").toLowerCase();
 
+    // Piano Operativo: autenticazione tramite email registrata / admin.
+    if (action === "po_session") {
+      return gestJson_(PO_session(p.email));
+    }
+    if (action === "po_list") {
+      return gestJson_({ok:true, events:PO_listEvents(p.email, String(p.from||""), String(p.to||""))});
+    }
+    if (action === "po_people") {
+      PO_requireUser_(p.email);
+      return gestJson_({ok:true, people:PO_listPeople(), admin:PO_isAdmin_(p.email)});
+    }
+
     if (action === "public") {
       return gestJson_({ok:true, events: gestPublicEvents_()});
     }
@@ -36,8 +48,37 @@ function doPost(e) {
   lock.waitLock(30000);
   try {
     const data = JSON.parse((e && e.postData && e.postData.contents) || "{}");
-    gestRequirePin_(data.pin);
     const action = String(data.action || "").toLowerCase();
+
+    // Piano Operativo usa l'email autorizzata, non il PIN del gestionale.
+    if (action === "po_list") {
+      return gestJson_({ok:true, events:PO_listEvents(data.email, String(data.from||""), String(data.to||""))});
+    }
+    if (action === "po_save") {
+      const saved = PO_saveTask(data.email, data.event || {});
+      return gestJson_({ok:true, event:saved});
+    }
+    if (action === "po_delete") {
+      PO_deleteTask(data.email, String(data.id || ""));
+      return gestJson_({ok:true});
+    }
+    if (action === "po_people") {
+      PO_requireUser_(data.email);
+      return gestJson_({ok:true, people:PO_listPeople(), admin:PO_isAdmin_(data.email)});
+    }
+    if (action === "po_save_person") {
+      const person = PO_savePerson(data.email, data.person || {});
+      return gestJson_({ok:true, person:person});
+    }
+    if (action === "po_delete_person") {
+      PO_deletePerson(data.email, String(data.id || ""));
+      return gestJson_({ok:true});
+    }
+    if (action === "po_generate_plan") {
+      return gestJson_(PO_generatePlanForSiteEvent(data.email, String(data.siteEventId || ""), Number(data.siteDateIndex || 0)));
+    }
+
+    gestRequirePin_(data.pin);
 
     if (action === "save") {
       const saved = gestSaveEvent_(data.event || {});

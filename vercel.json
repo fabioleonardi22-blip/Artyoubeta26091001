@@ -139,6 +139,11 @@
       "source": "/wp-sitemap-taxonomies-portfolio-filter-1.xml",
       "destination": "/sitemap.xml",
       "permanent": true
+    },
+    {
+      "source": "/calendario-docenti",
+      "destination": "/calendario-docenti/",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -189,6 +194,10 @@
     {
       "source": "/privacy-policy/",
       "destination": "/privacy-policy.html"
+    },
+    {
+      "source": "/calendario-docenti/",
+      "destination": "/calendario-docenti.html"
     }
   ]
 }

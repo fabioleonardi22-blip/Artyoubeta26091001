@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Calendario Docenti | Artyou Roma</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<script src="/js/artyou-calendar-config.js"></script>
+<style>
+:root{--ink:#13181D;--paper:#F6F3EC;--line:#DED7CA;--orange:#F09000;--blue:#2CA8E0;--green:#28B4A8;--violet:#7C5CE7;--red:#B5445B;--muted:#68737D;--white:#fff;--shadow:0 14px 38px rgba(25,20,15,.08)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#ECE7DE;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+header{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:4px solid #cf334f}
+.brand strong{font-size:21px}.brand span{display:block;margin-top:3px;color:#BFC8CF;font-size:12px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.header-actions a,.header-actions button{color:#fff;text-decoration:none;border:1px solid #4A555E;background:transparent;border-radius:10px;padding:9px 12px;font-weight:800}
+.shell{max-width:1500px;margin:0 auto;padding:22px;display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.sidebar{padding:18px;height:calc(100vh - 98px);position:sticky;top:88px;overflow:auto}
+.sidebar h3{margin:0 0 12px;font-size:15px}.mini{font-size:12px;color:var(--muted);line-height:1.45}
+.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:900;display:inline-flex;gap:8px;align-items:center;justify-content:center}
+.btn.primary{background:var(--orange);color:#241A05}.btn.dark{background:var(--ink);color:#fff}.btn.soft{background:var(--paper);color:var(--ink);border:1px solid var(--line)}.btn.full{width:100%}
+.legend{display:grid;gap:8px;margin-top:18px}.legend-row{display:flex;align-items:center;gap:9px;font-size:13px}.dot{width:11px;height:11px;border-radius:50%}
+.filters{display:grid;gap:8px;margin-top:20px}.filters label{display:flex;align-items:center;gap:8px;font-size:13px}.filters input{width:auto}
+.status{margin-top:18px;padding:11px 12px;border-radius:11px;font-size:12px;line-height:1.45;background:#EEF5F8;color:#24576C}.status.ok{background:#EAF8F2;color:#12634E}.status.warn{background:#FFF4DD;color:#75520B}.status.err{background:#FCEDEF;color:#8A2438}
+.main{padding:18px;min-width:0}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}.left-tools,.right-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.month-title{min-width:190px;text-align:center;font-size:24px;font-weight:900;text-transform:capitalize}
+.view-switch{display:flex;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:3px}.view-switch button{border:0;background:transparent;border-radius:8px;padding:8px 10px;font-weight:800}.view-switch button.active{background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.weekdays,.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}.weekdays div{padding:9px;text-align:center;color:var(--muted);font-size:12px;font-weight:900;text-transform:uppercase}
+.calendar{border-top:1px solid var(--line);border-left:1px solid var(--line);border-radius:14px;overflow:hidden}.day{min-height:132px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;background:#fff;overflow:hidden}.day.muted{background:#FAF8F3;color:#AAA}.day.today{box-shadow:inset 0 0 0 2px var(--orange)}.day-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}.day-num{font-weight:900;font-size:13px}.add-mini{border:0;background:transparent;color:var(--muted);font-size:18px;padding:0 3px;line-height:1}
+.event{border-radius:8px;padding:6px 7px;margin:5px 0;font-size:11px;line-height:1.25;font-weight:800;cursor:pointer;border-left:4px solid currentColor;background:#F4F5F6;color:#334}.event small{display:block;font-weight:500;opacity:.85;margin-top:2px}.event[data-type="Lezione"]{background:#EAF7FC;color:#16709A}.event[data-type="Prova"]{background:#F1ECFF;color:#5E48B5}.event[data-type="Riunione"]{background:#F1F2F3;color:#4F5A63}.event[data-type="Spettacolo"]{background:#FFF0DF;color:#A15A00}.event[data-type="Workshop"]{background:#E9F8F4;color:#1E7469}.event[data-type="Festival"]{background:#FCECEF;color:#9E2942}.event[data-type="Comunicazione"]{background:#FFF0F0;color:#B23B47}.event[data-type="Avvio corsi"]{background:#EAF8F2;color:#12634E}.event[data-type="YEP"]{background:#EEF0FF;color:#4D57B8}.event[data-type="Altro"]{background:#F7F1E6;color:#6D5A34}.event.overdue{box-shadow:inset 0 0 0 2px #D9534F}.event.soon{box-shadow:inset 0 0 0 2px #F0A000}.event.done{opacity:.55;text-decoration:line-through}
+.agenda{display:none}.agenda.active{display:block}.board{display:none}.board.active{display:block}.board-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.board-col{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}.board-head{padding:13px 14px;font-weight:900;background:var(--paper);display:flex;justify-content:space-between;align-items:center}.board-list{padding:10px}.board-card{border:1px solid var(--line);border-radius:11px;padding:11px;margin:8px 0;background:#fff}.board-card.done{opacity:.55}.board-card.overdue{border-color:#D9534F}.board-card.soon{border-color:#F0A000}.board-card strong{display:block;margin-bottom:4px}.board-meta{font-size:12px;color:var(--muted);line-height:1.4}.board-status{display:inline-block;margin-top:7px;padding:4px 7px;border-radius:999px;background:#F1F2F3;font-size:11px;font-weight:800}.board-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}.board-toolbar button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 11px;font-weight:800;font-size:12px}.board-toolbar button.active{background:var(--ink);color:#fff;border-color:var(--ink)}.agenda-day{border-top:1px solid var(--line);padding:16px 4px}.agenda-day:first-child{border-top:0}.agenda-date{font-weight:900;margin-bottom:9px}.agenda-event{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:11px;margin:7px 0}.agenda-event strong{display:block}.agenda-event small{color:var(--muted)}
+.modal-wrap{position:fixed;inset:0;background:rgba(10,14,17,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}.modal-wrap.open{display:flex}.modal{width:min(720px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 26px 70px rgba(0,0,0,.35);padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.modal-head h2{margin:0}.close{border:0;background:#F1F2F3;border-radius:50%;width:38px;height:38px;font-size:22px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:900}input,select,textarea{width:100%;border:1px solid #CCC5B8;border-radius:10px;padding:11px;background:#fff}textarea{min-height:95px;resize:vertical}.checks{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}.checks label{flex-direction:row;align-items:center}.checks input{width:auto}.public-box,.task-box,.linked-box,.meeting-box{display:none;margin-top:14px;padding:14px;border-radius:13px}.meeting-box{background:#F2F6FA;border:1px solid #CCD8E2}.meeting-box.show{display:block}.meeting-people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.meeting-person{display:flex;flex-direction:row;align-items:center;gap:8px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:12px}.meeting-person input{width:auto}.meeting-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}@media(max-width:620px){.meeting-people{grid-template-columns:1fr}}.linked-box{background:#F7F4FF;border:1px solid #D7CFF5}.linked-box.show{display:block}.linked-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.linked-list{display:grid;gap:10px;margin-top:12px}.linked-row{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr auto;gap:8px;align-items:end;padding:10px;border:1px solid #D8D1E8;border-radius:11px;background:#fff}.linked-row label{font-size:11px}.linked-row .remove-linked{min-width:42px;height:42px}@media(max-width:900px){.linked-row{grid-template-columns:1fr 1fr}.linked-row .task-name{grid-column:1/-1}}@media(max-width:620px){.linked-row{grid-template-columns:1fr}.linked-row .task-name{grid-column:auto}}.public-box{background:#FFF8E9;border:1px solid #F0D9A4}.task-box{background:#F3FAF7;border:1px solid #BFDCCF}.public-box.show,.task-box.show{display:block}.task-box strong{display:block;margin-bottom:10px}.actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:20px}.danger{background:#FCEDEF;color:#8A2438}
+.people-list{display:grid;gap:10px;margin-top:14px}.person-row{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.person-row .wide{grid-column:1/-1}.person-row button{align-self:end}.access{max-width:520px;margin:70px auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}.access h1{margin-top:0}.access .btn{margin-top:12px}
+.hidden{display:none!important}
+@media(max-width:980px){.shell{grid-template-columns:1fr;padding:12px}.sidebar{position:static;height:auto}.main{padding:12px}.day{min-height:110px}.event{font-size:10px}}
+@media(max-width:700px){.person-row{grid-template-columns:1fr}.person-row .wide{grid-column:auto}header{padding:12px 14px}.brand span{display:none}.shell{padding:8px}.sidebar{border-radius:14px}.main{border-radius:14px}.weekdays div{font-size:10px;padding:7px 2px}.calendar{grid-template-columns:repeat(7,minmax(78px,1fr));overflow-x:auto}.weekdays{grid-template-columns:repeat(7,minmax(78px,1fr));overflow-x:auto}.day{min-height:105px;padding:5px}.month-title{font-size:20px;min-width:145px}.grid2{grid-template-columns:1fr}.modal{padding:16px}.header-actions a{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><strong>ARTYOU · Calendario Docenti</strong><span>Area interna · lezioni, prove, riunioni, spettacoli e festival</span></div>
+  <div class="header-actions"><a href="/gestionale.html">Gestionale eventi</a><a href="/responsabili.html">Anagrafica Docenti e Staff</a><a href="/index.html">Torna al sito</a><button id="logoutBtn" class="hidden">Esci</button></div>
+</header>
+
+<section id="accessScreen" class="access">
+  <h1>Accesso docenti</h1>
+  <p class="mini">Questa pagina è riservata ai docenti Artyou. Nella versione collegata a Google Calendar l'accesso viene verificato dal backend tramite email autorizzata.</p>
+  <label>Email docente<input id="loginEmail" type="email" placeholder="nome@esempio.it" autocomplete="email"></label>
+  <button class="btn dark full" id="loginBtn">Accedi</button>
+  <div id="loginStatus" class="status warn">Modalità test della branch: gli appuntamenti vengono salvati solo in questo browser finché non colleghiamo l'endpoint Google Calendar.</div>
+</section>
+
+<div id="app" class="shell hidden">
+  <aside class="panel sidebar">
+    <button class="btn primary full" id="newBtn">＋ Nuovo appuntamento</button>
+    <div class="legend">
+      <h3>Categorie</h3>
+      <div class="legend-row"><span class="dot" style="background:#2CA8E0"></span>Lezione</div>
+      <div class="legend-row"><span class="dot" style="background:#7C5CE7"></span>Prova</div>
+      <div class="legend-row"><span class="dot" style="background:#68737D"></span>Riunione</div>
+      <div class="legend-row"><span class="dot" style="background:#F09000"></span>Spettacolo</div>
+      <div class="legend-row"><span class="dot" style="background:#28B4A8"></span>Workshop</div>
+      <div class="legend-row"><span class="dot" style="background:#B5445B"></span>Festival</div><div class="legend-row"><span class="dot" style="background:#D9535F"></span>Comunicazione</div><div class="legend-row"><span class="dot" style="background:#28B47C"></span>Avvio corsi</div><div class="legend-row"><span class="dot" style="background:#5964D8"></span>YEP</div>
+    </div>
+    <div class="filters">
+      <h3>Mostra</h3>
+      <label><input type="checkbox" class="type-filter" value="Lezione" checked> Lezioni</label>
+      <label><input type="checkbox" class="type-filter" value="Prova" checked> Prove</label>
+      <label><input type="checkbox" class="type-filter" value="Riunione" checked> Riunioni</label>
+      <label><input type="checkbox" class="type-filter" value="Spettacolo" checked> Spettacoli</label>
+      <label><input type="checkbox" class="type-filter" value="Workshop" checked> Workshop</label>
+      <label><input type="checkbox" class="type-filter" value="Festival" checked> Festival</label><label><input type="checkbox" class="type-filter" value="Comunicazione" checked> Comunicazione</label><label><input type="checkbox" class="type-filter" value="Avvio corsi" checked> Avvio corsi</label><label><input type="checkbox" class="type-filter" value="YEP" checked> YEP</label>
+      <label><input type="checkbox" class="type-filter" value="Altro" checked> Altro</label>
+    </div>
+    <div id="syncStatus" class="status warn">Google Calendar non ancora collegato a questa branch.</div>
+  </aside>
+
+  <main class="panel main">
+    <div class="topbar">
+      <div class="left-tools">
+        <button class="btn soft" id="prevBtn">←</button>
+        <button class="btn soft" id="todayBtn">Oggi</button>
+        <button class="btn soft" id="nextBtn">→</button>
+        <div class="month-title" id="monthTitle"></div>
+      </div>
+      <div class="right-tools">
+        <button class="btn soft" id="refreshBtn">↻ Aggiorna</button>
+        <div class="view-switch"><button data-view="month" class="active">Mese</button><button data-view="agenda">Agenda</button><button data-view="board">Bacheca</button></div>
+      </div>
+    </div>
+    <div id="monthView">
+      <div class="weekdays"><div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div></div>
+      <div class="calendar" id="calendar"></div>
+    </div>
+    <div class="agenda" id="agendaView"></div><div class="board" id="boardView"><div class="board-toolbar" id="boardToolbar"><button data-board-filter="all" class="active">Tutto</button><button data-board-filter="mine">Mio</button><button data-board-filter="late">In ritardo</button><button data-board-filter="week">Questa settimana</button><button data-board-filter="done">Fatto</button></div><div class="board-grid" id="boardGrid"></div></div>
+  </main>
+</div>
+
+<div class="modal-wrap" id="modalWrap">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head"><h2 id="modalTitle">Nuovo appuntamento</h2><button class="close" id="closeBtn" aria-label="Chiudi">×</button></div>
+    <input id="eventId" type="hidden"><input id="siteEventId" type="hidden"><input id="siteDateIndex" type="hidden">
+    <div class="grid2">
+      <label>Titolo<input id="title" placeholder="Es. Prove ShortYou"></label>
+      <label>Categoria<select id="type"><option>Lezione</option><option>Prova</option><option>Riunione</option><option>Spettacolo</option><option>Workshop</option><option>Festival</option><option>Comunicazione</option><option>Avvio corsi</option><option>YEP</option><option>Altro</option></select></label>
+      <label>Data<input id="date" type="date"></label>
+      <label>Ora inizio<input id="start" type="time" value="20:00"></label>
+      <label>Ora fine<input id="end" type="time" value="22:00"></label>
+      <label>Sede / luogo<input id="venue" placeholder="Es. Teatro Antigone"></label>
+      <label>Docente / responsabile<input id="teacher" placeholder="Nome e cognome"></label>
+      <label>Visibilità<select id="visibility"><option value="internal">Solo docenti</option><option value="public">Pubblicabile sul sito</option></select></label>
+    </div>
+    <label style="margin-top:13px">Note<textarea id="notes" placeholder="Informazioni interne, indicazioni, esigenze tecniche…"></textarea></label>
+    <div id="meetingBox" class="meeting-box">
+      <div class="linked-head">
+        <div><strong>Partecipanti alla riunione</strong><div class="mini">Seleziona chi deve essere avvisato. I contatti arrivano dall'elenco Responsabili.</div></div>
+      </div>
+      <div class="meeting-actions">
+        <button type="button" class="btn soft" id="selectAllMeetingBtn">Seleziona tutti</button>
+        <button type="button" class="btn soft" id="clearMeetingBtn">Nessuno</button>
+      </div>
+      <div id="meetingPeople" class="meeting-people"></div>
+      <div class="grid2" style="margin-top:12px">
+        <label>Avvisa tramite<select id="meetingChannel"><option value="calendar">Invito Google Calendar + email</option><option value="email">Email</option><option value="whatsapp">WhatsApp</option><option value="both">Email + WhatsApp</option></select></label>
+        <label>Promemoria<select id="meetingReminder"><option value="0">Nessun promemoria extra</option><option value="1">1 giorno prima</option><option value="3">3 giorni prima</option><option value="6">6 giorni prima</option></select></label>
+      </div>
+      <div class="checks"><label><input id="notifyMeetingNow" type="checkbox" checked> Invia gli inviti/avvisi quando salvo</label></div>
+    </div>
+    <div id="linkedTasksBox" class="linked-box">
+      <div class="linked-head">
+        <div><strong>Compiti collegati all'evento</strong><div class="mini">Assegna ogni attività a un responsabile secondario con scadenza e canale di promemoria.</div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn soft" id="generateStandardTasksBtn">Genera attività standard</button><button type="button" class="btn dark" id="addLinkedTaskBtn">＋ Aggiungi compito</button></div>
+      </div>
+      <div id="linkedTasksList" class="linked-list"></div>
+    </div>
+    <div id="taskBox" class="task-box">
+      <strong>Scadenza e attività</strong>
+      <div class="grid2">
+        <label>Stato<select id="taskStatus"><option value="todo">Da fare</option><option value="progress">In corso</option><option value="done">Fatto</option><option value="blocked">Bloccato</option></select></label>
+        <label>Ripeti<select id="repeat"><option value="none">No</option><option value="monthly">Ogni mese</option><option value="weekly">Ogni settimana</option><option value="yearly">Ogni anno</option></select></label>
+        <label>Team / responsabile<input id="team" placeholder="Es. Martina — Grafica"></label>
+        <label>Fase<input id="phase" placeholder="Es. Organico / ADV + Organico"></label><label>Promemoria<select id="reminderDays"><option value="0">Nessuno</option><option value="6" selected>6 giorni prima</option><option value="3">3 giorni prima</option><option value="1">1 giorno prima</option></select></label><label>Canale<select id="reminderChannel"><option value="email">Email</option><option value="whatsapp">WhatsApp</option><option value="both">Email + WhatsApp</option></select></label>
+      </div>
+      <div id="coursePresetWrap" style="display:none;margin-top:14px">
+        <label>Attività per partenza corsi<select id="coursePreset">
+          <option value="">Scegli attività…</option>
+          <option value="Raccolta info corsi|56">Raccolta info corsi · 8 settimane prima</option>
+          <option value="Definizione sedi e orari|49">Definizione sedi e orari · 7 settimane prima</option>
+          <option value="Aggiornamento pagine corsi sul sito|42">Aggiornamento pagine corsi sul sito · 6 settimane prima</option>
+          <option value="Creazione grafiche e locandine|35">Creazione grafiche e locandine · 5 settimane prima</option>
+          <option value="Apertura prenotazioni lezioni di prova|28">Apertura prenotazioni lezioni di prova · 4 settimane prima</option>
+          <option value="Campagna social e ADV|28">Campagna social e ADV · 4 settimane prima</option>
+          <option value="Reminder lezioni di prova|14">Reminder lezioni di prova · 2 settimane prima</option>
+          <option value="Verifica iscritti e capienze|7">Verifica iscritti e capienze · 1 settimana prima</option>
+          <option value="Messaggio finale ai docenti|3">Messaggio finale ai docenti · 3 giorni prima</option>
+          <option value="Controllo aule e materiali|1">Controllo aule e materiali · 1 giorno prima</option>
+          <option value="Follow-up nuovi iscritti|-3">Follow-up nuovi iscritti · 3 giorni dopo</option>
+        </select></label>
+        <label style="margin-top:10px">Data partenza corso<input id="courseStart" type="date"></label>
+        <button type="button" class="btn soft" id="applyPresetBtn" style="margin-top:10px">Calcola scadenza</button>
+      </div>
+      <div id="yepPresetWrap" style="display:none;margin-top:14px">
+        <label>Attività YEP<select id="yepPreset">
+          <option value="">Scegli attività…</option>
+          <option value="Definizione format e obiettivi YEP|90|Direzione">Definizione format e obiettivi · 90 giorni prima</option>
+          <option value="Conferma venue e disponibilità sale|75|Produzione">Conferma venue e sale · 75 giorni prima</option>
+          <option value="Definizione budget e quota partecipazione|70|Amministrazione">Budget e quota partecipazione · 70 giorni prima</option>
+          <option value="Definizione programma e calendario attività|60|Programmazione">Programma e calendario · 60 giorni prima</option>
+          <option value="Conferma docenti, ospiti e staff|55|Direzione">Docenti, ospiti e staff · 55 giorni prima</option>
+          <option value="Creazione pagina YEP sul sito|50|Comunicazione">Pagina YEP sul sito · 50 giorni prima</option>
+          <option value="Apertura iscrizioni YEP|45|Iscrizioni">Apertura iscrizioni · 45 giorni prima</option>
+          <option value="Produzione grafiche e locandine YEP|42|Comunicazione">Grafiche e locandine · 42 giorni prima</option>
+          <option value="Lancio comunicazione social e newsletter|40|Comunicazione">Lancio social e newsletter · 40 giorni prima</option>
+          <option value="Attivazione campagna ADV YEP|35|ADV">Campagna ADV · 35 giorni prima</option>
+          <option value="Raccolta foto e materiali docenti|30|Comunicazione">Foto e materiali docenti · 30 giorni prima</option>
+          <option value="Controllo iscritti e andamento vendite|21|Iscrizioni">Controllo iscritti · 21 giorni prima</option>
+          <option value="Piano logistico e assegnazione sale|18|Logistica">Piano logistico e sale · 18 giorni prima</option>
+          <option value="Definizione accoglienza e segreteria|14|Logistica">Accoglienza e segreteria · 14 giorni prima</option>
+          <option value="Reminder social e comunicazione finale|10|Comunicazione">Reminder finale · 10 giorni prima</option>
+          <option value="Chiusura iscrizioni e lista partecipanti|7|Iscrizioni">Chiusura iscrizioni · 7 giorni prima</option>
+          <option value="Invio informazioni pratiche ai partecipanti|5|Comunicazione">Info pratiche partecipanti · 5 giorni prima</option>
+          <option value="Conferma catering, materiali e forniture|4|Logistica">Catering, materiali e forniture · 4 giorni prima</option>
+          <option value="Brief operativo staff e docenti|2|Direzione">Brief staff e docenti · 2 giorni prima</option>
+          <option value="Controllo finale spazi e materiali|1|Logistica">Controllo finale · 1 giorno prima</option>
+          <option value="Pubblicazione stories e copertura live|0|Comunicazione">Copertura live · giorno evento</option>
+          <option value="Raccolta foto e video dell'evento|-1|Comunicazione">Raccolta foto/video · 1 giorno dopo</option>
+          <option value="Invio ringraziamenti e questionario feedback|-2|Comunicazione">Ringraziamenti e feedback · 2 giorni dopo</option>
+          <option value="Pubblicazione carosello foto recap|-5|Comunicazione">Carosello foto recap · 5 giorni dopo</option>
+          <option value="Pubblicazione YEP Reel Recap|-7|Comunicazione">YEP Reel Recap · 7 giorni dopo</option>
+          <option value="Report finale presenze, costi e risultati|-10|Report">Report finale · 10 giorni dopo</option>
+        </select></label>
+        <label style="margin-top:10px">Data YEP<input id="yepDate" type="date"></label>
+        <button type="button" class="btn soft" id="applyYepPresetBtn" style="margin-top:10px">Calcola scadenza YEP</button>
+      </div>
+    </div>
+    <div id="publicBox" class="public-box">
+      <strong>Pubblicazione sul sito</strong>
+      <p class="mini">Questi dati saranno usati quando collegheremo il calendario al Gestionale Eventi.</p>
+      <div class="grid2">
+        <label>Titolo pubblico<input id="publicTitle" placeholder="Titolo da mostrare sul sito"></label>
+        <label>Prezzo €<input id="price" type="number" min="0" step="0.01" placeholder="15"></label>
+        <label>Posti disponibili<input id="capacity" type="number" min="0" placeholder="60"></label>
+        <label>Slug evento<input id="slug" placeholder="es. shortyou-29-novembre"></label>
+      </div>
+      <div class="checks"><label><input id="publishSite" type="checkbox"> Crea/aggiorna evento sul sito</label></div>
+    </div>
+    <div class="actions"><button class="btn danger hidden" id="deleteBtn">Elimina</button><button class="btn dark hidden" id="generatePlanBtn">Crea Piano Operativo</button><button class="btn soft" id="cancelBtn">Annulla</button><button class="btn primary" id="saveBtn">Salva appuntamento</button></div>
+  </div>
+</div>
+
+
+<div class="modal-wrap" id="peopleModalWrap">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="peopleTitle">
+    <div class="modal-head"><h2 id="peopleTitle">Responsabili e contatti</h2><button class="close" id="peopleCloseBtn" aria-label="Chiudi">×</button></div>
+    <p class="mini">Qui registriamo chi può ricevere promemoria. In questa branch i dati restano nel browser; con il backend saranno salvati nel Piano Operativo.</p>
+    <div class="grid2">
+      <label>Nome<input id="personName" placeholder="Nome e cognome"></label>
+      <label>Ruolo<input id="personRole" placeholder="Es. Grafica, Direzione, Staff Eventi"></label>
+      <label>Email<input id="personEmail" type="email" placeholder="nome@artyouroma.it"></label>
+      <label>WhatsApp<input id="personPhone" placeholder="+39 ..."></label>
+    </div>
+    <div class="checks"><label><input id="personEmailOn" type="checkbox" checked> Promemoria email</label><label><input id="personWhatsappOn" type="checkbox"> Promemoria WhatsApp</label></div>
+    <div class="actions"><button class="btn primary" id="addPersonBtn">Aggiungi responsabile</button></div>
+    <div class="people-list" id="peopleList"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var endpoint=window.ARTYOU_CALENDAR_ENDPOINT||"";
+var current=new Date();current.setDate(1);
+var events=[];
+var email="";
+var LS="artyouCalendarDemoEvents_v1";var PEOPLE_LS="artyouCalendarPeople_v1";var boardFilter="all";var people=[];var linkedDraft=[];var meetingSelected=[];
+
+function $(id){return document.getElementById(id)}
+function isoDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function escapeHtml(s){return String(s||"").replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function slugify(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")}
+function enabledTypes(){return [].slice.call(document.querySelectorAll(".type-filter:checked")).map(function(x){return x.value})}
+function visibleEvents(){var ok=enabledTypes();return events.filter(function(e){return ok.indexOf(e.type||"Altro")!==-1})}
+function loadDemo(){try{events=JSON.parse(localStorage.getItem(LS)||"[]")}catch(e){events=[]}}
+function saveDemo(){localStorage.setItem(LS,JSON.stringify(events))}function loadPeople(){try{people=JSON.parse(localStorage.getItem(PEOPLE_LS)||"[]")}catch(e){people=[]}renderPeople();refreshPeopleSelect()}function savePeople(){localStorage.setItem(PEOPLE_LS,JSON.stringify(people));renderPeople();refreshPeopleSelect()}function renderPeople(){var box=$("peopleList");if(!box)return;box.innerHTML="";if(!people.length){box.innerHTML='<div class="mini">Nessun responsabile registrato.</div>';return}people.forEach(function(p){var row=document.createElement("div");row.className="person-row";row.innerHTML='<div><strong>'+escapeHtml(p.name)+'</strong><div class="mini">'+escapeHtml(p.role||"")+'</div></div><div><div class="mini">'+escapeHtml(p.email||"")+'</div><div class="mini">'+escapeHtml(p.phone||"")+'</div></div><button class="btn danger">Elimina</button>';row.querySelector("button").onclick=function(){people=people.filter(function(x){return x.id!==p.id});savePeople()};box.appendChild(row)})}function refreshPeopleSelect(){var sel=$("teacher");if(!sel)return;var current=sel.value;var dl=$("peopleDatalist");if(!dl){dl=document.createElement("datalist");dl.id="peopleDatalist";document.body.appendChild(dl);sel.setAttribute("list","peopleDatalist")}dl.innerHTML="";people.forEach(function(p){var o=document.createElement("option");o.value=p.name;o.label=p.role||p.email||"";dl.appendChild(o)});if(current)sel.value=current}function findPersonByName(name){name=String(name||"").trim().toLowerCase();return people.find(function(p){return String(p.name||"").trim().toLowerCase()===name})||null}
+function renderMeetingPeople(){
+  var box=$("meetingPeople");if(!box)return;box.innerHTML="";
+  var active=people.filter(function(p){return p.active!==false});
+  if(!active.length){box.innerHTML='<div class="mini">Prima registra i partecipanti dal pulsante Responsabili.</div>';return}
+  active.forEach(function(p){
+    var lab=document.createElement("label");lab.className="meeting-person";
+    lab.innerHTML='<input type="checkbox" value="'+escapeHtml(p.id)+'" '+(meetingSelected.indexOf(p.id)!==-1?'checked':'')+'> <span><strong>'+escapeHtml(p.name)+'</strong>'+(p.role?'<br><span class="mini">'+escapeHtml(p.role)+'</span>':'')+'</span>';
+    lab.querySelector("input").onchange=function(){if(this.checked){if(meetingSelected.indexOf(p.id)===-1)meetingSelected.push(p.id)}else meetingSelected=meetingSelected.filter(function(id){return id!==p.id})};
+    box.appendChild(lab)
+  })
+}
+function setMeetingSelection(ids){meetingSelected=Array.isArray(ids)?ids.slice():[];renderMeetingPeople()}
+function linkedTaskTypes(){return ["Spettacolo","Workshop","Festival","YEP"]}
+function linkedTemplates(type){
+  if(type==="YEP"||type==="Festival")return[
+    ["Immagine coordinata / locandina",-42],["Piano comunicazione social",-35],["Comunicato stampa",-28],["SIAE, assicurazioni e sicurezza",-18],["Schede tecniche",-14],["Riunione operativa / run of show",-7],["Brief staff e docenti",-2],["Check allestimento e segnaletica",-1],["Coordinamento giornata",0],["Carosello foto / Reel Recap",7]
+  ];
+  if(type==="Workshop")return[
+    ["Conferma docente e contenuti",-35],["Pagina e apertura iscrizioni",-28],["Locandina / grafiche",-25],["Lancio social e newsletter",-21],["Controllo iscritti",-10],["Reminder partecipanti",-5],["Check materiali e sala",-2],["Accoglienza e coordinamento",0],["Feedback e recap",2]
+  ];
+  return[
+    ["Conferma venue / accordo economico",-40],["Locandina spettacolo",-30],["Lancio social e newsletter",-28],["Calendario prove",-21],["SIAE e permessi",-14],["Check tecnico luci / audio",-10],["Reminder comunicazione",-7],["Check logistica",-5],["Prova generale",-2],["Check finale",-1],["Coordinamento spettacolo",0],["Recap foto / video",2]
+  ]
+}
+function addLinkedTask(data){data=data||{};linkedDraft.push({id:data.id||("sub_"+Date.now()+"_"+Math.random().toString(36).slice(2,6)),title:data.title||"",responsibleContactId:data.responsibleContactId||"",date:data.date||"",reminderChannel:data.reminderChannel||"email"});renderLinkedTasks()}
+function renderLinkedTasks(){
+  var box=$("linkedTasksList");if(!box)return;box.innerHTML="";
+  if(!linkedDraft.length){box.innerHTML='<div class="mini">Nessun compito collegato. Puoi aggiungerne uno oppure generare quelli standard.</div>';return}
+  linkedDraft.forEach(function(t,idx){
+    var row=document.createElement("div");row.className="linked-row";
+    var opts='<option value="">Da assegnare</option>'+people.filter(function(p){return p.active!==false}).map(function(p){return '<option value="'+escapeHtml(p.id)+'" '+(p.id===t.responsibleContactId?'selected':'')+'>'+escapeHtml(p.name)+(p.role?' · '+escapeHtml(p.role):'')+'</option>'}).join("");
+    row.innerHTML='<label class="task-name">Cosa fare<input class="lt-title" value="'+escapeHtml(t.title)+'" placeholder="Es. Locandina spettacolo"></label><label>Responsabile<select class="lt-owner">'+opts+'</select></label><label>Entro quando<input class="lt-date" type="date" value="'+escapeHtml(t.date)+'"></label><label>Promemoria<select class="lt-channel"><option value="email" '+(t.reminderChannel==="email"?"selected":"")+'>Email</option><option value="whatsapp" '+(t.reminderChannel==="whatsapp"?"selected":"")+'>WhatsApp</option><option value="both" '+(t.reminderChannel==="both"?"selected":"")+'>Email + WhatsApp</option></select></label><button type="button" class="btn danger remove-linked">×</button>';
+    row.querySelector(".lt-title").oninput=function(){t.title=this.value};
+    row.querySelector(".lt-owner").onchange=function(){t.responsibleContactId=this.value};
+    row.querySelector(".lt-date").onchange=function(){t.date=this.value};
+    row.querySelector(".lt-channel").onchange=function(){t.reminderChannel=this.value};
+    row.querySelector(".remove-linked").onclick=function(){linkedDraft.splice(idx,1);renderLinkedTasks()};
+    box.appendChild(row)
+  })
+}
+function generateStandardLinkedTasks(){
+  var eventDate=$("date").value,type=$("type").value;if(!eventDate){alert("Inserisci prima la data dell'evento.");return}
+  var templates=linkedTemplates(type);linkedDraft=[];
+  templates.forEach(function(x){var d=new Date(eventDate+"T12:00:00");d.setDate(d.getDate()+Number(x[1]));linkedDraft.push({id:"sub_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),title:x[0],responsibleContactId:"",date:isoDate(d),reminderChannel:"email"})});
+  renderLinkedTasks()
+}
+function loadLinkedForEvent(e){
+  linkedDraft=[];
+  if(e&&e.id&&e.source!=="site"){
+    events.filter(function(x){return x.parentEventId===e.id}).forEach(function(x){linkedDraft.push({id:x.id,title:x.title,responsibleContactId:x.responsibleContactId||"",date:x.date||"",reminderChannel:x.reminderChannel||"email"})})
+  }
+  renderLinkedTasks()
+}
+function api(action,payload){
+  if(!endpoint)return Promise.reject(new Error("demo"));
+  var opts={method:payload?"POST":"GET",headers:{"Content-Type":"text/plain;charset=utf-8"}};
+  var url=endpoint+"?action="+encodeURIComponent(action)+"&email="+encodeURIComponent(email)+"&_="+Date.now();
+  if(payload){payload.action=action;payload.email=email;opts.body=JSON.stringify(payload)}
+  return fetch(url,opts).then(function(r){return r.json()});
+}
+function setSync(msg,type){$("syncStatus").className="status "+(type||"warn");$("syncStatus").textContent=msg}
+function login(){
+  email=$("loginEmail").value.trim().toLowerCase();
+  if(!email){$("loginStatus").textContent="Inserisci l'email.";return}
+  if(!endpoint){
+    sessionStorage.setItem("artyouCalendarEmail",email);loadDemo();openApp();setSync("Modalità test: dati salvati solo in questo browser.","warn");return
+  }
+  $("loginStatus").textContent="Verifica accesso…";
+  api("session").then(function(r){
+    if(!r||!r.ok)throw new Error((r&&r.errore)||"Accesso non autorizzato");
+    sessionStorage.setItem("artyouCalendarEmail",email);openApp();refresh();
+  }).catch(function(e){$("loginStatus").textContent=e.message});
+}
+function openApp(){$("accessScreen").classList.add("hidden");$("app").classList.remove("hidden");$("logoutBtn").classList.remove("hidden");render()}
+function logout(){sessionStorage.removeItem("artyouCalendarEmail");location.reload()}
+function refresh(){
+  if(!endpoint){loadDemo();render();return}
+  setSync("Sincronizzazione con Google Calendar…","warn");
+  var start=new Date(current.getFullYear(),current.getMonth()-1,1),end=new Date(current.getFullYear(),current.getMonth()+2,0);
+  api("list",{from:isoDate(start),to:isoDate(end)}).then(function(r){
+    if(!r||!r.ok)throw new Error((r&&r.errore)||"Errore sincronizzazione");
+    events=r.events||[];render();setSync("Google Calendar sincronizzato · "+events.length+" appuntamenti","ok");
+  }).catch(function(e){setSync(e.message,"err")});
+}
+function render(){
+  $("monthTitle").textContent=current.toLocaleDateString("it-IT",{month:"long",year:"numeric"});
+  renderMonth();renderAgenda();renderBoard();
+}
+function renderBoard(){
+  var box=$("boardGrid");box.innerHTML="";
+  var groups=["Comunicazione","Avvio corsi","Spettacolo","YEP"];
+  var labels={"Comunicazione":"Comunicazione","Avvio corsi":"Corsi","Spettacolo":"Spettacoli","YEP":"YEP"};
+  var statusLabels={"todo":"Da fare","progress":"In corso","done":"Fatto","blocked":"Bloccato"};
+  var today=isoDate(new Date());
+  var me=(email||"").toLowerCase();
+  var now=new Date(today+"T12:00:00"),weekEnd=new Date(now);weekEnd.setDate(weekEnd.getDate()+7);var weekEndIso=isoDate(weekEnd);
+  groups.forEach(function(type){
+    var items=events.filter(function(e){
+      if(e.type!==type)return false;
+      if(boardFilter==="done")return e.taskStatus==="done";
+      if(boardFilter==="late")return e.taskStatus!=="done"&&e.date&&e.date<today;
+      if(boardFilter==="week")return e.taskStatus!=="done"&&e.date&&e.date>=today&&e.date<=weekEndIso;
+      if(boardFilter==="mine"){
+        var who=((e.team||"")+" "+(e.teacher||"")).toLowerCase();
+        var local=me.split("@")[0].replace(/[._-]+/g," ");
+        return !!local&&who.indexOf(local)!==-1;
+      }
+      return true;
+    }).sort(function(a,b){return (a.date||"9999").localeCompare(b.date||"9999")});
+    var col=document.createElement("section");col.className="board-col";
+    col.innerHTML='<div class="board-head"><span>'+labels[type]+'</span><small>'+items.length+' attività</small></div><div class="board-list"></div>';
+    var list=col.querySelector(".board-list");
+    if(!items.length){list.innerHTML='<div class="mini">Nessuna attività.</div>'}
+    items.forEach(function(e){
+      var card=document.createElement("div");card.className="board-card";
+      if(e.taskStatus==="done")card.classList.add("done");
+      if(e.taskStatus!=="done"&&e.date){if(e.date<today)card.classList.add("overdue");else{var diff=(new Date(e.date+"T12:00:00")-new Date(today+"T12:00:00"))/86400000;if(diff<=7)card.classList.add("soon")}}
+      card.innerHTML='<strong>'+escapeHtml(e.title||"Attività")+'</strong><div class="board-meta">'+escapeHtml((e.phase?e.phase+" · ":"")+(e.team||e.teacher||(e.source==="site"?"Evento già sul sito":"Senza responsabile")))+'</div><div class="board-meta">'+(e.source==="site"?"Data evento: ":"Scadenza: ")+escapeHtml(e.date||e.siteDateLabel||"da definire")+'</div><span class="board-status">'+escapeHtml(e.source==="site"?"Dal gestionale":(statusLabels[e.taskStatus]||"Da fare"))+'</span>';
+      card.onclick=function(){openModal(e)};
+      list.appendChild(card)
+    });
+    box.appendChild(col)
+  })
+}
+function renderMonth(){
+  var box=$("calendar");box.innerHTML="";
+  var y=current.getFullYear(),m=current.getMonth(),first=new Date(y,m,1),offset=(first.getDay()+6)%7;
+  var start=new Date(y,m,1-offset);
+  for(var i=0;i<42;i++){
+    var d=new Date(start);d.setDate(start.getDate()+i);
+    var cell=document.createElement("div");cell.className="day"+(d.getMonth()!==m?" muted":"")+(isoDate(d)===isoDate(new Date())?" today":"");
+    cell.innerHTML='<div class="day-head"><span class="day-num">'+d.getDate()+'</span><button class="add-mini" title="Aggiungi">＋</button></div>';
+    (visibleEvents().filter(function(e){return e.date===isoDate(d)})).sort(function(a,b){return (a.start||"").localeCompare(b.start||"")}).forEach(function(e){
+      var el=document.createElement("div");el.className="event";el.dataset.type=e.type||"Altro";if(e.taskStatus==="done")el.classList.add("done");var today=isoDate(new Date());if((e.type==="Comunicazione"||e.type==="Avvio corsi"||e.type==="Spettacolo"||e.type==="YEP")&&e.taskStatus!=="done"){if(e.date<today)el.classList.add("overdue");else{var diff=(new Date(e.date+"T12:00:00")-new Date(today+"T12:00:00"))/86400000;if(diff<=7)el.classList.add("soon")}}el.innerHTML=escapeHtml((e.start?e.start+" ":"")+e.title)+(e.team?'<small>'+escapeHtml(e.team)+'</small>':(e.venue?'<small>'+escapeHtml(e.venue)+'</small>':""));el.onclick=function(ev){ev.stopPropagation();openModal(e)};cell.appendChild(el)
+    });
+    (function(date){cell.querySelector(".add-mini").onclick=function(ev){ev.stopPropagation();openModal({date:isoDate(date)})}})(d);
+    box.appendChild(cell)
+  }
+}
+function renderAgenda(){
+  var box=$("agendaView");box.innerHTML="";
+  var filtered=visibleEvents().slice().sort(function(a,b){return (a.date+" "+(a.start||"")).localeCompare(b.date+" "+(b.start||""))});
+  var by={};filtered.forEach(function(e){(by[e.date]||(by[e.date]=[])).push(e)});
+  Object.keys(by).forEach(function(date){
+    var wrap=document.createElement("div");wrap.className="agenda-day";
+    var dd=date?new Date(date+"T12:00:00"):null;wrap.innerHTML='<div class="agenda-date">'+(dd&&!isNaN(dd.getTime())?dd.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"}):"Data da definire")+'</div>';
+    by[date].forEach(function(e){var row=document.createElement("div");row.className="agenda-event";row.innerHTML='<div><strong>'+escapeHtml(e.title)+'</strong><small>'+escapeHtml((e.start||"")+" "+(e.end?"– "+e.end:"")+" · "+(e.type||"Altro")+(e.source==="site"?" · Dal gestionale":(e.taskStatus?" · "+({"todo":"Da fare","progress":"In corso","done":"Fatto","blocked":"Bloccato"}[e.taskStatus]||e.taskStatus):""))+(e.team?" · "+e.team:(e.venue?" · "+e.venue:"")))+'</small></div><button class="btn soft">Apri</button>';row.querySelector("button").onclick=function(){openModal(e)};wrap.appendChild(row)});
+    box.appendChild(wrap)
+  });
+  if(!filtered.length)box.innerHTML='<div class="mini" style="padding:22px">Nessun appuntamento da mostrare.</div>'
+}
+function openModal(e){
+  e=e||{};var fromSite=e.source==="site";$("modalTitle").textContent=fromSite?"Evento dal Gestionale":(e.id?"Modifica appuntamento":"Nuovo appuntamento");$("eventId").value=e.id||"";$("siteEventId").value=e.siteEventId||"";$("siteDateIndex").value=e.siteDateIndex==null?"":String(e.siteDateIndex);$("title").value=e.title||"";$("type").value=e.type||"Lezione";$("date").value=e.date||"";$("start").value=e.start||"20:00";$("end").value=e.end||"22:00";$("venue").value=e.venue||"";$("teacher").value=e.teacher||"";$("visibility").value=e.visibility||"internal";$("notes").value=e.notes||"";$("publicTitle").value=e.publicTitle||"";$("price").value=e.price==null?"":e.price;$("capacity").value=e.capacity==null?"":e.capacity;$("slug").value=e.slug||"";$("publishSite").checked=!!e.publishSite;$("taskStatus").value=e.taskStatus||"todo";$("repeat").value=e.repeat||"none";$("team").value=e.team||"";$("phase").value=e.phase||"";$("courseStart").value=e.courseStart||"";$("coursePreset").value=e.coursePreset||"";$("yepDate").value=e.yepDate||"";$("yepPreset").value=e.yepPreset||"";$("reminderDays").value=String(e.reminderDays==null?6:e.reminderDays);$("reminderChannel").value=e.reminderChannel||"email";$("deleteBtn").classList.toggle("hidden",!e.id||fromSite);$("saveBtn").classList.toggle("hidden",fromSite);$("generatePlanBtn").classList.toggle("hidden",!fromSite);setMeetingSelection(e.attendeeIds||[]);$("meetingChannel").value=e.meetingChannel||"calendar";$("meetingReminder").value=String(e.meetingReminderDays||0);$("notifyMeetingNow").checked=!e.id;loadLinkedForEvent(e);togglePublic();toggleTaskBox();$("modalWrap").classList.add("open")
+}
+function closeModal(){$("modalWrap").classList.remove("open")}
+function togglePublic(){$("publicBox").classList.toggle("show",$("visibility").value==="public")}function toggleTaskBox(){var t=$("type").value;var on=t==="Comunicazione"||t==="Avvio corsi"||t==="Spettacolo"||t==="YEP";$("taskBox").classList.toggle("show",on);$("coursePresetWrap").style.display=t==="Avvio corsi"?"block":"none";$("yepPresetWrap").style.display=t==="YEP"?"block":"none";var site=!!$("siteEventId").value;$("linkedTasksBox").classList.toggle("show",linkedTaskTypes().indexOf(t)!==-1&&!site);$("meetingBox").classList.toggle("show",t==="Riunione"&&!site);if(t==="Riunione")renderMeetingPeople()}
+function collect(){
+  var title=$("title").value.trim();
+  return{id:$("eventId").value||("evt_"+Date.now()),title:title,type:$("type").value,date:$("date").value,start:$("start").value,end:$("end").value,venue:$("venue").value.trim(),teacher:$("teacher").value.trim(),visibility:$("visibility").value,notes:$("notes").value.trim(),publicTitle:$("publicTitle").value.trim(),price:$("price").value===""?null:Number($("price").value),capacity:$("capacity").value===""?null:Number($("capacity").value),slug:$("slug").value.trim()||slugify($("publicTitle").value||title),publishSite:$("publishSite").checked,taskStatus:$("taskStatus").value,repeat:$("repeat").value,team:$("team").value.trim(),phase:$("phase").value.trim(),courseStart:$("courseStart").value,coursePreset:$("coursePreset").value,yepDate:$("yepDate").value,yepPreset:$("yepPreset").value,reminderDays:Number($("reminderDays").value)||0,reminderChannel:$("reminderChannel").value,responsibleContactId:(findPersonByName($("teacher").value)||{}).id||"",attendeeIds:meetingSelected.slice(),meetingChannel:$("meetingChannel").value,meetingReminderDays:Number($("meetingReminder").value)||0,notifyAttendees:$("notifyMeetingNow").checked}
+}
+function save(){
+  var e=collect();if(!e.title||!e.date){alert("Inserisci almeno titolo e data.");return}
+  var validLinked=linkedDraft.filter(function(t){return String(t.title||"").trim()&&t.date});
+  function childEvent(t){
+    var p=people.find(function(x){return x.id===t.responsibleContactId})||{};
+    return{id:t.id,title:t.title,type:e.type,date:t.date,start:"09:00",end:"10:00",venue:e.venue,teacher:p.name||"",visibility:"internal",notes:"Compito collegato a: "+e.title,taskStatus:"todo",repeat:"none",team:p.name||"",phase:"Piano evento",reminderDays:6,reminderChannel:t.reminderChannel,responsibleContactId:t.responsibleContactId,parentEventId:e.id,source:"linked"}
+  }
+  if(!endpoint){
+    var i=events.findIndex(function(x){return x.id===e.id});if(i>=0)events[i]=e;else events.push(e);
+    events=events.filter(function(x){return x.parentEventId!==e.id||validLinked.some(function(t){return t.id===x.id})});
+    validLinked.forEach(function(t){var ce=childEvent(t),j=events.findIndex(function(x){return x.id===ce.id});if(j>=0)events[j]=ce;else events.push(ce)});
+    saveDemo();closeModal();render();return
+  }
+  api("save",{event:e}).then(function(r){
+    if(!r||!r.ok)throw new Error((r&&r.errore)||"Salvataggio non riuscito");
+    return Promise.all(validLinked.map(function(t){return api("save",{event:childEvent(t)})}))
+  }).then(function(){closeModal();refresh()}).catch(function(err){alert(err.message)})
+}
+function generatePlan(){
+  var siteEventId=$("siteEventId").value,siteDateIndex=Number($("siteDateIndex").value||0);
+  if(!siteEventId){alert("Evento del Gestionale non riconosciuto.");return}
+  if(!endpoint){alert("La generazione automatica sarà disponibile appena colleghiamo il backend Apps Script.");return}
+  if(!confirm("Creare automaticamente tutte le attività operative collegate a questo evento?"))return;
+  $("generatePlanBtn").disabled=true;$("generatePlanBtn").textContent="Generazione…";
+  api("generate_plan",{siteEventId:siteEventId,siteDateIndex:siteDateIndex}).then(function(r){
+    if(!r||!r.ok)throw new Error((r&&r.errore)||"Generazione non riuscita");
+    closeModal();
+    alert("Piano creato: "+r.created+" attività. "+(r.skipped? r.skipped+" già esistenti non duplicate.":""));
+    refresh();
+  }).catch(function(err){
+    var m=err.message==="data_evento_non_definita"?"Prima definisci la data dell'evento nel Gestionale.":err.message;
+    alert(m);
+  }).finally(function(){$("generatePlanBtn").disabled=false;$("generatePlanBtn").textContent="Crea Piano Operativo"})
+}
+function remove(){
+  var id=$("eventId").value;if(!id)return;if(!confirm("Eliminare questo appuntamento?"))return;
+  if(!endpoint){events=events.filter(function(x){return x.id!==id});saveDemo();closeModal();render();return}
+  api("delete",{id:id}).then(function(r){if(!r||!r.ok)throw new Error((r&&r.errore)||"Eliminazione non riuscita");closeModal();refresh()}).catch(function(err){alert(err.message)})
+}
+$("peopleCloseBtn").onclick=function(){$("peopleModalWrap").classList.remove("open")};$("peopleModalWrap").onclick=function(e){if(e.target===$("peopleModalWrap"))$("peopleModalWrap").classList.remove("open")};$("addPersonBtn").onclick=function(){var name=$("personName").value.trim();if(!name){alert("Inserisci il nome.");return}people.push({id:"p_"+Date.now(),name:name,role:$("personRole").value.trim(),email:$("personEmail").value.trim(),phone:$("personPhone").value.trim(),emailOn:$("personEmailOn").checked,whatsappOn:$("personWhatsappOn").checked});savePeople();$("personName").value="";$("personRole").value="";$("personEmail").value="";$("personPhone").value="";};$("loginBtn").onclick=login;$("logoutBtn").onclick=logout;$("newBtn").onclick=function(){openModal({date:isoDate(new Date())})};$("closeBtn").onclick=closeModal;$("cancelBtn").onclick=closeModal;$("saveBtn").onclick=save;$("deleteBtn").onclick=remove;$("generatePlanBtn").onclick=generatePlan;$("addLinkedTaskBtn").onclick=function(){addLinkedTask({date:$("date").value})};$("generateStandardTasksBtn").onclick=generateStandardLinkedTasks;$("selectAllMeetingBtn").onclick=function(){meetingSelected=people.filter(function(p){return p.active!==false}).map(function(p){return p.id});renderMeetingPeople()};$("clearMeetingBtn").onclick=function(){meetingSelected=[];renderMeetingPeople()};$("visibility").onchange=togglePublic;$("type").onchange=toggleTaskBox;$("applyPresetBtn").onclick=function(){var start=$("courseStart").value,p=$("coursePreset").value;if(!start||!p){alert("Scegli attività e data di partenza del corso.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value="Avvio corsi";$("taskStatus").value="todo";};$("applyYepPresetBtn").onclick=function(){var start=$("yepDate").value,p=$("yepPreset").value;if(!start||!p){alert("Scegli attività e data YEP.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value=parts[2]||"YEP";$("taskStatus").value="todo";};$("refreshBtn").onclick=refresh;
+$("prevBtn").onclick=function(){current.setMonth(current.getMonth()-1);render();if(endpoint)refresh()};$("nextBtn").onclick=function(){current.setMonth(current.getMonth()+1);render();if(endpoint)refresh()};$("todayBtn").onclick=function(){current=new Date();current.setDate(1);render();if(endpoint)refresh()};
+document.querySelectorAll(".type-filter").forEach(function(x){x.onchange=render});document.querySelectorAll(".view-switch button").forEach(function(b){b.onclick=function(){document.querySelectorAll(".view-switch button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");var v=b.dataset.view;$("monthView").classList.toggle("hidden",v!=="month");$("agendaView").classList.toggle("active",v==="agenda");$("boardView").classList.toggle("active",v==="board")}});$("modalWrap").onclick=function(e){if(e.target===$("modalWrap"))closeModal()};
+document.querySelectorAll("[data-board-filter]").forEach(function(b){b.onclick=function(){boardFilter=b.dataset.boardFilter;document.querySelectorAll("[data-board-filter]").forEach(function(x){x.classList.remove("active")});b.classList.add("active");renderBoard()}});loadPeople();var saved=sessionStorage.getItem("artyouCalendarEmail");if(saved){email=saved;$("loginEmail").value=saved;loadDemo();openApp();if(endpoint)refresh()}
+})();
+</script>
+</body>
+</html>
