@@ -628,6 +628,12 @@ function PO_saveTask(email,e) {
   if(old){
     obj.reminderKeyInviati=String(old.reminderKeyInviati||'');
     if(!obj.googleEventId) obj.googleEventId=String(old.googleEventId||'');
+    if(!String(e.source||'').trim()) obj.source=String(old.source||obj.source||'plan');
+    if(!String(e.parentEventId||'').trim()) obj.parentEventId=String(old.parentEventId||'');
+    if(!String(e.templateKey||'').trim()) obj.templateKey=String(old.templateKey||'');
+  }
+  if(obj.source==='plan' && !obj.parentEventId && /Generato automaticamente dal Gestionale Eventi/i.test(obj.note||'')){
+    obj.source='generated';
   }
 
   obj.googleEventId=PO_syncTaskToCalendar_(obj);
