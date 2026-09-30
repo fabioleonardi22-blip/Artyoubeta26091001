@@ -158,13 +158,14 @@ function PO_savePerson(email, p) {
   for(let i=1;i<values.length;i++) if(String(values[i][idIx])===id){row=i+1;break;}
   const arr=h.map(k=>Object.prototype.hasOwnProperty.call(obj,k)?obj[k]:'');
   if(row>0) sh.getRange(row,1,1,h.length).setValues([arr]); else sh.appendRow(arr);
+  PO_audit_(email,row>0?'modifica':'crea','persona',id,obj.nome+' · '+obj.livelloAccesso);
   return PO_listPeople().find(x=>x.id===id);
 }
 
 function PO_deletePerson(email,id) {
   PO_requireAdmin_(email);
   const sh=PO_getPeopleSheet_(), values=sh.getDataRange().getValues(), h=values[0].map(String), ix=h.indexOf('id');
-  for(let i=1;i<values.length;i++) if(String(values[i][ix])===String(id)){sh.deleteRow(i+1);return true;}
+  for(let i=1;i<values.length;i++) if(String(values[i][ix])===String(id)){PO_audit_(email,'elimina','persona',id,String(values[i][h.indexOf('nome')]||''));sh.deleteRow(i+1);return true;}
   return true;
 }
 
@@ -465,7 +466,7 @@ function PO_saveTask(email,e) {
   if(String(obj.tipo)==='Riunione' && e.notifyAttendees) PO_notifyMeetingAttendees_(obj);
   const arr=h.map(k=>Object.prototype.hasOwnProperty.call(obj,k)?obj[k]:'');
   if(row>0) sh.getRange(row,1,1,h.length).setValues([arr]); else sh.appendRow(arr);
-
+  PO_audit_(email,row>0?'modifica':'crea','attivita',id,obj.titolo);
   return PO_listTasks().find(x=>x.id===id);
 }
 
@@ -477,7 +478,7 @@ function PO_deleteTask(email,id) {
     if(String(values[i][idIx])!==String(id)) continue;
     const gid=String(values[i][gIx]||'');
     if(gid){try{const ev=PO_calendar_().getEventById(gid);if(ev)ev.deleteEvent();}catch(e){}}
-    sh.deleteRow(i+1); return true;
+    PO_audit_(email,'elimina','attivita',id,String(values[i][h.indexOf('titolo')]||''));sh.deleteRow(i+1); return true;
   }
   if(String(id).indexOf('gcal_')===0){
     const gid=String(id).slice(5);try{const ev=PO_calendar_().getEventById(gid);if(ev)ev.deleteEvent();}catch(e){}
