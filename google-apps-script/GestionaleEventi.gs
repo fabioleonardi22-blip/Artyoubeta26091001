@@ -9,6 +9,16 @@ const GEST_CFG = {
 function doGet(e) {
   try {
     const p = (e && e.parameter) || {};
+
+    // Compatibilità con il Gestionale Prenotazioni storico e la dashboard live.
+    // Queste route esistevano già nel vecchio Code.gs e sono ancora usate dal sito.
+    if (String(p.disponibilita || "") === "1") {
+      return gestJson_({ok:true, disponibilita: (typeof leggiDisponibilita === "function" ? leggiDisponibilita() : {})});
+    }
+    if (String(p.eventi || "") === "1") {
+      return gestJson_({ok:true, eventi: (typeof leggiEventiPubblici_ === "function" ? leggiEventiPubblici_() : {})});
+    }
+
     const action = String(p.action || "public").toLowerCase();
 
     // Piano Operativo: autenticazione tramite email registrata / admin.
