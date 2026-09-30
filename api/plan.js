@@ -14,9 +14,10 @@ module.exports = async function handler(req, res) {
     const query = qIndex >= 0 ? rawUrl.slice(qIndex + 1) : "";
     const params = new URLSearchParams(query);
     params.delete("email");
+    params.delete("token");
     const action = params.get("action");
     if (action) params.set("action", "po_" + action);
-    params.set("email", identity.email);
+    params.set("token", credential);
 
     let url = APPS_SCRIPT_URL;
     const qs = params.toString();
@@ -31,7 +32,8 @@ module.exports = async function handler(req, res) {
         try { body = JSON.parse(body); } catch (e) { body = {}; }
       }
       body.action = "po_" + String(body.action || action || "");
-      body.email = identity.email;
+      delete body.email;
+      body.token = credential;
       options.headers["Content-Type"] = "text/plain;charset=utf-8";
       options.body = JSON.stringify(body);
     }
