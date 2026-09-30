@@ -407,7 +407,7 @@ function PO_generatePlanForSiteEvent(email, siteEventId, dateIndex) {
     d.setDate(d.getDate()-Number(t.days||0));
     PO_saveTask(email,{
       title:t.title+' · '+String(ev.title||''),
-      type:type==='Festival'?'YEP':type,
+      type:type,
       phase:t.phase||'',
       teacher:t.owner||'',
       team:t.owner||'',
