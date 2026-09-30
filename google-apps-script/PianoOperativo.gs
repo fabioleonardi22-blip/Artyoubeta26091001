@@ -395,6 +395,11 @@ function PO_bookingSourceEvents_() {
 }
 
 function PO_operationalSourceEvents_() {
+  const cache=CacheService.getScriptCache();
+  try{
+    const hit=cache.get('po_operational_events_v1');
+    if(hit)return JSON.parse(hit);
+  }catch(e){}
   let site=[];
   if(typeof gestAdminEvents_==='function'){
     try{site=gestAdminEvents_().filter(e=>e.attivo);}catch(err){site=[];}
@@ -410,6 +415,7 @@ function PO_operationalSourceEvents_() {
     seen[key]=true;
     out.push(e);
   });
+  try{cache.put('po_operational_events_v1',JSON.stringify(out),15)}catch(e){}
   return out;
 }
 
