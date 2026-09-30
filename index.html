@@ -279,7 +279,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </nav>
 <div class="am-wrap" style="display: flex; gap: 12px; align-items: center;">
 <div aria-hidden="true" class="am-wrap" style="width:52px;height:52px;border-radius:26px;background:#25D366;color:#0B2E1A;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(37,211,102,.22);border:2px solid #79FF9C;cursor:default;flex:0 0 52px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.001c-5.523 0-10 4.477-10 10 0 1.762.464 3.479 1.345 4.997L2 22l5.161-1.352a9.953 9.953 0 0 0 4.879 1.253h.005c5.522 0 9.999-4.477 9.999-10 0-2.671-1.04-5.182-2.929-7.07A9.935 9.935 0 0 0 12.04 2Zm0 18.174h-.004a8.172 8.172 0 0 1-4.166-1.14l-.299-.177-3.096.812.827-3.016-.194-.31a8.163 8.163 0 0 1-1.253-4.343c0-4.508 3.669-8.176 8.19-8.176a8.14 8.14 0 0 1 5.79 2.398 8.13 8.13 0 0 1 2.397 5.788c0 4.508-3.669 8.164-8.192 8.164Zm4.484-6.13c-.246-.123-1.454-.718-1.68-.8-.226-.082-.39-.123-.554.123-.164.246-.635.8-.778.964-.144.165-.287.185-.533.062-.246-.123-1.037-.382-1.976-1.22-.73-.65-1.222-1.453-1.365-1.7-.144-.246-.015-.379.108-.501.11-.11.246-.287.369-.43.123-.144.164-.246.246-.41.082-.164.041-.308-.02-.43-.062-.123-.554-1.335-.76-1.828-.2-.48-.404-.415-.554-.423l-.472-.008a.906.906 0 0 0-.656.307c-.226.246-.862.842-.862 2.054 0 1.212.883 2.383 1.006 2.548.123.164 1.74 2.658 4.216 3.727.589.254 1.049.406 1.408.52.591.188 1.13.161 1.556.098.475-.071 1.454-.595 1.66-1.169.205-.574.205-1.066.144-1.169-.062-.102-.226-.164-.472-.287Z"></path></svg></div>
-<a id="artyou-trial-header-cta" href="#artyou-wa-course-menu" class="am-fs-body" style="background:#25D366;color:#0B2E1A;border:2px solid #79FF9C;box-shadow:0 0 0 2px rgba(121,255,156,.14),0 6px 18px rgba(37,211,102,.22);padding:12px 20px;border-radius:999px;font-weight:700;text-decoration:none;font-size:15px;"><span class="am-long">Lezione di Prova Gratuita</span><span class="am-short">Prova Gratuita</span></a>
+<a id="artyou-trial-header-cta" href="#prova" class="am-fs-body" style="background:#25D366;color:#0B2E1A;border:2px solid #79FF9C;box-shadow:0 0 0 2px rgba(121,255,156,.14),0 6px 18px rgba(37,211,102,.22);padding:12px 20px;border-radius:999px;font-weight:700;text-decoration:none;font-size:15px;"><span class="am-long">Lezione di Prova Gratuita</span><span class="am-short">Prova Gratuita</span></a>
 <label for="artyou-menu-toggle" class="artyou-menu-btn" role="button" aria-label="Apri il menu" style="display: none;"><svg class="am-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg><svg class="am-close" style="display: none;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></label></div>
 </header>
 <div aria-hidden="true" style="height: 6px; background: #7A1631;"></div>
@@ -999,79 +999,10 @@ class Component extends DCLogic {
 })();
 </script>
 
-<script id="artyou-center-trial-form">
-(function(){
-  var overlay=null, card=null, placeholder=null, oldStyle="";
 
-  function getCard(){
-    var target=document.getElementById("artyou-wa-course-menu");
-    return target ? target.parentElement : null;
-  }
-
-  function closeTrialModal(){
-    if(!overlay||!card)return;
-    if(placeholder&&placeholder.parentNode){
-      placeholder.parentNode.insertBefore(card,placeholder);
-      placeholder.parentNode.removeChild(placeholder);
-    }
-    card.setAttribute("style",oldStyle);
-    overlay.remove();
-    overlay=null; card=null; placeholder=null;
-    document.body.style.overflow="";
-  }
-
-  function openTrialModal(){
-    card=getCard();
-    if(!card)return false;
-    if(overlay)return true;
-
-    placeholder=document.createComment("artyou-trial-form-placeholder");
-    card.parentNode.insertBefore(placeholder,card);
-    oldStyle=card.getAttribute("style")||"";
-
-    overlay=document.createElement("div");
-    overlay.id="artyou-trial-modal";
-    overlay.setAttribute("role","dialog");
-    overlay.setAttribute("aria-modal","true");
-    overlay.setAttribute("aria-label","Lezione di prova gratuita");
-    overlay.style.cssText="position:fixed;inset:0;z-index:9999;background:rgba(13,17,21,.78);display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;";
-
-    var close=document.createElement("button");
-    close.type="button";
-    close.setAttribute("aria-label","Chiudi");
-    close.innerHTML="×";
-    close.style.cssText="position:absolute;top:18px;right:22px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.55);background:#13181D;color:#fff;font-size:28px;line-height:1;cursor:pointer;z-index:10001;";
-
-    close.addEventListener("click",closeTrialModal);
-    overlay.addEventListener("click",function(e){if(e.target===overlay)closeTrialModal();});
-    document.addEventListener("keydown",function esc(e){if(e.key==="Escape"){document.removeEventListener("keydown",esc);closeTrialModal();}});
-
-    overlay.appendChild(close);
-    overlay.appendChild(card);
-    document.body.appendChild(overlay);
-    document.body.style.overflow="hidden";
-
-    card.style.cssText="background:#FFFFFF;color:#13181D;border-radius:24px;padding:40px;display:flex;flex-direction:column;gap:20px;width:min(520px,calc(100vw - 48px));max-height:calc(100vh - 48px);overflow:auto;box-sizing:border-box;box-shadow:0 24px 80px rgba(0,0,0,.35);";
-    return true;
-  }
-
-  window.ARTYOU_CENTER_TRIAL=openTrialModal;
-
-  document.addEventListener("click",function(e){
-    var a=e.target.closest&&e.target.closest('a[href="#artyou-wa-course-menu"]');
-    if(!a)return;
-    e.preventDefault();
-    openTrialModal();
-  });
-
-  window.addEventListener("hashchange",function(){
-    if(location.hash==="#artyou-wa-course-menu") openTrialModal();
-  });
-})();
-</script>
 
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
-<script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;if(id==="artyou-wa-course-menu"&&window.ARTYOU_CENTER_TRIAL){window.ARTYOU_CENTER_TRIAL("auto");return true;}var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
+<script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
 <script id="artyou-forms-js">
 (function(){
