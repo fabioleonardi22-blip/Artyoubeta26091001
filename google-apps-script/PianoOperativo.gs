@@ -585,7 +585,14 @@ function PO_syncTaskToCalendar_(task) {
   const desc=['Piano Operativo Artyou','Area: '+(task.tipo||''),'Fase: '+(task.fase||''),'Responsabile: '+(task.responsabileNome||''),'Stato: '+(task.stato||''),'',task.note||''].join('\n');
 
   const attendeeIds=PO_parseJson_(task.attendeeIdsJSON||'[]',[]);
-  const guests=attendeeIds.map(PO_findPersonById_).filter(Boolean).map(p=>p.email).filter(Boolean);
+  // L'account dell'associazione vede già il calendario condiviso:
+  // non va invitato anche come guest, altrimenti Google Calendar mostra il doppione.
+  const associationEmail='artyouroma@gmail.com';
+  const guests=attendeeIds
+    .map(PO_findPersonById_)
+    .filter(Boolean)
+    .map(p=>PO_normalizeEmail_(p.email))
+    .filter(mail=>mail && mail!==associationEmail);
 
   if(ev){
     ev.setTitle(task.titolo||'Attività Artyou');ev.setTime(start,end);ev.setLocation(task.luogo||'');ev.setDescription(desc);
