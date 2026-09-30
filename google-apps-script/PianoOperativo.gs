@@ -556,6 +556,26 @@ function PO_notifyMeetingAttendees_(task){
     }
   });
 }
+function PO_sendMeetingReminder_(task,daysLeft){
+  const ids=PO_parseJson_(task.attendeeIdsJSON||'[]',[]);
+  if(!ids.length)return false;
+  const people=ids.map(PO_findPersonById_).filter(p=>p&&p.active);
+  const channel=String(task.meetingChannel||'calendar').toLowerCase();
+  const when=Utilities.formatDate(new Date(String(task.data)+'T'+(task.oraInizio||'09:00')+':00'),Session.getScriptTimeZone(),'dd/MM/yyyy HH:mm');
+  const timing=daysLeft===0?'oggi':(daysLeft===1?'domani':'tra '+daysLeft+' giorni');
+  const body=['Promemoria riunione Artyou','',task.titolo||'Riunione','Quando: '+when+' ('+timing+')','Dove: '+(task.luogo||'-'),'',task.note||''].join('\n');
+  let sent=false;
+  people.forEach(function(p){
+    if((channel==='calendar'||channel==='email'||channel==='both')&&p.email&&p.emailOn){
+      MailApp.sendEmail({to:p.email,subject:'Artyou · Promemoria riunione: '+(task.titolo||''),body:body,name:'Artyou Roma'});sent=true;
+    }
+    if((channel==='whatsapp'||channel==='both')&&p.phone&&p.whatsappOn){
+      sent=PO_sendWhatsAppReminder_(p,{titolo:task.titolo||'Riunione'},body)||sent;
+    }
+  });
+  return sent;
+}
+
 function PO_runDailyReminders() {
   const sh=PO_getTasksSheet_(), values=sh.getDataRange().getValues();
   if(values.length<2)return;
