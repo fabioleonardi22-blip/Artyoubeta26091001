@@ -157,7 +157,10 @@ function PO_savePerson(email, p) {
   let row=-1, idIx=h.indexOf('id');
   for(let i=1;i<values.length;i++) if(String(values[i][idIx])===id){row=i+1;break;}
   const arr=h.map(k=>Object.prototype.hasOwnProperty.call(obj,k)?obj[k]:'');
-  if(row>0) sh.getRange(row,1,1,h.length).setValues([arr]); else sh.appendRow(arr);
+  const targetRow=row>0?row:Math.max(2,sh.getLastRow()+1);
+  const phoneIx=h.indexOf('whatsapp');
+  if(phoneIx>=0) sh.getRange(targetRow,phoneIx+1).setNumberFormat('@');
+  sh.getRange(targetRow,1,1,h.length).setValues([arr]);
   PO_audit_(email,row>0?'modifica':'crea','persona',id,obj.nome+' · '+obj.livelloAccesso);
   return PO_listPeople().find(x=>x.id===id);
 }
