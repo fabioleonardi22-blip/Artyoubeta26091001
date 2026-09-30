@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
     const credential = String(body.credential || "");
     const identity = await verifyGoogleIdToken(credential);
 
-    const url = APPS_SCRIPT_URL + "?action=po_session&email=" + encodeURIComponent(identity.email) + "&_=" + Date.now();
+    const url = APPS_SCRIPT_URL + "?action=po_session&token=" + encodeURIComponent(credential) + "&_=" + Date.now();
     const upstream = await fetch(url, { method:"GET", redirect:"follow" });
     const text = await upstream.text();
     let session;
