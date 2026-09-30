@@ -19,7 +19,7 @@ const PO_TASK_HEADERS = [
 ];
 
 const PO_PEOPLE_HEADERS = [
-  'id','nome','tipo','ruolo','competenzeJSON','email','whatsapp','emailAttiva','whatsappAttivo','attivo','note','updatedAt'
+  'id','nome','tipo','ruolo','livelloAccesso','competenzeJSON','email','whatsapp','emailAttiva','whatsappAttivo','attivo','note','updatedAt'
 ];
 
 function PO_getSpreadsheet_() {
@@ -84,7 +84,7 @@ function PO_listPeople() {
     const o={}; h.forEach((k,i)=>o[k]=r[i]);
     return {
       id:String(o.id||''), name:String(o.nome||''), kind:String(o.tipo||'Docente'), role:String(o.ruolo||''),
-      skills:(typeof gestParseJson_==='function'?gestParseJson_(o.competenzeJSON,[]):PO_parseJson_(o.competenzeJSON,[])),
+      accessLevel:String(o.livelloAccesso||'Docente'), skills:(typeof gestParseJson_==='function'?gestParseJson_(o.competenzeJSON,[]):PO_parseJson_(o.competenzeJSON,[])),
       email:String(o.email||''), phone:String(o.whatsapp||''),
       emailOn:PO_bool_(o.emailAttiva,true), whatsappOn:PO_bool_(o.whatsappAttivo,false),
       active:PO_bool_(o.attivo,true), notes:String(o.note||''), updatedAt:o.updatedAt||''
@@ -108,10 +108,11 @@ function PO_isAdmin_(email) {
 function PO_requireUser_(email) {
   email=PO_normalizeEmail_(email);
   if (!email) throw new Error('email_mancante');
-  if (PO_isAdmin_(email)) return {email:email,admin:true};
+  if (PO_isAdmin_(email)) return {email:email,admin:true,accessLevel:'Amministratore'};
   const person=PO_findPersonByEmail_(email);
   if (!person) throw new Error('accesso_non_autorizzato');
-  return {email:email,admin:false,person:person};
+  const accessLevel=String(person.accessLevel||'Docente');
+  return {email:email,admin:false,accessLevel:accessLevel,person:person};
 }
 
 function PO_requireAdmin_(email) {
@@ -120,9 +121,15 @@ function PO_requireAdmin_(email) {
   return u;
 }
 
+function PO_requireEditor_(email) {
+  const u=PO_requireUser_(email);
+  if (u.admin || String(u.accessLevel||'') === 'Staff') return u;
+  throw new Error('permesso_modifica_richiesto');
+}
+
 function PO_session(email) {
   const u=PO_requireUser_(email);
-  return {ok:true, admin:!!u.admin, person:u.person||null};
+  return {ok:true, admin:!!u.admin, accessLevel:u.admin?'Amministratore':String(u.accessLevel||'Docente'), person:u.person||null};
 }
 
 function PO_savePerson(email, p) {
@@ -132,7 +139,7 @@ function PO_savePerson(email, p) {
   const id=String(p.id||Utilities.getUuid());
   const obj={
     id:id,nome:String(p.name||p.nome||'').trim(),tipo:String(p.kind||p.tipo||'Docente').trim(),ruolo:String(p.role||p.ruolo||'').trim(),
-    competenzeJSON:JSON.stringify(Array.isArray(p.skills)?p.skills:[]),
+    livelloAccesso:String(p.accessLevel||p.livelloAccesso||'Docente').trim(),competenzeJSON:JSON.stringify(Array.isArray(p.skills)?p.skills:[]),
     email:PO_normalizeEmail_(p.email),whatsapp:String(p.phone||p.whatsapp||'').trim(),
     emailAttiva:p.emailOn!==false,whatsappAttivo:!!p.whatsappOn,attivo:p.active!==false,
     note:String(p.notes||p.note||'').trim(),updatedAt:new Date()
@@ -361,7 +368,7 @@ function PO_getSiteEvent_(siteEventId) {
 }
 
 function PO_generatePlanForSiteEvent(email, siteEventId, dateIndex) {
-  PO_requireUser_(email);
+  PO_requireEditor_(email);
   const ev=PO_getSiteEvent_(siteEventId);
   const dates=Array.isArray(ev.dates)&&ev.dates.length?ev.dates:[];
   const ix=Math.max(0,Number(dateIndex)||0);
@@ -408,7 +415,7 @@ function PO_generatePlanForSiteEvent(email, siteEventId, dateIndex) {
 }
 
 function PO_saveTask(email,e) {
-  PO_requireUser_(email);
+  PO_requireEditor_(email);
   e=e||{};
   if(!String(e.title||'').trim()) throw new Error('titolo_mancante');
   if(!String(e.date||'').trim()) throw new Error('data_mancante');
@@ -450,7 +457,7 @@ function PO_saveTask(email,e) {
 }
 
 function PO_deleteTask(email,id) {
-  PO_requireUser_(email);
+  PO_requireEditor_(email);
   const sh=PO_getTasksSheet_(), values=sh.getDataRange().getValues(), h=values[0].map(String);
   const idIx=h.indexOf('id'), gIx=h.indexOf('googleEventId');
   for(let i=1;i<values.length;i++){
