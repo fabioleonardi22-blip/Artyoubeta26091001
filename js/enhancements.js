@@ -18,3 +18,25 @@
   },true);
   new MutationObserver(function(){if(saved())hide()}).observe(document.documentElement,{childList:true,subtree:true});
 })();
+
+
+/* Header WhatsApp: uniform neutral icon on every page */
+(function(){
+  function apply(){
+    if(document.getElementById('artyou-header-wa-style')) return;
+    var s=document.createElement('style');
+    s.id='artyou-header-wa-style';
+    s.textContent=
+      'header a[aria-label="Scrivici su WhatsApp"],header .artyou-header-wa{'+
+      'background:transparent!important;color:#F6F3EC!important;'+
+      'border:1px solid #3A444D!important;box-shadow:none!important;'+
+      'width:48px!important;height:48px!important;border-radius:50%!important;'+
+      'display:flex!important;align-items:center!important;justify-content:center!important;'+
+      'padding:0!important;flex:0 0 48px!important}'+
+      '@media(max-width:820px){header a[aria-label="Scrivici su WhatsApp"],header .artyou-header-wa{'+
+      'width:44px!important;height:44px!important;flex-basis:44px!important}}';
+    document.head.appendChild(s);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',apply);
+  else apply();
+})();
