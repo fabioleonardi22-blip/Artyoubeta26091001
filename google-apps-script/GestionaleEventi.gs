@@ -19,8 +19,8 @@ function doGet(e) {
       return gestJson_({ok:true, events:PO_listEvents(p.email, String(p.from||""), String(p.to||""))});
     }
     if (action === "po_people") {
-      PO_requireUser_(p.email);
-      return gestJson_({ok:true, people:PO_listPeople(), admin:PO_isAdmin_(p.email)});
+      const poUser = PO_requireUser_(p.email);
+      return gestJson_({ok:true, people:PO_listPeople(), admin:!!poUser.admin, accessLevel:poUser.accessLevel||"Docente"});
     }
 
     if (action === "public") {
@@ -63,8 +63,8 @@ function doPost(e) {
       return gestJson_({ok:true});
     }
     if (action === "po_people") {
-      PO_requireUser_(data.email);
-      return gestJson_({ok:true, people:PO_listPeople(), admin:PO_isAdmin_(data.email)});
+      const poUser = PO_requireUser_(data.email);
+      return gestJson_({ok:true, people:PO_listPeople(), admin:!!poUser.admin, accessLevel:poUser.accessLevel||"Docente"});
     }
     if (action === "po_save_person") {
       const person = PO_savePerson(data.email, data.person || {});
