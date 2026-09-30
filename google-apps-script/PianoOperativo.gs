@@ -146,6 +146,10 @@ function PO_savePerson(email, p) {
     note:String(p.notes||p.note||'').trim(),updatedAt:new Date()
   };
   if(!obj.nome) throw new Error('nome_mancante');
+  if(!obj.email) throw new Error('email_mancante');
+  if(['Amministratore','Staff','Docente'].indexOf(obj.livelloAccesso)===-1) obj.livelloAccesso='Docente';
+  const dup=PO_listPeople().find(x=>PO_normalizeEmail_(x.email)===obj.email&&String(x.id)!==id);
+  if(dup) throw new Error('email_gia_autorizzata');
   let row=-1, idIx=h.indexOf('id');
   for(let i=1;i<values.length;i++) if(String(values[i][idIx])===id){row=i+1;break;}
   const arr=h.map(k=>Object.prototype.hasOwnProperty.call(obj,k)?obj[k]:'');
