@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Corso di Stand-up Comedy a Roma | Artyou</title>
-<meta name="viewport" content="width=1440"><script id="artyou-viewport">(function(){try{var w=Math.min(screen.width,screen.height);if(w<=600){var m=document.querySelector('meta[name="viewport"]');m.setAttribute("content","width=device-width, initial-scale=1, viewport-fit=cover");document.documentElement.classList.add("am-mobile");}}catch(e){}})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><script id="artyou-viewport">(function(){try{if(window.matchMedia&&window.matchMedia("(max-width: 820px)").matches){document.documentElement.classList.add("am-mobile");}}catch(e){}})();</script>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script src="/js/support.js"></script>
@@ -218,6 +218,24 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
   "courseMode": "onsite"
 }
 </script>
+
+<style id="artyou-mobile-hardening">
+@media (max-width: 820px){
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{width:100%;max-width:100%;overflow-x:hidden!important;}
+  body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
+  [style*="width: 1440px"],[style*="width:1440px"]{width:100%!important;max-width:100%!important;min-width:0!important;}
+  main,section,article,header,footer,nav,form{max-width:100%;min-width:0;}
+  img,video,iframe,svg{max-width:100%;height:auto;}
+  input,select,textarea,button{max-width:100%;}
+  [style*="padding: 0 120px"],[style*="padding:0 120px"],[style*="padding: 20px 120px"],[style*="padding:20px 120px"],[style*="padding: 32px 120px"],[style*="padding:32px 120px"],[style*="padding: 48px 120px"],[style*="padding:48px 120px"],[style*="padding: 64px 120px"],[style*="padding:64px 120px"]{
+    padding-left:20px!important;padding-right:20px!important;
+  }
+  [style*="min-width: 600px"],[style*="min-width:600px"],[style*="min-width: 700px"],[style*="min-width:700px"],[style*="min-width: 800px"],[style*="min-width:800px"]{min-width:0!important;}
+  [role="dialog"],dialog,.modal,.artyou-modal,[class*="modal"]{max-width:calc(100vw - 24px)!important;max-height:calc(100dvh - 24px)!important;overflow:auto!important;}
+  .am-grid2:has(input,select,textarea){grid-template-columns:minmax(0,1fr)!important;}
+}
+</style>
 </head>
 <body>
 <x-dc>
