@@ -15,7 +15,7 @@ const PO_TASK_HEADERS = [
   'id','titolo','tipo','fase','responsabileId','responsabileNome','data','oraInizio','oraFine',
   'luogo','visibilita','stato','ripeti','note','publicTitle','price','capacity','slug','publishSite',
   'courseStart','coursePreset','yepDate','yepPreset','reminderDays','reminderChannel',
-  'reminderKeyInviati','googleEventId','source','parentEventId','templateKey','updatedAt'
+  'reminderKeyInviati','googleEventId','source','parentEventId','templateKey','attendeeIdsJSON','meetingChannel','meetingReminderDays','updatedAt'
 ];
 
 const PO_PEOPLE_HEADERS = [
@@ -164,10 +164,13 @@ function PO_taskRowToEvent_(h,r) {
     coursePreset:String(o.coursePreset||''), yepDate:PO_dateISO_(o.yepDate),
     yepPreset:String(o.yepPreset||''), reminderDays:Number(o.reminderDays||0),
     reminderChannel:String(o.reminderChannel||'email'), googleEventId:String(o.googleEventId||''),
-    source:String(o.source||'plan'), parentEventId:String(o.parentEventId||''), templateKey:String(o.templateKey||'')
+    source:String(o.source||'plan'), parentEventId:String(o.parentEventId||''), templateKey:String(o.templateKey||''),
+    attendeeIds:gestParseJson_?gestParseJson_(o.attendeeIdsJSON,[]):PO_parseJson_(o.attendeeIdsJSON,[]),
+    meetingChannel:String(o.meetingChannel||'calendar'), meetingReminderDays:Number(o.meetingReminderDays||0)
   };
 }
 
+function PO_parseJson_(s,f){try{return JSON.parse(String(s||""))}catch(e){return f}}
 function PO_dateISO_(v) {
   if (!v) return '';
   if (v instanceof Date && !isNaN(v.getTime())) return Utilities.formatDate(v, Session.getScriptTimeZone(), 'yyyy-MM-dd');
@@ -422,7 +425,9 @@ function PO_saveTask(email,e) {
     courseStart:String(e.courseStart||''),coursePreset:String(e.coursePreset||''),yepDate:String(e.yepDate||''),
     yepPreset:String(e.yepPreset||''),reminderDays:Number(e.reminderDays||0),
     reminderChannel:String(e.reminderChannel||'email'),reminderKeyInviati:'',
-    googleEventId:String(e.googleEventId||''),source:String(e.source||'plan'),parentEventId:String(e.parentEventId||''),templateKey:String(e.templateKey||''),updatedAt:new Date()
+    googleEventId:String(e.googleEventId||''),source:String(e.source||'plan'),parentEventId:String(e.parentEventId||''),templateKey:String(e.templateKey||''),
+    attendeeIdsJSON:JSON.stringify(Array.isArray(e.attendeeIds)?e.attendeeIds:[]),meetingChannel:String(e.meetingChannel||'calendar'),
+    meetingReminderDays:Number(e.meetingReminderDays||0),updatedAt:new Date()
   };
 
   // Preserve reminder history and existing Google ID on update.
@@ -434,6 +439,7 @@ function PO_saveTask(email,e) {
   }
 
   obj.googleEventId=PO_syncTaskToCalendar_(obj);
+  if(String(obj.tipo)==='Riunione' && e.notifyAttendees) PO_notifyMeetingAttendees_(obj);
   const arr=h.map(k=>Object.prototype.hasOwnProperty.call(obj,k)?obj[k]:'');
   if(row>0) sh.getRange(row,1,1,h.length).setValues([arr]); else sh.appendRow(arr);
 
@@ -498,11 +504,43 @@ function PO_syncTaskToCalendar_(task) {
   let ev=null;
   if(task.googleEventId){try{ev=cal.getEventById(task.googleEventId);}catch(e){}}
   const desc=['Piano Operativo Artyou','Area: '+(task.tipo||''),'Fase: '+(task.fase||''),'Responsabile: '+(task.responsabileNome||''),'Stato: '+(task.stato||''),'',task.note||''].join('\n');
-  if(ev){ev.setTitle(task.titolo||'Attività Artyou');ev.setTime(start,end);ev.setLocation(task.luogo||'');ev.setDescription(desc);}
-  else ev=cal.createEvent(task.titolo||'Attività Artyou',start,end,{description:desc,location:task.luogo||''});
+
+  const attendeeIds=PO_parseJson_(task.attendeeIdsJSON||'[]',[]);
+  const guests=attendeeIds.map(PO_findPersonById_).filter(Boolean).map(p=>p.email).filter(Boolean);
+
+  if(ev){
+    ev.setTitle(task.titolo||'Attività Artyou');ev.setTime(start,end);ev.setLocation(task.luogo||'');ev.setDescription(desc);
+    if(String(task.tipo||'')==='Riunione'){
+      try{
+        const current=(ev.getGuestList?ev.getGuestList():[]).map(g=>String(g.getEmail?g.getEmail():'').toLowerCase()).filter(Boolean);
+        current.forEach(mail=>{if(guests.map(x=>x.toLowerCase()).indexOf(mail)===-1&&ev.removeGuest)ev.removeGuest(mail)});
+        guests.forEach(mail=>{if(current.indexOf(mail.toLowerCase())===-1&&ev.addGuest)ev.addGuest(mail)});
+      }catch(e){}
+    }
+  } else {
+    const opts={description:desc,location:task.luogo||''};
+    if(String(task.tipo||'')==='Riunione'&&guests.length){opts.guests=guests.join(',');opts.sendInvites=true;}
+    ev=cal.createEvent(task.titolo||'Attività Artyou',start,end,opts);
+  }
   return ev.getId();
 }
 
+
+function PO_notifyMeetingAttendees_(task){
+  const ids=PO_parseJson_(task.attendeeIdsJSON||'[]',[]);
+  const people=ids.map(PO_findPersonById_).filter(Boolean);
+  const channel=String(task.meetingChannel||'calendar').toLowerCase();
+  const when=Utilities.formatDate(new Date(String(task.data)+'T'+(task.oraInizio||'09:00')+':00'),Session.getScriptTimeZone(),'dd/MM/yyyy HH:mm');
+  const body=['Riunione Artyou','',task.titolo||'Riunione','Quando: '+when,'Dove: '+(task.luogo||'-'),'',task.note||''].join('\n');
+  people.forEach(function(p){
+    if((channel==='email'||channel==='both')&&p.email&&p.emailOn){
+      MailApp.sendEmail({to:p.email,subject:'Artyou · Riunione: '+(task.titolo||''),body:body,name:'Artyou Roma'});
+    }
+    if((channel==='whatsapp'||channel==='both')&&p.phone&&p.whatsappOn){
+      PO_sendWhatsAppReminder_(p,{titolo:task.titolo||'Riunione'},body);
+    }
+  });
+}
 function PO_runDailyReminders() {
   const sh=PO_getTasksSheet_(), values=sh.getDataRange().getValues();
   if(values.length<2)return;
