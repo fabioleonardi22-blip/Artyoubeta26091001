@@ -11,9 +11,10 @@ function posti(b){var h=document.getElementById("f-posti");if(h&&h.value)return 
 function collect(b){
 var pe=document.getElementById("f-paga-online"),pr=document.getElementById("f-prezzo"),n=posti(b),p=pr?parseFloat(pr.value):NaN,on=!!(pe&&pe.value==="true");
 var pm=document.getElementById("f-pagamento-modalita");
-var pagamento=on
-  ? (pm&&pm.value?("PayPal - "+pm.value):"PayPal (online)")
-  : (pm&&pm.value?pm.value:"In cassa");
+var modalita=pm&&pm.value?String(pm.value).trim():"";
+var pagamento=/locale/i.test(modalita)
+  ? "Paga al Locale"
+  : (on ? "PayPal (online)" : (modalita||"In cassa"));
 var d={action:"prenota",Modulo:window.ARTYOU_BOOKING_MODULE||"Prenotazione",Evento:evento(),Nome:q("nome")?q("nome").value.trim():"",Cognome:q("cognome")?q("cognome").value.trim():"",Telefono:q("tel")?q("tel").value.trim():"",Email:q("mail")?q("mail").value.trim():"",Posti:n,Pagamento:pagamento,Importo:(!isNaN(p)&&p>0)?(p*n).toFixed(2):""};
 if(window.ARTYOU_BOOKING_DEFAULT_DATE)d["Data evento"]=window.ARTYOU_BOOKING_DEFAULT_DATE;
 if(window.ARTYOU_BOOKING_DEFAULT_TIME)d["Ora evento"]=window.ARTYOU_BOOKING_DEFAULT_TIME;
