@@ -235,7 +235,7 @@ header{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding
 var endpoint=window.ARTYOU_CALENDAR_ENDPOINT||"";
 var current=new Date();current.setDate(1);
 var events=[];
-var email="";
+var email="",currentSession=null,currentAccess="Docente",canEdit=false;
 var LS="artyouCalendarDemoEvents_v1";var PEOPLE_LS="artyouCalendarPeople_v1";var boardFilter="all";var people=[];var linkedDraft=[];var meetingSelected=[];
 
 function $(id){return document.getElementById(id)}
@@ -245,7 +245,20 @@ function slugify(s){return String(s||"").toLowerCase().normalize("NFD").replace(
 function enabledTypes(){return [].slice.call(document.querySelectorAll(".type-filter:checked")).map(function(x){return x.value})}
 function visibleEvents(){var ok=enabledTypes();return events.filter(function(e){return ok.indexOf(e.type||"Altro")!==-1})}
 function loadDemo(){try{events=JSON.parse(localStorage.getItem(LS)||"[]")}catch(e){events=[]}}
-function saveDemo(){localStorage.setItem(LS,JSON.stringify(events))}function loadPeople(){try{people=JSON.parse(localStorage.getItem(PEOPLE_LS)||"[]")}catch(e){people=[]}renderPeople();refreshPeopleSelect()}function savePeople(){localStorage.setItem(PEOPLE_LS,JSON.stringify(people));renderPeople();refreshPeopleSelect()}function renderPeople(){var box=$("peopleList");if(!box)return;box.innerHTML="";if(!people.length){box.innerHTML='<div class="mini">Nessun responsabile registrato.</div>';return}people.forEach(function(p){var row=document.createElement("div");row.className="person-row";row.innerHTML='<div><strong>'+escapeHtml(p.name)+'</strong><div class="mini">'+escapeHtml(p.role||"")+'</div></div><div><div class="mini">'+escapeHtml(p.email||"")+'</div><div class="mini">'+escapeHtml(p.phone||"")+'</div></div><button class="btn danger">Elimina</button>';row.querySelector("button").onclick=function(){people=people.filter(function(x){return x.id!==p.id});savePeople()};box.appendChild(row)})}function refreshPeopleSelect(){var sel=$("teacher");if(!sel)return;var current=sel.value;var dl=$("peopleDatalist");if(!dl){dl=document.createElement("datalist");dl.id="peopleDatalist";document.body.appendChild(dl);sel.setAttribute("list","peopleDatalist")}dl.innerHTML="";people.forEach(function(p){var o=document.createElement("option");o.value=p.name;o.label=p.role||p.email||"";dl.appendChild(o)});if(current)sel.value=current}function findPersonByName(name){name=String(name||"").trim().toLowerCase();return people.find(function(p){return String(p.name||"").trim().toLowerCase()===name})||null}
+function saveDemo(){localStorage.setItem(LS,JSON.stringify(events))}
+function loadPeople(){
+  if(endpoint&&ArtyouGoogleAuth.getToken()){
+    return api("people").then(function(r){
+      if(!r||!r.ok)throw new Error((r&&r.errore)||"Errore anagrafiche");
+      people=(r.people||[]).filter(function(p){return p.active!==false});
+      renderPeople();refreshPeopleSelect();renderMeetingPeople();
+      return people;
+    }).catch(function(){people=[];renderPeople();refreshPeopleSelect();return people})
+  }
+  try{people=JSON.parse(localStorage.getItem(PEOPLE_LS)||"[]")}catch(e){people=[]}
+  renderPeople();refreshPeopleSelect();return Promise.resolve(people)
+}
+function savePeople(){localStorage.setItem(PEOPLE_LS,JSON.stringify(people));renderPeople();refreshPeopleSelect()}function renderPeople(){var box=$("peopleList");if(!box)return;box.innerHTML="";if(!people.length){box.innerHTML='<div class="mini">Nessun responsabile registrato.</div>';return}people.forEach(function(p){var row=document.createElement("div");row.className="person-row";row.innerHTML='<div><strong>'+escapeHtml(p.name)+'</strong><div class="mini">'+escapeHtml(p.role||"")+'</div></div><div><div class="mini">'+escapeHtml(p.email||"")+'</div><div class="mini">'+escapeHtml(p.phone||"")+'</div></div><button class="btn danger">Elimina</button>';row.querySelector("button").onclick=function(){people=people.filter(function(x){return x.id!==p.id});savePeople()};box.appendChild(row)})}function refreshPeopleSelect(){var sel=$("teacher");if(!sel)return;var current=sel.value;var dl=$("peopleDatalist");if(!dl){dl=document.createElement("datalist");dl.id="peopleDatalist";document.body.appendChild(dl);sel.setAttribute("list","peopleDatalist")}dl.innerHTML="";people.forEach(function(p){var o=document.createElement("option");o.value=p.name;o.label=p.role||p.email||"";dl.appendChild(o)});if(current)sel.value=current}function findPersonByName(name){name=String(name||"").trim().toLowerCase();return people.find(function(p){return String(p.name||"").trim().toLowerCase()===name})||null}
 function renderMeetingPeople(){
   var box=$("meetingPeople");if(!box)return;box.innerHTML="";
   var active=people.filter(function(p){return p.active!==false});
@@ -308,10 +321,14 @@ function api(action,payload){
 }
 function setSync(msg,type){$("syncStatus").className="status "+(type||"warn");$("syncStatus").textContent=msg}
 function googleAuthorized(session){
-  email=String((session&&session.email)||"").toLowerCase();
+  currentSession=session||{};
+  email=String(currentSession.email||"").toLowerCase();
+  currentAccess=currentSession.admin?"Amministratore":String(currentSession.accessLevel||(currentSession.person&&currentSession.person.accessLevel)||"Docente");
+  canEdit=currentAccess==="Amministratore"||currentAccess==="Staff";
   sessionStorage.setItem("artyouCalendarEmail",email);
   openApp();
-  refresh();
+  $("newBtn").classList.toggle("hidden",!canEdit);
+  loadPeople().then(function(){refresh()});
 }
 function openApp(){$("accessScreen").classList.add("hidden");$("app").classList.remove("hidden");$("logoutBtn").classList.remove("hidden");render()}
 function logout(){ArtyouGoogleAuth.clear();sessionStorage.removeItem("artyouCalendarEmail");location.reload()}
@@ -371,7 +388,7 @@ function renderMonth(){
   for(var i=0;i<42;i++){
     var d=new Date(start);d.setDate(start.getDate()+i);
     var cell=document.createElement("div");cell.className="day"+(d.getMonth()!==m?" muted":"")+(isoDate(d)===isoDate(new Date())?" today":"");
-    cell.innerHTML='<div class="day-head"><span class="day-num">'+d.getDate()+'</span><button class="add-mini" title="Aggiungi">＋</button></div>';
+    cell.innerHTML='<div class="day-head"><span class="day-num">'+d.getDate()+'</span><button class="add-mini" title="Aggiungi"'+(canEdit?'':' style="display:none"')+'>＋</button></div>';
     (visibleEvents().filter(function(e){return e.date===isoDate(d)})).sort(function(a,b){return (a.start||"").localeCompare(b.start||"")}).forEach(function(e){
       var el=document.createElement("div");el.className="event";el.dataset.type=e.type||"Altro";if(e.taskStatus==="done")el.classList.add("done");var today=isoDate(new Date());if((e.type==="Comunicazione"||e.type==="Avvio corsi"||e.type==="Spettacolo"||e.type==="YEP")&&e.taskStatus!=="done"){if(e.date<today)el.classList.add("overdue");else{var diff=(new Date(e.date+"T12:00:00")-new Date(today+"T12:00:00"))/86400000;if(diff<=7)el.classList.add("soon")}}el.innerHTML=escapeHtml((e.start?e.start+" ":"")+e.title)+(e.team?'<small>'+escapeHtml(e.team)+'</small>':(e.venue?'<small>'+escapeHtml(e.venue)+'</small>':""));el.onclick=function(ev){ev.stopPropagation();openModal(e)};cell.appendChild(el)
     });
@@ -392,7 +409,13 @@ function renderAgenda(){
   if(!filtered.length)box.innerHTML='<div class="mini" style="padding:22px">Nessun appuntamento da mostrare.</div>'
 }
 function openModal(e){
-  e=e||{};var fromSite=e.source==="site";$("modalTitle").textContent=fromSite?"Evento dal Gestionale":(e.id?"Modifica appuntamento":"Nuovo appuntamento");$("eventId").value=e.id||"";$("siteEventId").value=e.siteEventId||"";$("siteDateIndex").value=e.siteDateIndex==null?"":String(e.siteDateIndex);$("title").value=e.title||"";$("type").value=e.type||"Lezione";$("date").value=e.date||"";$("start").value=e.start||"20:00";$("end").value=e.end||"22:00";$("venue").value=e.venue||"";$("teacher").value=e.teacher||"";$("visibility").value=e.visibility||"internal";$("notes").value=e.notes||"";$("publicTitle").value=e.publicTitle||"";$("price").value=e.price==null?"":e.price;$("capacity").value=e.capacity==null?"":e.capacity;$("slug").value=e.slug||"";$("publishSite").checked=!!e.publishSite;$("taskStatus").value=e.taskStatus||"todo";$("repeat").value=e.repeat||"none";$("team").value=e.team||"";$("phase").value=e.phase||"";$("courseStart").value=e.courseStart||"";$("coursePreset").value=e.coursePreset||"";$("yepDate").value=e.yepDate||"";$("yepPreset").value=e.yepPreset||"";$("reminderDays").value=String(e.reminderDays==null?6:e.reminderDays);$("reminderChannel").value=e.reminderChannel||"email";$("deleteBtn").classList.toggle("hidden",!e.id||fromSite);$("saveBtn").classList.toggle("hidden",fromSite);$("generatePlanBtn").classList.toggle("hidden",!fromSite);setMeetingSelection(e.attendeeIds||[]);$("meetingChannel").value=e.meetingChannel||"calendar";$("meetingReminder").value=String(e.meetingReminderDays||0);$("notifyMeetingNow").checked=!e.id;loadLinkedForEvent(e);togglePublic();toggleTaskBox();$("modalWrap").classList.add("open")
+  e=e||{};var fromSite=e.source==="site";var editable=canEdit&&!fromSite;
+  $("modalTitle").textContent=fromSite?"Evento dal Gestionale":(e.id?(editable?"Modifica appuntamento":"Dettaglio appuntamento"):"Nuovo appuntamento");$("eventId").value=e.id||"";$("siteEventId").value=e.siteEventId||"";$("siteDateIndex").value=e.siteDateIndex==null?"":String(e.siteDateIndex);$("title").value=e.title||"";$("type").value=e.type||"Lezione";$("date").value=e.date||"";$("start").value=e.start||"20:00";$("end").value=e.end||"22:00";$("venue").value=e.venue||"";$("teacher").value=e.teacher||"";$("visibility").value=e.visibility||"internal";$("notes").value=e.notes||"";$("publicTitle").value=e.publicTitle||"";$("price").value=e.price==null?"":e.price;$("capacity").value=e.capacity==null?"":e.capacity;$("slug").value=e.slug||"";$("publishSite").checked=!!e.publishSite;$("taskStatus").value=e.taskStatus||"todo";$("repeat").value=e.repeat||"none";$("team").value=e.team||"";$("phase").value=e.phase||"";$("courseStart").value=e.courseStart||"";$("coursePreset").value=e.coursePreset||"";$("yepDate").value=e.yepDate||"";$("yepPreset").value=e.yepPreset||"";$("reminderDays").value=String(e.reminderDays==null?6:e.reminderDays);$("reminderChannel").value=e.reminderChannel||"email";
+  $("deleteBtn").classList.toggle("hidden",!editable||!e.id);$("saveBtn").classList.toggle("hidden",!editable);$("generatePlanBtn").classList.toggle("hidden",!canEdit||!fromSite);
+  setMeetingSelection(e.attendeeIds||[]);$("meetingChannel").value=e.meetingChannel||"calendar";$("meetingReminder").value=String(e.meetingReminderDays||0);$("notifyMeetingNow").checked=!e.id;loadLinkedForEvent(e);togglePublic();toggleTaskBox();
+  document.querySelectorAll("#modalWrap input,#modalWrap select,#modalWrap textarea").forEach(function(x){x.disabled=!editable});
+  ["addLinkedTaskBtn","generateStandardTasksBtn","selectAllMeetingBtn","clearMeetingBtn","applyPresetBtn","applyYepPresetBtn"].forEach(function(id){var el=$(id);if(el)el.classList.toggle("hidden",!editable)});
+  $("modalWrap").classList.add("open")
 }
 function closeModal(){$("modalWrap").classList.remove("open")}
 function togglePublic(){$("publicBox").classList.toggle("show",$("visibility").value==="public")}function toggleTaskBox(){var t=$("type").value;var on=t==="Comunicazione"||t==="Avvio corsi"||t==="Spettacolo"||t==="YEP";$("taskBox").classList.toggle("show",on);$("coursePresetWrap").style.display=t==="Avvio corsi"?"block":"none";$("yepPresetWrap").style.display=t==="YEP"?"block":"none";var site=!!$("siteEventId").value;$("linkedTasksBox").classList.toggle("show",linkedTaskTypes().indexOf(t)!==-1&&!site);$("meetingBox").classList.toggle("show",t==="Riunione"&&!site);if(t==="Riunione")renderMeetingPeople()}
@@ -401,6 +424,7 @@ function collect(){
   return{id:$("eventId").value||("evt_"+Date.now()),title:title,type:$("type").value,date:$("date").value,start:$("start").value,end:$("end").value,venue:$("venue").value.trim(),teacher:$("teacher").value.trim(),visibility:$("visibility").value,notes:$("notes").value.trim(),publicTitle:$("publicTitle").value.trim(),price:$("price").value===""?null:Number($("price").value),capacity:$("capacity").value===""?null:Number($("capacity").value),slug:$("slug").value.trim()||slugify($("publicTitle").value||title),publishSite:$("publishSite").checked,taskStatus:$("taskStatus").value,repeat:$("repeat").value,team:$("team").value.trim(),phase:$("phase").value.trim(),courseStart:$("courseStart").value,coursePreset:$("coursePreset").value,yepDate:$("yepDate").value,yepPreset:$("yepPreset").value,reminderDays:Number($("reminderDays").value)||0,reminderChannel:$("reminderChannel").value,responsibleContactId:(findPersonByName($("teacher").value)||{}).id||"",attendeeIds:meetingSelected.slice(),meetingChannel:$("meetingChannel").value,meetingReminderDays:Number($("meetingReminder").value)||0,notifyAttendees:$("notifyMeetingNow").checked}
 }
 function save(){
+  if(!canEdit){alert("Il tuo profilo è in sola lettura.");return}
   var e=collect();if(!e.title||!e.date){alert("Inserisci almeno titolo e data.");return}
   var validLinked=linkedDraft.filter(function(t){return String(t.title||"").trim()&&t.date});
   function childEvent(t){
@@ -419,6 +443,7 @@ function save(){
   }).then(function(){closeModal();refresh()}).catch(function(err){alert(err.message)})
 }
 function generatePlan(){
+  if(!canEdit){alert("Il tuo profilo è in sola lettura.");return}
   var siteEventId=$("siteEventId").value,siteDateIndex=Number($("siteDateIndex").value||0);
   if(!siteEventId){alert("Evento del Gestionale non riconosciuto.");return}
   if(!endpoint){alert("La generazione automatica sarà disponibile appena colleghiamo il backend Apps Script.");return}
@@ -435,14 +460,15 @@ function generatePlan(){
   }).finally(function(){$("generatePlanBtn").disabled=false;$("generatePlanBtn").textContent="Crea Piano Operativo"})
 }
 function remove(){
+  if(!canEdit){alert("Il tuo profilo è in sola lettura.");return}
   var id=$("eventId").value;if(!id)return;if(!confirm("Eliminare questo appuntamento?"))return;
   if(!endpoint){events=events.filter(function(x){return x.id!==id});saveDemo();closeModal();render();return}
   api("delete",{id:id}).then(function(r){if(!r||!r.ok)throw new Error((r&&r.errore)||"Eliminazione non riuscita");closeModal();refresh()}).catch(function(err){alert(err.message)})
 }
-$("peopleCloseBtn").onclick=function(){$("peopleModalWrap").classList.remove("open")};$("peopleModalWrap").onclick=function(e){if(e.target===$("peopleModalWrap"))$("peopleModalWrap").classList.remove("open")};$("addPersonBtn").onclick=function(){var name=$("personName").value.trim();if(!name){alert("Inserisci il nome.");return}people.push({id:"p_"+Date.now(),name:name,role:$("personRole").value.trim(),email:$("personEmail").value.trim(),phone:$("personPhone").value.trim(),emailOn:$("personEmailOn").checked,whatsappOn:$("personWhatsappOn").checked});savePeople();$("personName").value="";$("personRole").value="";$("personEmail").value="";$("personPhone").value="";};$("logoutBtn").onclick=logout;$("newBtn").onclick=function(){openModal({date:isoDate(new Date())})};$("closeBtn").onclick=closeModal;$("cancelBtn").onclick=closeModal;$("saveBtn").onclick=save;$("deleteBtn").onclick=remove;$("generatePlanBtn").onclick=generatePlan;$("addLinkedTaskBtn").onclick=function(){addLinkedTask({date:$("date").value})};$("generateStandardTasksBtn").onclick=generateStandardLinkedTasks;$("selectAllMeetingBtn").onclick=function(){meetingSelected=people.filter(function(p){return p.active!==false}).map(function(p){return p.id});renderMeetingPeople()};$("clearMeetingBtn").onclick=function(){meetingSelected=[];renderMeetingPeople()};$("visibility").onchange=togglePublic;$("type").onchange=toggleTaskBox;$("applyPresetBtn").onclick=function(){var start=$("courseStart").value,p=$("coursePreset").value;if(!start||!p){alert("Scegli attività e data di partenza del corso.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value="Avvio corsi";$("taskStatus").value="todo";};$("applyYepPresetBtn").onclick=function(){var start=$("yepDate").value,p=$("yepPreset").value;if(!start||!p){alert("Scegli attività e data YEP.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value=parts[2]||"YEP";$("taskStatus").value="todo";};$("refreshBtn").onclick=refresh;
+$("peopleCloseBtn").onclick=function(){$("peopleModalWrap").classList.remove("open")};$("peopleModalWrap").onclick=function(e){if(e.target===$("peopleModalWrap"))$("peopleModalWrap").classList.remove("open")};$("addPersonBtn").onclick=function(){var name=$("personName").value.trim();if(!name){alert("Inserisci il nome.");return}people.push({id:"p_"+Date.now(),name:name,role:$("personRole").value.trim(),email:$("personEmail").value.trim(),phone:$("personPhone").value.trim(),emailOn:$("personEmailOn").checked,whatsappOn:$("personWhatsappOn").checked});savePeople();$("personName").value="";$("personRole").value="";$("personEmail").value="";$("personPhone").value="";};$("logoutBtn").onclick=logout;$("newBtn").onclick=function(){if(canEdit)openModal({date:isoDate(new Date())})};$("closeBtn").onclick=closeModal;$("cancelBtn").onclick=closeModal;$("saveBtn").onclick=save;$("deleteBtn").onclick=remove;$("generatePlanBtn").onclick=generatePlan;$("addLinkedTaskBtn").onclick=function(){addLinkedTask({date:$("date").value})};$("generateStandardTasksBtn").onclick=generateStandardLinkedTasks;$("selectAllMeetingBtn").onclick=function(){meetingSelected=people.filter(function(p){return p.active!==false}).map(function(p){return p.id});renderMeetingPeople()};$("clearMeetingBtn").onclick=function(){meetingSelected=[];renderMeetingPeople()};$("visibility").onchange=togglePublic;$("type").onchange=toggleTaskBox;$("applyPresetBtn").onclick=function(){var start=$("courseStart").value,p=$("coursePreset").value;if(!start||!p){alert("Scegli attività e data di partenza del corso.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value="Avvio corsi";$("taskStatus").value="todo";};$("applyYepPresetBtn").onclick=function(){var start=$("yepDate").value,p=$("yepPreset").value;if(!start||!p){alert("Scegli attività e data YEP.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value=parts[2]||"YEP";$("taskStatus").value="todo";};$("refreshBtn").onclick=refresh;
 $("prevBtn").onclick=function(){current.setMonth(current.getMonth()-1);render();if(endpoint)refresh()};$("nextBtn").onclick=function(){current.setMonth(current.getMonth()+1);render();if(endpoint)refresh()};$("todayBtn").onclick=function(){current=new Date();current.setDate(1);render();if(endpoint)refresh()};
 document.querySelectorAll(".type-filter").forEach(function(x){x.onchange=render});document.querySelectorAll(".view-switch button").forEach(function(b){b.onclick=function(){document.querySelectorAll(".view-switch button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");var v=b.dataset.view;$("monthView").classList.toggle("hidden",v!=="month");$("agendaView").classList.toggle("active",v==="agenda");$("boardView").classList.toggle("active",v==="board")}});$("modalWrap").onclick=function(e){if(e.target===$("modalWrap"))closeModal()};
-document.querySelectorAll("[data-board-filter]").forEach(function(b){b.onclick=function(){boardFilter=b.dataset.boardFilter;document.querySelectorAll("[data-board-filter]").forEach(function(x){x.classList.remove("active")});b.classList.add("active");renderBoard()}});loadPeople();ArtyouGoogleAuth.init({buttonId:"googleLoginButton",statusId:"loginStatus",onAuthorized:googleAuthorized});
+document.querySelectorAll("[data-board-filter]").forEach(function(b){b.onclick=function(){boardFilter=b.dataset.boardFilter;document.querySelectorAll("[data-board-filter]").forEach(function(x){x.classList.remove("active")});b.classList.add("active");renderBoard()}});ArtyouGoogleAuth.init({buttonId:"googleLoginButton",statusId:"loginStatus",onAuthorized:googleAuthorized});
 })();
 </script>
 </body>
