@@ -36,7 +36,7 @@ label{font-size:13px;font-weight:800;display:flex;flex-direction:column;gap:7px}
   <aside class="panel sidebar">
     <div>
       <label>PIN amministratore</label>
-      <div class="login"><input id="pin" type="password" autocomplete="current-password" placeholder="PIN"><button class="btn dark" id="loginBtn">Accedi</button></div>
+      <div class="login"><input id="pin" type="password" autocomplete="current-password" placeholder="PIN"><button class="btn dark" id="loginBtn">Accedi</button><button class="btn soft" id="logoutBtn" style="display:none">Esci</button></div>
     </div>
     <div class="toolbar"><button class="btn primary" id="newBtn">+ Nuovo evento</button><button class="btn soft" id="refreshBtn">Aggiorna</button></div>
     <div id="status" class="status info">Configura l'endpoint e inserisci il PIN per iniziare.</div>
@@ -200,7 +200,19 @@ function renderList(){
 function escapeHtml(s){return String(s||"").replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function refresh(){
   setStatus("Caricamento eventi…","info");
-  apiGet("list").then(assert).then(function(r){events=r.events||[];renderList();setStatus("Gestionale collegato. "+events.length+" eventi trovati.","ok")}).catch(function(e){setStatus(e.message,"err")});
+  apiGet("list").then(assert).then(function(r){
+    events=r.events||[];
+    try{sessionStorage.setItem("artyouGestionalePin",pin())}catch(e){}
+    $("logoutBtn").style.display="inline-block";
+    renderList();
+    setStatus("Gestionale collegato. "+events.length+" eventi trovati.","ok");
+  }).catch(function(e){
+    if(String(e.message||"").indexOf("pin_non_valido")!==-1){
+      try{sessionStorage.removeItem("artyouGestionalePin")}catch(x){}
+      $("logoutBtn").style.display="none";
+    }
+    setStatus(e.message,"err");
+  });
 }
 function save(){
   var e=collect();if(!e.title){setStatus("Inserisci il titolo.","err");return}if(!e.dates.length){setStatus("Inserisci almeno una data.","err");return}
@@ -221,10 +233,28 @@ function upload(){
   reader.onload=function(){var b64=String(reader.result).split(",")[1]||"";apiPost({action:"uploadimage",name:file.name,mime:file.type,base64:b64}).then(assert).then(function(r){$("poster").value=r.url;updatePoster();setStatus("Immagine caricata.","ok")}).catch(function(e){setStatus(e.message,"err")})};reader.readAsDataURL(file);
 }
 $("loginBtn").onclick=refresh;$("refreshBtn").onclick=refresh;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("deleteBtn").onclick=del;
+$("logoutBtn").onclick=function(){
+  try{sessionStorage.removeItem("artyouGestionalePin")}catch(e){}
+  $("pin").value="";
+  $("logoutBtn").style.display="none";
+  events=[];currentId="";
+  renderList();clearForm();
+  setStatus("Sessione chiusa. Inserisci il PIN per accedere.","info");
+};
 $("addDateBtn").onclick=function(){addDate()};$("addCastBtn").onclick=function(){addCast()};$("poster").oninput=updatePoster;$("uploadBtn").onclick=upload;
 $("title").oninput=function(){if(!currentId&&!$("slug").value.trim())$("slug").value=slugify(this.value);updatePreviewLink()};$("slug").oninput=updatePreviewLink;$("eventType").onchange=toggleSaggiFields;
 clearForm();
-if(!endpoint)setStatus("Prima configurazione: inserisci l'URL /exec del Gestionale in js/artyou-events-config.js.","err");
+var savedPin="";
+try{savedPin=sessionStorage.getItem("artyouGestionalePin")||""}catch(e){}
+if(savedPin){
+  $("pin").value=savedPin;
+  $("logoutBtn").style.display="inline-block";
+  refresh();
+}else if(!endpoint){
+  setStatus("Prima configurazione: inserisci l'URL /exec del Gestionale in js/artyou-events-config.js.","err");
+}else{
+  setStatus("Inserisci il PIN amministratore per iniziare. Verrà ricordato fino alla chiusura del browser.","info");
+}
 })();
 </script>
 </body>
