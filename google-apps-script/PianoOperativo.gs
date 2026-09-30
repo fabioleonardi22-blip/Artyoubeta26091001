@@ -74,6 +74,29 @@ function PO_bool_(v, def) {
 }
 
 function PO_normalizeEmail_(s) { return String(s||'').trim().toLowerCase(); }
+function PO_emailFromGoogleToken_(token) {
+  token=String(token||'').trim();
+  if(!token) throw new Error('google_token_mancante');
+  const cache=CacheService.getScriptCache();
+  const cacheKey='po_gt_'+Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,token)).slice(0,40);
+  const cached=cache.get(cacheKey);
+  if(cached) return PO_normalizeEmail_(cached);
+
+  const url='https://oauth2.googleapis.com/tokeninfo?id_token='+encodeURIComponent(token);
+  const res=UrlFetchApp.fetch(url,{muteHttpExceptions:true});
+  if(res.getResponseCode()!==200) throw new Error('google_token_non_valido');
+  let info={};
+  try{info=JSON.parse(res.getContentText()||'{}');}catch(e){throw new Error('google_token_non_valido');}
+  if(!info.email || String(info.email_verified)!=='true') throw new Error('google_email_non_verificata');
+
+  const expected=String(PropertiesService.getScriptProperties().getProperty('PO_GOOGLE_CLIENT_ID')||'').trim();
+  if(expected && String(info.aud||'')!==expected) throw new Error('google_audience_non_valida');
+
+  const email=PO_normalizeEmail_(info.email);
+  cache.put(cacheKey,email,300);
+  return email;
+}
+
 
 function PO_adminEmails_() {
   return String(PropertiesService.getScriptProperties().getProperty(PO_PROP_ADMIN_EMAILS)||'')
