@@ -29,10 +29,10 @@ header{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding
 .view-switch{display:flex;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:3px}.view-switch button{border:0;background:transparent;border-radius:8px;padding:8px 10px;font-weight:800}.view-switch button.active{background:#fff;box-shadow:0 2px 7px rgba(0,0,0,.08)}
 .weekdays,.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}.weekdays div{padding:9px;text-align:center;color:var(--muted);font-size:12px;font-weight:900;text-transform:uppercase}
 .calendar{border-top:1px solid var(--line);border-left:1px solid var(--line);border-radius:14px;overflow:hidden}.day{min-height:132px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;background:#fff;overflow:hidden}.day.muted{background:#FAF8F3;color:#AAA}.day.today{box-shadow:inset 0 0 0 2px var(--orange)}.day-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}.day-num{font-weight:900;font-size:13px}.add-mini{border:0;background:transparent;color:var(--muted);font-size:18px;padding:0 3px;line-height:1}
-.event{border-radius:8px;padding:6px 7px;margin:5px 0;font-size:11px;line-height:1.25;font-weight:800;cursor:pointer;border-left:4px solid currentColor;background:#F4F5F6;color:#334}.event small{display:block;font-weight:500;opacity:.85;margin-top:2px}.event[data-type="Lezione"]{background:#EAF7FC;color:#16709A}.event[data-type="Prova"]{background:#F1ECFF;color:#5E48B5}.event[data-type="Riunione"]{background:#F1F2F3;color:#4F5A63}.event[data-type="Spettacolo"]{background:#FFF0DF;color:#A15A00}.event[data-type="Workshop"]{background:#E9F8F4;color:#1E7469}.event[data-type="Festival"]{background:#FCECEF;color:#9E2942}.event[data-type="Altro"]{background:#F7F1E6;color:#6D5A34}
+.event{border-radius:8px;padding:6px 7px;margin:5px 0;font-size:11px;line-height:1.25;font-weight:800;cursor:pointer;border-left:4px solid currentColor;background:#F4F5F6;color:#334}.event small{display:block;font-weight:500;opacity:.85;margin-top:2px}.event[data-type="Lezione"]{background:#EAF7FC;color:#16709A}.event[data-type="Prova"]{background:#F1ECFF;color:#5E48B5}.event[data-type="Riunione"]{background:#F1F2F3;color:#4F5A63}.event[data-type="Spettacolo"]{background:#FFF0DF;color:#A15A00}.event[data-type="Workshop"]{background:#E9F8F4;color:#1E7469}.event[data-type="Festival"]{background:#FCECEF;color:#9E2942}.event[data-type="Comunicazione"]{background:#FFF0F0;color:#B23B47}.event[data-type="Avvio corsi"]{background:#EAF8F2;color:#12634E}.event[data-type="Altro"]{background:#F7F1E6;color:#6D5A34}.event.overdue{box-shadow:inset 0 0 0 2px #D9534F}.event.soon{box-shadow:inset 0 0 0 2px #F0A000}.event.done{opacity:.55;text-decoration:line-through}
 .agenda{display:none}.agenda.active{display:block}.agenda-day{border-top:1px solid var(--line);padding:16px 4px}.agenda-day:first-child{border-top:0}.agenda-date{font-weight:900;margin-bottom:9px}.agenda-event{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:11px;margin:7px 0}.agenda-event strong{display:block}.agenda-event small{color:var(--muted)}
 .modal-wrap{position:fixed;inset:0;background:rgba(10,14,17,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}.modal-wrap.open{display:flex}.modal{width:min(720px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 26px 70px rgba(0,0,0,.35);padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.modal-head h2{margin:0}.close{border:0;background:#F1F2F3;border-radius:50%;width:38px;height:38px;font-size:22px}
-.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:900}input,select,textarea{width:100%;border:1px solid #CCC5B8;border-radius:10px;padding:11px;background:#fff}textarea{min-height:95px;resize:vertical}.checks{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}.checks label{flex-direction:row;align-items:center}.checks input{width:auto}.public-box{display:none;margin-top:14px;padding:14px;border-radius:13px;background:#FFF8E9;border:1px solid #F0D9A4}.public-box.show{display:block}.actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:20px}.danger{background:#FCEDEF;color:#8A2438}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:900}input,select,textarea{width:100%;border:1px solid #CCC5B8;border-radius:10px;padding:11px;background:#fff}textarea{min-height:95px;resize:vertical}.checks{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}.checks label{flex-direction:row;align-items:center}.checks input{width:auto}.public-box,.task-box{display:none;margin-top:14px;padding:14px;border-radius:13px}.public-box{background:#FFF8E9;border:1px solid #F0D9A4}.task-box{background:#F3FAF7;border:1px solid #BFDCCF}.public-box.show,.task-box.show{display:block}.task-box strong{display:block;margin-bottom:10px}.actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:20px}.danger{background:#FCEDEF;color:#8A2438}
 .access{max-width:520px;margin:70px auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}.access h1{margin-top:0}.access .btn{margin-top:12px}
 .hidden{display:none!important}
 @media(max-width:980px){.shell{grid-template-columns:1fr;padding:12px}.sidebar{position:static;height:auto}.main{padding:12px}.day{min-height:110px}.event{font-size:10px}}
@@ -63,7 +63,7 @@ header{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding
       <div class="legend-row"><span class="dot" style="background:#68737D"></span>Riunione</div>
       <div class="legend-row"><span class="dot" style="background:#F09000"></span>Spettacolo</div>
       <div class="legend-row"><span class="dot" style="background:#28B4A8"></span>Workshop</div>
-      <div class="legend-row"><span class="dot" style="background:#B5445B"></span>Festival</div>
+      <div class="legend-row"><span class="dot" style="background:#B5445B"></span>Festival</div><div class="legend-row"><span class="dot" style="background:#D9535F"></span>Comunicazione</div><div class="legend-row"><span class="dot" style="background:#28B47C"></span>Avvio corsi</div>
     </div>
     <div class="filters">
       <h3>Mostra</h3>
@@ -72,7 +72,7 @@ header{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding
       <label><input type="checkbox" class="type-filter" value="Riunione" checked> Riunioni</label>
       <label><input type="checkbox" class="type-filter" value="Spettacolo" checked> Spettacoli</label>
       <label><input type="checkbox" class="type-filter" value="Workshop" checked> Workshop</label>
-      <label><input type="checkbox" class="type-filter" value="Festival" checked> Festival</label>
+      <label><input type="checkbox" class="type-filter" value="Festival" checked> Festival</label><label><input type="checkbox" class="type-filter" value="Comunicazione" checked> Comunicazione</label><label><input type="checkbox" class="type-filter" value="Avvio corsi" checked> Avvio corsi</label>
       <label><input type="checkbox" class="type-filter" value="Altro" checked> Altro</label>
     </div>
     <div id="syncStatus" class="status warn">Google Calendar non ancora collegato a questa branch.</div>
@@ -105,7 +105,7 @@ header{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding
     <input id="eventId" type="hidden">
     <div class="grid2">
       <label>Titolo<input id="title" placeholder="Es. Prove ShortYou"></label>
-      <label>Categoria<select id="type"><option>Lezione</option><option>Prova</option><option>Riunione</option><option>Spettacolo</option><option>Workshop</option><option>Festival</option><option>Altro</option></select></label>
+      <label>Categoria<select id="type"><option>Lezione</option><option>Prova</option><option>Riunione</option><option>Spettacolo</option><option>Workshop</option><option>Festival</option><option>Comunicazione</option><option>Avvio corsi</option><option>Altro</option></select></label>
       <label>Data<input id="date" type="date"></label>
       <label>Ora inizio<input id="start" type="time" value="20:00"></label>
       <label>Ora fine<input id="end" type="time" value="22:00"></label>
@@ -114,6 +114,33 @@ header{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding
       <label>Visibilità<select id="visibility"><option value="internal">Solo docenti</option><option value="public">Pubblicabile sul sito</option></select></label>
     </div>
     <label style="margin-top:13px">Note<textarea id="notes" placeholder="Informazioni interne, indicazioni, esigenze tecniche…"></textarea></label>
+    <div id="taskBox" class="task-box">
+      <strong>Scadenza e attività</strong>
+      <div class="grid2">
+        <label>Stato<select id="taskStatus"><option value="todo">Da fare</option><option value="progress">In corso</option><option value="done">Fatto</option><option value="blocked">Bloccato</option></select></label>
+        <label>Ripeti<select id="repeat"><option value="none">No</option><option value="monthly">Ogni mese</option><option value="weekly">Ogni settimana</option><option value="yearly">Ogni anno</option></select></label>
+        <label>Team / responsabile<input id="team" placeholder="Es. Martina — Grafica"></label>
+        <label>Fase<input id="phase" placeholder="Es. Organico / ADV + Organico"></label>
+      </div>
+      <div id="coursePresetWrap" style="display:none;margin-top:14px">
+        <label>Attività per partenza corsi<select id="coursePreset">
+          <option value="">Scegli attività…</option>
+          <option value="Raccolta info corsi|56">Raccolta info corsi · 8 settimane prima</option>
+          <option value="Definizione sedi e orari|49">Definizione sedi e orari · 7 settimane prima</option>
+          <option value="Aggiornamento pagine corsi sul sito|42">Aggiornamento pagine corsi sul sito · 6 settimane prima</option>
+          <option value="Creazione grafiche e locandine|35">Creazione grafiche e locandine · 5 settimane prima</option>
+          <option value="Apertura prenotazioni lezioni di prova|28">Apertura prenotazioni lezioni di prova · 4 settimane prima</option>
+          <option value="Campagna social e ADV|28">Campagna social e ADV · 4 settimane prima</option>
+          <option value="Reminder lezioni di prova|14">Reminder lezioni di prova · 2 settimane prima</option>
+          <option value="Verifica iscritti e capienze|7">Verifica iscritti e capienze · 1 settimana prima</option>
+          <option value="Messaggio finale ai docenti|3">Messaggio finale ai docenti · 3 giorni prima</option>
+          <option value="Controllo aule e materiali|1">Controllo aule e materiali · 1 giorno prima</option>
+          <option value="Follow-up nuovi iscritti|-3">Follow-up nuovi iscritti · 3 giorni dopo</option>
+        </select></label>
+        <label style="margin-top:10px">Data partenza corso<input id="courseStart" type="date"></label>
+        <button type="button" class="btn soft" id="applyPresetBtn" style="margin-top:10px">Calcola scadenza</button>
+      </div>
+    </div>
     <div id="publicBox" class="public-box">
       <strong>Pubblicazione sul sito</strong>
       <p class="mini">Questi dati saranno usati quando collegheremo il calendario al Gestionale Eventi.</p>
@@ -190,7 +217,7 @@ function renderMonth(){
     var cell=document.createElement("div");cell.className="day"+(d.getMonth()!==m?" muted":"")+(isoDate(d)===isoDate(new Date())?" today":"");
     cell.innerHTML='<div class="day-head"><span class="day-num">'+d.getDate()+'</span><button class="add-mini" title="Aggiungi">＋</button></div>';
     (visibleEvents().filter(function(e){return e.date===isoDate(d)})).sort(function(a,b){return (a.start||"").localeCompare(b.start||"")}).forEach(function(e){
-      var el=document.createElement("div");el.className="event";el.dataset.type=e.type||"Altro";el.innerHTML=escapeHtml((e.start?e.start+" ":"")+e.title)+(e.venue?'<small>'+escapeHtml(e.venue)+'</small>':"");el.onclick=function(ev){ev.stopPropagation();openModal(e)};cell.appendChild(el)
+      var el=document.createElement("div");el.className="event";el.dataset.type=e.type||"Altro";if(e.taskStatus==="done")el.classList.add("done");var today=isoDate(new Date());if((e.type==="Comunicazione"||e.type==="Avvio corsi")&&e.taskStatus!=="done"){if(e.date<today)el.classList.add("overdue");else{var diff=(new Date(e.date+"T12:00:00")-new Date(today+"T12:00:00"))/86400000;if(diff<=7)el.classList.add("soon")}}el.innerHTML=escapeHtml((e.start?e.start+" ":"")+e.title)+(e.team?'<small>'+escapeHtml(e.team)+'</small>':(e.venue?'<small>'+escapeHtml(e.venue)+'</small>':""));el.onclick=function(ev){ev.stopPropagation();openModal(e)};cell.appendChild(el)
     });
     (function(date){cell.querySelector(".add-mini").onclick=function(ev){ev.stopPropagation();openModal({date:isoDate(date)})}})(d);
     box.appendChild(cell)
@@ -203,19 +230,19 @@ function renderAgenda(){
   Object.keys(by).forEach(function(date){
     var wrap=document.createElement("div");wrap.className="agenda-day";
     var dd=new Date(date+"T12:00:00");wrap.innerHTML='<div class="agenda-date">'+dd.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})+'</div>';
-    by[date].forEach(function(e){var row=document.createElement("div");row.className="agenda-event";row.innerHTML='<div><strong>'+escapeHtml(e.title)+'</strong><small>'+escapeHtml((e.start||"")+" "+(e.end?"– "+e.end:"")+" · "+(e.type||"Altro")+(e.venue?" · "+e.venue:""))+'</small></div><button class="btn soft">Apri</button>';row.querySelector("button").onclick=function(){openModal(e)};wrap.appendChild(row)});
+    by[date].forEach(function(e){var row=document.createElement("div");row.className="agenda-event";row.innerHTML='<div><strong>'+escapeHtml(e.title)+'</strong><small>'+escapeHtml((e.start||"")+" "+(e.end?"– "+e.end:"")+" · "+(e.type||"Altro")+(e.taskStatus?" · "+({"todo":"Da fare","progress":"In corso","done":"Fatto","blocked":"Bloccato"}[e.taskStatus]||e.taskStatus):"")+(e.team?" · "+e.team:(e.venue?" · "+e.venue:"")))+'</small></div><button class="btn soft">Apri</button>';row.querySelector("button").onclick=function(){openModal(e)};wrap.appendChild(row)});
     box.appendChild(wrap)
   });
   if(!filtered.length)box.innerHTML='<div class="mini" style="padding:22px">Nessun appuntamento da mostrare.</div>'
 }
 function openModal(e){
-  e=e||{};$("modalTitle").textContent=e.id?"Modifica appuntamento":"Nuovo appuntamento";$("eventId").value=e.id||"";$("title").value=e.title||"";$("type").value=e.type||"Lezione";$("date").value=e.date||isoDate(new Date());$("start").value=e.start||"20:00";$("end").value=e.end||"22:00";$("venue").value=e.venue||"";$("teacher").value=e.teacher||"";$("visibility").value=e.visibility||"internal";$("notes").value=e.notes||"";$("publicTitle").value=e.publicTitle||"";$("price").value=e.price==null?"":e.price;$("capacity").value=e.capacity==null?"":e.capacity;$("slug").value=e.slug||"";$("publishSite").checked=!!e.publishSite;$("deleteBtn").classList.toggle("hidden",!e.id);togglePublic();$("modalWrap").classList.add("open")
+  e=e||{};$("modalTitle").textContent=e.id?"Modifica appuntamento":"Nuovo appuntamento";$("eventId").value=e.id||"";$("title").value=e.title||"";$("type").value=e.type||"Lezione";$("date").value=e.date||isoDate(new Date());$("start").value=e.start||"20:00";$("end").value=e.end||"22:00";$("venue").value=e.venue||"";$("teacher").value=e.teacher||"";$("visibility").value=e.visibility||"internal";$("notes").value=e.notes||"";$("publicTitle").value=e.publicTitle||"";$("price").value=e.price==null?"":e.price;$("capacity").value=e.capacity==null?"":e.capacity;$("slug").value=e.slug||"";$("publishSite").checked=!!e.publishSite;$("taskStatus").value=e.taskStatus||"todo";$("repeat").value=e.repeat||"none";$("team").value=e.team||"";$("phase").value=e.phase||"";$("courseStart").value=e.courseStart||"";$("coursePreset").value=e.coursePreset||"";$("deleteBtn").classList.toggle("hidden",!e.id);togglePublic();toggleTaskBox();$("modalWrap").classList.add("open")
 }
 function closeModal(){$("modalWrap").classList.remove("open")}
-function togglePublic(){$("publicBox").classList.toggle("show",$("visibility").value==="public")}
+function togglePublic(){$("publicBox").classList.toggle("show",$("visibility").value==="public")}function toggleTaskBox(){var on=$("type").value==="Comunicazione"||$("type").value==="Avvio corsi";$("taskBox").classList.toggle("show",on);$("coursePresetWrap").style.display=$("type").value==="Avvio corsi"?"block":"none"}
 function collect(){
   var title=$("title").value.trim();
-  return{id:$("eventId").value||("evt_"+Date.now()),title:title,type:$("type").value,date:$("date").value,start:$("start").value,end:$("end").value,venue:$("venue").value.trim(),teacher:$("teacher").value.trim(),visibility:$("visibility").value,notes:$("notes").value.trim(),publicTitle:$("publicTitle").value.trim(),price:$("price").value===""?null:Number($("price").value),capacity:$("capacity").value===""?null:Number($("capacity").value),slug:$("slug").value.trim()||slugify($("publicTitle").value||title),publishSite:$("publishSite").checked}
+  return{id:$("eventId").value||("evt_"+Date.now()),title:title,type:$("type").value,date:$("date").value,start:$("start").value,end:$("end").value,venue:$("venue").value.trim(),teacher:$("teacher").value.trim(),visibility:$("visibility").value,notes:$("notes").value.trim(),publicTitle:$("publicTitle").value.trim(),price:$("price").value===""?null:Number($("price").value),capacity:$("capacity").value===""?null:Number($("capacity").value),slug:$("slug").value.trim()||slugify($("publicTitle").value||title),publishSite:$("publishSite").checked,taskStatus:$("taskStatus").value,repeat:$("repeat").value,team:$("team").value.trim(),phase:$("phase").value.trim(),courseStart:$("courseStart").value,coursePreset:$("coursePreset").value}
 }
 function save(){
   var e=collect();if(!e.title||!e.date){alert("Inserisci almeno titolo e data.");return}
@@ -227,7 +254,7 @@ function remove(){
   if(!endpoint){events=events.filter(function(x){return x.id!==id});saveDemo();closeModal();render();return}
   api("delete",{id:id}).then(function(r){if(!r||!r.ok)throw new Error((r&&r.errore)||"Eliminazione non riuscita");closeModal();refresh()}).catch(function(err){alert(err.message)})
 }
-$("loginBtn").onclick=login;$("logoutBtn").onclick=logout;$("newBtn").onclick=function(){openModal()};$("closeBtn").onclick=closeModal;$("cancelBtn").onclick=closeModal;$("saveBtn").onclick=save;$("deleteBtn").onclick=remove;$("visibility").onchange=togglePublic;$("refreshBtn").onclick=refresh;
+$("loginBtn").onclick=login;$("logoutBtn").onclick=logout;$("newBtn").onclick=function(){openModal()};$("closeBtn").onclick=closeModal;$("cancelBtn").onclick=closeModal;$("saveBtn").onclick=save;$("deleteBtn").onclick=remove;$("visibility").onchange=togglePublic;$("type").onchange=toggleTaskBox;$("applyPresetBtn").onclick=function(){var start=$("courseStart").value,p=$("coursePreset").value;if(!start||!p){alert("Scegli attività e data di partenza del corso.");return}var parts=p.split("|"),days=Number(parts[1]);var d=new Date(start+"T12:00:00");d.setDate(d.getDate()-days);$("title").value=parts[0];$("date").value=isoDate(d);$("phase").value="Avvio corsi";$("taskStatus").value="todo";};$("refreshBtn").onclick=refresh;
 $("prevBtn").onclick=function(){current.setMonth(current.getMonth()-1);render();if(endpoint)refresh()};$("nextBtn").onclick=function(){current.setMonth(current.getMonth()+1);render();if(endpoint)refresh()};$("todayBtn").onclick=function(){current=new Date();current.setDate(1);render();if(endpoint)refresh()};
 document.querySelectorAll(".type-filter").forEach(function(x){x.onchange=render});document.querySelectorAll(".view-switch button").forEach(function(b){b.onclick=function(){document.querySelectorAll(".view-switch button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");var agenda=b.dataset.view==="agenda";$("monthView").classList.toggle("hidden",agenda);$("agendaView").classList.toggle("active",agenda)}});$("modalWrap").onclick=function(e){if(e.target===$("modalWrap"))closeModal()};
 var saved=sessionStorage.getItem("artyouCalendarEmail");if(saved){email=saved;$("loginEmail").value=saved;loadDemo();openApp();if(endpoint)refresh()}
