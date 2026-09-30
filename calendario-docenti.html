@@ -446,12 +446,21 @@ function save(){
   var oldChildIds=events.filter(function(x){return x.parentEventId===e.id}).map(function(x){return x.id});
   var keptIds=validLinked.map(function(t){return t.id});
   var removedIds=oldChildIds.filter(function(id){return keptIds.indexOf(id)===-1});
+  var savedEvent=null;
   api("save",{event:e}).then(function(r){
     if(!r||!r.ok)throw new Error((r&&r.errore)||"Salvataggio non riuscito");
-    return Promise.all(removedIds.map(function(id){return api("delete",{id:id})}).concat(validLinked.map(function(t){return api("save",{event:childEvent(t)})})))
+    savedEvent=r.event||e;
+    var ops=removedIds.map(function(id){return api("delete",{id:id})}).concat(validLinked.map(function(t){return api("save",{event:childEvent(t)})}));
+    if(!ops.length)return [];
+    return Promise.all(ops)
   }).then(function(results){
     var bad=(results||[]).find(function(x){return x&&x.ok===false});if(bad)throw new Error(bad.errore||"Aggiornamento compiti non riuscito");
-    closeModal();refresh()
+    if(!removedIds.length&&!validLinked.length&&savedEvent){
+      var ix=events.findIndex(function(x){return String(x.id)===String(savedEvent.id)});
+      if(ix>=0)events[ix]=savedEvent;else events.push(savedEvent);
+      closeModal();render();setSync("Attività salvata e sincronizzata","ok");return
+    }
+    closeModal();return refresh()
   }).catch(function(err){alert(err.message)})
 }
 function generatePlan(){
