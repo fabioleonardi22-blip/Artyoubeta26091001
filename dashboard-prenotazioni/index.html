@@ -52,22 +52,30 @@ function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function getJSON(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})}
 function statusFor(free,cap){if(free<=0)return{label:"Sold out",cls:"full"};if(cap>0&&free/cap<=.2)return{label:"Quasi pieno",cls:"warn"};return{label:"Aperto",cls:"ok"}}
+var WORKSHOW_CATALOG=[
+  {ids:["tra-fiaba-horror-un-confine-sottile-con-niko-di-felice"],words:["tra fiaba","horror","niko di felice"]},
+  {ids:["from-text-to-next-con-federica-forbicioni","from-text-to-next"],words:["from text to next","federica forbicioni"]},
+  {ids:["thriller-con-cinzia-zadro","thriller"],words:["thriller","cinzia zadro"]},
+  {ids:["laboratorio-avanzati-con-antonio-vulpio","laboratorio-avanzati"],words:["laboratorio avanzati","antonio vulpio","vulpio"]},
+  {ids:["human-comedy-con-fabio-mangolini","human-comedy"],words:["human comedy","fabio mangolini","maschera"]},
+  {ids:["improv-di-una-notte-di-mezza-primavera-con-pierpaolo-buzza","improv-di-una-notte-di-mezza-primavera"],words:["mezza primavera","shakespeare","pierpaolo buzza"]}
+];
+function isWorkshow(title,id){
+  var iid=String(id||"").toLowerCase();
+  var hay=(String(id||"")+" "+String(title||"")).toLowerCase();
+  if(hay.indexOf("workshow")>=0)return true;
+  for(var i=0;i<WORKSHOW_CATALOG.length;i++){
+    var w=WORKSHOW_CATALOG[i];
+    if(w.ids.indexOf(iid)>=0)return true;
+    for(var j=0;j<w.words.length;j++) if(hay.indexOf(w.words[j])>=0)return true;
+  }
+  return false;
+}
 function categoryOf(title,id){
   var t=(String(id||"")+" "+String(title||"")).toLowerCase();
-  var workshowIds=[
-    "tra-fiaba-horror-un-confine-sottile-con-niko-di-felice",
-    "from-text-to-next-con-federica-forbicioni","from-text-to-next",
-    "thriller-con-cinzia-zadro","thriller",
-    "laboratorio-avanzati-con-antonio-vulpio","laboratorio-avanzati",
-    "human-comedy-con-fabio-mangolini","human-comedy",
-    "improv-di-una-notte-di-mezza-primavera-con-pierpaolo-buzza",
-    "improv-di-una-notte-di-mezza-primavera"
-  ];
-  if(workshowIds.indexOf(String(id||"").toLowerCase())>=0)return"WorkshoW";
-  if(t.indexOf("niko di felice")>=0&&t.indexOf("horror")>=0)return"WorkshoW";
+  if(isWorkshow(title,id))return"WorkshoW";
   if(t.indexOf("yep")>=0)return"YEP";
   if(t.indexOf("festival")>=0||t.indexOf("rif")>=0)return"Festival";
-  if(t.indexOf("workshow")>=0)return"WorkshoW";
   if(t.indexOf("workshop")>=0)return"Workshop";
   return"Spettacoli"
 }
@@ -95,7 +103,7 @@ function matchesFilter(x){
   var hay=(x.id+" "+x.title).toLowerCase();
   if(activeFilter==="shortyou")return hay.indexOf("shortyou")>=0;
   if(activeFilter==="vortice")return hay.indexOf("un vortice")>=0||hay.indexOf("vortice")>=0;
-  if(activeFilter==="WorkshoW")return x.category==="WorkshoW"||hay.indexOf("workshow")>=0;
+  if(activeFilter==="WorkshoW")return isWorkshow(x.title,x.id);
   return x.category===activeFilter;
 }
 function render(){
