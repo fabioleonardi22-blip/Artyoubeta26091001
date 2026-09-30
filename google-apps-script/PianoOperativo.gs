@@ -112,6 +112,7 @@ function PO_requireUser_(email) {
   const person=PO_findPersonByEmail_(email);
   if (!person) throw new Error('accesso_non_autorizzato');
   const accessLevel=String(person.accessLevel||'Docente');
+  if (accessLevel === 'Amministratore') return {email:email,admin:true,accessLevel:'Amministratore',person:person};
   return {email:email,admin:false,accessLevel:accessLevel,person:person};
 }
 
