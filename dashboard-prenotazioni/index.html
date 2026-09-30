@@ -23,8 +23,8 @@ button{cursor:pointer;background:var(--ink);color:#fff}.pill{background:#fff;bor
 th{font-size:12px;text-transform:uppercase;color:var(--muted);background:#FBFAF7}td.num{text-align:right}.event-title{font-weight:900}.date{font-size:13px;color:var(--muted);margin-top:3px}
 .bar{height:9px;background:#ECE7DE;border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:var(--green)}
 .badge{display:inline-block;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:900}.ok{background:#E7F7F2;color:#12634E}.warn{background:#FFF3D8;color:#855A00}.full{background:#FCE8EC;color:#8A2438}
-.empty,.error{padding:26px;text-align:center;color:var(--muted)}.error{color:#8A2438}.mobile-card{display:none}
-@media(max-width:760px){.wrap{padding:12px}.topbar{flex-direction:column}.stats{grid-template-columns:repeat(2,1fr)}.tablewrap{display:none}.mobile-card{display:block;padding:12px}.card{border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:10px}.card-head{display:flex;justify-content:space-between;gap:10px}.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.mini{background:var(--paper);border-radius:10px;padding:9px;text-align:center}.mini b{display:block;font-size:20px}.mini span{font-size:10px;color:var(--muted);text-transform:uppercase}}
+.featured-title{margin:22px 0 10px;font-size:18px}.featured{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:18px}.focus{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 24px rgba(20,18,15,.05)}.focus-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.focus h2{margin:0;font-size:22px}.focus-date{color:var(--muted);font-size:13px;margin-top:5px}.focus-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0 12px}.focus-stat{background:var(--paper);border-radius:12px;padding:11px;text-align:center}.focus-stat b{display:block;font-size:27px}.focus-stat span{display:block;font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-top:3px}.focus-foot{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:13px}.empty,.error{padding:26px;text-align:center;color:var(--muted)}.error{color:#8A2438}.mobile-card{display:none}
+@media(max-width:760px){.wrap{padding:12px}.topbar{flex-direction:column}.stats{grid-template-columns:repeat(2,1fr)}.featured{grid-template-columns:1fr}.tablewrap{display:none}.mobile-card{display:block;padding:12px}.card{border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:10px}.card-head{display:flex;justify-content:space-between;gap:10px}.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.mini{background:var(--paper);border-radius:10px;padding:9px;text-align:center}.mini b{display:block;font-size:20px}.mini span{font-size:10px;color:var(--muted);text-transform:uppercase}}
 </style>
 </head>
 <body>
@@ -37,6 +37,8 @@ th{font-size:12px;text-transform:uppercase;color:var(--muted);background:#FBFAF7
 <div class="stat"><span>Eventi attivi</span><b id="sEvents">—</b></div>
 <div class="stat"><span>Sold out</span><b id="sSold">—</b></div>
 </section>
+<h2 class="featured-title">Eventi in evidenza</h2>
+<section class="featured" id="featured"><div class="focus"><div class="empty">Caricamento Shortyou…</div></div><div class="focus"><div class="empty">Caricamento Un vortice di Emozioni…</div></div></section>
 <section class="panel">
 <div class="filters" id="filters"><button class="filter active">Tutti</button></div>
 <div class="tablewrap"><table><thead><tr><th>Evento</th><th>Capienza</th><th>Prenotati</th><th>Disponibili</th><th>Riempimento</th><th>Stato</th></tr></thead><tbody id="rows"><tr><td colspan="6" class="empty">Caricamento…</td></tr></tbody></table></div>
@@ -53,6 +55,7 @@ function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return
 function getJSON(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})}
 function statusFor(free,cap){if(free<=0)return{label:"Sold out",cls:"full"};if(cap>0&&free/cap<=.2)return{label:"Quasi pieno",cls:"warn"};return{label:"Aperto",cls:"ok"}}
 function categoryOf(title){var t=String(title||"").toLowerCase();if(t.indexOf("yep")>=0)return"YEP";if(t.indexOf("festival")>=0||t.indexOf("rif")>=0)return"Festival";if(t.indexOf("workshow")>=0)return"WorkshoW";if(t.indexOf("workshop")>=0)return"Workshop";return"Spettacoli"}
+function renderFeatured(){var box=$("featured");var wanted=[{key:"shortyou",label:"Shortyou"},{key:"un vortice",label:"Un vortice di Emozioni"}];box.innerHTML="";wanted.forEach(function(w){var x=data.find(function(e){var hay=(e.id+" "+e.title).toLowerCase();return hay.indexOf(w.key)>=0});var c=document.createElement("div");c.className="focus";if(!x){c.innerHTML="<div class=\"focus-top\"><div><h2>"+esc(w.label)+"</h2><div class=\"focus-date\">Evento non trovato tra quelli attivi</div></div></div>";box.appendChild(c);return}var pct=x.cap>0?Math.round((x.booked/x.cap)*100):0,st=statusFor(x.free,x.cap);c.innerHTML="<div class=\"focus-top\"><div><h2>"+esc(x.title)+"</h2><div class=\"focus-date\">"+esc(x.date)+"</div></div><span class=\"badge "+st.cls+"\">"+st.label+"</span></div><div class=\"focus-stats\"><div class=\"focus-stat\"><b>"+x.booked+"</b><span>Prenotati</span></div><div class=\"focus-stat\"><b>"+x.free+"</b><span>Disponibili</span></div><div class=\"focus-stat\"><b>"+x.cap+"</b><span>Capienza</span></div></div><div class=\"bar\"><i style=\"width:"+Math.min(100,pct)+"%\"></i></div><div class=\"focus-foot\"><span>Riempimento</span><b>"+pct+"%</b></div>";box.appendChild(c)})}
 function renderFilters(){var cats=["all"].concat(Array.from(new Set(data.map(function(x){return x.category}))));$("filters").innerHTML="";cats.forEach(function(c){var b=document.createElement("button");b.className="filter"+(activeFilter===c?" active":"");b.textContent=c==="all"?"Tutti":c;b.onclick=function(){activeFilter=c;render()};$("filters").appendChild(b)})}
 function render(){
  renderFilters();var list=data.filter(function(x){return activeFilter==="all"||x.category===activeFilter});
@@ -76,7 +79,7 @@ function refresh(){
    var booked=data.reduce(function(s,x){return s+x.booked},0),available=data.reduce(function(s,x){return s+x.free},0),sold=data.filter(function(x){return x.free<=0}).length;
    $("sBooked").textContent=booked;$("sFree").textContent=available;$("sEvents").textContent=data.length;$("sSold").textContent=sold;
    $("updated").textContent="Aggiornato "+new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
-   render();
+   renderFeatured();render();
  }).catch(function(err){$("rows").innerHTML='<tr><td colspan="6" class="error">Impossibile caricare i dati: '+esc(err.message)+'</td></tr>';$("cards").innerHTML='<div class="error">Impossibile caricare i dati.</div>'});
 }
 $("refresh").onclick=refresh;refresh();setInterval(refresh,10000);
