@@ -58,3 +58,33 @@ window.ARTYOU_CALENDAR_ENDPOINT = "/api/plan";
 - Promemoria email → disponibili.
 - WhatsApp → disponibile quando vengono configurate le credenziali ufficiali Meta.
 - Attività con stato `Fatto` → nessun ulteriore promemoria.
+
+
+## Accesso Google e permessi
+
+Il Piano Operativo usa Google Identity Services. Configurare in Vercel:
+
+- `GOOGLE_CLIENT_ID`: Client ID OAuth 2.0 di tipo Applicazione web.
+- Origini JavaScript autorizzate: dominio principale, dominio Vercel di produzione e preview usata per i test.
+
+La persona deve essere presente nel foglio `Responsabili`, con email Google esatta e stato attivo. I livelli supportati sono:
+
+- `Amministratore`: accesso completo, compresa Anagrafica.
+- `Staff`: modifica Piano Operativo, attività e riunioni; Anagrafica in sola lettura.
+- `Docente`: Piano Operativo in sola lettura.
+
+Gli amministratori configurati in `PO_ADMIN_EMAILS` restano amministratori anche se non sono ancora presenti in Anagrafica.
+
+## Checklist prima della pubblicazione
+
+1. Copiare nel progetto Apps Script sia `GestionaleEventi.gs` sia `PianoOperativo.gs`.
+2. Eseguire `PO_setup("EMAIL_ADMIN")` una volta.
+3. Ridistribuire la Web App Apps Script mantenendo lo stesso URL `/exec`.
+4. Configurare `GOOGLE_CLIENT_ID` su Vercel e ridistribuire.
+5. Inserire almeno un amministratore e un docente di prova nell'Anagrafica.
+6. Verificare: admin entra e modifica; Staff modifica il piano ma non l'anagrafica; Docente vede in sola lettura; account non registrato o non attivo viene rifiutato.
+7. Verificare una riunione con invito Calendar e promemoria e-mail/WhatsApp.
+8. Verificare generazione Piano Operativo da Spettacolo, Workshop e YEP e assenza di duplicati.
+9. Verificare da mobile Mese, Agenda, Bacheca, Piano Operativo e Anagrafica.
+
+Il foglio `PianoOperativoAudit` viene creato automaticamente e registra creazione, modifica ed eliminazione di attività e anagrafiche.
