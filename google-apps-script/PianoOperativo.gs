@@ -315,52 +315,72 @@ function PO_headerIndex_(headers,names){
 function PO_bookingSourceEvents_() {
   const ss=PO_getSpreadsheet_();
   if(!ss)return [];
-  const sh=ss.getSheetByName('Eventi');
-  if(!sh || sh.getLastRow()<2)return [];
-  const values=sh.getDataRange().getValues();
-  const h=values[0].map(String);
-  const iId=PO_headerIndex_(h,['Evento','ID','Id','Slug','Codice']);
-  const iTitle=PO_headerIndex_(h,['Titolo','Evento titolo','Nome']);
-  const iDate=PO_headerIndex_(h,['Data','Data evento']);
-  const iTime=PO_headerIndex_(h,['Ora','Orario']);
-  const iCap=PO_headerIndex_(h,['Capienza','Posti']);
-  const iPrice=PO_headerIndex_(h,['Prezzo','Costo']);
-  const iType=PO_headerIndex_(h,['Tipo','Tipo evento','Categoria']);
-  const iVenue=PO_headerIndex_(h,['Luogo','Venue','Sede']);
-
+  const skipNames={'PianoOperativo':true,'Responsabili':true,'PianoOperativoAudit':true,'EventiSito':true};
   const out=[];
-  values.slice(1).forEach(function(r,rowIndex){
-    const rawId=iId>=0?r[iId]:'';
-    const rawTitle=iTitle>=0?r[iTitle]:'';
-    const rawDate=iDate>=0?r[iDate]:'';
-    if(!rawId && !rawTitle)return;
 
-    const baseId=String(rawId||rawTitle||('riga-'+(rowIndex+2))).trim();
-    const title=String(rawTitle||rawId||'Evento').trim();
-    let dateLabel='';
-    if(rawDate instanceof Date && !isNaN(rawDate.getTime())){
-      dateLabel=Utilities.formatDate(rawDate,Session.getScriptTimeZone(),'dd/MM/yyyy');
-    }else{
-      dateLabel=String(rawDate||'').trim();
-    }
-    const rawTime=iTime>=0?String(r[iTime]||'').trim():'';
-    if(rawTime && dateLabel && dateLabel.indexOf(rawTime)===-1) dateLabel+=' · '+rawTime;
+  ss.getSheets().forEach(function(sh){
+    if(skipNames[sh.getName()] || sh.getLastRow()<2 || sh.getLastColumn()<2)return;
+    const values=sh.getDataRange().getValues();
+    const h=values[0].map(String);
+    const iId=PO_headerIndex_(h,['Evento','ID','Id','Slug','Codice']);
+    const iTitle=PO_headerIndex_(h,['Titolo','Evento titolo','Nome']);
+    const iDate=PO_headerIndex_(h,['Data','Data evento']);
+    const iTime=PO_headerIndex_(h,['Ora','Orario']);
+    const iCap=PO_headerIndex_(h,['Capienza','Posti']);
+    const iPrice=PO_headerIndex_(h,['Prezzo','Costo']);
+    const iType=PO_headerIndex_(h,['Tipo','Tipo evento','Categoria']);
+    const iVenue=PO_headerIndex_(h,['Luogo','Venue','Sede']);
+    const iSlug=PO_headerIndex_(h,['Slug','Codice']);
+    const iDesc=PO_headerIndex_(h,['Descrizione','Note interne','Note']);
 
-    out.push({
-      id:'booking:'+baseId,
-      slug:baseId,
-      title:title,
-      cat:iType>=0?String(r[iType]||''):'',
-      eventType:iType>=0?String(r[iType]||''):'',
-      tipo:iType>=0?String(r[iType]||''):'',
-      venue:iVenue>=0?String(r[iVenue]||''):'',
-      price:iPrice>=0&&r[iPrice]!==''?Number(r[iPrice]):'',
-      capienza:iCap>=0&&r[iCap]!==''?Number(r[iCap]):0,
-      dates:[{label:dateLabel||'Data da definire'}],
-      attivo:true,
-      sourceKind:'booking'
+    // Riconosce automaticamente le tabelle del Gestionale Prenotazioni,
+    // anche se il foglio non si chiama "Eventi".
+    if(iTitle<0 || iDate<0 || iCap<0 || (iId<0 && iSlug<0))return;
+
+    values.slice(1).forEach(function(r,rowIndex){
+      const rawId=iId>=0?r[iId]:(iSlug>=0?r[iSlug]:'');
+      const rawSlug=iSlug>=0?r[iSlug]:rawId;
+      const rawTitle=iTitle>=0?r[iTitle]:'';
+      const rawDate=iDate>=0?r[iDate]:'';
+      if(!rawId && !rawTitle)return;
+
+      const baseId=String(rawId||rawSlug||rawTitle||('riga-'+(rowIndex+2))).trim();
+      const slug=String(rawSlug||baseId).trim();
+      const title=String(rawTitle||baseId||'Evento').trim();
+      let dateLabel='';
+      if(rawDate instanceof Date && !isNaN(rawDate.getTime())){
+        dateLabel=Utilities.formatDate(rawDate,Session.getScriptTimeZone(),'dd/MM/yyyy');
+      }else{
+        dateLabel=String(rawDate||'').trim();
+      }
+      let rawTime=iTime>=0?r[iTime]:'';
+      let timeLabel='';
+      if(rawTime instanceof Date && !isNaN(rawTime.getTime())){
+        timeLabel=Utilities.formatDate(rawTime,Session.getScriptTimeZone(),'HH:mm');
+      }else{
+        timeLabel=String(rawTime||'').trim();
+      }
+      if(timeLabel && dateLabel && dateLabel.indexOf(timeLabel)===-1) dateLabel+=' · '+timeLabel;
+
+      out.push({
+        id:'booking:'+baseId,
+        slug:slug,
+        title:title,
+        cat:iType>=0?String(r[iType]||''):'',
+        eventType:iType>=0?String(r[iType]||''):'',
+        tipo:iType>=0?String(r[iType]||''):'',
+        venue:iVenue>=0?String(r[iVenue]||''):'',
+        desc:iDesc>=0?String(r[iDesc]||''):'',
+        price:iPrice>=0&&r[iPrice]!==''?Number(r[iPrice]):'',
+        capienza:iCap>=0&&r[iCap]!==''?Number(r[iCap]):0,
+        dates:[{label:dateLabel||'Data da definire'}],
+        attivo:true,
+        sourceKind:'booking',
+        sourceSheet:sh.getName()
+      });
     });
   });
+
   return out;
 }
 
