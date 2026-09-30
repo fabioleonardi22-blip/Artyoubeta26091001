@@ -13,13 +13,16 @@ function doGet(e) {
 
     // Piano Operativo: autenticazione tramite email registrata / admin.
     if (action === "po_session") {
-      return gestJson_(PO_session(p.email));
+      const poEmail = PO_emailFromGoogleToken_(p.token);
+      return gestJson_(PO_session(poEmail));
     }
     if (action === "po_list") {
-      return gestJson_({ok:true, events:PO_listEvents(p.email, String(p.from||""), String(p.to||""))});
+      const poEmail = PO_emailFromGoogleToken_(p.token);
+      return gestJson_({ok:true, events:PO_listEvents(poEmail, String(p.from||""), String(p.to||""))});
     }
     if (action === "po_people") {
-      const poUser = PO_requireUser_(p.email);
+      const poEmail = PO_emailFromGoogleToken_(p.token);
+      const poUser = PO_requireUser_(poEmail);
       return gestJson_({ok:true, people:PO_listPeople(), admin:!!poUser.admin, accessLevel:poUser.accessLevel||"Docente"});
     }
 
@@ -51,31 +54,34 @@ function doPost(e) {
     const action = String(data.action || "").toLowerCase();
 
     // Piano Operativo usa l'email autorizzata, non il PIN del gestionale.
+    // Piano Operativo: verifica anche nel backend Apps Script il token Google.
+    let poEmail = "";
+    if (action.indexOf("po_")===0) poEmail = PO_emailFromGoogleToken_(data.token);
     if (action === "po_list") {
-      return gestJson_({ok:true, events:PO_listEvents(data.email, String(data.from||""), String(data.to||""))});
+      return gestJson_({ok:true, events:PO_listEvents(poEmail, String(data.from||""), String(data.to||""))});
     }
     if (action === "po_save") {
-      const saved = PO_saveTask(data.email, data.event || {});
+      const saved = PO_saveTask(poEmail, data.event || {});
       return gestJson_({ok:true, event:saved});
     }
     if (action === "po_delete") {
-      PO_deleteTask(data.email, String(data.id || ""));
+      PO_deleteTask(poEmail, String(data.id || ""));
       return gestJson_({ok:true});
     }
     if (action === "po_people") {
-      const poUser = PO_requireUser_(data.email);
+      const poUser = PO_requireUser_(poEmail);
       return gestJson_({ok:true, people:PO_listPeople(), admin:!!poUser.admin, accessLevel:poUser.accessLevel||"Docente"});
     }
     if (action === "po_save_person") {
-      const person = PO_savePerson(data.email, data.person || {});
+      const person = PO_savePerson(poEmail, data.person || {});
       return gestJson_({ok:true, person:person});
     }
     if (action === "po_delete_person") {
-      PO_deletePerson(data.email, String(data.id || ""));
+      PO_deletePerson(poEmail, String(data.id || ""));
       return gestJson_({ok:true});
     }
     if (action === "po_generate_plan") {
-      return gestJson_(PO_generatePlanForSiteEvent(data.email, String(data.siteEventId || ""), Number(data.siteDateIndex || 0)));
+      return gestJson_(PO_generatePlanForSiteEvent(poEmail, String(data.siteEventId || ""), Number(data.siteDateIndex || 0)));
     }
 
     gestRequirePin_(data.pin);
