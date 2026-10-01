@@ -141,52 +141,77 @@ footer{background:#0D1115;color:#D5DCE1;padding:48px 40px 30px;margin-top:40px}
 
 <script>
 (function(){
+const K_STOCK="artyou_merch_demo_stock",K_ORDERS="artyou_merch_demo_orders";
+const DEFAULT_STOCK=[
+ {name:"T-shirt Artyou",variant:"Nero · M",qty:12,reserved:1},
+ {name:"Felpa Artyou",variant:"Nero · L",qty:5,reserved:0},
+ {name:"Pantaloni Artyou",variant:"Nero · XL",qty:8,reserved:0},
+ {name:"Calzini antiscivolo",variant:"Bianco · 39-42",qty:20,reserved:2}
+];
 const products=[
-{id:"tee-classic",cat:"tshirt",name:"T-shirt Artyou · Classic",price:20,colors:["Nero","Bianco","Bordeaux"],sizes:["S","M","L","XL"],stock:3},
-{id:"tee-oversize",cat:"tshirt",name:"T-shirt Artyou · Oversize",price:24,colors:["Nero","Bianco","Ocra"],sizes:["S","M","L","XL"],stock:2},
-{id:"hoodie",cat:"felpe",name:"Felpa Artyou · Hoodie",price:35,colors:["Nero","Grigio","Ocra"],sizes:["S","M","L","XL"],stock:2},
-{id:"jogger",cat:"pantaloni",name:"Pantaloni Artyou · Jogger",price:30,colors:["Nero","Grigio"],sizes:["S","M","L","XL"],stock:1},
-{id:"socks",cat:"calzini",name:"Calzini Artyou · Grip",price:12,colors:["Nero","Arancio"],sizes:["35-38","39-42","43-46"],stock:8}
+{id:"tee-classic",family:"T-shirt Artyou",cat:"tshirt",name:"T-shirt Artyou · Classic",price:20,colors:["Nero","Bianco","Bordeaux"],sizes:["S","M","L","XL"]},
+{id:"tee-oversize",family:"T-shirt Artyou",cat:"tshirt",name:"T-shirt Artyou · Oversize",price:24,colors:["Nero","Bianco","Ocra"],sizes:["S","M","L","XL"]},
+{id:"hoodie",family:"Felpa Artyou",cat:"felpe",name:"Felpa Artyou · Hoodie",price:35,colors:["Nero","Grigio","Ocra"],sizes:["S","M","L","XL"]},
+{id:"jogger",family:"Pantaloni Artyou",cat:"pantaloni",name:"Pantaloni Artyou · Jogger",price:30,colors:["Nero","Grigio"],sizes:["S","M","L","XL"]},
+{id:"socks",family:"Calzini antiscivolo",cat:"calzini",name:"Calzini Artyou · Grip",price:12,colors:["Nero","Arancio"],sizes:["35-38","39-42","43-46"]}
 ];
 const colors={Nero:"#111",Bianco:"#F6F3EC",Bordeaux:"#8E2941",Ocra:"#C79A2B",Grigio:"#8B8F92",Arancio:"#F09000"};
 const cart=[];
-const grid=document.getElementById("grid");
-const drawer=document.getElementById("drawer");
-const items=document.getElementById("cartItems");
-const count=document.getElementById("cartCount");
-const total=document.getElementById("cartTotal");
+const grid=document.getElementById("grid"),drawer=document.getElementById("drawer"),items=document.getElementById("cartItems"),count=document.getElementById("cartCount"),total=document.getElementById("cartTotal");
 const euro=v=>new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"}).format(v);
-
+function getStock(){try{const x=JSON.parse(localStorage.getItem(K_STOCK));return Array.isArray(x)?x:DEFAULT_STOCK}catch(e){return DEFAULT_STOCK}}
+function familyQty(name){return getStock().filter(x=>x.name===name).reduce((n,x)=>n+Math.max(0,Number(x.qty)||0),0)}
 function card(p){
+ const qty=familyQty(p.family);
  const dots=p.colors.map((c,i)=>'<button class="dot'+(i===0?' active':'')+'" data-color="'+c+'" style="background:'+colors[c]+'" title="'+c+'"></button>').join("");
- const sizes=p.sizes.map((s,i)=>'<button class="size'+(i===0?' active':'')+'" data-size="'+s+'">'+s+'</button>').join("");
+ const sizes=p.sizes.map((sz,i)=>'<button class="size'+(i===0?' active':'')+'" data-size="'+sz+'">'+sz+'</button>').join("");
  return '<article class="card" data-id="'+p.id+'" data-color="'+p.colors[0]+'" data-size="'+p.sizes[0]+'">'+
- '<div class="photo"><span>Foto prodotto</span></div>'+
- '<div class="card-body"><h3 class="title">'+p.name+'</h3><div class="price">'+euro(p.price)+'</div>'+
- '<div><div class="row-label">Colori:</div><div class="colors">'+dots+'</div></div>'+
- '<div><div class="row-label">Taglia:</div><div class="sizes">'+sizes+'</div></div>'+
- '<div class="actions"><button class="add" data-add="'+p.id+'">Aggiungi al carrello</button><button class="discover">Scopri il prodotto</button></div>'+
- '<div class="stock">Disponibili: '+p.stock+'</div></div></article>';
+ '<div class="photo"><span>Foto prodotto</span></div><div class="card-body"><h3 class="title">'+p.name+'</h3><div class="price">'+euro(p.price)+'</div>'+
+ '<div><div class="row-label">Colori:</div><div class="colors">'+dots+'</div></div><div><div class="row-label">Taglia:</div><div class="sizes">'+sizes+'</div></div>'+
+ '<div class="actions"><button class="add" data-add="'+p.id+'" '+(qty<=0?'disabled style="opacity:.45;cursor:not-allowed"':'')+'>'+(qty<=0?'Esaurito':'Aggiungi al carrello')+'</button><button class="discover">Scopri il prodotto</button></div>'+
+ '<div class="stock">Disponibili: '+qty+'</div></div></article>';
 }
-function render(filter){grid.innerHTML=products.filter(p=>filter==="all"||p.cat===filter).map(card).join("")}
+let currentFilter="all";
+function render(filter){currentFilter=filter;grid.innerHTML=products.filter(p=>filter==="all"||p.cat===filter).map(card).join("")}
 function renderCart(){
- count.textContent=cart.reduce((s,x)=>s+x.qty,0);
- items.innerHTML=cart.length?cart.map((x,i)=>'<div class="cart-line"><div><strong>'+x.name+'</strong><br><small>'+x.color+' · '+x.size+'</small></div><div>'+x.qty+' × '+euro(x.price)+'</div></div>').join(""):'<p>Il carrello è vuoto.</p>';
- total.textContent=euro(cart.reduce((s,x)=>s+x.qty*x.price,0));
+ count.textContent=cart.reduce((n,x)=>n+x.qty,0);
+ items.innerHTML=cart.length?cart.map(x=>'<div class="cart-line"><div><strong>'+x.name+'</strong><br><small>'+x.color+' · '+x.size+'</small></div><div>'+x.qty+' × '+euro(x.price)+'</div></div>').join(""):'<p>Il carrello è vuoto.</p>';
+ total.textContent=euro(cart.reduce((n,x)=>n+x.qty*x.price,0));
 }
-document.getElementById("tabs").onclick=e=>{
- const b=e.target.closest("[data-filter]"); if(!b)return;
- document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");render(b.dataset.filter);
-};
+document.getElementById("tabs").onclick=e=>{const b=e.target.closest("[data-filter]");if(!b)return;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");render(b.dataset.filter)};
 grid.onclick=e=>{
- const c=e.target.closest(".card"); if(!c)return;
- const dot=e.target.closest("[data-color]"); if(dot){c.querySelectorAll(".dot").forEach(x=>x.classList.remove("active"));dot.classList.add("active");c.dataset.color=dot.dataset.color;return}
- const size=e.target.closest("[data-size]"); if(size){c.querySelectorAll(".size").forEach(x=>x.classList.remove("active"));size.classList.add("active");c.dataset.size=size.dataset.size;return}
- const add=e.target.closest("[data-add]"); if(add){const p=products.find(x=>x.id===add.dataset.add);const same=cart.find(x=>x.id===p.id&&x.color===c.dataset.color&&x.size===c.dataset.size);if(same)same.qty++;else cart.push({id:p.id,name:p.name,price:p.price,color:c.dataset.color,size:c.dataset.size,qty:1});renderCart();drawer.classList.add("open")}
+ const c=e.target.closest(".card");if(!c)return;
+ const dot=e.target.closest("[data-color]");if(dot){c.querySelectorAll(".dot").forEach(x=>x.classList.remove("active"));dot.classList.add("active");c.dataset.color=dot.dataset.color;return}
+ const sz=e.target.closest("[data-size]");if(sz){c.querySelectorAll(".size").forEach(x=>x.classList.remove("active"));sz.classList.add("active");c.dataset.size=sz.dataset.size;return}
+ const add=e.target.closest("[data-add]");if(add&&!add.disabled){const p=products.find(x=>x.id===add.dataset.add);const same=cart.find(x=>x.id===p.id&&x.color===c.dataset.color&&x.size===c.dataset.size);if(same)same.qty++;else cart.push({id:p.id,family:p.family,name:p.name,price:p.price,color:c.dataset.color,size:c.dataset.size,qty:1});renderCart();drawer.classList.add("open")}
 };
 document.getElementById("cartOpen").onclick=()=>drawer.classList.add("open");
 document.getElementById("close").onclick=()=>drawer.classList.remove("open");
 drawer.onclick=e=>{if(e.target===drawer)drawer.classList.remove("open")};
+
+const checkout=document.querySelector(".checkout");
+checkout.onclick=()=>{
+ if(!cart.length){alert("Il carrello è vuoto.");return;}
+ let stock=getStock();
+ for(const line of cart){
+   let remaining=line.qty;
+   for(const row of stock){
+     if(row.name===line.family&&remaining>0){
+       const take=Math.min(row.qty,remaining);row.qty-=take;remaining-=take;
+     }
+   }
+   if(remaining>0){alert("Disponibilità insufficiente per "+line.name);return;}
+ }
+ localStorage.setItem(K_STOCK,JSON.stringify(stock));
+ let orders=[];try{orders=JSON.parse(localStorage.getItem(K_ORDERS))||[]}catch(e){}
+ const totalValue=cart.reduce((n,x)=>n+x.qty*x.price,0);
+ const id="#ART-"+String(orders.length+28).padStart(4,"0");
+ orders.unshift({id,date:new Date().toLocaleDateString("it-IT"),client:"Cliente demo",email:"demo@artyouroma.it",items:cart.reduce((n,x)=>n+x.qty,0)+" articoli",total:euro(totalValue),payment:"Demo",delivery:"Ritiro in sede",status:"Da preparare"});
+ localStorage.setItem(K_ORDERS,JSON.stringify(orders));
+ cart.splice(0);renderCart();render(currentFilter);drawer.classList.remove("open");
+ alert("Ordine demo creato. Ora apri il gestionale: lo troverai nella sezione Ordini.");
+};
+window.addEventListener("storage",()=>render(currentFilter));
 render("all");renderCart();
 })();
 </script>
