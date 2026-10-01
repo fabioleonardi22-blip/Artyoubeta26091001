@@ -103,6 +103,18 @@ footer{background:#0D1115;color:#D5DCE1;padding:48px 40px 30px;margin-top:40px}
 @media(max-width:560px){
   .photo{height:500px!important}
 }
+
+.photo img{cursor:zoom-in}
+.image-lightbox{
+  position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;
+  display:none;align-items:center;justify-content:center;padding:30px
+}
+.image-lightbox.open{display:flex}
+.image-lightbox img{max-width:92vw;max-height:90vh;object-fit:contain;border-radius:12px;box-shadow:0 18px 60px rgba(0,0,0,.45)}
+.image-lightbox-close{
+  position:absolute;top:18px;right:22px;width:44px;height:44px;border-radius:50%;
+  border:1px solid #ffffff55;background:#111;color:#fff;font-size:28px;cursor:pointer
+}
 </style>
 </head>
 <body>
@@ -154,6 +166,11 @@ footer{background:#0D1115;color:#D5DCE1;padding:48px 40px 30px;margin-top:40px}
   </div>
 </div>
 
+<div id="imageLightbox" class="image-lightbox" aria-hidden="true">
+  <button class="image-lightbox-close" id="imageLightboxClose" aria-label="Chiudi">×</button>
+  <img id="imageLightboxImg" src="" alt="">
+</div>
+
 <footer id="contatti">
   <div class="footer-grid">
     <div class="footer-col"><img src="/img/logo-verticale-bianco.png" alt="Artyou Roma"><span>Associazione di Promozione Sociale. Improvvisazione teatrale, teatro di testo e stand-up comedy a Roma.</span></div>
@@ -175,15 +192,15 @@ const DEFAULT_STOCK=[
  {name:"Calzini antiscivolo",variant:"Bianco · 39-42",qty:20,reserved:2}
 ];
 const products=[
-{id:"tee-wordcloud",family:"T-shirt Artyou",cat:"tshirt",name:"T-shirt Artyou · Improv Wordcloud",price:20,image:"/img/merch/tee-wordcloud.webp",colors:["Verde","Nero"],sizes:["S","M","L","XL"]},
-{id:"tee-actor",family:"T-shirt Artyou",cat:"tshirt",name:"T-shirt Artyou · I'm an Actor",price:20,image:"/img/merch/tee-actor.webp",colors:["Nero"],sizes:["S","M","L","XL"]},
-{id:"tee-memory",family:"T-shirt Artyou",cat:"tshirt",name:"T-shirt Artyou · Improvviso",price:20,image:"/img/merch/tee-memory.webp",colors:["Blu","Nero"],sizes:["S","M","L","XL"]},
-{id:"tee-arte",family:"T-shirt Artyou",cat:"tshirt",name:"T-shirt Artyou · Io sono Arte",price:20,image:"/img/merch/tee-arte.webp",colors:["Nero"],sizes:["S","M","L","XL"]},
-{id:"hoodie-cyan",family:"Felpa Artyou",cat:"felpe",name:"Felpa Artyou · Think Big Cyan",price:35,image:"/img/merch/hoodie-cyan.webp",colors:["Cyan","Nero","Verde","Bordeaux"],sizes:["S","M","L","XL"]},
-{id:"hoodie-black",family:"Felpa Artyou",cat:"felpe",name:"Felpa Artyou · Think Big Black",price:35,image:"/img/merch/hoodie-black.webp",colors:["Nero","Verde","Bordeaux"],sizes:["S","M","L","XL"]},
-{id:"hoodie-green",family:"Felpa Artyou",cat:"felpe",name:"Felpa Artyou · Think Big Green",price:35,image:"/img/merch/hoodie-green.webp",colors:["Verde","Nero","Bordeaux"],sizes:["S","M","L","XL"]},
-{id:"jogger",family:"Pantaloni Artyou",cat:"pantaloni",name:"Pantaloni Artyou · Jogger",price:30,image:"/img/merch/jogger-artyou-roma.jpg",colors:["Nero","Grigio"],sizes:["S","M","L","XL"]},
-{id:"socks",family:"Calzini antiscivolo",cat:"calzini",name:"Calzini Artyou · Grip",price:12,colors:["Nero","Arancio"],sizes:["35-38","39-42","43-46"]}
+{id:"tee-wordcloud",family:"T-shirt Artyou",cat:"tshirt",name:"T-shirt Artyou · Improv Wordcloud",price:14,image:"/img/merch/tee-wordcloud.webp",colors:["Verde","Nero"],sizes:["S","M","L","XL"]},
+{id:"tee-actor",family:"T-shirt Artyou",cat:"tshirt",name:"T-shirt Artyou · I'm an Actor",price:14,image:"/img/merch/tee-actor.webp",colors:["Nero"],sizes:["S","M","L","XL"]},
+{id:"tee-memory",family:"T-shirt Artyou",cat:"tshirt",name:"T-shirt Artyou · Improvviso",price:14,image:"/img/merch/tee-memory.webp",colors:["Blu","Nero"],sizes:["S","M","L","XL"]},
+{id:"tee-arte",family:"T-shirt Artyou",cat:"tshirt",name:"T-shirt Artyou · Io sono Arte",price:14,image:"/img/merch/tee-arte.webp",colors:["Nero"],sizes:["S","M","L","XL"]},
+{id:"hoodie-cyan",family:"Felpa Artyou",cat:"felpe",name:"Felpa Artyou · Think Big Cyan",price:30,image:"/img/merch/hoodie-cyan.webp",colors:["Cyan","Nero","Verde","Bordeaux"],sizes:["S","M","L","XL"]},
+{id:"hoodie-black",family:"Felpa Artyou",cat:"felpe",name:"Felpa Artyou · Think Big Black",price:30,image:"/img/merch/hoodie-black.webp",colors:["Nero","Verde","Bordeaux"],sizes:["S","M","L","XL"]},
+{id:"hoodie-green",family:"Felpa Artyou",cat:"felpe",name:"Felpa Artyou · Think Big Green",price:30,image:"/img/merch/hoodie-green.webp",colors:["Verde","Nero","Bordeaux"],sizes:["S","M","L","XL"]},
+{id:"jogger",family:"Pantaloni Artyou",cat:"pantaloni",name:"Pantaloni Artyou · Jogger",price:20,image:"/img/merch/jogger-artyou-roma.jpg",colors:["Nero","Grigio"],sizes:["S","M","L","XL"]},
+{id:"socks",family:"Calzini antiscivolo",cat:"calzini",name:"Calzini Artyou · Grip",price:5,image:"/img/merch/calzino-sportivo-artyou-roma.jpg",colors:["Nero","Arancio"],sizes:["35-38","39-42","43-46"]}
 ];
 const colors={Nero:"#111",Bianco:"#F6F3EC",Bordeaux:"#8E2941",Ocra:"#C79A2B",Grigio:"#8B8F92",Arancio:"#F09000",Verde:"#174F39",Blu:"#173B68",Cyan:"#12B9D6"};
 const cart=[];
