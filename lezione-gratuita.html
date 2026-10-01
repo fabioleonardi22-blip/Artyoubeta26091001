@@ -479,8 +479,8 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 #lg-form{background:#FFFFFF;color:#13181D;border-radius:24px;padding:32px;box-shadow:0 22px 50px rgba(0,0,0,.24)}
 #lg-form h2{margin:0 0 10px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:31px}
 #lg-form>p{margin:0 0 20px;color:#555D64;font-size:15px;line-height:1.5}
-.lg-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.lg-field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}.lg-field label{font-size:13px;font-weight:800}
-.lg-field input,.lg-field select{width:100%;height:52px;border:1px solid #CFC8BA;border-radius:12px;padding:0 14px;background:#FFFFFF;font:inherit;font-size:15px;color:#13181D}
+.lg-grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.lg-field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;min-width:0}.lg-field label{font-size:13px;font-weight:800}
+.lg-field input,.lg-field select{box-sizing:border-box;width:100%;min-width:0;height:52px;border:1px solid #CFC8BA;border-radius:12px;padding:0 14px;background:#FFFFFF;font:inherit;font-size:15px;color:#13181D}
 #lg-wa-go{width:100%;height:56px;border:0;border-radius:14px;background:#25D366;color:#0B2E1A;font:inherit;font-weight:800;font-size:16px;cursor:pointer}
 #lg-form .lg-note{font-size:12px;color:#777;margin-top:12px}
 #lg-photo{background:#090C0F}#lg-photo img{display:block;width:100%;height:auto;max-height:760px;object-fit:cover;object-position:center}
