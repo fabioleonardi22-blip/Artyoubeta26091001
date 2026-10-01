@@ -26,6 +26,11 @@
       "permanent": true
     },
     {
+      "source": "/insegnanti/:slug",
+      "destination": "/insegnanti/:slug/",
+      "permanent": true
+    },
+    {
       "source": "/contatti",
       "destination": "/contatti/",
       "permanent": true
@@ -176,6 +181,10 @@
     {
       "source": "/insegnanti/",
       "destination": "/insegnanti.html"
+    },
+    {
+      "source": "/insegnanti/:slug/",
+      "destination": "/api/insegnante?slug=:slug"
     },
     {
       "source": "/contatti/",
