@@ -51,19 +51,34 @@ function selectedDateIndex(){
 function pad(n){return String(n).padStart(2,"0");}
 function stamp(d){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"T"+pad(d.getHours())+pad(d.getMinutes())+"00";}
 
-function parseDate(label){
-  label=String(label||"").toLowerCase();
-  if(!label||/definire|arrivo|tbd/.test(label)) return null;
+function parseDate(label,timeHint){
+  var raw=String(label||"").trim();
+  var timeRaw=String(timeHint||"").trim();
+  var low=(raw+" "+timeRaw).toLowerCase();
+  if(!low||/definire|arrivo|tbd/.test(low)) return null;
+
   var months={gennaio:0,febbraio:1,marzo:2,aprile:3,maggio:4,giugno:5,luglio:6,agosto:7,settembre:8,ottobre:9,novembre:10,dicembre:11};
   var weekdays={domenica:0,lunedì:1,lunedi:1,martedì:2,martedi:2,mercoledì:3,mercoledi:3,giovedì:4,giovedi:4,venerdì:5,venerdi:5,sabato:6};
-  var m=label.match(/(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)(?:\s+(\d{4}))?/i);
-  var tm=label.match(/(?:dalle|alle|ore)?\s*(\d{1,2})[:.]([0-5]\d)/i);
-  if(!m||!tm) return null;
-  var day=parseInt(m[1],10),month=months[m[2].toLowerCase()],hour=parseInt(tm[1],10),minute=parseInt(tm[2],10),year=m[3]?parseInt(m[3],10):null;
+  var day=null,month=null,year=null,m;
+
+  if((m=low.match(/(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/))){
+    year=parseInt(m[1],10); month=parseInt(m[2],10)-1; day=parseInt(m[3],10);
+  } else if((m=low.match(/(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})/))){
+    day=parseInt(m[1],10); month=parseInt(m[2],10)-1; year=parseInt(m[3],10); if(year<100)year+=2000;
+  } else if((m=low.match(/(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)(?:\s+(\d{4}))?/i))){
+    day=parseInt(m[1],10); month=months[m[2].toLowerCase()]; year=m[3]?parseInt(m[3],10):null;
+  } else {
+    return null;
+  }
+
+  var tm=low.match(/(?:dalle|alle|ore)?\s*(\d{1,2})[:.]([0-5]\d)/i);
+  var hour=tm?parseInt(tm[1],10):20;
+  var minute=tm?parseInt(tm[2],10):30;
   var now=new Date();
+
   if(!year){
     var wd=null;
-    Object.keys(weekdays).some(function(k){if(label.indexOf(k)>=0){wd=weekdays[k];return true;}return false;});
+    Object.keys(weekdays).some(function(k){if(low.indexOf(k)>=0){wd=weekdays[k];return true;}return false;});
     for(var y=now.getFullYear();y<=now.getFullYear()+3;y++){
       var cand=new Date(y,month,day,hour,minute,0,0);
       if((wd===null||cand.getDay()===wd)&&cand.getTime()>=now.getTime()-7*86400000){year=y;break;}
@@ -86,10 +101,10 @@ function build(){
   var show=selectedShow();
   if(!show||!Array.isArray(show.dates)||!show.dates.length) return false;
   var idx=selectedDateIndex();
-  var date=show.dates[idx]||show.dates[0];
-  var start=parseDate(date&&date.label);
-  if(!start) return false;
-  var end=new Date(start.getTime()+2*60*60*1000);
+  var date=show.dates[idx]||show.dates[0]||{};
+  var dateText=[date.label,date.data,date.date,show.data].filter(Boolean).join(" ");
+  var timeText=[date.ora,date.time,show.ora].filter(Boolean).join(" ");
+  var start=parseDate(dateText,timeText);
   var anchor=findInsertPoint();
   if(!anchor||!anchor.parentNode) return false;
 
@@ -101,6 +116,18 @@ function build(){
     card.id=CARD_ID;
     anchor.parentNode.insertBefore(card,anchor.nextSibling);
   }
+
+  if(!start){
+    card.innerHTML=
+      '<div><h2 class="ac-title">Aggiungi al calendario</h2><p class="ac-sub">Data e orario in aggiornamento dal gestionale.</p></div>'+
+      '<div class="ac-actions">'+
+      '<button type="button" class="ac-btn primary" disabled style="opacity:.45;cursor:not-allowed">APPLE / CALENDARIO</button>'+
+      '<span class="ac-btn" style="opacity:.45;cursor:not-allowed">GOOGLE CALENDAR</span>'+
+      '<button type="button" class="ac-btn" disabled style="opacity:.45;cursor:not-allowed">SCARICA .ICS</button>'+
+      '</div>';
+    return true;
+  }
+  var end=new Date(start.getTime()+2*60*60*1000);
 
   var title=show.title||"Evento Artyou";
   var venue=[show.venue||"",show.addr||""].filter(Boolean).join(" · ");
