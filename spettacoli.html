@@ -430,7 +430,23 @@ function render(){
    var posterStyle=e.poster?'background-image:url('+encodeURI(String(e.poster))+');background-color:'+col[0]+';':'background-color:'+col[0]+';';
    var where=[e.venue,e.addr].filter(Boolean).join(" · ");
    var msg="Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".";
-   var detailHref="/spettacolo.html#"+encodeURIComponent(e.slug||"");
+   function eventHref(ev,firstDate){
+     var explicit=ev&&(ev.href||ev.url||ev.link||ev.permalink||ev.bookingUrl||ev.booking_url);
+     if(explicit) return String(explicit);
+     var title=String(ev&&ev.title||"").toLowerCase();
+     var slug=String(ev&&ev.slug||"");
+     var label=String(firstDate&&firstDate.label||"").toLowerCase();
+     var hay=[title,slug.toLowerCase(),label,String(ev&&ev.tipo||"").toLowerCase()].join(" ");
+     if(/shortyou/.test(hay)){
+       if(/29\\s+novembre|29[-_ ]nov/.test(hay)) return "/spettacolo.html#shortyou-29-novembre";
+       if(/4\\s+ottobre|04[-_ ]ott|4[-_ ]ott/.test(hay)) return "/spettacolo.html#shortyou";
+     }
+     if(/un\\s+vortice\\s+di\\s+emozioni|vortice-di-emozioni|un-vortice/.test(hay)) return "/un-vortice-di-emozioni/";
+     if(/rome\\s+improv\\s+festival|rome-improv-festival/.test(hay)) return "/rome-improv-festival/";
+     if(/\\byep\\b|yep-2027/.test(hay)) return "/yep/";
+     return "/spettacolo.html#"+encodeURIComponent(slug);
+   }
+   var detailHref=eventHref(e,first);
    art.innerHTML='<a href="'+detailHref+'" class="poster" style="'+posterStyle+';text-decoration:none"><div class="badge"><strong>'+esc(b.day)+'</strong><span>'+esc(b.month)+'</span></div></a>'+
      '<div class="card-body"><span class="cat" style="color:'+col[1]+'">'+esc(e.cat||"Evento")+'</span>'+
      '<h2><a href="'+detailHref+'" style="color:inherit;text-decoration:none">'+esc(e.title||"Evento")+'</a></h2>'+
