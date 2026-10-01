@@ -348,10 +348,10 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div>
 <div id="ws-success" style="display:none;background:#FFF;border:1px solid #E4DED2;border-radius:24px;padding:32px;flex-direction:column;gap:16px;"><h2 style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:32px;">Prenotazione inviata!</h2><p style="margin:0;font-size:17px;line-height:1.55;color:#3F474E;">Abbiamo ricevuto la tua richiesta per <strong id="ws-success-label">il WorkshoW</strong>. Riceverai la conferma via email.</p><a href="/workshow/" style="font-weight:700;">Torna ai WorkshoW</a></div>
 </div>
-<aside style="display:flex;flex-direction:column;gap:20px;"><div style="background:#13181D;color:#F6F3EC;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:16px;"><h2 class="am-fs-m" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:28px;">Cosa succede dopo</h2><ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.5;color:#C4CCD2;"><li>Ricevi l’email di conferma della richiesta.</li><li>Verifichiamo la disponibilità del WorkshoW.</li><li>Il pagamento viene gestito tramite PayPal a info@artyouroma.it secondo la modalità scelta.</li></ol></div><div id="ws-calendar-box" style="display:none;background:#FFFFFF;border:1px solid #E4DED2;border-radius:18px;padding:16px 18px;flex-direction:column;gap:10px;">
+<aside style="display:flex;flex-direction:column;gap:20px;"><div style="background:#13181D;color:#F6F3EC;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:16px;"><h2 class="am-fs-m" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:28px;">Cosa succede dopo</h2><ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.5;color:#C4CCD2;"><li>Ricevi l’email di conferma della richiesta.</li><li>Verifichiamo la disponibilità del WorkshoW.</li><li>Il pagamento viene gestito tramite PayPal a info@artyouroma.it secondo la modalità scelta.</li></ol></div><div id="ws-calendar-box" style="display:flex;background:#FFFFFF;border:1px solid #E4DED2;border-radius:18px;padding:16px 18px;flex-direction:column;gap:10px;">
   <div style="display:flex;flex-direction:column;gap:4px;">
     <strong style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;line-height:1.1;color:#13181D;">Aggiungi al calendario</strong>
-    <span style="font-size:12px;line-height:1.4;color:#555D64;">Salva il WorkshoW e ricevi un promemoria.</span>
+    <span id="ws-calendar-subtext" style="font-size:12px;line-height:1.4;color:#555D64;">Salva il WorkshoW e ricevi un promemoria.</span>
   </div>
   <div id="ws-calendar-actions" style="display:grid;grid-template-columns:1fr;gap:8px;">
     <button id="ws-calendar-apple" type="button" style="min-height:42px;border:1px solid #123E73;border-radius:999px;background:#123E73;color:#FFFFFF;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;padding:0 12px;">APPLE / CALENDARIO</button>
@@ -818,7 +818,20 @@ a{color:#1A6E99}a:hover{color:#12506F}
     if(!box||!g)return;
     var x=getEvent(),ev=x.ev||{},title=ev.titolo||LABELS[req()]||"WorkshoW Artyou";
     var start=parseDate(ev.data,ev.ora);
-    if(!start){box.style.display="none";return;}
+    var sub=document.getElementById("ws-calendar-subtext");
+    var apple=document.getElementById("ws-calendar-apple"),ics=document.getElementById("ws-calendar-ics");
+    if(!start){
+      box.style.display="flex";
+      if(sub)sub.textContent="Caricamento data e orario dal gestionale…";
+      g.href="#"; g.style.opacity=".45"; g.style.pointerEvents="none";
+      if(apple){apple.disabled=true;apple.style.opacity=".45";apple.style.cursor="not-allowed";}
+      if(ics){ics.disabled=true;ics.style.opacity=".45";ics.style.cursor="not-allowed";}
+      return;
+    }
+    if(sub)sub.textContent="Salva il WorkshoW e ricevi un promemoria.";
+    g.style.opacity="1"; g.style.pointerEvents="auto";
+    if(apple){apple.disabled=false;apple.style.opacity="1";apple.style.cursor="pointer";}
+    if(ics){ics.disabled=false;ics.style.opacity="1";ics.style.cursor="pointer";}
     var end=new Date(start.getTime()+2*60*60*1000);
     var locationText=[ev.sede||ev.luogo||"",ev.indirizzo||""].filter(Boolean).join(" · ");
     if(!locationText)locationText="Artyou Roma";
@@ -848,7 +861,6 @@ a{color:#1A6E99}a:hover{color:#12506F}
       a.href=u;a.download=(x.id||"workshow-artyou")+".ics";document.body.appendChild(a);a.click();a.remove();
       setTimeout(function(){URL.revokeObjectURL(u)},1200);
     }
-    var apple=document.getElementById("ws-calendar-apple"),ics=document.getElementById("ws-calendar-ics");
     if(apple)apple.onclick=download;
     if(ics)ics.onclick=download;
   }
