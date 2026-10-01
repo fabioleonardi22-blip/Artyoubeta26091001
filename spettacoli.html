@@ -430,7 +430,7 @@ function render(){
    var posterStyle=e.poster?'background-image:url('+encodeURI(String(e.poster))+');background-color:'+col[0]+';':'background-color:'+col[0]+';';
    var where=[e.venue,e.addr].filter(Boolean).join(" · ");
    var msg="Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".";
-   var detailHref="/spettacoli/"+encodeURIComponent(e.slug||"")+"/";
+   var detailHref="/spettacolo.html#"+encodeURIComponent(e.slug||"");
    art.innerHTML='<a href="'+detailHref+'" class="poster" style="'+posterStyle+';text-decoration:none"><div class="badge"><strong>'+esc(b.day)+'</strong><span>'+esc(b.month)+'</span></div></a>'+
      '<div class="card-body"><span class="cat" style="color:'+col[1]+'">'+esc(e.cat||"Evento")+'</span>'+
      '<h2><a href="'+detailHref+'" style="color:inherit;text-decoration:none">'+esc(e.title||"Evento")+'</a></h2>'+
