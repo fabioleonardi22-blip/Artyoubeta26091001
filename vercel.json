@@ -199,7 +199,7 @@
     },
     {
       "source": "/spettacoli/:slug/",
-      "destination": "/spettacolo.html"
+      "destination": "/api/spettacolo?slug=:slug"
     },
     {
       "source": "/un-vortice-di-emozioni/",
