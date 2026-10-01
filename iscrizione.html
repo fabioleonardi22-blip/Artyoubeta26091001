@@ -308,15 +308,15 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <main class="am-px am-py am-grid1" style="padding: 56px 120px 96px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: start; flex-grow: 1;">
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <nav aria-label="Percorso" class="am-wrap am-fs-body" style="font-size: 15px; color: #555D64; display: flex; gap: 10px;"><a href="/">Home</a><span>/</span><a href="/improvvisazione-teatrale/">Corsi</a><span>/</span><span>Iscrizione</span></nav>
-<h1 id="artyou-form-title" class="am-fs-xxl" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 64px; line-height: 1; letter-spacing: -2px;">Iscriviti a un corso</h1>
-<p id="artyou-form-intro" class="am-fs-lead" style="margin: 0; font-size: 19px; line-height: 1.6; color: #3F474E;">Compila il modulo per richiedere il posto. Per i WorkshoW chiediamo solo i dati essenziali e ti confermiamo la prenotazione via email.</p>
+<h1 id="artyou-form-title" class="am-fs-xxl" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 64px; line-height: 1; letter-spacing: -2px;">Iscriviti ai corsi Amatori</h1>
+<p id="artyou-form-intro" class="am-fs-lead" style="margin: 0; font-size: 19px; line-height: 1.6; color: #3F474E;">Scegli un corso Amatori dopo il triennio e invia l’iscrizione tramite email oppure WhatsApp.</p>
 <div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 22px;">
 <sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
-<div id="artyou-course-chooser" style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Quale corso?</span>
+<div id="artyou-course-chooser" style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Corsi Amatori · Dopo il triennio</span>
 <div class="am-wrap" style="display: flex; flex-wrap: wrap; gap: 8px;">
-<sc-for list="{{courses}}" as="c" hint-placeholder-count="11">
+<sc-for list="{{courses}}" as="c" hint-placeholder-count="5">
 <button type="button" onClick="{{c.pick}}" class="am-fs-body" style="padding: 10px 14px; border-radius: 999px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-weight: 600; font-size: 14px; cursor: pointer; min-height: 44px;">{{c.label}}</button>
 </sc-for>
 </div></div>
@@ -332,7 +332,6 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div id="artyou-field-come" class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
 <div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-come" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Come ci hai conosciuto?</label><select id="f-come" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit; background: #FFFFFF;"><option>Passaparola</option><option>Instagram</option><option>Facebook</option><option>Google</option><option>Uno spettacolo</option><option>Altro</option></select></div>
 </div>
-<span id="artyou-young-note" class="am-fs-body" style="font-size: 14px; color: #555D64; margin-top: -8px;">Per Artyou Young inserisci i dati del genitore e indica nelle note nome ed età del ragazzo o della ragazza.</span>
 </sc-if>
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
 <div id="artyou-field-note" style="display: flex; flex-direction: column; gap: 8px;"><label for="f-note" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Note <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><textarea id="f-note" rows="3" style="border: 1px solid #CFC8BA; border-radius: 12px; padding: 12px 16px; font-size: 16px; font-family: inherit; resize: vertical;"></textarea></div>
@@ -344,7 +343,9 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <label id="artyou-tessera" class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3F474E; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho già la tessera associativa Artyou</label>
 </sc-if>
 </div>
-<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}"><button id="artyou-generic-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Invia l’iscrizione · {{selLabel}}</button></sc-if>
+<input id="f-corso-selezionato" type="hidden" value="{{selLabel}}">
+<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}"><button id="artyou-generic-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Invia l’iscrizione tramite Mail</button></sc-if>
+<a id="artyou-whatsapp-enrollment" href="{{waEnrollment}}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;min-height:58px;padding:14px 20px;border-radius:14px;background:#25D366;color:#0B2E1A;font-weight:700;font-size:17px;text-decoration:none;text-align:center;box-sizing:border-box;">Iscriviti con WhatsApp</a>
 <sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}"><button id="artyou-workshow-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 800; font-size: 17px; cursor: pointer;">Conferma prenotazione WorkshoW</button></sc-if>
 </div>
 </sc-if>
@@ -384,20 +385,20 @@ class Component extends DCLogic {
   constructor(props) { super(props); this.state = { sent: false }; }
   componentDidMount() {
     var self = this;
-    this.onHash = function () { self.setState({ h: window.location.hash }); };
+    this.onHash = function () { self.setState({ h: window.location.hash, pick: null }); };
     window.addEventListener("hashchange", this.onHash);
   }
   componentWillUnmount() { window.removeEventListener("hashchange", this.onHash); }
   hash() { try { return decodeURIComponent((window.location.hash || "").slice(1)); } catch (e) { return ""; } }
   renderVals() {
     var self = this, st = this.state || {};
-    var C = [["primo-anno", "Improvvisazione · 1° anno"], ["secondo-anno", "Improvvisazione · 2° anno"], ["terzo-anno", "Improvvisazione · 3° anno"], ["pattern", "Amatori · Pattern"], ["gioco-della-scena", "Amatori · Il gioco della scena"], ["grand-hotel-bellevue", "Amatori · Grand Hotel Bellevue"], ["coscienza-di-zero", "Amatori · La coscienza di Zero"], ["dalla-testa-ai-piedi", "Amatori · Dalla testa ai piedi"], ["teatro", "Teatro di testo"], ["stand-up", "Stand-up comedy"], ["young", "Artyou Young (bambini e ragazzi)"], ["ws-horror", "WorkshoW · Horror"], ["ws-maschera", "WorkshoW · La maschera teatrale"], ["ws-thriller", "WorkshoW · Thriller"], ["ws-parole", "WorkshoW · Parole e testo"], ["ws-shakespeare", "WorkshoW · Shakespeare"], ["ws-vulpio", "WorkshoW · Laboratorio avanzati (gennaio)"]];
+    var C = [["pattern", "Amatori · Pattern"], ["gioco-della-scena", "Amatori · Il gioco della scena"], ["grand-hotel-bellevue", "Amatori · Grand Hotel Bellevue"], ["coscienza-di-zero", "Amatori · La coscienza di Zero"], ["dalla-testa-ai-piedi", "Amatori · Dalla testa ai piedi"]];
     var h = this.hash();
     var idx = st.pick != null ? st.pick : Math.max(0, C.map(function (c) { return c[0]; }).indexOf(h));
     var courses = C.map(function (c, i) { var on = i === idx; return { label: c[1], bg: on ? "#13181D" : "#FFFFFF", fg: on ? "#FFFFFF" : "#13181D", border: on ? "#13181D" : "#CFC8BA", pick: function () { self.setState({ pick: i }); } }; });
     var selId = C[idx][0];
     var isWorkshow = /^ws-/.test(selId);
-    return { accent: this.props.accent ?? "#F09000", courses: courses, selLabel: C[idx][1], selId: selId, isWorkshow: isWorkshow, notWorkshow: !isWorkshow, sent: !!st.sent, notSent: !st.sent,
+    return { accent: this.props.accent ?? "#F09000", courses: courses, selLabel: C[idx][1], selId: selId, waEnrollment: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao volevo iscrivermi al corso " + C[idx][1].replace(/^Amatori · /, "") + " degli Amatori"), isWorkshow: isWorkshow, notWorkshow: !isWorkshow, sent: !!st.sent, notSent: !st.sent,
       send: function () { self.setState({ sent: true }); }, reset: function () { self.setState({ sent: false }); } };
   }
 }
@@ -407,66 +408,7 @@ class Component extends DCLogic {
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
-<script id="artyou-workshow-mode">
-(function(){
-  var LABELS = {
-    "ws-horror":"Horror",
-    "ws-maschera":"La maschera teatrale",
-    "ws-thriller":"Thriller",
-    "ws-parole":"Parole e testo",
-    "ws-shakespeare":"Shakespeare",
-    "ws-vulpio":"Laboratorio avanzati (gennaio)"
-  };
-  function applyWorkshowMode(){
-    var h="";
-    try{ h=decodeURIComponent((location.hash||"").replace(/^#/,"")); }catch(e){}
-    var isWs=/^ws-/.test(h);
-    document.documentElement.classList.toggle("artyou-workshow-mode",isWs);
-    if(!isWs) return;
 
-    var title=document.getElementById("artyou-form-title");
-    var intro=document.getElementById("artyou-form-intro");
-    if(title) title.textContent="Prenota il tuo WorkshoW";
-    if(intro) intro.textContent="Inserisci i tuoi dati essenziali per richiedere il posto. Riceverai la conferma via email.";
-
-    var label=LABELS[h] || h.replace(/^ws-/,"").replace(/-/g," ");
-    var chosen=document.getElementById("artyou-workshow-label");
-    if(chosen) chosen.textContent="WorkshoW · "+label;
-
-    [
-      "artyou-course-chooser",
-      "artyou-field-sede",
-      "artyou-field-come",
-      "artyou-young-note",
-      "artyou-field-note",
-      "artyou-photo-consent",
-      "artyou-tessera",
-      "artyou-generic-submit"
-    ].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el) el.style.setProperty("display","none","important");
-    });
-
-    var selected=document.getElementById("artyou-workshow-selected");
-    if(selected) selected.style.setProperty("display","flex","important");
-    var submit=document.getElementById("artyou-workshow-submit");
-    if(submit) submit.style.setProperty("display","block","important");
-
-    var aside=document.querySelector("aside");
-    if(aside){
-      var h2=aside.querySelector("h2");
-      var ol=aside.querySelector("ol");
-      if(h2) h2.textContent="Cosa succede dopo";
-      if(ol) ol.innerHTML="<li>Ricevi l’email di conferma della richiesta.</li><li>Verifichiamo la disponibilità del WorkshoW.</li><li>Ti confermiamo il posto e le eventuali indicazioni di pagamento.</li>";
-    }
-  }
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",applyWorkshowMode);
-  else applyWorkshowMode();
-  window.addEventListener("hashchange",function(){setTimeout(applyWorkshowMode,0);});
-  setTimeout(applyWorkshowMode,250);
-  setTimeout(applyWorkshowMode,1000);
-})();
-</script>
 <script id="artyou-forms-js">
 (function(){
   var ENDPOINT = "/api/artyou";
@@ -528,7 +470,7 @@ class Component extends DCLogic {
     else if (MODULO === "Spettacolo" || MODULO === "Un Vortice di Emozioni") { var h1 = document.querySelector("h1"); if (h1) d.Evento = testo(h1); }
     var s = scelte(); if (s) d.Scelte = s;
     var posti = testo(b).match(/(\d+)\s+post/); if (posti) d.Posti = posti[1];
-    if (MODULO === "Iscrizioni") { var m = testo(b).split("·").slice(1).join("·").trim(); if (m) d.Corso = m; var wh = (location.hash || "").replace(/^#/, ""); if (/^ws-/.test(wh)) d.Evento = wh; }
+    if (MODULO === "Iscrizioni") { var selectedCourse = document.getElementById("f-corso-selezionato"); var m = selectedCourse ? selectedCourse.value : ""; if (m) d.Corso = m; var wh = (location.hash || "").replace(/^#/, ""); if (/^ws-/.test(wh)) d.Evento = wh; }
     c.querySelectorAll("input, select, textarea").forEach(function(el){
       if (/^(f|p)-(nome|cognome|tel|mail)$/.test(el.id) || el.type === "hidden") return;
       var k = pulisci(etichetta(el));
