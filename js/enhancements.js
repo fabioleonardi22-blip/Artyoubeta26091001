@@ -56,3 +56,27 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',apply);
   else apply();
 })();
+
+/* Google Maps buttons: brighter, calm turquoise treatment site-wide */
+(function(){
+  function apply(){
+    if(document.getElementById('artyou-google-maps-style')) return;
+    var s=document.createElement('style');
+    s.id='artyou-google-maps-style';
+    s.textContent=
+      'a[href*="google.com/maps"],a[href*="maps.google"],a[href*="maps.app.goo.gl"]{'+
+      'background:#DDF7F1!important;color:#0E5F58!important;'+
+      'border:1px solid #8ED8CA!important;'+
+      'box-shadow:0 10px 24px rgba(14,95,88,.12)!important;'+
+      'transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease!important}'+
+      'a[href*="google.com/maps"]:hover,a[href*="maps.google"]:hover,a[href*="maps.app.goo.gl"]:hover{'+
+      'background:#CEF1E9!important;border-color:#69C9B8!important;'+
+      'box-shadow:0 12px 28px rgba(14,95,88,.18)!important;transform:translateY(-1px)!important}'+
+      'a[href*="google.com/maps"] span,a[href*="maps.google"] span,a[href*="maps.app.goo.gl"] span{color:#0E5F58!important}'+
+      'a[href*="google.com/maps"] span[style*="border-radius"],a[href*="maps.google"] span[style*="border-radius"],a[href*="maps.app.goo.gl"] span[style*="border-radius"]{'+
+      'background:#7CE3D0!important;color:#0A4E49!important}';
+    document.head.appendChild(s);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',apply);
+  else apply();
+})();
