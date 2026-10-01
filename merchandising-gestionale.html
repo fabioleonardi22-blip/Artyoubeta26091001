@@ -27,6 +27,15 @@ table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(-
 .product-layout{display:grid;grid-template-columns:220px 1fr;gap:22px}.product-photo{height:250px;background:#D8D5D0;border-radius:6px}.minirow{display:flex;gap:8px;margin-top:10px}.mini{width:48px;height:48px;background:#D8D5D0;border-radius:4px;border:1px solid #DDD}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:5px;font-size:10px}.field input,.field select,.field textarea{border:1px solid #DDD6CC;border-radius:5px;padding:9px;background:#fff;font:inherit;font-size:11px}.variants{margin-top:14px}.switch{display:inline-block;width:34px;height:20px;background:#2ECC71;border-radius:999px;vertical-align:middle;position:relative;margin-right:6px}.switch:after{content:"";position:absolute;right:2px;top:2px;width:16px;height:16px;background:#fff;border-radius:50%}
 .actions{display:flex;gap:6px}.iconbtn{border:1px solid #DDD6CC;background:#fff;border-radius:5px;padding:5px 7px;font-size:10px}
 @media(max-width:900px){.shell{grid-template-columns:1fr}aside{display:none}.stats{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}.product-layout{grid-template-columns:1fr}}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.42);display:none;align-items:center;justify-content:center;z-index:100}
+.modal.open{display:flex}
+.modal-card{width:min(520px,92vw);background:#F7F5F1;border-radius:10px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-card h3{margin:0 0 16px}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-grid label{font-size:11px;display:flex;flex-direction:column;gap:5px}
+.modal-grid input,.modal-grid select{border:1px solid #DDD6CC;border-radius:5px;padding:9px;background:#fff;font:inherit;font-size:11px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
 </style>
 </head>
 <body>
@@ -68,7 +77,7 @@ table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(-
 </section>
 
 <section id="products" class="page">
-  <div class="toolbar"><div><div class="kicker">Merch Artyou</div><div class="title">Modifica prodotto</div></div><button class="primary">+ Nuovo prodotto</button></div>
+  <div class="toolbar"><div><div class="kicker">Merch Artyou</div><div class="title">Modifica prodotto</div></div><button class="primary" id="newProductBtn">+ Nuovo prodotto</button></div>
   <div class="panel product-layout">
     <div>
       <div class="product-photo"></div>
@@ -84,13 +93,8 @@ table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(-
       </div>
       <div class="variants">
         <table><thead><tr><th>Colore</th><th>Taglia</th><th>Codice</th><th>Prezzo</th><th>Disponibilità</th><th>Azioni</th></tr></thead>
-        <tbody>
-          <tr><td>● Nero</td><td>S</td><td>TS-AR-S</td><td>20,00</td><td>3</td><td><div class="actions"><button class="iconbtn">✎</button><button class="iconbtn">🗑</button></div></td></tr>
-          <tr><td>● Nero</td><td>M</td><td>TS-AR-M</td><td>20,00</td><td>12</td><td><div class="actions"><button class="iconbtn">✎</button><button class="iconbtn">🗑</button></div></td></tr>
-          <tr><td>● Nero</td><td>L</td><td>TS-AR-L</td><td>20,00</td><td>7</td><td><div class="actions"><button class="iconbtn">✎</button><button class="iconbtn">🗑</button></div></td></tr>
-          <tr><td>● Nero</td><td>XL</td><td>TS-AR-XL</td><td>20,00</td><td>2</td><td><div class="actions"><button class="iconbtn">✎</button><button class="iconbtn">🗑</button></div></td></tr>
-        </tbody></table>
-        <button class="iconbtn" style="margin-top:10px">+ Aggiungi variante</button>
+        <tbody id="variantBody"></tbody></table>
+        <button class="iconbtn" id="addVariantBtn" style="margin-top:10px">+ Aggiungi variante</button>
         <div style="margin-top:14px;font-size:11px"><span class="switch"></span> Prodotto attivo</div>
       </div>
     </div>
@@ -100,22 +104,13 @@ table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(-
 <section id="stock" class="page">
   <div class="toolbar"><div><div class="kicker">Merch Artyou</div><div class="title">Magazzino</div></div><button class="primary">Esporta CSV</button></div>
   <div class="toolbar"><div class="left"><input placeholder="Cerca prodotto..."><select><option>Tutte le categorie</option><option>T-shirt</option><option>Felpa</option></select></div></div>
-  <table><thead><tr><th>Prodotto</th><th>Variante</th><th>Disponibili</th><th>Riservati</th><th>Stato</th><th>Azioni</th></tr></thead><tbody>
-    <tr><td>T-shirt Artyou</td><td>Nero · M</td><td>12</td><td>1</td><td><span class="badge b-green">Disponibile</span></td><td>•••</td></tr>
-    <tr><td>Felpa Artyou</td><td>Nero · L</td><td>5</td><td>0</td><td><span class="badge b-green">Disponibile</span></td><td>•••</td></tr>
-    <tr><td>Pantaloni Artyou</td><td>Nero · XL</td><td>0</td><td>0</td><td><span class="badge b-yellow">Esaurito</span></td><td>•••</td></tr>
-  </tbody></table>
+  <table><thead><tr><th>Prodotto</th><th>Variante</th><th>Disponibili</th><th>Riservati</th><th>Stato</th><th>Azioni</th></tr></thead><tbody id="stockBody"></tbody></table>
 </section>
 
 <section id="orders" class="page">
   <div class="toolbar"><div><div class="kicker">Tutti (27) · Da preparare (8) · Spediti (12) · Consegnati (7)</div><div class="title">Ordini</div></div><button class="primary">Esporta ordini</button></div>
   <div class="toolbar"><div class="left"><input placeholder="Cerca per numero ordine, cliente, email..."><select><option>Ultimi 30 giorni</option></select></div></div>
-  <table><thead><tr><th># Ordine</th><th>Data</th><th>Cliente</th><th>Prodotti</th><th>Totale</th><th>Pagamento</th><th>Consegna</th><th>Stato</th><th>Azioni</th></tr></thead><tbody>
-    <tr><td>#ART-0027</td><td>26/09/2026</td><td>Mario Rossi<br><small>mario@email.com</small></td><td>2 articoli</td><td>€55,00</td><td>PayPal</td><td>Ritiro in sede</td><td><span class="badge b-yellow">Da preparare</span></td><td>•••</td></tr>
-    <tr><td>#ART-0026</td><td>25/09/2026</td><td>Laura Bianchi<br><small>laura@email.com</small></td><td>1 articolo</td><td>€20,00</td><td>Carta</td><td>Spedizione</td><td><span class="badge b-blue">Pronto</span></td><td>•••</td></tr>
-    <tr><td>#ART-0025</td><td>24/09/2026</td><td>Giulia Verdi<br><small>giulia@email.com</small></td><td>3 articoli</td><td>€75,00</td><td>PayPal</td><td>Spedizione</td><td><span class="badge b-blue">Spedito</span></td><td>•••</td></tr>
-    <tr><td>#ART-0024</td><td>23/09/2026</td><td>Marco Neri<br><small>marco@email.com</small></td><td>1 articolo</td><td>€30,00</td><td>Carta</td><td>Ritiro in sede</td><td><span class="badge b-green">Consegnato</span></td><td>•••</td></tr>
-  </tbody></table>
+  <table><thead><tr><th># Ordine</th><th>Data</th><th>Cliente</th><th>Prodotti</th><th>Totale</th><th>Pagamento</th><th>Consegna</th><th>Stato</th><th>Azioni</th></tr></thead><tbody id="ordersBody"></tbody></table>
 </section>
 
 <section id="clients" class="page"><div class="title">Clienti</div><div class="panel">Sezione tecnica in preparazione.</div></section>
@@ -124,6 +119,44 @@ table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(-
 </div>
 
 <script>
+const variants=[
+ {color:"Nero",size:"S",code:"TS-AR-S",price:20,qty:3},
+ {color:"Nero",size:"M",code:"TS-AR-M",price:20,qty:12},
+ {color:"Nero",size:"L",code:"TS-AR-L",price:20,qty:7},
+ {color:"Nero",size:"XL",code:"TS-AR-XL",price:20,qty:2}
+];
+const stock=[
+ {name:"T-shirt Artyou",variant:"Nero · M",qty:12,reserved:1},
+ {name:"Felpa Artyou",variant:"Nero · L",qty:5,reserved:0},
+ {name:"Pantaloni Artyou",variant:"Nero · XL",qty:0,reserved:0},
+ {name:"Calzini antiscivolo",variant:"Bianco · 39-42",qty:20,reserved:2}
+];
+const orders=[
+ {id:"#ART-0027",date:"26/09/2026",client:"Mario Rossi",email:"mario@email.com",items:"2 articoli",total:"€55,00",payment:"PayPal",delivery:"Ritiro in sede",status:"Da preparare"},
+ {id:"#ART-0026",date:"25/09/2026",client:"Laura Bianchi",email:"laura@email.com",items:"1 articolo",total:"€20,00",payment:"Carta",delivery:"Spedizione",status:"Pronto"},
+ {id:"#ART-0025",date:"24/09/2026",client:"Giulia Verdi",email:"giulia@email.com",items:"3 articoli",total:"€75,00",payment:"PayPal",delivery:"Spedizione",status:"Spedito"},
+ {id:"#ART-0024",date:"23/09/2026",client:"Marco Neri",email:"marco@email.com",items:"1 articolo",total:"€30,00",payment:"Carta",delivery:"Ritiro in sede",status:"Consegnato"}
+];
+
+function badgeFor(status){
+  if(status==="Da preparare") return "b-yellow";
+  if(status==="Pronto"||status==="Spedito") return "b-blue";
+  if(status==="Consegnato") return "b-green";
+  return "b-gray";
+}
+function renderVariants(){
+ const el=document.getElementById("variantBody"); if(!el)return;
+ el.innerHTML=variants.map((v,i)=>`<tr><td>● ${v.color}</td><td>${v.size}</td><td>${v.code}</td><td>${v.price.toFixed(2).replace(".",",")}</td><td>${v.qty}</td><td><div class="actions"><button class="iconbtn" data-vdec="${i}">−</button><button class="iconbtn" data-vinc="${i}">+</button><button class="iconbtn" data-vdel="${i}">🗑</button></div></td></tr>`).join("");
+}
+function renderStock(){
+ const el=document.getElementById("stockBody"); if(!el)return;
+ el.innerHTML=stock.map((x,i)=>`<tr><td>${x.name}</td><td>${x.variant}</td><td>${x.qty}</td><td>${x.reserved}</td><td><span class="badge ${x.qty===0?'b-yellow':'b-green'}">${x.qty===0?'Esaurito':'Disponibile'}</span></td><td><button class="iconbtn" data-sdec="${i}">−1</button> <button class="iconbtn" data-sinc="${i}">+1</button></td></tr>`).join("");
+}
+function renderOrders(){
+ const el=document.getElementById("ordersBody"); if(!el)return;
+ el.innerHTML=orders.map((o,i)=>`<tr><td>${o.id}</td><td>${o.date}</td><td>${o.client}<br><small>${o.email}</small></td><td>${o.items}</td><td>${o.total}</td><td>${o.payment}</td><td>${o.delivery}</td><td><span class="badge ${badgeFor(o.status)}">${o.status}</span></td><td><select class="iconbtn" data-order="${i}"><option ${o.status==="Da preparare"?'selected':''}>Da preparare</option><option ${o.status==="Pronto"?'selected':''}>Pronto</option><option ${o.status==="Spedito"?'selected':''}>Spedito</option><option ${o.status==="Consegnato"?'selected':''}>Consegnato</option></select></td></tr>`).join("");
+}
+
 document.querySelectorAll('.menu button').forEach(function(b){
   b.addEventListener('click',function(){
     document.querySelectorAll('.menu button').forEach(x=>x.classList.remove('active'));
@@ -132,5 +165,38 @@ document.querySelectorAll('.menu button').forEach(function(b){
     document.getElementById(b.dataset.tab).classList.add('active');
   });
 });
+document.addEventListener("click",e=>{
+ const b=e.target.closest("button"); if(!b)return;
+ if(b.dataset.vinc!==undefined){variants[+b.dataset.vinc].qty++;renderVariants()}
+ if(b.dataset.vdec!==undefined){variants[+b.dataset.vdec].qty=Math.max(0,variants[+b.dataset.vdec].qty-1);renderVariants()}
+ if(b.dataset.vdel!==undefined){variants.splice(+b.dataset.vdel,1);renderVariants()}
+ if(b.dataset.sinc!==undefined){stock[+b.dataset.sinc].qty++;renderStock()}
+ if(b.dataset.sdec!==undefined){stock[+b.dataset.sdec].qty=Math.max(0,stock[+b.dataset.sdec].qty-1);renderStock()}
+});
+document.addEventListener("change",e=>{
+ if(e.target.matches("[data-order]")){orders[+e.target.dataset.order].status=e.target.value;renderOrders()}
+});
+const modal=document.getElementById("variantModal");
+document.getElementById("addVariantBtn").onclick=()=>modal.classList.add("open");
+document.getElementById("cancelVariant").onclick=()=>modal.classList.remove("open");
+document.getElementById("saveVariant").onclick=()=>{
+ variants.push({color:vColor.value||"—",size:vSize.value||"—",code:vCode.value||"—",price:Number(vPrice.value)||0,qty:Math.max(0,Number(vQty.value)||0)});
+ modal.classList.remove("open"); renderVariants();
+};
+renderVariants();renderStock();renderOrders();
 </script>
+
+<div class="modal" id="variantModal">
+  <div class="modal-card">
+    <h3>Aggiungi variante</h3>
+    <div class="modal-grid">
+      <label>Colore<input id="vColor" value="Nero"></label>
+      <label>Taglia<input id="vSize" value="M"></label>
+      <label>Codice<input id="vCode" value="TS-AR-M"></label>
+      <label>Prezzo<input id="vPrice" type="number" value="20"></label>
+      <label>Disponibilità<input id="vQty" type="number" value="5"></label>
+    </div>
+    <div class="modal-actions"><button class="iconbtn" id="cancelVariant">Annulla</button><button class="primary" id="saveVariant">Salva variante</button></div>
+  </div>
+</div>
 </body></html>
