@@ -119,25 +119,39 @@ table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(-
 </div>
 
 <script>
-const variants=[
+const K_STOCK="artyou_merch_demo_stock";
+const K_VARIANTS="artyou_merch_demo_variants";
+const K_ORDERS="artyou_merch_demo_orders";
+
+const DEFAULT_VARIANTS=[
  {color:"Nero",size:"S",code:"TS-AR-S",price:20,qty:3},
  {color:"Nero",size:"M",code:"TS-AR-M",price:20,qty:12},
  {color:"Nero",size:"L",code:"TS-AR-L",price:20,qty:7},
  {color:"Nero",size:"XL",code:"TS-AR-XL",price:20,qty:2}
 ];
-const stock=[
+const DEFAULT_STOCK=[
  {name:"T-shirt Artyou",variant:"Nero · M",qty:12,reserved:1},
  {name:"Felpa Artyou",variant:"Nero · L",qty:5,reserved:0},
- {name:"Pantaloni Artyou",variant:"Nero · XL",qty:0,reserved:0},
+ {name:"Pantaloni Artyou",variant:"Nero · XL",qty:8,reserved:0},
  {name:"Calzini antiscivolo",variant:"Bianco · 39-42",qty:20,reserved:2}
 ];
-const orders=[
+const DEFAULT_ORDERS=[
  {id:"#ART-0027",date:"26/09/2026",client:"Mario Rossi",email:"mario@email.com",items:"2 articoli",total:"€55,00",payment:"PayPal",delivery:"Ritiro in sede",status:"Da preparare"},
  {id:"#ART-0026",date:"25/09/2026",client:"Laura Bianchi",email:"laura@email.com",items:"1 articolo",total:"€20,00",payment:"Carta",delivery:"Spedizione",status:"Pronto"},
  {id:"#ART-0025",date:"24/09/2026",client:"Giulia Verdi",email:"giulia@email.com",items:"3 articoli",total:"€75,00",payment:"PayPal",delivery:"Spedizione",status:"Spedito"},
  {id:"#ART-0024",date:"23/09/2026",client:"Marco Neri",email:"marco@email.com",items:"1 articolo",total:"€30,00",payment:"Carta",delivery:"Ritiro in sede",status:"Consegnato"}
 ];
 
+function read(key,fallback){try{const v=JSON.parse(localStorage.getItem(key));return Array.isArray(v)?v:fallback.map(x=>({...x}));}catch(e){return fallback.map(x=>({...x}));}}
+let variants=read(K_VARIANTS,DEFAULT_VARIANTS);
+let stock=read(K_STOCK,DEFAULT_STOCK);
+let orders=read(K_ORDERS,DEFAULT_ORDERS);
+function saveAll(){
+ localStorage.setItem(K_VARIANTS,JSON.stringify(variants));
+ localStorage.setItem(K_STOCK,JSON.stringify(stock));
+ localStorage.setItem(K_ORDERS,JSON.stringify(orders));
+ window.dispatchEvent(new Event("artyou:merch-demo-updated"));
+}
 function badgeFor(status){
   if(status==="Da preparare") return "b-yellow";
   if(status==="Pronto"||status==="Spedito") return "b-blue";
@@ -146,7 +160,7 @@ function badgeFor(status){
 }
 function renderVariants(){
  const el=document.getElementById("variantBody"); if(!el)return;
- el.innerHTML=variants.map((v,i)=>`<tr><td>● ${v.color}</td><td>${v.size}</td><td>${v.code}</td><td>${v.price.toFixed(2).replace(".",",")}</td><td>${v.qty}</td><td><div class="actions"><button class="iconbtn" data-vdec="${i}">−</button><button class="iconbtn" data-vinc="${i}">+</button><button class="iconbtn" data-vdel="${i}">🗑</button></div></td></tr>`).join("");
+ el.innerHTML=variants.map((v,i)=>`<tr><td>● ${v.color}</td><td>${v.size}</td><td>${v.code}</td><td>${Number(v.price).toFixed(2).replace(".",",")}</td><td>${v.qty}</td><td><div class="actions"><button class="iconbtn" data-vdec="${i}">−</button><button class="iconbtn" data-vinc="${i}">+</button><button class="iconbtn" data-vdel="${i}">🗑</button></div></td></tr>`).join("");
 }
 function renderStock(){
  const el=document.getElementById("stockBody"); if(!el)return;
@@ -155,6 +169,12 @@ function renderStock(){
 function renderOrders(){
  const el=document.getElementById("ordersBody"); if(!el)return;
  el.innerHTML=orders.map((o,i)=>`<tr><td>${o.id}</td><td>${o.date}</td><td>${o.client}<br><small>${o.email}</small></td><td>${o.items}</td><td>${o.total}</td><td>${o.payment}</td><td>${o.delivery}</td><td><span class="badge ${badgeFor(o.status)}">${o.status}</span></td><td><select class="iconbtn" data-order="${i}"><option ${o.status==="Da preparare"?'selected':''}>Da preparare</option><option ${o.status==="Pronto"?'selected':''}>Pronto</option><option ${o.status==="Spedito"?'selected':''}>Spedito</option><option ${o.status==="Consegnato"?'selected':''}>Consegnato</option></select></td></tr>`).join("");
+}
+function refreshDashboard(){
+ const stats=document.querySelectorAll("#overview .stat strong");
+ if(stats[0])stats[0].textContent=orders.length;
+ if(stats[2])stats[2].textContent=stock.filter(x=>x.qty>0).length;
+ if(stats[3])stats[3].textContent=stock.filter(x=>x.qty===0).length;
 }
 
 document.querySelectorAll('.menu button').forEach(function(b){
@@ -167,23 +187,24 @@ document.querySelectorAll('.menu button').forEach(function(b){
 });
 document.addEventListener("click",e=>{
  const b=e.target.closest("button"); if(!b)return;
- if(b.dataset.vinc!==undefined){variants[+b.dataset.vinc].qty++;renderVariants()}
- if(b.dataset.vdec!==undefined){variants[+b.dataset.vdec].qty=Math.max(0,variants[+b.dataset.vdec].qty-1);renderVariants()}
- if(b.dataset.vdel!==undefined){variants.splice(+b.dataset.vdel,1);renderVariants()}
- if(b.dataset.sinc!==undefined){stock[+b.dataset.sinc].qty++;renderStock()}
- if(b.dataset.sdec!==undefined){stock[+b.dataset.sdec].qty=Math.max(0,stock[+b.dataset.sdec].qty-1);renderStock()}
+ if(b.dataset.vinc!==undefined){variants[+b.dataset.vinc].qty++;saveAll();renderVariants()}
+ if(b.dataset.vdec!==undefined){variants[+b.dataset.vdec].qty=Math.max(0,variants[+b.dataset.vdec].qty-1);saveAll();renderVariants()}
+ if(b.dataset.vdel!==undefined){variants.splice(+b.dataset.vdel,1);saveAll();renderVariants()}
+ if(b.dataset.sinc!==undefined){stock[+b.dataset.sinc].qty++;saveAll();renderStock();refreshDashboard()}
+ if(b.dataset.sdec!==undefined){stock[+b.dataset.sdec].qty=Math.max(0,stock[+b.dataset.sdec].qty-1);saveAll();renderStock();refreshDashboard()}
 });
 document.addEventListener("change",e=>{
- if(e.target.matches("[data-order]")){orders[+e.target.dataset.order].status=e.target.value;renderOrders()}
+ if(e.target.matches("[data-order]")){orders[+e.target.dataset.order].status=e.target.value;saveAll();renderOrders();refreshDashboard()}
 });
 const modal=document.getElementById("variantModal");
 document.getElementById("addVariantBtn").onclick=()=>modal.classList.add("open");
 document.getElementById("cancelVariant").onclick=()=>modal.classList.remove("open");
 document.getElementById("saveVariant").onclick=()=>{
  variants.push({color:vColor.value||"—",size:vSize.value||"—",code:vCode.value||"—",price:Number(vPrice.value)||0,qty:Math.max(0,Number(vQty.value)||0)});
- modal.classList.remove("open"); renderVariants();
+ saveAll();modal.classList.remove("open");renderVariants();
 };
-renderVariants();renderStock();renderOrders();
+window.addEventListener("storage",()=>{variants=read(K_VARIANTS,DEFAULT_VARIANTS);stock=read(K_STOCK,DEFAULT_STOCK);orders=read(K_ORDERS,DEFAULT_ORDERS);renderVariants();renderStock();renderOrders();refreshDashboard()});
+renderVariants();renderStock();renderOrders();refreshDashboard();
 </script>
 
 <div class="modal" id="variantModal">
