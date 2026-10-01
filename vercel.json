@@ -184,7 +184,7 @@
     },
     {
       "source": "/insegnanti/:slug/",
-      "destination": "/api/insegnante?slug=:slug"
+      "destination": "/insegnante.html"
     },
     {
       "source": "/contatti/",
