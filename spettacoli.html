@@ -431,8 +431,8 @@ function render(){
    var slugText=String(e.slug||"").toLowerCase();
    var titleText=String(e.title||"").toLowerCase();
    var dateText=String(first.label||"").toLowerCase();
-   if(!poster && /shortyou/.test(slugText+" "+titleText)){
-     if(/29\\s+novembre|29[-_ ]nov/.test(dateText+" "+slugText)) poster=(window.SHORTYOU_29_NOV_POSTER||"");
+   if(/shortyou/.test(slugText+" "+titleText)){
+     if(/29\\s+novembre|29[-_ ]nov/.test(dateText+" "+slugText)) poster=(window.SHORTYOU_29_NOV_POSTER||poster||"");
      else if(/4\\s+ottobre|04[-_ ]ott|4[-_ ]ott/.test(dateText+" "+slugText)) poster="/img/shortyou-4-ottobre.jpg";
    }
    var posterStyle=poster?'background-image:url('+encodeURI(String(poster))+');background-color:'+col[0]+';':'background-color:'+col[0]+';';
