@@ -410,6 +410,24 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 <style id="artyou-mobile-hide-floating-whatsapp">
 @media(max-width:820px){#am-wa-float{display:none!important;}}
 </style>
+
+<style id="rif-calendar-box-css">
+#rif-calendar-box{background:#F6F3EC;padding:24px 120px 36px}
+#rif-calendar-box .calendar-card{max-width:960px;margin:0 auto;background:#FFFFFF;border:1px solid #E4DED2;border-radius:20px;padding:24px 26px;display:flex;flex-direction:column;gap:16px}
+#rif-calendar-box .calendar-title{margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:28px;line-height:1.1;color:#13181D}
+#rif-calendar-box .calendar-sub{margin:4px 0 0;font-size:15px;line-height:1.45;color:#555D64}
+#rif-calendar-box .calendar-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#rif-calendar-box .calendar-btn{min-height:52px;border-radius:999px;border:1px solid #CFC8BA;background:#fff;color:#13181D;display:flex;align-items:center;justify-content:center;gap:9px;padding:0 16px;font-family:inherit;font-size:14px;font-weight:800;text-decoration:none;cursor:pointer;text-align:center}
+#rif-calendar-box .calendar-btn.primary{background:#123E73;border-color:#123E73;color:#fff}
+@media(max-width:820px){
+  #rif-calendar-box{padding:18px 16px 28px!important}
+  #rif-calendar-box .calendar-card{padding:20px}
+  #rif-calendar-box .calendar-title{font-size:25px}
+  #rif-calendar-box .calendar-actions{grid-template-columns:1fr}
+  #rif-calendar-box .calendar-btn{width:100%}
+}
+</style>
+
 </head>
 <body>
 <x-dc>
@@ -450,6 +468,20 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div class="am-abs" style="position: absolute; bottom: 20px; left: 20px; background: #F6F3EC; color: #13181D; border-radius: 16px; padding: 12px 18px; display: flex; flex-direction: column; align-items: center;"><span class="am-fs-m" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px; line-height: 1;">12-13-14</span><span style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">Marzo ’27</span></div>
 </div>
 </section>
+<section id="rif-calendar-box" aria-label="Aggiungi Rome Improv Festival al calendario">
+  <div class="calendar-card">
+    <div>
+      <h2 class="calendar-title">Aggiungi al calendario</h2>
+      <p class="calendar-sub">12–13–14 marzo 2027 · Roma · Salva l’evento e ricevi un promemoria.</p>
+    </div>
+    <div class="calendar-actions">
+      <button type="button" class="calendar-btn primary" data-calendar-download="rif-calendar-box">APPLE / CALENDARIO</button>
+      <a class="calendar-btn" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Rome%20Improv%20Festival&dates=20270312%2F20270315&details=Rome%20Improv%20Festival%202027%20%E2%80%93%20tre%20giorni%20di%20workshop%20e%20spettacoli%20di%20improvvisazione%20teatrale%20a%20Roma.%20Informazioni%3A%20https%3A%2F%2Fartyouroma.it%2Frome-improv-festival%2F&location=Roma&ctz=Europe%2FRome" target="_blank" rel="noopener">GOOGLE CALENDAR</a>
+      <button type="button" class="calendar-btn" data-calendar-download="rif-calendar-box">SCARICA .ICS</button>
+    </div>
+  </div>
+</section>
+
 <!-- testo SEO -->
 <section class="am-px am-py seo-testo am-grid1" style="background:#F6F3EC;padding:72px 120px 8px;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:56px;align-items:start;"><div style="display:flex;flex-direction:column;gap:18px;"><p class="am-fs-body" style="margin:0;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0B6F94;">International improv festival in Rome</p><h2 class="am-fs-l" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:40px;line-height:1.05;letter-spacing:-1px;">Il festival internazionale di improvvisazione teatrale a Roma</h2><p class="am-fs-lead" style="margin:0;font-size:18px;line-height:1.65;color:#3F474E;">Il Rome Improv Festival è un festival internazionale di improvvisazione teatrale di Artyou Roma. Per tre giorni a marzo Roma, che è stata <em>Caput Mundi</em>, diventa un punto d’incontro per improvvisatori e improvvisatrici da tutta Europa e non solo: workshop di giorno con insegnanti internazionali e spettacoli ogni sera, tutto in inglese.</p><p class="am-fs-lead" style="margin:0;font-size:18px;line-height:1.65;color:#3F474E;">È l’occasione per lavorare con docenti che di solito non si incontrano in Italia, per mettersi alla prova in un’altra lingua e per conoscere improvvisatori di altre scuole.</p></div><div lang="en" style="position:relative;overflow:hidden;background:#FFFFFF;border:1px solid #E4DED2;border-radius:24px;padding:36px 32px 32px;display:flex;flex-direction:column;gap:16px;"><div aria-hidden="true" style="position:absolute;top:0;left:0;right:0;height:6px;background:#F09000;"></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><span style="background:#13181D;color:#F6F3EC;font-size:13px;font-weight:800;letter-spacing:1.5px;padding:6px 12px;border-radius:999px;">EN</span><span style="font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#0B6F94;">For international improvisers</span></div><h3 style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:28px;line-height:1.1;color:#13181D;">In English</h3><p class="am-fs-lead" style="margin:0;font-size:17px;line-height:1.65;color:#3F474E;">The Rome Improv Festival is an international improv festival held in Rome every March. For three days, improvisers from all over Europe and beyond meet for workshops with international teachers and improv shows every night, all in English.</p><p class="am-fs-lead" style="margin:0;font-size:17px;line-height:1.65;color:#3F474E;">Organised by Artyou Roma, it is open to improvisers from any school.</p><div style="display:flex;flex-wrap:wrap;gap:8px;"><span style="background:#F6F3EC;color:#13181D;font-size:14px;font-weight:600;padding:8px 12px;border-radius:999px;">3 days in March</span><span style="background:#F6F3EC;color:#13181D;font-size:14px;font-weight:600;padding:8px 12px;border-radius:999px;">Workshops &amp; shows</span><span style="background:#F6F3EC;color:#13181D;font-size:14px;font-weight:600;padding:8px 12px;border-radius:999px;">All in English</span></div></div></section>
 <main class="am-px am-py am-grid1" style="padding: 64px 120px 30px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: start;">
@@ -882,5 +914,31 @@ class Component extends DCLogic {
   });
 })();
 </script>
+
+<script id="rif-calendar-box-js">
+(function(){
+  var id="rif-calendar-box",title="Rome Improv Festival",start="20270312",end="20270315",
+      desc="Rome Improv Festival 2027 – tre giorni di workshop e spettacoli di improvvisazione teatrale a Roma.",loc="Roma",url="https://artyouroma.it/rome-improv-festival/",filename="rome-improv-festival-2027.ics";
+  function esc(v){return String(v||"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;")}
+  function download(){
+    var ics=[
+      "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Artyou Roma//Eventi//IT","CALSCALE:GREGORIAN","METHOD:PUBLISH",
+      "BEGIN:VEVENT","UID:"+id+"@artyouroma.it",
+      "DTSTART;VALUE=DATE:"+start,
+      "DTEND;VALUE=DATE:"+end,
+      "SUMMARY:"+esc(title),
+      "DESCRIPTION:"+esc(desc+"\n\nInformazioni: "+url),
+      "LOCATION:"+esc(loc),
+      "URL:"+url,
+      "END:VEVENT","END:VCALENDAR"
+    ].join("\r\n");
+    var blob=new Blob([ics],{type:"text/calendar;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");
+    a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(u)},1200);
+  }
+  document.querySelectorAll('[data-calendar-download="'+id+'"]').forEach(function(b){b.addEventListener("click",download);});
+})();
+</script>
+
 </body>
 </html>
