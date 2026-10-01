@@ -51,6 +51,11 @@
       "permanent": true
     },
     {
+      "source": "/spettacoli/:slug",
+      "destination": "/spettacoli/:slug/",
+      "permanent": true
+    },
+    {
       "source": "/un-vortice-di-emozioni",
       "destination": "/un-vortice-di-emozioni/",
       "permanent": true
@@ -191,6 +196,10 @@
     {
       "source": "/spettacoli/",
       "destination": "/spettacoli.html"
+    },
+    {
+      "source": "/spettacoli/:slug/",
+      "destination": "/spettacolo.html"
     },
     {
       "source": "/un-vortice-di-emozioni/",
