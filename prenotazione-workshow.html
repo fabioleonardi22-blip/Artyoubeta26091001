@@ -328,17 +328,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
   </div>
   <strong id="ws-capacity-count" style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:24px;color:#555D64;white-space:nowrap;">Caricamento…</strong>
 </div>
-<div id="ws-calendar-box" style="display:none;background:#FFFFFF;border:1px solid #E4DED2;border-radius:18px;padding:20px;flex-direction:column;gap:14px;">
-  <div style="display:flex;flex-direction:column;gap:4px;">
-    <strong style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:24px;line-height:1.1;color:#13181D;">Aggiungi al calendario</strong>
-    <span style="font-size:14px;line-height:1.45;color:#555D64;">Salva il WorkshoW e ricevi un promemoria.</span>
-  </div>
-  <div id="ws-calendar-actions" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;">
-    <button id="ws-calendar-apple" type="button" style="min-height:48px;border:1px solid #123E73;border-radius:999px;background:#123E73;color:#FFFFFF;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;padding:0 14px;">APPLE / CALENDARIO</button>
-    <a id="ws-calendar-google" href="#" target="_blank" rel="noopener" style="min-height:48px;border:1px solid #CFC8BA;border-radius:999px;background:#FFFFFF;color:#13181D;text-decoration:none;font-family:inherit;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;padding:0 14px;text-align:center;">GOOGLE CALENDAR</a>
-    <button id="ws-calendar-ics" type="button" style="min-height:48px;border:1px solid #CFC8BA;border-radius:999px;background:#FFFFFF;color:#13181D;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;padding:0 14px;">SCARICA .ICS</button>
-  </div>
-</div>
+
 <input id="f-evento-id" type="hidden" value="">
 <div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;"><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-nome" style="font-size:14px;font-weight:700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-cognome" style="font-size:14px;font-weight:700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div></div>
 <div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;"><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-mail" style="font-size:14px;font-weight:700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-tel" style="font-size:14px;font-weight:700;">Telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 ..." style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div></div>
@@ -358,7 +348,17 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div>
 <div id="ws-success" style="display:none;background:#FFF;border:1px solid #E4DED2;border-radius:24px;padding:32px;flex-direction:column;gap:16px;"><h2 style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:32px;">Prenotazione inviata!</h2><p style="margin:0;font-size:17px;line-height:1.55;color:#3F474E;">Abbiamo ricevuto la tua richiesta per <strong id="ws-success-label">il WorkshoW</strong>. Riceverai la conferma via email.</p><a href="/workshow/" style="font-weight:700;">Torna ai WorkshoW</a></div>
 </div>
-<aside style="display:flex;flex-direction:column;gap:20px;"><div style="background:#13181D;color:#F6F3EC;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:16px;"><h2 class="am-fs-m" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:28px;">Cosa succede dopo</h2><ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.5;color:#C4CCD2;"><li>Ricevi l’email di conferma della richiesta.</li><li>Verifichiamo la disponibilità del WorkshoW.</li><li>Il pagamento viene gestito tramite PayPal a info@artyouroma.it secondo la modalità scelta.</li></ol></div></aside>
+<aside style="display:flex;flex-direction:column;gap:20px;"><div style="background:#13181D;color:#F6F3EC;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:16px;"><h2 class="am-fs-m" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:28px;">Cosa succede dopo</h2><ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.5;color:#C4CCD2;"><li>Ricevi l’email di conferma della richiesta.</li><li>Verifichiamo la disponibilità del WorkshoW.</li><li>Il pagamento viene gestito tramite PayPal a info@artyouroma.it secondo la modalità scelta.</li></ol></div><div id="ws-calendar-box" style="display:none;background:#FFFFFF;border:1px solid #E4DED2;border-radius:18px;padding:16px 18px;flex-direction:column;gap:10px;">
+  <div style="display:flex;flex-direction:column;gap:4px;">
+    <strong style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;line-height:1.1;color:#13181D;">Aggiungi al calendario</strong>
+    <span style="font-size:12px;line-height:1.4;color:#555D64;">Salva il WorkshoW e ricevi un promemoria.</span>
+  </div>
+  <div id="ws-calendar-actions" style="display:grid;grid-template-columns:1fr;gap:8px;">
+    <button id="ws-calendar-apple" type="button" style="min-height:42px;border:1px solid #123E73;border-radius:999px;background:#123E73;color:#FFFFFF;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;padding:0 12px;">APPLE / CALENDARIO</button>
+    <a id="ws-calendar-google" href="#" target="_blank" rel="noopener" style="min-height:42px;border:1px solid #CFC8BA;border-radius:999px;background:#FFFFFF;color:#13181D;text-decoration:none;font-family:inherit;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0 12px;text-align:center;">GOOGLE CALENDAR</a>
+    <button id="ws-calendar-ics" type="button" style="min-height:42px;border:1px solid #CFC8BA;border-radius:999px;background:#FFFFFF;color:#13181D;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;padding:0 12px;">SCARICA .ICS</button>
+  </div>
+</div></aside>
 </main>
 <footer class="am-px am-wrap am-fs-body" style="flex-grow: 1; background: #0D1115; color: #9AA5AE; padding: 32px 120px; display: flex; justify-content: space-between; align-items: flex-start; font-size: 14px;">
 <span>© 2026 Artyou Roma · Via La Spezia, 73 – Roma</span>
