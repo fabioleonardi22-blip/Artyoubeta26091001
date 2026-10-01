@@ -32,7 +32,54 @@ function selectedShow(){
   var list=window.ARTYOU_DYNAMIC_SHOWS||[];
   var show=list.filter(function(x){return x&&x.slug===slug;})[0];
   if(show) return show;
-  return null;
+
+  // Fallback robusto: ricava i dati direttamente dalla pagina già renderizzata.
+  var h1=document.querySelector("main h1");
+  var title=h1 ? (h1.textContent||"").trim() : "Evento Artyou";
+
+  var when="";
+  var venue="";
+  var addr="";
+  var dts=Array.from(document.querySelectorAll("main dt"));
+  dts.forEach(function(dt){
+    var key=(dt.textContent||"").trim().toLowerCase();
+    var dd=dt.parentElement&&dt.parentElement.querySelector("dd");
+    var val=dd ? (dd.textContent||"").trim() : "";
+    if(key==="quando") when=val;
+    if(key==="dove"){
+      venue=val;
+      var strong=dd&&dd.querySelector("strong");
+      if(strong){
+        venue=(strong.textContent||"").trim();
+        addr=val.replace(venue,"").replace(/^\s*[·-]\s*/,"").trim();
+      }
+    }
+  });
+
+  if(!venue){
+    var mapLink=Array.from(document.querySelectorAll('a[target="_blank"]')).find(function(a){
+      return /Apri in Google Maps/i.test(a.textContent||"");
+    });
+    if(mapLink){
+      var spans=mapLink.querySelectorAll("span");
+      if(spans.length){
+        var texts=Array.from(spans).map(function(s){return (s.textContent||"").trim();}).filter(Boolean);
+        if(texts.length) venue=texts[0];
+        if(texts.length>1) addr=texts[1];
+      }
+    }
+  }
+
+  if(!when) return null;
+
+  return {
+    slug: slug||"evento",
+    title: title||"Evento Artyou",
+    desc: "",
+    venue: venue||"Roma",
+    addr: addr||"",
+    dates:[{label:when}]
+  };
 }
 
 function selectedDateIndex(){
