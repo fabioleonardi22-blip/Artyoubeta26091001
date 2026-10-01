@@ -427,7 +427,15 @@ function render(){
    var first=e.dates&&e.dates.length?e.dates[0]:{label:"Data da definire"};
    var b=badge(first.label,e.tbd),col=COLORS[e.cat]||["#26343D","#415D6B"];
    var art=document.createElement("article");art.className="card";
-   var posterStyle=e.poster?'background-image:url('+encodeURI(String(e.poster))+');background-color:'+col[0]+';':'background-color:'+col[0]+';';
+   var poster=e.poster||"";
+   var slugText=String(e.slug||"").toLowerCase();
+   var titleText=String(e.title||"").toLowerCase();
+   var dateText=String(first.label||"").toLowerCase();
+   if(!poster && /shortyou/.test(slugText+" "+titleText)){
+     if(/29\\s+novembre|29[-_ ]nov/.test(dateText+" "+slugText)) poster=(window.SHORTYOU_29_NOV_POSTER||"");
+     else if(/4\\s+ottobre|04[-_ ]ott|4[-_ ]ott/.test(dateText+" "+slugText)) poster="/img/shortyou-4-ottobre.jpg";
+   }
+   var posterStyle=poster?'background-image:url('+encodeURI(String(poster))+');background-color:'+col[0]+';':'background-color:'+col[0]+';';
    var where=[e.venue,e.addr].filter(Boolean).join(" · ");
    var msg="Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".";
    function eventHref(ev,firstDate){
