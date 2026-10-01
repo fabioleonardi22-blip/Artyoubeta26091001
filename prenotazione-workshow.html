@@ -278,6 +278,14 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 <style id="artyou-mobile-hide-floating-whatsapp">
 @media(max-width:820px){#am-wa-float{display:none!important;}}
 </style>
+
+<style id="workshow-calendar-responsive">
+@media(max-width:820px){
+  #ws-calendar-actions{grid-template-columns:1fr!important;}
+  #ws-calendar-actions>*{width:100%!important;}
+}
+</style>
+
 </head>
 <body>
 <x-dc>
@@ -319,6 +327,17 @@ a{color:#1A6E99}a:hover{color:#12506F}
     <span id="ws-capacity-meta" style="font-size:13px;color:#6C747B;">Aggiornamento automatico</span>
   </div>
   <strong id="ws-capacity-count" style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:24px;color:#555D64;white-space:nowrap;">Caricamento…</strong>
+</div>
+<div id="ws-calendar-box" style="display:none;background:#FFFFFF;border:1px solid #E4DED2;border-radius:18px;padding:20px;flex-direction:column;gap:14px;">
+  <div style="display:flex;flex-direction:column;gap:4px;">
+    <strong style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:24px;line-height:1.1;color:#13181D;">Aggiungi al calendario</strong>
+    <span style="font-size:14px;line-height:1.45;color:#555D64;">Salva il WorkshoW e ricevi un promemoria.</span>
+  </div>
+  <div id="ws-calendar-actions" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;">
+    <button id="ws-calendar-apple" type="button" style="min-height:48px;border:1px solid #123E73;border-radius:999px;background:#123E73;color:#FFFFFF;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;padding:0 14px;">APPLE / CALENDARIO</button>
+    <a id="ws-calendar-google" href="#" target="_blank" rel="noopener" style="min-height:48px;border:1px solid #CFC8BA;border-radius:999px;background:#FFFFFF;color:#13181D;text-decoration:none;font-family:inherit;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;padding:0 14px;text-align:center;">GOOGLE CALENDAR</a>
+    <button id="ws-calendar-ics" type="button" style="min-height:48px;border:1px solid #CFC8BA;border-radius:999px;background:#FFFFFF;color:#13181D;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;padding:0 14px;">SCARICA .ICS</button>
+  </div>
 </div>
 <input id="f-evento-id" type="hidden" value="">
 <div class="am-grid2 am-k" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;"><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-nome" style="font-size:14px;font-weight:700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div><div style="display:flex;flex-direction:column;gap:8px;"><label for="f-cognome" style="font-size:14px;font-weight:700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height:50px;border:1px solid #CFC8BA;border-radius:12px;padding:0 16px;font-size:16px;font-family:inherit;"></div></div>
@@ -754,5 +773,91 @@ a{color:#1A6E99}a:hover{color:#12506F}
   setTimeout(retry,900);
 })();
 </script>
+
+<script id="workshow-calendar-js">
+(function(){
+  var LABELS={
+    "ws-horror":"WorkshoW · Tra fiaba & horror – Un confine sottile",
+    "ws-maschera":"WorkshoW · Human Comedy",
+    "ws-thriller":"WorkshoW · Thriller",
+    "ws-parole":"WorkshoW · From Text to Next",
+    "ws-shakespeare":"WorkshoW · Improv di una notte di mezza primavera",
+    "ws-vulpio":"WorkshoW · Laboratorio avanzati"
+  };
+
+  function req(){
+    var h="";
+    try{h=decodeURIComponent((location.hash||"").replace(/^#/,""));}catch(e){}
+    return LABELS[h]?h:"ws-horror";
+  }
+  function pad(n){return String(n).padStart(2,"0")}
+  function stamp(d){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"T"+pad(d.getHours())+pad(d.getMinutes())+"00"}
+  function parseDate(dateText,timeText){
+    var s=(String(dateText||"")+" "+String(timeText||"")).trim();
+    if(!s)return null;
+    var now=new Date(), day,month,year,hour=10,minute=0,m;
+    if((m=s.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/))){
+      day=+m[1];month=+m[2]-1;year=+m[3];if(year<100)year+=2000;
+    } else if((m=s.match(/(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)(?:\s+(\d{4}))?/i))){
+      var ms={gennaio:0,febbraio:1,marzo:2,aprile:3,maggio:4,giugno:5,luglio:6,agosto:7,settembre:8,ottobre:9,novembre:10,dicembre:11};
+      day=+m[1];month=ms[m[2].toLowerCase()];year=m[3]?+m[3]:now.getFullYear();
+      if(!m[3] && new Date(year,month,day,23,59)<now)year++;
+    } else return null;
+    var tm=s.match(/(?:ore|dalle|alle)?\s*(\d{1,2})[:.]([0-5]\d)/i);
+    if(tm){hour=+tm[1];minute=+tm[2];}
+    return new Date(year,month,day,hour,minute,0,0);
+  }
+  function esc(v){return String(v||"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;")}
+  function getEvent(){
+    var id=(document.getElementById("f-evento-id")||{}).value||window.ARTYOU_BOOKING_RESOLVED_EVENT_ID||window.ARTYOU_BOOKING_EVENT_ID||"";
+    var info=window.ARTYOU_EVENT_INFO||{};
+    return {id:id, ev:info[id]||{}};
+  }
+  function refresh(){
+    var box=document.getElementById("ws-calendar-box"),g=document.getElementById("ws-calendar-google");
+    if(!box||!g)return;
+    var x=getEvent(),ev=x.ev||{},title=ev.titolo||LABELS[req()]||"WorkshoW Artyou";
+    var start=parseDate(ev.data,ev.ora);
+    if(!start){box.style.display="none";return;}
+    var end=new Date(start.getTime()+2*60*60*1000);
+    var locationText=[ev.sede||ev.luogo||"",ev.indirizzo||""].filter(Boolean).join(" · ");
+    if(!locationText)locationText="Artyou Roma";
+    var url=location.href;
+    var details=(ev.descrizione||"WorkshoW Artyou Roma")+"\n\nInformazioni e prenotazioni: "+url;
+    g.href="https://calendar.google.com/calendar/render?action=TEMPLATE"
+      +"&text="+encodeURIComponent(title)
+      +"&dates="+stamp(start)+"%2F"+stamp(end)
+      +"&details="+encodeURIComponent(details)
+      +"&location="+encodeURIComponent(locationText)
+      +"&ctz=Europe%2FRome";
+    box.style.display="flex";
+
+    function download(){
+      var ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Artyou Roma//WorkshoW//IT","CALSCALE:GREGORIAN","BEGIN:VEVENT",
+        "UID:"+(x.id||"workshow")+"-"+stamp(start)+"@artyouroma.it",
+        "DTSTAMP:"+stamp(new Date())+"Z",
+        "DTSTART;TZID=Europe/Rome:"+stamp(start),
+        "DTEND;TZID=Europe/Rome:"+stamp(end),
+        "SUMMARY:"+esc(title),
+        "DESCRIPTION:"+esc(details),
+        "LOCATION:"+esc(locationText),
+        "URL:"+url,
+        "END:VEVENT","END:VCALENDAR"].join("\r\n");
+      var blob=new Blob([ics],{type:"text/calendar;charset=utf-8"});
+      var u=URL.createObjectURL(blob),a=document.createElement("a");
+      a.href=u;a.download=(x.id||"workshow-artyou")+".ics";document.body.appendChild(a);a.click();a.remove();
+      setTimeout(function(){URL.revokeObjectURL(u)},1200);
+    }
+    var apple=document.getElementById("ws-calendar-apple"),ics=document.getElementById("ws-calendar-ics");
+    if(apple)apple.onclick=download;
+    if(ics)ics.onclick=download;
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",refresh);else refresh();
+  window.addEventListener("hashchange",function(){setTimeout(refresh,100)});
+  window.addEventListener("artyou:capacity-updated",function(){setTimeout(refresh,50)});
+  setTimeout(refresh,700);setTimeout(refresh,1800);
+})();
+</script>
+
 </body>
 </html>
