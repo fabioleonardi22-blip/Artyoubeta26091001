@@ -78,6 +78,31 @@ footer{background:#0D1115;color:#D5DCE1;padding:48px 40px 30px;margin-top:40px}
 @media(max-width:920px){.site{width:100%;max-width:100%;box-shadow:none}.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){header{padding:14px 16px}nav a:not(.active):not(.cta){display:none}main{padding:20px 16px 42px}h1{font-size:46px}.hero-photo{height:230px}.grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}}
 .photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* Product cards: wider visual area / full model framing */
+.photo{
+  height:360px!important;
+  background:#151f24!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important
+}
+.photo img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  display:block!important;
+  background:#151f24!important
+}
+.card{min-height:585px!important}
+@media(max-width:920px){
+  .photo{height:430px!important}
+}
+@media(max-width:560px){
+  .photo{height:500px!important}
+}
 </style>
 </head>
 <body>
