@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Artyou Roma – Insegnante</title>
-<meta name="robots" content="noindex,follow">
+<meta name="robots" content="index,follow">
 <meta name="viewport" content="width=1440"><script id="artyou-viewport">(function(){try{var w=Math.min(screen.width,screen.height);if(w<=600){var m=document.querySelector('meta[name="viewport"]');m.setAttribute("content","width=device-width, initial-scale=1, viewport-fit=cover");document.documentElement.classList.add("am-mobile");}}catch(e){}})();</script>
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -299,6 +299,19 @@ class Component extends DCLogic {
     var META = {"Improvvisazione": ["#1A6E99", "#2CA8E0", "#0F4A66"], "Teatro": ["#941880", "#941880", "#4A1040"], "Stand-up": ["#C0145C", "#E41870", "#5A0F30"], "ImproEnglish": ["#127A70", "#28B4A8", "#0E4A45"], "Formazione docenti": ["#4F7A0A", "#94C01C", "#3D5410"]};
     var slug = this.hash();
     var cur = TEACH.filter(function (x) { return x.slug === slug; })[0] || TEACH[0];
+    try {
+      var cleanProfile = /^\/insegnanti\/[^\/]+\/?$/.test(window.location.pathname);
+      var canonical = "https://artyouroma.it/insegnanti/" + encodeURIComponent(cur.slug || slug || "") + "/";
+      document.title = cur.name + " | Insegnante Artyou Roma";
+      var md = document.querySelector('meta[name="description"]');
+      if (md) md.setAttribute("content", (cur.name + " – " + (cur.role || "Insegnante") + " di Artyou Roma. Scopri profilo, formazione, corsi e attività.").slice(0,160));
+      var can = document.querySelector('link[rel="canonical"]');
+      if (!can) { can = document.createElement("link"); can.rel = "canonical"; document.head.appendChild(can); }
+      can.href = canonical;
+      var rob = document.querySelector('meta[name="robots"]');
+      if (rob) rob.setAttribute("content", cleanProfile ? "index,follow" : "noindex,follow");
+      document.documentElement.setAttribute("data-teacher-seo-runtime","1");
+    } catch(e) {}
     if (cur.slug === "andrea-onori") {
       cur.quote = "Il mio lavoro è mettere gli allievi in condizioni di creare: tutto sta nel fargli scoprire, in qualche modo, il coraggio di tuffarsi e volare. Il resto sono solo parole imparate a memoria.";
       cur.bioTitle = "Biografia";
