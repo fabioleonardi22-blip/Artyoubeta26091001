@@ -36,8 +36,17 @@ async function init(opts){
       }catch(e){clear()}
     }
 
-    if(!w.google||!google.accounts||!google.accounts.id)throw new Error("google_identity_non_caricato");
-    google.accounts.id.initialize({
+    async function waitForGoogleIdentity(timeoutMs){
+      timeoutMs=timeoutMs||12000;
+      var started=Date.now();
+      while(Date.now()-started<timeoutMs){
+        if(w.google&&w.google.accounts&&w.google.accounts.id)return w.google.accounts.id;
+        await new Promise(function(resolve){setTimeout(resolve,120);});
+      }
+      throw new Error("google_identity_non_caricato");
+    }
+    var googleId=await waitForGoogleIdentity(12000);
+    googleId.initialize({
       client_id:cfg.clientId,
       callback:async function(resp){
         try{
@@ -59,7 +68,7 @@ async function init(opts){
     });
     if(mount){
       mount.innerHTML="";
-      google.accounts.id.renderButton(mount,{theme:"outline",size:"large",text:"signin_with",shape:"rectangular",width:300});
+      googleId.renderButton(mount,{theme:"outline",size:"large",text:"signin_with",shape:"rectangular",width:300});
     }
     setStatus("Accedi con un account Google autorizzato da Artyou.","warn");
   }catch(e){
