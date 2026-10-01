@@ -200,7 +200,7 @@ const products=[
 {id:"hoodie-black",family:"Felpa Artyou",cat:"felpe",name:"Felpa Artyou · Think Big Black",price:30,image:"/img/merch/hoodie-black.webp",colors:["Nero","Verde","Bordeaux"],sizes:["S","M","L","XL"]},
 {id:"hoodie-green",family:"Felpa Artyou",cat:"felpe",name:"Felpa Artyou · Think Big Green",price:30,image:"/img/merch/hoodie-green.webp",colors:["Verde","Nero","Bordeaux"],sizes:["S","M","L","XL"]},
 {id:"jogger",family:"Pantaloni Artyou",cat:"pantaloni",name:"Pantaloni Artyou · Jogger",price:20,image:"/img/merch/jogger-artyou-roma.jpg",colors:["Nero","Grigio"],sizes:["S","M","L","XL"]},
-{id:"socks",family:"Calzini antiscivolo",cat:"calzini",name:"Calzini Artyou · Grip",price:5,image:"/img/merch/calzino-sportivo-artyou-roma.jpg",colors:["Nero","Arancio"],sizes:["35-38","39-42","43-46"]}
+{id:"socks",family:"Calzini antiscivolo",cat:"calzini",name:"Calzini Artyou · Grip",price:5,image:"/img/merch/calzino-sportivo-artyou-roma.webp",colors:["Nero","Arancio"],sizes:["35-38","39-42","43-46"]}
 ];
 const colors={Nero:"#111",Bianco:"#F6F3EC",Bordeaux:"#8E2941",Ocra:"#C79A2B",Grigio:"#8B8F92",Arancio:"#F09000",Verde:"#174F39",Blu:"#173B68",Cyan:"#12B9D6"};
 const cart=[];
@@ -258,6 +258,30 @@ checkout.onclick=()=>{
  cart.splice(0);renderCart();render(currentFilter);drawer.classList.remove("open");
  alert("Ordine demo creato. Ora apri il gestionale: lo troverai nella sezione Ordini.");
 };
+const imageLightbox=document.getElementById("imageLightbox");
+const imageLightboxImg=document.getElementById("imageLightboxImg");
+const imageLightboxClose=document.getElementById("imageLightboxClose");
+
+grid.addEventListener("click",e=>{
+  const img=e.target.closest(".photo img");
+  if(!img)return;
+  e.preventDefault();
+  e.stopPropagation();
+  imageLightboxImg.src=img.src;
+  imageLightboxImg.alt=img.alt||"Immagine prodotto";
+  imageLightbox.classList.add("open");
+  imageLightbox.setAttribute("aria-hidden","false");
+});
+
+function closeImageLightbox(){
+  imageLightbox.classList.remove("open");
+  imageLightbox.setAttribute("aria-hidden","true");
+  imageLightboxImg.removeAttribute("src");
+}
+imageLightboxClose.addEventListener("click",closeImageLightbox);
+imageLightbox.addEventListener("click",e=>{if(e.target===imageLightbox)closeImageLightbox()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&imageLightbox.classList.contains("open"))closeImageLightbox()});
+
 window.addEventListener("storage",()=>render(currentFilter));
 render("all");renderCart();
 })();
