@@ -382,6 +382,50 @@ body.locked{overflow:hidden}
   .quick-body{overflow:visible!important;padding:24px 20px 28px!important}
   .store-carousel-track{grid-auto-columns:minmax(190px,78vw)}
 }
+
+/* ===== Pagina store principale v3 ===== */
+.featured-store{
+  margin:0 var(--px) 42px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:26px;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(420px,.92fr);
+}
+.featured-gallery{
+  display:grid;
+  grid-template-columns:86px minmax(0,1fr);
+  gap:14px;
+  padding:20px;
+  background:#F3EFE8;
+  min-height:660px;
+}
+.featured-thumbs{display:flex;flex-direction:column;gap:10px;overflow:auto;max-height:620px}
+.featured-thumb{width:82px;aspect-ratio:4/5;border:2px solid transparent;border-radius:12px;padding:0;overflow:hidden;background:#fff;cursor:pointer}
+.featured-thumb[aria-pressed="true"]{border-color:var(--orange)}
+.featured-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.featured-main{position:relative;border-radius:18px;overflow:hidden;background:#E8E2D8;min-height:620px;cursor:zoom-in}
+.featured-main img{width:100%;height:100%;object-fit:cover;display:block}
+.featured-main .placeholder{min-height:620px}
+.featured-info{padding:38px 38px 32px;display:flex;flex-direction:column;gap:18px}
+.featured-info h2{margin:0;font-family:var(--display);font-size:38px;line-height:1.03;letter-spacing:-.8px}
+.featured-info .price{font-size:30px}
+.featured-info p{margin:0;color:var(--muted);font-size:16px;line-height:1.6}
+.featured-similar{border-top:1px solid var(--line);padding-top:16px}
+.featured-similar-track{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(125px,155px);gap:10px;overflow-x:auto;padding-bottom:6px}
+.featured-similar-card{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff;padding:0;text-align:left;cursor:pointer}
+.featured-similar-card img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block}
+.featured-similar-card span{display:block;padding:8px;font-size:12px;font-weight:700;color:var(--ink)}
+#shop .shop-head,#shop .grid{display:none}
+@media(max-width:900px){
+  .featured-store{grid-template-columns:1fr}
+  .featured-gallery{min-height:0;grid-template-columns:64px 1fr}
+  .featured-thumb{width:60px}
+  .featured-main{min-height:460px}
+  .featured-main .placeholder{min-height:460px}
+  .featured-info{padding:26px 20px 30px}
+}
 </style>
 </head>
 <body>
@@ -446,6 +490,30 @@ body.locked{overflow:hidden}
     <div class="shop-head">
       <h2 id="shopTitle">Tutta la collezione</h2>
       <p>Ordina online · ritiro nelle sedi Artyou</p>
+    </div>
+    <div class="featured-store" id="featuredStore">
+      <div class="featured-gallery">
+        <div class="featured-thumbs" id="featuredThumbs"></div>
+        <div class="featured-main" id="featuredMain"></div>
+      </div>
+      <div class="featured-info">
+        <div>
+          <div class="cat" id="featuredCat"></div>
+          <h2 id="featuredTitle"></h2>
+        </div>
+        <div class="price" id="featuredPrice"></div>
+        <p id="featuredDesc"></p>
+        <div><div class="opt-label">Colore: <strong id="featuredColorName"></strong></div><div class="swatches" id="featuredColors"></div></div>
+        <div><div class="opt-label">Taglia: <strong id="featuredSizeName"></strong></div><div class="sizes" id="featuredSizes"></div></div>
+        <div class="quick-actions">
+          <div class="qty"><button type="button" id="featuredMinus">−</button><output id="featuredQty">1</output><button type="button" id="featuredPlus">+</button></div>
+          <button class="btn btn-orange" id="featuredAdd">Aggiungi al carrello</button>
+        </div>
+        <div class="featured-similar">
+          <div class="quick-related-head"><strong id="featuredSimilarTitle">Modelli simili</strong><span class="cat">Scorri →</span></div>
+          <div class="featured-similar-track" id="featuredSimilar"></div>
+        </div>
+      </div>
     </div>
     <div class="grid" id="grid" aria-live="polite"></div>
   </section>
@@ -636,7 +704,7 @@ function fixSel(p,s){
 function loadStock(){
   return fetch(API+"?stock=1",{cache:"no-store"}).then(r=>r.json()).then(j=>{
     if(j&&j.ok&&j.varianti){STOCK=j.varianti;PRODUCTS.forEach(p=>fixSel(p,sel[p.id]))}
-  }).catch(()=>{}).then(()=>{renderTabs();renderGrid();renderCart();renderStoreCarousels()});
+  }).catch(()=>{}).then(()=>{renderTabs();renderGrid();renderCart();renderStoreCarousels();renderFeatured()});
 }
 
 /* ===== Utilità ===== */
@@ -677,6 +745,63 @@ const sel={};
 PRODUCTS.forEach(p=>sel[p.id]={color:p.colors[0],size:p.sizes[Math.min(1,p.sizes.length-1)]});
 let filter="all";
 let cart=store.get(K_CART,[]).filter(l=>PRODUCTS.some(p=>p.id===l.id));
+
+/* ===== Scheda prodotto grande nella pagina ===== */
+let featuredProduct=PRODUCTS[0],featuredSel={...sel[PRODUCTS[0].id]},featuredQty=1,featuredGalleryIndex=0;
+function featuredGalleryItems(p){
+  const seen=new Set(),items=[];
+  const add=(src,label,color)=>{if(src&&!seen.has(src)){seen.add(src);items.push({src,label,color})}};
+  colorsOf(p).forEach(col=>add(imgFor(p,col),col,col));
+  Object.keys(p.images||{}).forEach(k=>add(p.images[k],k==="default"?p.name:k,k==="default"?null:k));
+  return items;
+}
+function renderFeatured(){
+  const p=featuredProduct,s=featuredSel,items=featuredGalleryItems(p);
+  if(featuredGalleryIndex>=items.length)featuredGalleryIndex=0;
+  $("#featuredThumbs").innerHTML=items.map((it,i)=>'<button class="featured-thumb" data-featured-thumb="'+i+'" aria-pressed="'+(i===featuredGalleryIndex)+'"><img src="'+it.src+'" alt="'+esc(p.name+" – "+it.label)+'"></button>').join("");
+  if(items.length){
+    const it=items[featuredGalleryIndex];
+    $("#featuredMain").innerHTML='<img src="'+it.src+'" alt="'+esc(p.family+" "+p.name+" – "+it.label)+'">'+badgeHTML(p);
+  }else $("#featuredMain").innerHTML='<div class="placeholder">'+SOCK_SVG+'<span>Foto in arrivo</span></div>';
+  $("#featuredCat").textContent=p.family;
+  $("#featuredTitle").textContent=p.name;
+  $("#featuredPrice").textContent=euro(priceOf(p,s.color,s.size));
+  $("#featuredDesc").textContent=p.desc;
+  $("#featuredColorName").textContent=s.color;
+  $("#featuredSizeName").textContent=s.size;
+  $("#featuredColors").innerHTML=swatchesHTML(p,s.color);
+  $("#featuredSizes").innerHTML=sizesHTML(p,s.color,s.size);
+  $("#featuredQty").textContent=featuredQty;
+  $("#featuredAdd").disabled=maxAddable(p,s.color,s.size)<1;
+  $("#featuredAdd").textContent=addLabel(p,s.color,s.size,featuredQty);
+  let rel=[];
+  if(p.cat==="tshirt") rel=PRODUCTS.filter(x=>x.cat==="tshirt"&&x.id!==p.id).map(x=>({p:x,color:colorsOf(x)[0]||x.colors[0]}));
+  else if(p.cat==="felpe") rel=colorsOf(p).filter(col=>col!==s.color).map(col=>({p,color:col}));
+  else rel=PRODUCTS.filter(x=>x.cat===p.cat&&x.id!==p.id).map(x=>({p:x,color:colorsOf(x)[0]||x.colors[0]}));
+  $("#featuredSimilarTitle").textContent=p.cat==="tshirt"?"Altre T-shirt":p.cat==="felpe"?"Altre Felpe":"Prodotti simili";
+  $("#featuredSimilar").innerHTML=rel.map(({p:x,color})=>{
+    const src=imgFor(x,color);
+    return '<button class="featured-similar-card" data-featured-product="'+x.id+'" data-featured-color="'+esc(color)+'">'+
+      (src?'<img src="'+src+'" alt="'+esc(x.name)+'">':'<div class="placeholder">'+SOCK_SVG+'</div>')+
+      '<span>'+esc(x.name)+(p.cat==="felpe"?' · '+esc(color):'')+'</span></button>';
+  }).join("");
+}
+$("#featuredStore").addEventListener("click",e=>{
+  const thumb=e.target.closest("[data-featured-thumb]"),prod=e.target.closest("[data-featured-product]"),color=e.target.closest("#featuredColors [data-color]"),size=e.target.closest("#featuredSizes [data-size]");
+  if(thumb){featuredGalleryIndex=Number(thumb.dataset.featuredThumb)||0;renderFeatured();return}
+  if(prod){
+    const p=PRODUCTS.find(x=>x.id===prod.dataset.featuredProduct);if(!p)return;
+    featuredProduct=p;featuredSel={...sel[p.id]};if(prod.dataset.featuredColor)featuredSel.color=prod.dataset.featuredColor;fixSel(p,featuredSel);featuredQty=1;featuredGalleryIndex=0;renderFeatured();return;
+  }
+  if(color){featuredSel.color=color.dataset.color;fixSel(featuredProduct,featuredSel);featuredGalleryIndex=0;renderFeatured();return}
+  if(size){featuredSel.size=size.dataset.size;renderFeatured();return}
+  if(e.target.closest("#featuredMain img")){
+    const img=e.target.closest("#featuredMain img"),z=$("#zoomOverlay");$("#zoomImg").src=img.currentSrc||img.src;$("#zoomImg").alt=img.alt;z.classList.add("open");z.setAttribute("aria-hidden","false");return;
+  }
+});
+$("#featuredMinus").addEventListener("click",()=>{featuredQty=Math.max(1,featuredQty-1);renderFeatured()});
+$("#featuredPlus").addEventListener("click",()=>{featuredQty=Math.min(10,featuredQty+1);renderFeatured()});
+$("#featuredAdd").addEventListener("click",()=>{if(maxAddable(featuredProduct,featuredSel.color,featuredSel.size)>0){sel[featuredProduct.id]={...featuredSel};addToCart(featuredProduct,featuredSel.color,featuredSel.size,featuredQty);renderFeatured()}});
 
 /* ===== Filtri ===== */
 const tabs=$("#tabs");
@@ -956,7 +1081,7 @@ function renderStoreCarousels(){
 }
 $("#storeCarousels").addEventListener("click",e=>{
   const b=e.target.closest("[data-store-open]");if(!b)return;
-  const p=PRODUCTS.find(x=>x.id===b.dataset.storeOpen);if(p)openQuick(p);
+  const p=PRODUCTS.find(x=>x.id===b.dataset.storeOpen);if(p){featuredProduct=p;featuredSel={...sel[p.id]};fixSel(p,featuredSel);featuredQty=1;featuredGalleryIndex=0;renderFeatured();document.querySelector("#featuredStore").scrollIntoView({behavior:"smooth",block:"start"})}
 });
 
 /* ===== Varie ===== */
@@ -964,7 +1089,7 @@ let tt;function toast(t){const el=$("#toast");el.textContent=t;el.classList.add(
 document.addEventListener("click",e=>{if(e.target.closest("header nav a")){const t=$("#menu-toggle");t&&(t.checked=false)}});
 addEventListener("storage",e=>{if(e.key===K_CART){cart=store.get(K_CART,[]);renderCart();renderGrid()}});
 
-renderTabs();renderGrid();renderCart();renderStoreCarousels();loadStock();
+renderTabs();renderGrid();renderCart();renderStoreCarousels();renderFeatured();loadStock();
 })();
 </script>
 </body>
