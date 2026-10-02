@@ -149,7 +149,25 @@ body.locked{overflow:hidden}
 
 #quick{align-items:center;justify-content:center;padding:24px}
 .quick{background:#fff;border-radius:26px;width:min(920px,100%);max-height:calc(100vh - 48px);overflow:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
-.quick .media{cursor:default;height:100%;min-height:420px;aspect-ratio:auto}
+.quick .media{cursor:zoom-in;height:100%;min-height:520px;aspect-ratio:auto}
+.quick{width:min(1180px,94vw);grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr)}
+.quick-related{border-top:1px solid var(--line);padding-top:16px}
+.quick-related-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.quick-related-head strong{font-family:var(--display);font-size:18px}
+.quick-related-track{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(130px,165px);gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:thin}
+.quick-related-card{scroll-snap-align:start;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;cursor:pointer;text-align:left;padding:0}
+.quick-related-card img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block}
+.quick-related-card span{display:block;padding:8px 9px 10px;font-size:12px;font-weight:700;color:var(--ink);line-height:1.2}
+.zoom-overlay{position:fixed;inset:0;background:rgba(8,12,15,.94);z-index:1400;display:none;align-items:center;justify-content:center;padding:24px}
+.zoom-overlay.open{display:flex}
+.zoom-overlay img{max-width:94vw;max-height:92vh;width:auto;height:auto;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,.55);border-radius:12px;background:#111}
+.zoom-close{position:fixed;top:18px;right:22px;z-index:1401;width:48px;height:48px;border-radius:50%;border:1px solid #ffffff55;background:#111;color:#fff;font-size:28px;cursor:pointer}
+.pay-choice{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pay-choice label{position:relative;display:block}
+.pay-choice input{position:absolute;opacity:0;pointer-events:none}
+.pay-pill{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border:1px solid #CFC7BA;border-radius:12px;background:#fff;color:var(--ink);font-weight:800;cursor:pointer;padding:10px}
+.pay-choice input:checked + .pay-pill{border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,144,0,.18);background:#FFF8EC}
+.paypal-mark{font-weight:900;color:#123B77}
 .quick .close{position:absolute;top:16px;right:16px;z-index:2}
 .quick-body{padding:36px 34px;display:flex;flex-direction:column;gap:18px}
 .quick-body h2{margin:0;font-family:var(--display);font-weight:800;font-size:32px;line-height:1.08;letter-spacing:-.6px;padding-right:44px}
@@ -216,6 +234,11 @@ body.locked{overflow:hidden}
 }
 /* ===== Telefono ===== */
 @media(max-width:820px){
+  .quick{grid-template-columns:1fr;width:min(96vw,720px);max-height:94vh;overflow:auto}
+  .quick .media{min-height:420px}
+  .quick-related-track{grid-auto-columns:minmax(120px,145px)}
+  .pay-choice{grid-template-columns:1fr}
+
   :root{--px:20px}
   header{padding:12px 16px;gap:10px}
   header>a img{height:40px}
@@ -359,6 +382,10 @@ body.locked{overflow:hidden}
       </div>
       <div class="price" id="qPrice"></div>
       <p id="qDesc"></p>
+      <div class="quick-related" id="qRelatedWrap">
+        <div class="quick-related-head"><strong id="qRelatedTitle">Modelli simili</strong><span class="cat">Scorri →</span></div>
+        <div class="quick-related-track" id="qRelated"></div>
+      </div>
       <div><div class="opt-label">Colore: <strong id="qColorName"></strong></div><div class="swatches" id="qColors"></div></div>
       <div><div class="opt-label">Taglia: <strong id="qSizeName"></strong></div><div class="sizes" id="qSizes"></div></div>
       <div class="note" id="qNote" hidden></div>
@@ -368,6 +395,11 @@ body.locked{overflow:hidden}
       </div>
     </div>
   </div>
+</div>
+
+<div class="zoom-overlay" id="zoomOverlay" aria-hidden="true">
+  <button class="zoom-close" id="zoomClose" aria-label="Chiudi immagine">×</button>
+  <img id="zoomImg" alt="">
 </div>
 
 <!-- Carrello -->
@@ -380,6 +412,7 @@ body.locked{overflow:hidden}
       <div class="fields">
         <label>Nome e cognome<input name="nome" autocomplete="name" required></label>
         <label>Telefono<input name="tel" type="tel" autocomplete="tel" required></label>
+        <label class="full">Email<input name="email" type="email" autocomplete="email" required></label>
         <label class="full">Sede di ritiro
           <select name="sede" required>
             <option value="">Scegli la sede</option>
@@ -388,17 +421,21 @@ body.locked{overflow:hidden}
           </select>
         </label>
         <label class="full">Note (facoltative)<textarea name="note" rows="2" placeholder="Es. corso del martedì, ritiro dopo lezione"></textarea></label>
+        <div class="pay-choice" role="radiogroup" aria-label="Metodo di pagamento">
+          <label><input type="radio" name="pagamento" value="paypal" required><span class="pay-pill"><span class="paypal-mark">PayPal</span> Paga con PayPal</span></label>
+          <label><input type="radio" name="pagamento" value="sede" required checked><span class="pay-pill">Paga in sede</span></label>
+        </div>
       </div>
       <div class="err" id="formErr" role="alert"></div>
       <input type="text" name="_hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
       <button type="submit" class="btn btn-orange send">Invia l’ordine</button>
-      <p class="fine">Ti mettiamo da parte i capi e li paghi al ritiro in sede. I dati servono solo a gestire l’ordine (<a href="/privacy-policy/" target="_blank" rel="noopener">privacy</a>).</p>
+      <p class="fine">Scegli se pagare con PayPal o al ritiro in sede. I dati servono solo a gestire l’ordine (<a href="/privacy-policy/" target="_blank" rel="noopener">privacy</a>).</p>
     </form>
     <div class="done" id="done" hidden>
       <div class="done-icon" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
       <h3>Ordine ricevuto!</h3>
       <p>Il tuo ordine <strong id="doneId"></strong> è registrato e i capi sono messi da parte per te.</p>
-      <p>Ritiro nella sede <strong id="doneSede"></strong> · totale <strong id="doneTot"></strong>, da pagare al ritiro. Ti scriviamo quando è pronto.</p>
+      <p>Ritiro nella sede <strong id="doneSede"></strong> · totale <strong id="doneTot"></strong>. Metodo di pagamento: <strong id="donePay"></strong>. Ti scriviamo quando è pronto.</p>
       <a class="btn-wa" id="doneWa" href="#" target="_blank" rel="noopener">Scrivici su WhatsApp</a>
       <button class="btn more" data-close>Torna al negozio</button>
     </div>
@@ -587,6 +624,25 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){const o=document.qu
 
 /* ===== Scheda prodotto ===== */
 const quick=$("#quick");let qp=null,qs=null,qq=1;
+function relatedHTML(p){
+  let items=[];
+  if(p.cat==="tshirt"){
+    items=PRODUCTS.filter(x=>x.cat==="tshirt"&&x.id!==p.id).map(x=>({p:x,color:colorsOf(x)[0]||x.colors[0]}));
+  }else if(p.cat==="felpe"){
+    items=colorsOf(p).filter(col=>col!==qs.color).map(col=>({p,color:col}));
+  }else{
+    items=PRODUCTS.filter(x=>x.cat===p.cat&&x.id!==p.id).map(x=>({p:x,color:colorsOf(x)[0]||x.colors[0]}));
+  }
+  const title=p.cat==="tshirt"?"Altre T-shirt":p.cat==="felpe"?"Altre Felpe":"Prodotti simili";
+  $("#qRelatedTitle").textContent=title;
+  $("#qRelatedWrap").hidden=!items.length;
+  return items.map(({p:x,color})=>{
+    const src=imgFor(x,color);
+    return '<button type="button" class="quick-related-card" data-related-id="'+x.id+'" data-related-color="'+esc(color)+'">'+
+      (src?'<img src="'+src+'" alt="'+esc(x.family+" "+x.name+" – "+color)+'">':'<div class="placeholder" style="aspect-ratio:4/5">'+SOCK_SVG+'</div>')+
+      '<span>'+esc(x.name)+(p.cat==="felpe"?' · '+esc(color):'')+'</span></button>';
+  }).join("");
+}
 function renderQuick(){
   const max=maxAddable(qp,qs.color,qs.size);
   qq=Math.max(1,Math.min(qq,max||1));
@@ -595,6 +651,7 @@ function renderQuick(){
   $("#qColorName").textContent=qs.color;$("#qSizeName").textContent=qs.size;
   $("#qColors").innerHTML=swatchesHTML(qp,qs.color);
   $("#qSizes").innerHTML=sizesHTML(qp,qs.color,qs.size);
+  $("#qRelated").innerHTML=relatedHTML(qp);
   $("#qQty").textContent=qq;
   const q=qtyOf(qp,qs.color,qs.size);
   const hasAny=Object.keys(qp.images).length>0,noPic=hasAny&&(qp.noPhoto||[]).includes(qs.color);
@@ -610,15 +667,32 @@ function openQuick(p){
   renderQuick();openOverlay(quick);
 }
 quick.addEventListener("click",e=>{
-  const c=e.target.closest("#qColors [data-color]"),z=e.target.closest("#qSizes [data-size]"),q=e.target.closest("[data-q]");
+  const c=e.target.closest("#qColors [data-color]"),z=e.target.closest("#qSizes [data-size]"),q=e.target.closest("[data-q]"),r=e.target.closest("[data-related-id]");
   if(c){qs.color=c.dataset.color;fixSel(qp,qs);renderQuick()}
   else if(z){qs.size=z.dataset.size;renderQuick()}
   else if(q){qq=qq+Number(q.dataset.q);renderQuick()}
+  else if(r){
+    const p=PRODUCTS.find(x=>x.id===r.dataset.relatedId);
+    if(p){
+      qp=p;qs={...sel[p.id]};if(r.dataset.relatedColor)qs.color=r.dataset.relatedColor;fixSel(p,qs);qq=1;
+      $("#qCat").textContent=p.family;$("#qTitle").textContent=p.name;$("#qDesc").textContent=p.desc;renderQuick();
+    }
+  }
+  else if(e.target.closest("#qMedia img")){
+    const img=e.target.closest("#qMedia img"),zov=$("#zoomOverlay");
+    $("#zoomImg").src=img.currentSrc||img.src;$("#zoomImg").alt=img.alt||"Immagine prodotto";
+    zov.classList.add("open");zov.setAttribute("aria-hidden","false");
+  }
 });
 $("#qAdd").addEventListener("click",()=>{
   if(maxAddable(qp,qs.color,qs.size)<1)return;
   sel[qp.id]={...qs};addToCart(qp,qs.color,qs.size,qq);closeOverlay(quick);renderGrid();
 });
+
+const zoomOverlay=$("#zoomOverlay");
+$("#zoomClose").addEventListener("click",()=>{zoomOverlay.classList.remove("open");zoomOverlay.setAttribute("aria-hidden","true");$("#zoomImg").removeAttribute("src")});
+zoomOverlay.addEventListener("click",e=>{if(e.target===zoomOverlay){zoomOverlay.classList.remove("open");zoomOverlay.setAttribute("aria-hidden","true");$("#zoomImg").removeAttribute("src")}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&zoomOverlay.classList.contains("open")){$("#zoomClose").click()}});
 
 /* ===== Carrello ===== */
 const drawer=$("#drawer");
@@ -671,15 +745,16 @@ const ERRORI={campi_mancanti:"Compila nome, telefono e sede di ritiro.",telefono
 $("#checkout").addEventListener("submit",e=>{
   e.preventDefault();
   const f=e.target,err=$("#formErr"),send=f.querySelector(".send");
-  const nome=f.nome.value.trim(),tel=f.tel.value.trim(),sede=f.sede.value,note=f.note.value.trim();
+  const nome=f.nome.value.trim(),tel=f.tel.value.trim(),email=f.email.value.trim(),sede=f.sede.value,note=f.note.value.trim(),pagamento=(f.pagamento.value||"sede");
   err.innerHTML="";
   if(!cart.length){err.textContent=ERRORI.carrello_vuoto;return}
-  if(!nome||!tel||!sede){err.textContent=ERRORI.campi_mancanti;(!nome?f.nome:!tel?f.tel:f.sede).focus();return}
+  if(!nome||!tel||!email||!sede){err.textContent="Compila nome, telefono, email e sede di ritiro.";(!nome?f.nome:!tel?f.tel:!email?f.email:f.sede).focus();return}
+  if(!/^\S+@\S+\.\S+$/.test(email)){err.textContent="Controlla l’indirizzo email.";f.email.focus();return}
   if(tel.replace(/\D/g,"").length<8){err.textContent=ERRORI.telefono_non_valido;f.tel.focus();return}
   const righe=cart.map(l=>{const p=lineP(l);return "• "+l.qty+"× "+p.family+" "+p.name+" – "+l.color+", taglia "+l.size+" ("+euro(priceOf(p,l.color,l.size)*l.qty)+")"});
-  const dati=["Totale: "+euro(cartTotal()),"Nome: "+nome,"Telefono: "+tel,"Ritiro: sede "+sede].concat(note?["Note: "+note]:[]);
+  const dati=["Totale: "+euro(cartTotal()),"Nome: "+nome,"Telefono: "+tel,"Email: "+email,"Ritiro: sede "+sede,"Pagamento: "+(pagamento==="paypal"?"PayPal":"In sede")].concat(note?["Note: "+note]:[]);
 
-  // Magazzino non attivo: l'ordine parte solo su WhatsApp, come prima
+  // Magazzino non attivo: l’ordine parte su WhatsApp mantenendo anche il metodo di pagamento scelto
   if(!live()){
     window.open(waUrl(waText(righe,dati)),"_blank","noopener");
     cart=[];saveCart();renderCart();f.reset();closeOverlay(drawer);
@@ -688,13 +763,13 @@ $("#checkout").addEventListener("submit",e=>{
 
   send.disabled=true;send.textContent="Invio in corso…";
   fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({
-    action:"ordine",nome,telefono:tel,sede,note,_hp:f._hp.value,
+    action:"ordine",nome,telefono:tel,email,sede,note,pagamento,_hp:f._hp.value,
     items:cart.map(l=>({id:l.id,colore:l.color,taglia:l.size,qty:l.qty}))
   })}).then(r=>r.json()).then(j=>{
     if(j&&j.ok){
       const tot=typeof j.totale==="number"?j.totale:cartTotal();
-      $("#doneId").textContent=j.id;$("#doneSede").textContent=sede;$("#doneTot").textContent=euro(tot);
-      $("#doneWa").href=waUrl("Ciao Artyou! Ho appena fatto l’ordine "+j.id+" dal sito ("+euro(tot)+"), ritiro nella sede "+sede+". Nome: "+nome+".");
+      $("#doneId").textContent=j.id;$("#doneSede").textContent=sede;$("#doneTot").textContent=euro(tot);$("#donePay").textContent=pagamento==="paypal"?"PayPal":"In sede";
+      $("#doneWa").href=waUrl("Ciao Artyou! Ho appena fatto l’ordine "+j.id+" dal sito ("+euro(tot)+"), ritiro nella sede "+sede+". Pagamento: "+(pagamento==="paypal"?"PayPal":"in sede")+". Nome: "+nome+".");
       cart=[];saveCart();f.reset();renderCart();showStep("done");
       loadStock();
       return;
