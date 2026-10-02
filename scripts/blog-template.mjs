@@ -158,13 +158,14 @@ export function renderIndex() {
   <div class="hero-text">
     <nav class="crumbs" aria-label="Percorso"><a href="/">Home</a><span>/</span><span>La finestra sul cortile</span></nav>
     <p class="kicker">Il blog internazionale di Artyou Roma</p>
-    <h1>La finestra <span>sul cortile</span></h1>
+    <h1>La finestra<br><span>sul cortile</span></h1>
     <p class="subtitle">Lo sconfinato mondo dell’improvvisazione</p>
-    <p class="lead">Uno sguardo oltre Roma: festival, artisti, scuole, format, tecniche e idee che attraversano il mondo dell’improvvisazione teatrale. Ogni settimana un nuovo articolo.</p>
+    <p class="lead">Affacciati con noi: festival, artisti, scuole e idee che attraversano il mondo dell’improvvisazione teatrale. Due nuovi articoli ogni settimana.</p>
   </div>
-  <div class="window" aria-hidden="true">
-    <span></span><span></span><span></span><span></span>
-  </div>
+  <picture class="hero-photo">
+    <source media="(max-width:900px)" srcset="/img/blog/finestra-hero-mobile.webp">
+    <img src="/img/blog/finestra-hero-2000.webp" srcset="/img/blog/finestra-hero-1100.webp 1100w, /img/blog/finestra-hero-2000.webp 2000w" sizes="(max-width:1440px) 100vw, 1440px" width="2000" height="762" alt="Un uomo affacciato alla finestra si porta la mano all’orecchio per ascoltare cosa succede in cortile" fetchpriority="high">
+  </picture>
 </section>
 <nav class="tabs" aria-label="Rubriche">
   <div class="tabs-inner">

@@ -49,19 +49,15 @@ header nav a.menu-extra{display:none}
 .read span{display:inline-block;transition:transform .2s}
 
 /* ===== Archivio: hero ===== */
-.hero{background:var(--ink);color:var(--cream);padding:56px var(--px) 60px;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:56px;align-items:center;overflow:hidden}
-.hero h1{margin:0;font-family:var(--display);font-weight:800;font-size:68px;line-height:.98;letter-spacing:-2px}
+.hero{position:relative;background:#06172A;color:var(--cream);min-height:clamp(420px,38vw,548px);display:flex;align-items:center;padding:48px var(--px);overflow:hidden;isolation:isolate}
+.hero-photo{position:absolute;inset:0;z-index:-1}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:right center;display:block}
+.hero-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,23,42,.55) 0%,rgba(6,23,42,.25) 30%,rgba(6,23,42,0) 50%)}
+.hero-text{max-width:520px}
+.hero h1{margin:0;font-family:var(--display);font-weight:800;font-size:72px;line-height:.95;letter-spacing:-2.2px}
 .hero h1 span{color:var(--orange)}
 .subtitle{margin:14px 0 0;font-family:var(--display);font-weight:600;font-size:24px;color:#E6EBEE}
-.hero .lead{margin:18px 0 0;font-size:18px;line-height:1.6;color:var(--soft);max-width:620px}
-/* la "finestra": quattro vetri con le luci del cortile */
-.window{justify-self:center;width:min(300px,100%);aspect-ratio:4/5;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;border:3px solid #2A333B;border-radius:24px 24px 10px 10px;background:#0D1115;position:relative;box-shadow:0 30px 60px rgba(0,0,0,.35)}
-.window:after{content:"";position:absolute;left:-14px;right:-14px;bottom:-16px;height:14px;border-radius:6px;background:#2A333B}
-.window span{border-radius:10px 10px 4px 4px;background:linear-gradient(160deg,#F09000,#C97800);opacity:.95}
-.window span:nth-child(2){background:linear-gradient(160deg,#1A6E99,#12506F)}
-.window span:nth-child(3){background:linear-gradient(160deg,#7A1631,#B13A32)}
-.window span:nth-child(4){background:linear-gradient(160deg,#2F7D4F,#1F5A38)}
-
+.hero .lead{margin:18px 0 0;font-size:17px;line-height:1.6;color:var(--soft);max-width:460px}
 /* ===== Archivio: rubriche ===== */
 .tabs{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:96px;z-index:400}
 .tabs-inner{display:flex;gap:28px;padding:0 var(--px);overflow-x:auto;scrollbar-width:none}
@@ -156,8 +152,8 @@ footer a{color:var(--grey)}footer strong{color:#E6EBEE}
   header nav{gap:16px}
   header nav a{font-size:15px}
   .long{display:none}.short{display:inline}
-  .hero{grid-template-columns:1fr 220px;gap:36px}
-  .hero h1{font-size:56px}
+  .hero h1{font-size:58px}
+  .hero-text{max-width:430px}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 /* ===== Telefono ===== */
@@ -176,8 +172,10 @@ footer a{color:var(--grey)}footer strong{color:#E6EBEE}
   #menu-toggle:checked~nav a.menu-extra{display:block;padding-left:18px;font-size:17px;color:var(--soft)}
   #menu-toggle:checked~.head-actions .menu-btn .bars{display:none}
   #menu-toggle:checked~.head-actions .menu-btn .x{display:block}
-  .hero{grid-template-columns:1fr;padding:30px 20px 36px;gap:0}
-  .window{display:none}
+  .hero{flex-direction:column;align-items:stretch;min-height:0;padding:0;background:#06172A}
+  .hero-photo{position:relative;inset:auto;order:2;aspect-ratio:900/615}
+  .hero-photo:after{background:linear-gradient(180deg,#06172A 0%,rgba(6,23,42,0) 28%)}
+  .hero-text{order:1;padding:28px 20px 6px;max-width:none}
   .hero h1{font-size:44px;letter-spacing:-1px}
   .subtitle{font-size:20px}
   .hero .lead{font-size:16px}
