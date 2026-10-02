@@ -27,6 +27,12 @@ data.festivalsCovered=data.festivalsCovered||[];
 const previous=data.articles.slice(0,24).map(x=>({title:x.title,category:x.category,date:x.date}));
 const today=new Date().toISOString().slice(0,10);
 
+// avvio automatico: se oggi è già uscito un articolo (tentativo di riserva), non ne scrive un altro
+if(!process.env.RUBRICA&&data.articles.some(x=>x.date===today)){
+  console.log("Oggi l'articolo è già stato pubblicato: nessuna nuova uscita.");
+  process.exit(0);
+}
+
 const ALTRE=["Improv around the world","Impro People","Dentro l'improv"];
 const RUBRICHE=["Festival Radar",...ALTRE];
 let category=process.env.RUBRICA&&RUBRICHE.includes(process.env.RUBRICA)?process.env.RUBRICA:null;

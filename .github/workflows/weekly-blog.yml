@@ -12,14 +12,23 @@ on:
     # lunedì: Festival Radar · giovedì: le altre rubriche a rotazione
     - cron: "15 8 * * 1"
     - cron: "15 8 * * 4"
+    # tentativi di riserva nello stesso giorno: partono solo se alle 8 non è uscito nulla
+    - cron: "15 13 * * 1"
+    - cron: "15 13 * * 4"
+    - cron: "15 18 * * 1"
+    - cron: "15 18 * * 4"
 
 permissions:
   contents: write
 
+concurrency:
+  group: blog-finestra-sul-cortile
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -31,12 +40,22 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
           RUBRICA: ${{ github.event.inputs.rubrica }}
-        run: node scripts/generate-blog.mjs
+        # fino a 3 tentativi, a 5 minuti di distanza, se un servizio non risponde
+        run: |
+          for i in 1 2 3; do
+            if node scripts/generate-blog.mjs; then exit 0; fi
+            echo "Tentativo $i non riuscito"; git checkout -- . ; git clean -fdq la-finestra-sul-cortile/
+            [ $i -lt 3 ] && sleep 300
+          done
+          exit 1
       - name: Foto per gli articoli che non ce l'hanno
+        if: always()
+        continue-on-error: true
         env:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
         run: node scripts/blog-images.mjs
       - name: Commit se ci sono novità
+        if: always()
         run: |
           if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
             echo "Nessuna modifica da pubblicare."
@@ -46,4 +65,8 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add blog/articles.json la-finestra-sul-cortile/
           git commit -m "blog: articolo settimanale La finestra sul cortile"
-          git push
+          for i in 1 2 3; do
+            git pull --rebase -q origin main && git push && exit 0
+            echo "Push non riuscito, riprovo"; sleep 20
+          done
+          exit 1
