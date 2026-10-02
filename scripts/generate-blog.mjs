@@ -71,7 +71,13 @@ const payload={
   temperature:0.4
 };
 
-const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
+const models=["openrouter/free","meta-llama/llama-3.3-70b-instruct:free","google/gemma-3-27b-it:free"];
+let res=null, lastErr="";
+for(const model of models){
+  try{
+    const ctrl=new AbortController();
+    const timer=setTimeout(()=>ctrl.abort(),45000);
+    res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
   method:"POST",
   headers:{
     "Authorization":`Bearer ${key}`,
@@ -79,9 +85,15 @@ const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
     "HTTP-Referer":"https://artyouroma.it/",
     "X-Title":"Artyou Blog"
   },
-  body:JSON.stringify(payload)
-});
-if(!res.ok) throw new Error("OpenRouter API "+res.status+" "+await res.text());
+  body:JSON.stringify({...payload,model}),
+  signal:ctrl.signal
+    });
+    clearTimeout(timer);
+    if(res.ok) break;
+    lastErr="OpenRouter API "+res.status+" "+await res.text();
+  }catch(e){lastErr=String(e);}
+}
+if(!res||!res.ok) throw new Error(lastErr||"OpenRouter non disponibile");
 const out=await res.json();
 let text=out.choices?.[0]?.message?.content||"";
 text=text.trim().replace(/^\`\`\`json\s*/i,"").replace(/\`\`\`$/,"").trim();
