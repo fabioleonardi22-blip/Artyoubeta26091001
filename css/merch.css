@@ -44,7 +44,7 @@ header nav a.menu-extra{display:none}
 .crumbs{font-size:13px;color:var(--grey);display:flex;gap:8px;margin-bottom:8px}
 .crumbs a{color:var(--soft)}
 .kicker{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange)}
-.hero h1{margin:0;font-family:var(--display);font-weight:800;font-size:40px;line-height:1.02;letter-spacing:-.8px}
+.hero h1{margin:0;font-family:var(--display);font-weight:800;font-size:46px;line-height:1.02;letter-spacing:-.8px}
 .hero .lead{margin:10px 0 0;font-size:17px;line-height:1.5;color:var(--soft)}
 .hero-cta{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap;align-items:center}
 .hero-cta .btn{padding:11px 18px;font-size:14px}
@@ -391,3 +391,5 @@ body.locked{overflow:hidden}
   .merch-seo-copy h2{font-size:24px}
   .merch-seo-cats{grid-template-columns:1fr}
 }
+
+@media(max-width:760px){.hero h1{font-size:40px}}
