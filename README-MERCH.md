@@ -1,6 +1,6 @@
 # Artyou Merch – magazzino e ordini
 
-Il magazzino del merchandising vive in un **Google Sheet dedicato**. La pagina `merchandising.html` lo legge tramite `/api/merch` (proxy Vercel in `api/merch.js`), che a sua volta chiama lo script `google-apps-script/MerchMagazzino.gs`.
+Il magazzino del merchandising vive in un **Google Sheet dedicato**. Le pagine `merchandising.html` e `merchandising-prodotto.html` lo leggono tramite `/api/merch` (proxy Vercel in `api/merch.js`), che a sua volta chiama lo script `google-apps-script/MerchMagazzino.gs`.
 
 Finché lo script non è collegato, la pagina funziona lo stesso in **modalità solo WhatsApp**: niente disponibilità mostrate, l'ordine parte come messaggio WhatsApp.
 
@@ -40,9 +40,15 @@ Finché lo script non è collegato, la pagina funziona lo stesso in **modalità 
 4. Il pagamento avviene al ritiro in sede.
 
 ## Aggiungere un prodotto nuovo
-1. Carica la foto in `img/merch/` e aggiungi il prodotto all'elenco `PRODUCTS` in `merchandising.html` (scegli un `id`, per esempio `tote-bag`).
+1. Carica la foto in `img/merch/` e aggiungi il prodotto all'elenco `PRODUCTS` in `js/merch.js` (scegli un `id`, per esempio `tote-bag`).
 2. Nel foglio Magazzino aggiungi una riga per ogni colore/taglia con **lo stesso `ProdottoID`** e gli stessi nomi di colori e taglie usati nella pagina.
 
 ## Note
 - `merchandising-gestionale.html` era la demo che salvava i dati nel browser: con il Google Sheet non serve più e si può eliminare.
 - Il carrello del cliente resta salvato nel suo browser finché non invia l'ordine.
+
+## File delle pagine
+- `merchandising.html` – il negozio (griglia prodotti con filtri).
+- `merchandising-prodotto.html?id=<id>` – la pagina di ogni prodotto (galleria, colori, taglie, modelli simili, altri prodotti).
+- `css/merch.css` e `js/merch.js` – stile, catalogo, carrello e collegamento al magazzino, condivisi dalle due pagine.
+- Foto extra di un prodotto (retro, dettagli): caricale in `img/merch/` e aggiungile in `js/merch.js` come `gallery:["/img/merch/nome-foto.webp"]`; compaiono come miniature nella pagina prodotto.
