@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { renderArticle, bodyFromParagraphs, sourcesFromList } from "./blog-template.mjs";
+import { findImage, QUERY_RUBRICA } from "./blog-images.mjs";
 
 const geminiKey=process.env.GEMINI_API_KEY;
 const openrouterKey=process.env.OPENROUTER_API_KEY;
@@ -59,13 +60,14 @@ FONTI:
 ${sourceBundle}
 
 Restituisci SOLO JSON valido:
-{"title":"","slug":"","category":"","excerpt":"","body":["paragrafo 1","paragrafo 2","paragrafo 3"],"sources":[{"name":"","url":""}],"radar":[]}
+{"title":"","slug":"","category":"","excerpt":"","image_query":"","body":["paragrafo 1","paragrafo 2","paragrafo 3"],"sources":[{"name":"","url":""}],"radar":[]}
 
 Requisiti:
 - slug minuscolo con trattini
 - excerpt massimo 180 caratteri
 - body totale circa 1000-1500 caratteri
-- se la categoria finale non è Festival Radar, radar deve essere []`;
+- se la categoria finale non è Festival Radar, radar deve essere []
+- image_query: 2-4 parole IN INGLESE per cercare una foto d'atmosfera su Unsplash (un luogo o un tema, es. "Chicago theater night", "comedy club stage"); MAI nomi di persone`;
 
 async function callGemini(){
   if(!geminiKey) return null;
@@ -169,8 +171,14 @@ const today=new Date().toISOString().slice(0,10);
 const dir=path.join(root,"la-finestra-sul-cortile",a.slug);
 fs.mkdirSync(dir,{recursive:true});
 
+let img=null;
+try{
+  const q=String(a.image_query||"").replace(/[^\w\s-]/g," ").trim().slice(0,60);
+  img=await findImage(q||QUERY_RUBRICA[a.category]||"improv theatre stage",{seed:a.slug});
+  if(!img&&q) img=await findImage(QUERY_RUBRICA[a.category]||"improv theatre stage",{seed:a.slug});
+}catch(e){console.log("Foto non trovata:",String(e));}
 const html=renderArticle({slug:a.slug,title:a.title,category:a.category,date:today,excerpt:a.excerpt,
-  bodyHtml:bodyFromParagraphs(a.body),sourcesHtml:sourcesFromList(a.sources)});
+  bodyHtml:bodyFromParagraphs(a.body),sourcesHtml:sourcesFromList(a.sources),...(img||{})});
 
 fs.writeFileSync(path.join(dir,"index.html"),html);
 data.articles=data.articles||[];
@@ -181,7 +189,9 @@ data.articles.unshift({
   category:a.category,
   date:today,
   excerpt:a.excerpt,
-  url:`/la-finestra-sul-cortile/${a.slug}/`
+  url:`/la-finestra-sul-cortile/${a.slug}/`,
+  ...(a.image_query?{imageQuery:a.image_query}:{}),
+  ...(img||{})
 });
 data.updated=today;
 fs.writeFileSync(dataPath,JSON.stringify(data,null,2)+"\n");

@@ -33,3 +33,11 @@ Le categorie ruotano:
 Gli articoli sono in italiano e hanno una lunghezza indicativa di 1000-1500 caratteri.
 
 La branch di test resta separata da `main` finché non viene approvata.
+
+## Foto degli articoli (Unsplash)
+Ogni articolo nuovo riceve una foto d'atmosfera da Unsplash, cercata con le parole chiave suggerite dal modello (`image_query`, sempre luoghi o temi, mai persone). Se non trova nulla usa una ricerca di riserva per rubrica; se Unsplash non risponde, l'articolo esce lo stesso con il riquadro colorato.
+
+- Segreto GitHub richiesto: `UNSPLASH_ACCESS_KEY` (gratuito, da unsplash.com/developers).
+- Le foto restano ospitate su Unsplash e ogni articolo cita il fotografo, come chiedono le linee guida Unsplash.
+- `node scripts/blog-images.mjs` aggiunge la foto agli articoli che non ce l'hanno (gira anche ogni settimana nel workflow).
+- Per scegliere una foto a mano basta scrivere nell'articolo in `blog/articles.json` i campi `image`, `imageThumb`, `imageAlt`, `imageCredit` (`name`, `url`).

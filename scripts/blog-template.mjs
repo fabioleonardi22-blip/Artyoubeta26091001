@@ -65,7 +65,7 @@ export function footer() {
 </footer>`;
 }
 
-export function page({ title, description, canonical, body, ogType = "website", jsonLd = "" }) {
+export function page({ title, description, canonical, body, ogType = "website", jsonLd = "", ogImage = "" }) {
   return `<!doctype html>
 <html lang="it">
 <head>
@@ -78,6 +78,7 @@ export function page({ title, description, canonical, body, ogType = "website", 
 <meta property="og:description" content="${safe(description)}">
 <meta property="og:type" content="${ogType}">
 <meta property="og:url" content="${safe(canonical)}">
+${ogImage ? `<meta property="og:image" content="${safe(ogImage)}">` : ""}
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -100,8 +101,17 @@ ${footer()}
 `;
 }
 
+// Foto di copertina con la citazione richiesta da Unsplash.
+// Se l'articolo non ha ancora la foto, il riquadro resta vuoto e lo completa blog.js
+// leggendo articles.json (così le foto aggiunte dopo compaiono anche negli articoli vecchi).
+export function coverHtml({ image, imageAlt, imageCredit, imageSourceUrl, title }) {
+  if (!image) return `<figure class="cover" id="cover" hidden></figure>`;
+  const credit = imageCredit ? `<figcaption>Foto di <a href="${safe(imageCredit.url)}" target="_blank" rel="noopener">${safe(imageCredit.name)}</a> su <a href="${safe(imageSourceUrl || "https://unsplash.com/")}" target="_blank" rel="noopener">Unsplash</a></figcaption>` : "";
+  return `<figure class="cover" id="cover" data-ready="1"><img src="${safe(image)}" alt="${safe(imageAlt || title)}" width="1600" height="900">${credit}</figure>`;
+}
+
 // Pagina di un articolo. bodyHtml e sourcesHtml sono già HTML sicuro.
-export function renderArticle({ slug, title, category, date, excerpt, bodyHtml, sourcesHtml }) {
+export function renderArticle({ slug, title, category, date, excerpt, bodyHtml, sourcesHtml, image, imageAlt, imageCredit, imageSourceUrl }) {
   const url = `https://artyouroma.it/la-finestra-sul-cortile/${slug}/`;
   const parole = String(bodyHtml).replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
   const minuti = Math.max(1, Math.round(parole / 220));
@@ -120,6 +130,7 @@ export function renderArticle({ slug, title, category, date, excerpt, bodyHtml, 
   </div>
 </section>
 <article class="article">
+  ${coverHtml({ image, imageAlt, imageCredit, imageSourceUrl, title })}
   <div class="prose">
 ${bodyHtml}
   </div>
@@ -132,7 +143,7 @@ ${bodyHtml}
 </section>
 ${outro()}
 <script src="/blog/blog.js" defer></script>`;
-  return page({ title: `${title} | La finestra sul cortile`, description: excerpt, canonical: url, body, ogType: "article", jsonLd: ld });
+  return page({ title: `${title} | La finestra sul cortile`, description: excerpt, canonical: url, body, ogType: "article", jsonLd: ld, ogImage: image || "" });
 }
 
 // HTML del corpo e delle fonti per un articolo generato dal modello (testo semplice)

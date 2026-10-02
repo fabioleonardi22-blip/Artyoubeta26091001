@@ -7,7 +7,8 @@ function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){retur
 function data(iso){var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso||"");return m?Number(m[3])+" "+MESI[Number(m[2])-1]+" "+m[1]:esc(iso)}
 function cc(c){return "cat-"+(CAT[c]||"world")}
 function card(a){
-  return '<article class="card"><a class="card-link" href="'+esc(a.url)+'">'+
+  return '<article class="card'+(a.image?' has-img':'')+'"><a class="card-link" href="'+esc(a.url)+'">'+
+    (a.image?'<span class="card-img"><img src="'+esc(a.imageThumb||a.image)+'" alt="" loading="lazy"></span>':'')+
     '<div class="card-top"><span class="chip '+cc(a.category)+'">'+esc(a.category)+'</span><span class="date">'+data(a.date)+'</span></div>'+
     '<h3>'+esc(a.title)+'</h3><p>'+esc(a.excerpt)+'</p><span class="read">Leggi l’articolo <span aria-hidden="true">→</span></span></a></article>';
 }
@@ -26,6 +27,8 @@ if(grid){
   };
   load().then(function(d){
     all=d.articles;var f=all[0];
+    var fe=document.getElementById("feature");
+    if(f&&f.image){fe.classList.add("has-img");fe.style.setProperty("--feat-img",'url("'+String(f.image).replace(/["\\]/g,"")+'")')}
     if(f)document.getElementById("feature").innerHTML='<a class="feature-link" href="'+esc(f.url)+'"><p class="kicker">Ultimo articolo · '+data(f.date)+'</p><span class="chip '+cc(f.category)+'">'+esc(f.category)+'</span><h2>'+esc(f.title)+'</h2><p>'+esc(f.excerpt)+'</p><span class="read">Leggi l’articolo <span aria-hidden="true">→</span></span></a>';
     else document.getElementById("feature").innerHTML='<p class="kicker">In arrivo</p><h2>Il primo articolo sta per uscire.</h2>';
     var radar=d.radar||[];
@@ -44,7 +47,12 @@ if(grid){
 var more=document.getElementById("more");
 if(more){
   load().then(function(d){
-    var cur=more.dataset.current,list=d.articles.filter(function(a){return a.slug!==cur}).slice(0,3);
+    var cur=more.dataset.current,me=d.articles.filter(function(a){return a.slug===cur})[0],cv=document.getElementById("cover");
+    if(me&&me.image&&cv&&!cv.dataset.ready){
+      cv.innerHTML='<img src="'+esc(me.image)+'" alt="'+esc(me.imageAlt||me.title)+'" width="1600" height="900">'+(me.imageCredit?'<figcaption>Foto di <a href="'+esc(me.imageCredit.url)+'" target="_blank" rel="noopener">'+esc(me.imageCredit.name)+'</a> su <a href="'+esc(me.imageSourceUrl||"https://unsplash.com/")+'" target="_blank" rel="noopener">Unsplash</a></figcaption>':'');
+      cv.hidden=false;cv.dataset.ready="1";
+    }
+    varlist=d.articles.filter(function(a){return a.slug!==cur}).slice(0,3);
     if(!list.length)return;
     document.getElementById("moreGrid").innerHTML=list.map(card).join("");more.hidden=false;
   }).catch(function(){});
