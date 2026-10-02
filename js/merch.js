@@ -94,7 +94,7 @@ const PRODUCTS=[
 /* ===== Magazzino (Google Sheet tramite /api/merch) =====
    Se il magazzino non risponde, il sito resta usabile: niente
    disponibilità mostrate e l'ordine parte solo via WhatsApp. */
-const API="/api/merch",K_CART="artyou_merch_cart",SHOP_URL="/merchandising.html";
+const API="/api/merch",K_CART="artyou_merch_cart",SHOP_URL="/merchandising/";
 const productUrl=(p,color)=>"/merchandising-prodotto.html?id="+encodeURIComponent(p.id)+(color?"&colore="+encodeURIComponent(color):"");
 let STOCK=null;
 const store={
@@ -243,7 +243,7 @@ function renderCart(){
   showStep(step==="done"&&!cart.length?"done":"cart");
   $("#cartItems").innerHTML=cart.length?cart.map((l,i)=>{
     const p=lineP(l),src=imgFor(p,l.color),q=qtyOf(p,l.color,l.size),warn=q!==null&&q<l.qty;
-    return '<div class="line'+(warn?' warn':'')+'"><a class="thumb" href="'+productUrl(p,l.color)+'">'+(src?'<img src="'+src+'" alt="">':'<div class="placeholder" style="gap:0">'+SOCK_SVG+'</div>')+'</a>'+
+    return '<div class="line'+(warn?' warn':'')+'"><a class="thumb" href="'+productUrl(p,l.color)+'">'+(src?'<img src="'+src+'" alt="'+esc(p.family+" "+p.name+" – "+l.color)+'">':'<div class="placeholder" style="gap:0">'+SOCK_SVG+'</div>')+'</a>'+
       '<div><strong>'+esc(p.family+" · "+p.name)+'</strong><small>'+l.color+' · Taglia '+l.size+'</small><br><small>'+euro(priceOf(p,l.color,l.size))+' cad.</small>'+
       (warn?'<br><small class="warn-txt">'+(q===0?'Non più disponibile':'Disponibili solo '+q)+'</small>':'')+'</div>'+
       '<div class="right"><div class="qty"><button type="button" data-i="'+i+'" data-d="-1" aria-label="Diminuisci">−</button><output>'+l.qty+'</output><button type="button" data-i="'+i+'" data-d="1" aria-label="Aumenta"'+(maxAddable(p,l.color,l.size)<1?' disabled':'')+'>+</button></div>'+
@@ -456,7 +456,7 @@ if(pdp){
       qty=Math.max(1,Math.min(qty,max||1));
       
       pdp.querySelector(".main-img").innerHTML=imgHTML(mainSrc,p.family+" "+p.name+" – "+s.color,true)+badgeHTML(p);
-      const th=pdp.querySelector(".thumbs");if(th)th.innerHTML=gal.length>1?gal.map((g,i)=>'<button type="button" class="thumb'+(g.src===mainSrc?' on':'')+'" data-g="'+i+'" aria-label="Foto '+(i+1)+(g.color?" – "+g.color:"")+'" aria-pressed="'+(g.src===mainSrc)+'"><img src="'+g.src+'" alt=""></button>').join(""):"";
+      const th=pdp.querySelector(".thumbs");if(th)th.innerHTML=gal.length>1?gal.map((g,i)=>'<button type="button" class="thumb'+(g.src===mainSrc?' on':'')+'" data-g="'+i+'" aria-label="Foto '+(i+1)+(g.color?" – "+g.color:"")+'" aria-pressed="'+(g.src===mainSrc)+'"><img src="'+g.src+'" alt="'+esc(p.family+" "+p.name+(g.color?" – "+g.color:"")+" – foto "+(i+1))+'"></button>').join(""):"";
       $("#pPrice").textContent=euro(priceOf(p,s.color,s.size));
       $("#pColor").textContent=s.color;$("#pSize").textContent=s.size;
       $("#pColors").innerHTML=swatchesHTML(p,s.color);

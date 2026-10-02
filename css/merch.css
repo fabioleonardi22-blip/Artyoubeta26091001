@@ -44,8 +44,8 @@ header nav a.menu-extra{display:none}
 .crumbs{font-size:13px;color:var(--grey);display:flex;gap:8px;margin-bottom:8px}
 .crumbs a{color:var(--soft)}
 .kicker{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange)}
-.hero h1{margin:0;font-family:var(--display);font-weight:800;font-size:36px;line-height:1.02;letter-spacing:-.8px}
-.hero .lead{margin:10px 0 0;font-size:15px;line-height:1.5;color:var(--soft)}
+.hero h1{margin:0;font-family:var(--display);font-weight:800;font-size:40px;line-height:1.02;letter-spacing:-.8px}
+.hero .lead{margin:10px 0 0;font-size:17px;line-height:1.5;color:var(--soft)}
 .hero-cta{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap;align-items:center}
 .hero-cta .btn{padding:11px 18px;font-size:14px}
 .hero h1 span{color:var(--orange)}
@@ -369,3 +369,25 @@ body.locked{overflow:hidden}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media(hover:none){.quick-add{display:none}.card.has-alt:hover .img-a{opacity:1}.card.has-alt:hover .img-b{opacity:0}}
+
+/* ===== SEO merchandising content ===== */
+.merch-seo-copy{padding:30px var(--px);background:#fff;border-bottom:1px solid var(--line)}
+.merch-seo-copy h2{margin:0 0 10px;font-family:var(--display);font-size:28px;line-height:1.1}
+.merch-seo-copy>p{max-width:920px;margin:0;color:var(--muted);line-height:1.65}
+.merch-seo-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+.merch-seo-cats>div{padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--paper)}
+.merch-seo-cats h3{margin:0 0 6px;font-family:var(--display);font-size:18px}
+.merch-seo-cats p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+.merch-seo-link{margin-top:16px!important}
+.merch-seo-link a{font-weight:700;color:var(--ink);text-decoration:underline;text-decoration-color:var(--orange);text-underline-offset:3px}
+.seo-fallback-item{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;padding-bottom:14px}
+.seo-fallback-item>a{color:inherit;text-decoration:none}
+.seo-fallback-item img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#eee}
+.seo-fallback-item h3{margin:12px 14px 6px;font-family:var(--display);font-size:18px}
+.seo-fallback-item p{margin:0 14px 8px;color:var(--muted);font-size:13px;line-height:1.45}
+.seo-fallback-item strong{margin:0 14px;color:var(--ink)}
+@media(max-width:760px){
+  .merch-seo-copy{padding:24px var(--px)}
+  .merch-seo-copy h2{font-size:24px}
+  .merch-seo-cats{grid-template-columns:1fr}
+}
