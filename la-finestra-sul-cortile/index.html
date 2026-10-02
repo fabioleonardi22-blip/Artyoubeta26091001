@@ -1,0 +1,18 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>La finestra sul cortile | Artyou Roma</title><meta name="description" content="Festival, insegnanti, scuole, format e tendenze dal mondo internazionale dell'improvvisazione teatrale.">
+<link rel="canonical" href="https://artyouroma.it/la-finestra-sul-cortile/"><link rel="stylesheet" href="/blog/blog.css"></head>
+<body><div class="site"><div class="top"></div><header><a class="brand" href="/">ARTYOU ROMA</a><a class="back" href="/">← Torna alla Home</a></header>
+<section class="hero"><div class="eyebrow">Il blog internazionale di Artyou Roma</div><h1>La finestra<br>sul cortile</h1><div class="subtitle">Lo sconfinato mondo dell’improvvisazione</div>
+<p class="intro">Uno sguardo oltre Roma: festival, artisti, scuole, format, tecniche e idee che attraversano il mondo dell’improvvisazione teatrale.</p></section>
+<nav class="tabs" aria-label="Categorie"><button class="tab active" data-filter="all">Tutto</button><button class="tab" data-filter="Improv around the world">Around the world</button><button class="tab" data-filter="Festival Radar">Festival Radar</button><button class="tab" data-filter="Impro People">Impro People</button><button class="tab" data-filter="Dentro l'improv">Dentro l'improv</button></nav>
+<main class="wrap"><section class="lead-grid"><article class="feature" id="feature"><div class="kicker">Ultimo articolo</div><h2>Caricamento…</h2></article>
+<aside class="radar"><div class="kicker">Segnalazioni</div><h3>Festival Radar</h3><div id="radar"><p>Il radar verrà aggiornato con festival verificati e link ufficiali.</p></div></aside></section>
+<div class="section-title"><h2>Dal cortile al mondo</h2><span id="count"></span></div><section class="grid" id="grid"></section></main>
+<footer><strong>La finestra sul cortile</strong> · Lo sconfinato mondo dell’improvvisazione<br>A cura della redazione Artyou Roma. Le segnalazioni di festival e appuntamenti vengono pubblicate con riferimento a fonti ufficiali.</footer></div>
+<script>
+let all=[];
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+function render(filter='all'){const list=filter==='all'?all:all.filter(a=>a.category===filter);document.getElementById('count').textContent=list.length+' articoli';document.getElementById('grid').innerHTML=list.length?list.map(a=>'<article class="card"><div class="meta">'+esc(a.category)+' · '+esc(a.date)+'</div><h3>'+esc(a.title)+'</h3><p>'+esc(a.excerpt)+'</p><a href="'+esc(a.url)+'">Continua a leggere →</a></article>').join(''):'<div class="empty">Nessun articolo in questa categoria, per ora.</div>'}
+fetch('/blog/articles.json',{cache:'no-store'}).then(r=>r.json()).then(data=>{all=(data.articles||[]).sort((a,b)=>b.date.localeCompare(a.date));const f=all[0];if(f)document.getElementById('feature').innerHTML='<div class="kicker">Ultimo articolo · '+esc(f.category)+'</div><h2>'+esc(f.title)+'</h2><p>'+esc(f.excerpt)+'</p><a href="'+esc(f.url)+'">Leggi l’articolo →</a>';const radar=data.radar||[];if(radar.length)document.getElementById('radar').innerHTML=radar.slice(0,4).map(x=>'<div class="radar-item"><strong>'+esc(x.name)+'</strong><span>'+esc(x.place)+' · '+esc(x.date)+'</span></div>').join('');render()}).catch(()=>{document.getElementById('grid').innerHTML='<div class="empty">Archivio momentaneamente non disponibile.</div>'});
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');render(b.dataset.filter)}));
+</script></body></html>
