@@ -52,7 +52,7 @@ if(more){
       cv.innerHTML='<img src="'+esc(me.image)+'" alt="'+esc(me.imageAlt||me.title)+'" width="1600" height="900">'+(me.imageCredit?'<figcaption>Foto di <a href="'+esc(me.imageCredit.url)+'" target="_blank" rel="noopener">'+esc(me.imageCredit.name)+'</a> su <a href="'+esc(me.imageSourceUrl||"https://unsplash.com/")+'" target="_blank" rel="noopener">Unsplash</a></figcaption>':'');
       cv.hidden=false;cv.dataset.ready="1";
     }
-    varlist=d.articles.filter(function(a){return a.slug!==cur}).slice(0,3);
+    var list=d.articles.filter(function(a){return a.slug!==cur}).slice(0,3);
     if(!list.length)return;
     document.getElementById("moreGrid").innerHTML=list.map(card).join("");more.hidden=false;
   }).catch(function(){});
