@@ -41,3 +41,10 @@ Ogni articolo nuovo riceve una foto d'atmosfera da Unsplash, cercata con le paro
 - Le foto restano ospitate su Unsplash e ogni articolo cita il fotografo, come chiedono le linee guida Unsplash.
 - `node scripts/blog-images.mjs` aggiunge la foto agli articoli che non ce l'hanno (gira anche ogni settimana nel workflow).
 - Per scegliere una foto a mano basta scrivere nell'articolo in `blog/articles.json` i campi `image`, `imageThumb`, `imageAlt`, `imageCredit` (`name`, `url`).
+
+## Due articoli a settimana e Festival Radar
+- **Lunedì** esce sempre un articolo **Festival Radar**; **giovedì** un articolo delle altre rubriche a rotazione (Improv around the world, Impro People, Dentro l'improv).
+- Ogni esecuzione legge i calendari internazionali dei festival elencati in `blog/sources.json` con `"type": "festival-directory"`, ne estrae i festival in programma nei prossimi 12 mesi e controlla il sito ufficiale di ognuno: compare "Verificato sul sito ufficiale" solo se il sito risponde e riporta nome e anno.
+- I festival trovati aggiornano il riquadro "Festival Radar" dell'archivio; quelli già raccontati finiscono in `festivalsCovered` per non ripeterli.
+- Avvio manuale: Actions → Weekly blog → Run workflow, scegliendo eventualmente la rubrica.
+- Per aggiungere un calendario di festival basta inserire in `sources.json` una voce con `"type": "festival-directory"`.

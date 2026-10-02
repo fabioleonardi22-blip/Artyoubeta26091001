@@ -28,5 +28,23 @@
     "url": "https://thefreeassociation.co.uk/",
     "type": "school",
     "region": "UK"
+  },
+  {
+    "name": "Improv Festivals – calendario internazionale",
+    "url": "https://improvfestivals.org/",
+    "type": "festival-directory",
+    "region": "World"
+  },
+  {
+    "name": "Improfestivals – calendario dei festival",
+    "url": "https://www.improfestivals.com/",
+    "type": "festival-directory",
+    "region": "World"
+  },
+  {
+    "name": "Improv Festivals Worldwide",
+    "url": "https://improv-festivals.radical-elements.com/",
+    "type": "festival-directory",
+    "region": "World"
   }
 ]

@@ -32,8 +32,8 @@ if(grid){
     if(f)document.getElementById("feature").innerHTML='<a class="feature-link" href="'+esc(f.url)+'"><p class="kicker">Ultimo articolo · '+data(f.date)+'</p><span class="chip '+cc(f.category)+'">'+esc(f.category)+'</span><h2>'+esc(f.title)+'</h2><p>'+esc(f.excerpt)+'</p><span class="read">Leggi l’articolo <span aria-hidden="true">→</span></span></a>';
     else document.getElementById("feature").innerHTML='<p class="kicker">In arrivo</p><h2>Il primo articolo sta per uscire.</h2>';
     var radar=d.radar||[];
-    if(radar.length)document.getElementById("radar").innerHTML=radar.slice(0,4).map(function(x){
-      return '<div class="radar-item">'+(x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">':'')+'<strong>'+esc(x.name)+'</strong>'+(x.url?'</a>':'')+'<span>'+esc(x.place)+' · '+esc(x.date)+'</span></div>'}).join("");
+    if(radar.length)document.getElementById("radar").innerHTML=radar.slice(0,5).map(function(x){
+      return '<div class="radar-item">'+(x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">':'')+'<strong>'+esc(x.name)+'</strong>'+(x.url?'</a>':'')+'<span>'+esc(x.place)+(x.place&&x.date?' · ':'')+esc(x.date)+'</span>'+(x.verified?'<em class="ok">Verificato sul sito ufficiale</em>':'')+'</div>'}).join("")+(d.radarUpdated?'<p class="radar-upd">Aggiornato il '+data(d.radarUpdated)+'</p>':'');
     render();
   }).catch(function(){grid.innerHTML='<div class="empty">Archivio momentaneamente non disponibile.</div>'});
   document.querySelector(".tabs").addEventListener("click",function(e){

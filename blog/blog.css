@@ -92,6 +92,8 @@ header nav a.menu-extra{display:none}
 .radar-item strong{display:block;font-size:16px}
 .radar-item a{color:var(--ink);text-decoration:none}.radar-item a:hover strong{color:var(--orange-d)}
 .radar-item span{font-size:13px;color:var(--muted-2)}
+.radar-item .ok{display:block;font-style:normal;font-size:12px;font-weight:700;color:var(--c-inside);margin-top:2px}
+.radar-upd{margin:12px 0 0;font-size:12px;color:var(--muted-2)}
 .radar-empty{margin:0;color:var(--muted);line-height:1.6}
 .section-title{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:22px}
 .section-title h2{margin:0;font-family:var(--display);font-weight:800;font-size:38px;letter-spacing:-1px}

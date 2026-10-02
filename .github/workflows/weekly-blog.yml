@@ -1,8 +1,17 @@
 name: Weekly blog - La finestra sul cortile
 on:
   workflow_dispatch:
+    inputs:
+      rubrica:
+        description: "Rubrica (vuoto = automatica)"
+        required: false
+        default: ""
+        type: choice
+        options: ["", "Festival Radar", "Improv around the world", "Impro People", "Dentro l'improv"]
   schedule:
-    - cron: "15 8 * * 3"
+    # lunedì: Festival Radar · giovedì: le altre rubriche a rotazione
+    - cron: "15 8 * * 1"
+    - cron: "15 8 * * 4"
 
 permissions:
   contents: write
@@ -10,7 +19,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,6 +30,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          RUBRICA: ${{ github.event.inputs.rubrica }}
         run: node scripts/generate-blog.mjs
       - name: Foto per gli articoli che non ce l'hanno
         env:
