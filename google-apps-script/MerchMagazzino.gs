@@ -29,7 +29,7 @@ const ORD_HEADERS = ["ID", "Data", "Stato", "Nome", "Telefono", "Sede", "Articol
                      "Note", "Pezzi restituiti", "Dettaglio (non modificare)"];
 
 /* Catalogo iniziale: usato SOLO da setup() per riempire il Magazzino la
-   prima volta. Gli ID devono coincidere con quelli di merchandising.html. */
+   prima volta. Gli ID devono coincidere con quelli di js/merch.js. */
 const CATALOGO_INIZIALE = [
   { id: "tee-wordcloud",  nome: "T-shirt Improv Wordcloud", prezzo: 14, colori: ["Verde", "Nero"], taglie: ["S", "M", "L", "XL"] },
   { id: "tee-actor",      nome: "T-shirt I'm an Actor",     prezzo: 14, colori: ["Nero"],          taglie: ["S", "M", "L", "XL"] },
