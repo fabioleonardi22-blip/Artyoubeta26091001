@@ -343,6 +343,11 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 <style id="artyou-mobile-hide-floating-whatsapp">
 @media(max-width:820px){#am-wa-float{display:none!important;}}
 </style>
+
+<style id="artyou-canonical-header-desktop">
+@media(min-width:821px){header.am-wrap{gap:32px}header nav.am-wrap{gap:24px!important}header nav.am-wrap>a{font-size:15px!important;white-space:nowrap}}
+@media(min-width:821px) and (max-width:1180px){header.am-wrap{gap:20px}header nav.am-wrap{gap:16px!important}header nav.am-wrap>a{font-size:14px!important}}
+</style>
 </head>
 <body>
 <x-dc>
@@ -355,20 +360,22 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </style>
 </helmet>
 <div class="am-wfull am-hauto" style="width: 1440px; height: auto; min-height: 100vh; display: flex; flex-direction: column; background: #F6F3EC; color: #13181D; font-family: 'Instrument Sans', 'Helvetica Neue', Helvetica, sans-serif; position: relative;">
-<header class="am-px am-wrap" style="background: #13181D; display: flex; align-items: center; justify-content: space-between; padding: 20px 120px; position: sticky; top: 0; z-index: 500;">
+<header class="am-px am-wrap" style="display: flex; align-items: center; justify-content: space-between; padding: 20px 120px; position: sticky; top: 0; z-index: 500; background: #13181D;">
 <a href="/" aria-label="Artyou Roma – Home" class="am-wrap" style="display: flex; align-items: center;"><img decoding="async" src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" style="height: 56px; width: auto; display: block;"></a>
 <input type="checkbox" id="artyou-menu-toggle" aria-hidden="true" tabindex="-1" class="am-abs" style="position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none;">
-<nav class="am-wrap" style="display: flex; gap: 36px; align-items: center;"><a href="/#spettacoli" style="text-decoration: none; font-size: 16px; font-weight: 500; color: #E6EBEE;">Spettacoli</a>
-<a href="/improvvisazione-teatrale/" style="text-decoration: none; font-size: 16px; font-weight: 700; color: #FFFFFF;">Corsi</a>
-<a href="/workshow/" style="text-decoration: none; font-size: 16px; font-weight: 500; color: #E6EBEE;">WorkshoW</a>
-<a href="/rome-improv-festival/" style="text-decoration: none; font-size: 16px; font-weight: 500; color: #E6EBEE;">Festival</a>
+<nav class="am-wrap" style="display: flex; gap: 36px; align-items: center;">
+<a href="/#spettacoli" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Spettacoli</a>
+<a href="/improvvisazione-teatrale/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Corsi</a>
+<a href="/workshow/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">WorkshoW</a>
+<a href="/rome-improv-festival/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Festival</a>
 <a href="/chi-siamo/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Chi Siamo</a>
 <a href="/merchandising.html" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Merchandising</a>
 <a href="/la-finestra-sul-cortile/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Blog</a>
 <a href="/insegnanti/" class="artyou-menu-extra" style="display: none; text-decoration: none;">I docenti</a>
-<a href="/#contatti" style="text-decoration: none; font-size: 16px; font-weight: 500; color: #E6EBEE;">Contatti</a></nav>
+<a href="/#contatti" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Contatti</a>
+</nav>
 <div class="am-wrap" style="display: flex; gap: 12px; align-items: center;">
-<a href="/lezione-gratuita/" class="am-fs-body" style="background:#25D366;color:#0B2E1A;border:2px solid #79FF9C;box-shadow:0 0 0 2px rgba(121,255,156,.14),0 6px 18px rgba(37,211,102,.22);padding:12px 20px;border-radius:999px;font-weight:700;text-decoration:none;font-size:15px;"><span class="am-long">Lezione di Prova Gratuita</span><span class="am-short">Prova Gratuita</span></a>
+<a id="artyou-trial-header-cta" href="/lezione-gratuita/" class="am-fs-body" style="background:#25D366;color:#0B2E1A;border:2px solid #79FF9C;box-shadow:0 0 0 2px rgba(121,255,156,.14),0 6px 18px rgba(37,211,102,.22);padding:12px 20px;border-radius:999px;font-weight:700;text-decoration:none;font-size:15px;"><span class="am-long">Lezione di Prova Gratuita</span><span class="am-short">Prova Gratuita</span></a>
 <label for="artyou-menu-toggle" class="artyou-menu-btn" role="button" aria-label="Apri il menu" style="display: none;"><svg class="am-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg><svg class="am-close" style="display: none;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></label></div>
 </header>
 <div aria-hidden="true" style="height: 6px; background: #7A1631;"></div><nav aria-label="Corsi" class="am-px am-wrap am-fs-body" style="background: #FFFFFF; border-bottom: 1px solid #E4DED2; padding: 0 120px; display: flex; gap: 32px; height: 56px; align-items: center; font-size: 15px; position: sticky; top: 96px; z-index: 400;"><span style="font-weight: 700; color: #6A7279; text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;">Corsi</span><a href="/improvvisazione-teatrale/" class="am-wrap" style="text-decoration: none; color: #3F474E; font-weight: 500; height: 56px; display: flex; align-items: center; box-sizing: border-box; border-bottom: 3px solid transparent;">Improvvisazione</a><a href="/improvvisazione-teatrale/#amatori" class="am-wrap" style="text-decoration: none; color: #3F474E; font-weight: 500; height: 56px; display: flex; align-items: center; box-sizing: border-box; border-bottom: 3px solid transparent;">Corsi Amatori</a><a href="/teatro/" class="am-wrap" style="text-decoration: none; color: #3F474E; font-weight: 500; height: 56px; display: flex; align-items: center; box-sizing: border-box; border-bottom: 3px solid transparent;">Teatro di testo</a><a href="/stand-up/" class="am-wrap" style="text-decoration: none; color: #13181D; font-weight: 700; height: 56px; display: flex; align-items: center; box-sizing: border-box; border-bottom: 3px solid #F09000;">Stand-up comedy</a><a href="/improvvisazione-teatrale/#young" class="am-wrap" style="text-decoration: none; color: #3F474E; font-weight: 500; height: 56px; display: flex; align-items: center; box-sizing: border-box; border-bottom: 3px solid transparent;">Artyou Young</a></nav>
