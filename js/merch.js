@@ -190,7 +190,6 @@ document.body.insertAdjacentHTML("beforeend",`
         <label class="full">Note (facoltative)<textarea name="note" rows="2" placeholder="Es. corso del martedì, ritiro dopo lezione"></textarea></label>
       </div>
       <div class="err" id="formErr" role="alert"></div>
-      <input type="text" name="_hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
       <button type="submit" class="btn btn-orange send">Invia l’ordine</button>
       <p class="fine">Ti mettiamo da parte i capi e li paghi al ritiro in sede. I dati servono solo a gestire l’ordine (<a href="/privacy-policy/" target="_blank" rel="noopener">privacy</a>).</p>
     </form>
@@ -276,10 +275,10 @@ $("#checkout").addEventListener("submit",e=>{
   }
   send.disabled=true;send.textContent="Invio in corso…";
   fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({
-    action:"ordine",nome,telefono:tel,sede,note,_hp:f._hp.value,
+    action:"ordine",nome,telefono:tel,sede,note,
     items:cart.map(l=>({id:l.id,colore:l.color,taglia:l.size,qty:l.qty}))
   })}).then(r=>r.json()).then(j=>{
-    if(j&&j.ok){
+    if(j&&j.ok&&/^MERCH-/.test(j.id||"")){
       const tot=typeof j.totale==="number"?j.totale:cartTotal();
       $("#doneId").textContent=j.id;$("#doneSede").textContent=sede;$("#doneTot").textContent=euro(tot);
       $("#doneWa").href=waUrl("Ciao Artyou! Ho appena fatto l’ordine "+j.id+" dal sito ("+euro(tot)+"), ritiro nella sede "+sede+". Nome: "+nome+".");
