@@ -1,4 +1,7 @@
 // Modello grafico condiviso del blog "La finestra sul cortile".
+// Lo usano sia generate-blog.mjs (articoli settimanali) sia le pagine statiche,
+// così ogni articolo nuovo esce con header, menu e footer del sito Artyou.
+
 export const safe = s => String(s ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
 
 const MESI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
@@ -7,6 +10,7 @@ export function dataLunga(iso) {
   return m ? `${Number(m[3])} ${MESI[Number(m[2]) - 1]} ${m[1]}` : safe(iso);
 }
 
+// colore di ogni rubrica
 export const CATEGORIE = {
   "Improv around the world": "world",
   "Festival Radar": "radar",
@@ -26,6 +30,7 @@ export function header() {
     <a href="/rome-improv-festival/">Festival</a>
     <a href="/chi-siamo/">Chi Siamo</a>
     <a href="/merchandising.html">Merchandising</a>
+    <a href="/la-finestra-sul-cortile/" aria-current="page">Blog</a>
     <a href="/insegnanti/" class="menu-extra">I docenti</a>
     <a href="/#contatti">Contatti</a>
   </nav>
@@ -95,6 +100,7 @@ ${footer()}
 `;
 }
 
+// Pagina di un articolo. bodyHtml e sourcesHtml sono già HTML sicuro.
 export function renderArticle({ slug, title, category, date, excerpt, bodyHtml, sourcesHtml }) {
   const url = `https://artyouroma.it/la-finestra-sul-cortile/${slug}/`;
   const parole = String(bodyHtml).replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
@@ -129,11 +135,13 @@ ${outro()}
   return page({ title: `${title} | La finestra sul cortile`, description: excerpt, canonical: url, body, ogType: "article", jsonLd: ld });
 }
 
+// HTML del corpo e delle fonti per un articolo generato dal modello (testo semplice)
 export function bodyFromParagraphs(paragraphs) { return paragraphs.map(p => `    <p>${safe(p)}</p>`).join("\n"); }
 export function sourcesFromList(list) {
   return `<h2>Fonti</h2><ul>${list.map(x => `<li><a href="${safe(x.url)}" target="_blank" rel="noopener noreferrer">${safe(x.name || x.url)}</a></li>`).join("")}</ul>`;
 }
 
+// Pagina archivio /la-finestra-sul-cortile/
 export function renderIndex() {
   const body = `<section class="hero">
   <div class="hero-text">

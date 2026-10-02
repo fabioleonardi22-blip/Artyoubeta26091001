@@ -14,6 +14,7 @@ function card(a){
 function load(){return fetch("/blog/articles.json",{cache:"no-store"}).then(function(r){return r.json()}).then(function(d){
   d.articles=(d.articles||[]).slice().sort(function(a,b){return String(b.date).localeCompare(String(a.date))});return d})}
 
+/* Archivio */
 var grid=document.getElementById("grid");
 if(grid){
   var all=[],filter="all";
@@ -39,6 +40,7 @@ if(grid){
   });
 }
 
+/* Articolo: altri articoli */
 var more=document.getElementById("more");
 if(more){
   load().then(function(d){
