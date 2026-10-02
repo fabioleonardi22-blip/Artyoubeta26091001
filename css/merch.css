@@ -22,7 +22,7 @@ button{font:inherit;color:inherit}
 header{background:var(--ink);display:flex;align-items:center;justify-content:space-between;padding:20px clamp(48px,7.6vw,110px);position:sticky;top:0;z-index:500;gap:20px}
 header>a img{height:56px;width:auto;display:block}
 #menu-toggle{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
-header nav{display:flex;gap:26px;align-items:center}
+header nav{display:flex;gap:24px;align-items:center}
 header nav a{text-decoration:none;font-size:16px;font-weight:500;color:#E6EBEE;white-space:nowrap}
 header nav a:hover{color:#fff}
 header nav a[aria-current="page"]{color:var(--orange);font-weight:700}
@@ -231,7 +231,7 @@ body.locked{overflow:hidden}
   .hero-photo{flex:none;width:100%}
   .hero-photo:after{inset:0 0 auto;width:auto;height:18%;background:linear-gradient(var(--ink),rgba(19,24,29,0))}
   .hero h1{font-size:40px}
-  header nav{gap:18px}
+  header nav{gap:16px}
   header nav a{font-size:15px}
   .long{display:none}.short{display:inline}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
