@@ -4,19 +4,32 @@ Blog editoriale automatico di Artyou Roma.
 
 ## Struttura
 - `/la-finestra-sul-cortile/`: archivio pubblico.
-- `/blog/articles.json`: indice degli articoli e Festival Radar.
-- `/scripts/generate-blog.mjs`: generatore.
-- `.github/workflows/weekly-blog.yml`: esecuzione ogni mercoledì alle 08:15 UTC (10:15 a Roma con ora legale, 09:15 con ora solare).
+- `/blog/articles.json`: indice degli articoli.
+- `/blog/sources.json`: fonti ufficiali autorizzate.
+- `/scripts/generate-blog.mjs`: generatore automatico.
+- `.github/workflows/weekly-blog.yml`: esecuzione settimanale.
 
-## Attivazione
-Nel repository GitHub aggiungere un Actions secret chiamato `OPENAI_API_KEY`.
-Il workflow può anche essere avviato manualmente da Actions > Weekly blog - La finestra sul cortile > Run workflow.
+## Provider AI
+Il generatore usa:
+1. Gemini API come provider principale.
+2. OpenRouter Free come fallback.
+
+Secrets GitHub richiesti:
+- `GEMINI_API_KEY`
+- `OPENROUTER_API_KEY`
+
+## Programmazione
+Il workflow parte ogni mercoledì alle 08:15 UTC e può essere avviato anche manualmente da GitHub Actions.
 
 ## Regole editoriali
-Il generatore usa ricerca web e richiede almeno una fonte URL valida. Date, festival e profili non devono essere inventati. Le categorie ruotano settimanalmente:
+Il generatore legge direttamente un elenco di fonti ufficiali e chiede al modello di usare solo quelle. Non deve inventare festival, date, biografie, ruoli, citazioni o eventi.
+
+Le categorie ruotano:
 1. Improv around the world
 2. Festival Radar
 3. Impro People
 4. Dentro l'improv
 
-Per la fase di test questa branch non va unita in main finché grafica e contenuti non sono approvati.
+Gli articoli sono in italiano e hanno una lunghezza indicativa di 1000-1500 caratteri.
+
+La branch di test resta separata da `main` finché non viene approvata.
