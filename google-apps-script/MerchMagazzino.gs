@@ -31,13 +31,23 @@ const ORD_HEADERS = ["ID", "Data", "Stato", "Nome", "Telefono", "Sede", "Articol
 /* Catalogo iniziale: usato SOLO da setup() per riempire il Magazzino la
    prima volta. Gli ID devono coincidere con quelli di js/merch.js. */
 const CATALOGO_INIZIALE = [
-  { id: "tee-wordcloud",  nome: "T-shirt Improv Wordcloud", prezzo: 14, colori: ["Verde", "Nero"], taglie: ["S", "M", "L", "XL"] },
-  { id: "tee-actor",      nome: "T-shirt I'm an Actor",     prezzo: 14, colori: ["Nero"],          taglie: ["S", "M", "L", "XL"] },
-  { id: "tee-memory",     nome: "T-shirt Improvviso",       prezzo: 14, colori: ["Blu", "Nero"],   taglie: ["S", "M", "L", "XL"] },
-  { id: "tee-arte",       nome: "T-shirt Io sono Arte",     prezzo: 14, colori: ["Nero"],          taglie: ["S", "M", "L", "XL"] },
-  { id: "hoodie-thinkbig",nome: "Felpa Think Big",          prezzo: 30, colori: ["Cyan", "Nero", "Verde", "Bordeaux"], taglie: ["S", "M", "L", "XL"] },
-  { id: "jogger",         nome: "Pantaloni Jogger",         prezzo: 20, colori: ["Nero", "Grigio"], taglie: ["S", "M", "L", "XL"] },
-  { id: "socks",          nome: "Calzini Grip",             prezzo: 5,  colori: ["Nero", "Arancio"], taglie: ["35-38", "39-42", "43-46"] }
+  { id: "tee-trust-the-play", nome: "T-shirt Trust the Play",  prezzo: 14, colori: ["Nero", "Bordeaux"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-learn-to-play", nome: "T-shirt Learn to Play",    prezzo: 14, colori: ["Verde petrolio"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-inspire-the-other", nome: "T-shirt Inspire the Other", prezzo: 14, colori: ["Blu notte"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-yep-2024",    nome: "T-shirt YEP 2024",           prezzo: 14, colori: ["Rosso", "Azzurro"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-act-believe", nome: "T-shirt Act Believe Improv", prezzo: 14, colori: ["Verde", "Blu notte"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-standup999",  nome: "T-shirt Standup999",         prezzo: 14, colori: ["Viola"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-wordcloud",   nome: "T-shirt Improv Wordcloud",   prezzo: 14, colori: ["Verde"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-actor",       nome: "T-shirt I'm an Actor",       prezzo: 14, colori: ["Nero"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-memory",      nome: "T-shirt Improvviso",         prezzo: 14, colori: ["Blu", "Blu notte"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-arte",        nome: "T-shirt Io sono Arte",       prezzo: 14, colori: ["Nero"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-its-all-theater", nome: "T-shirt It's All Theater", prezzo: 14, colori: ["Blu notte", "Nero", "Bianco"], taglie: ["S", "M", "L", "XL"] },
+  { id: "tee-im-theatre",  nome: "T-shirt I'm Theatre",        prezzo: 14, colori: ["Nero"], taglie: ["S", "M", "L", "XL"] },
+  { id: "hoodie-thinkbig", nome: "Felpa Think Big",            prezzo: 30, colori: ["Cyan", "Nero", "Verde", "Bordeaux"], taglie: ["S", "M", "L", "XL"] },
+  { id: "hoodie-ithink",   nome: "Felpa I Think",              prezzo: 30, colori: ["Nero", "Grigio antracite", "Verde"], taglie: ["S", "M", "L", "XL"] },
+  { id: "hoodie-ithink-variant", nome: "Felpa I Think - Variant Ed.", prezzo: 30, colori: ["Bianco", "Bordeaux"], taglie: ["S", "M", "L", "XL"] },
+  { id: "jogger",          nome: "Pantaloni Jogger",           prezzo: 20, colori: ["Nero", "Grigio"], taglie: ["S", "M", "L", "XL"] },
+  { id: "socks",           nome: "Calzini Grip",               prezzo: 5,  colori: ["Nero", "Arancio"], taglie: ["35-38", "39-42", "43-46"] }
 ];
 
 /* ============================================================
