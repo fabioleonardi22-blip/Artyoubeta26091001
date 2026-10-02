@@ -7,7 +7,11 @@
       "category": "Improv around the world",
       "date": "2026-10-02",
       "excerpt": "Un viaggio nel panorama internazionale dell'improvvisazione teatrale, tra le storiche scuole di Chicago, Londra e Barcellona.",
-      "url": "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-londra-e-barcellona/"
+      "url": "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-londra-e-barcellona/",
+      "image": "https://images.unsplash.com/photo-1581611055683-d7b2b2f92077?auto=format&fit=crop&w=1600&q=82",
+      "imageThumb": "https://images.unsplash.com/photo-1581611055683-d7b2b2f92077?auto=format&fit=crop&w=700&q=78",
+      "imageAlt": "Pubblico e palco teatrale durante uno spettacolo",
+      "imageSourceUrl": "https://unsplash.com/photos/people-raising-their-hands-on-the-stage-WqmIYLHC_S4"
     },
     {
       "slug": "perche-guardare-oltre-il-proprio-palco",
@@ -15,7 +19,11 @@
       "category": "Improv around the world",
       "date": "2026-10-02",
       "excerpt": "L’improvvisazione cambia lingua, ritmo e abitudini da una città all’altra. Questa rubrica nasce per mettere in relazione scuole, festival, insegnanti e pratiche internazionali.",
-      "url": "/la-finestra-sul-cortile/perche-guardare-oltre-il-proprio-palco/"
+      "url": "/la-finestra-sul-cortile/perche-guardare-oltre-il-proprio-palco/",
+      "image": "https://images.unsplash.com/photo-1629276300845-fcae346b4c6d?auto=format&fit=crop&w=1600&q=82",
+      "imageThumb": "https://images.unsplash.com/photo-1629276300845-fcae346b4c6d?auto=format&fit=crop&w=700&q=78",
+      "imageAlt": "Artista su un palco illuminato",
+      "imageSourceUrl": "https://unsplash.com/photos/man-in-black-jacket-standing-on-stage-xX21Sxqzb2c"
     }
   ],
   "radar": []
