@@ -2,13 +2,20 @@
 (function(){
 "use strict";
 var CAT={"Improv around the world":"world","Festival Radar":"radar","Impro People":"people","Dentro l'improv":"inside"};
+var FALLBACK_IMG={
+  world:"https://images.unsplash.com/photo-1581611055683-d7b2b2f92077?auto=format&fit=crop&w=1600&q=82",
+  radar:"https://images.unsplash.com/photo-1629276300845-fcae346b4c6d?auto=format&fit=crop&w=1600&q=82",
+  people:"https://images.unsplash.com/photo-1581611055683-d7b2b2f92077?auto=format&fit=crop&w=1600&q=82",
+  inside:"https://images.unsplash.com/photo-1629276300845-fcae346b4c6d?auto=format&fit=crop&w=1600&q=82"
+};
+function imageFor(a,thumb){var k=CAT[a.category]||"world";return (thumb&&a.imageThumb)||a.image||FALLBACK_IMG[k]||FALLBACK_IMG.world;}
 var MESI=["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]})}
 function data(iso){var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso||"");return m?Number(m[3])+" "+MESI[Number(m[2])-1]+" "+m[1]:esc(iso)}
 function cc(c){return "cat-"+(CAT[c]||"world")}
 function card(a){
-  return '<article class="card'+(a.image?' has-img':'')+'"><a class="card-link" href="'+esc(a.url)+'">'+
-    (a.image?'<span class="card-img"><img src="'+esc(a.imageThumb||a.image)+'" alt="" loading="lazy"></span>':'')+
+  return '<article class="card has-img"><a class="card-link" href="'+esc(a.url)+'">'+
+    '<span class="card-img"><img src="'+esc(imageFor(a,true))+'" alt="" loading="lazy"></span>'+
     '<div class="card-top"><span class="chip '+cc(a.category)+'">'+esc(a.category)+'</span><span class="date">'+data(a.date)+'</span></div>'+
     '<h3>'+esc(a.title)+'</h3><p>'+esc(a.excerpt)+'</p><span class="read">Leggi l’articolo <span aria-hidden="true">→</span></span></a></article>';
 }
@@ -28,7 +35,7 @@ if(grid){
   load().then(function(d){
     all=d.articles;var f=all[0];
     var fe=document.getElementById("feature");
-    if(f&&f.image){fe.classList.add("has-img");fe.style.setProperty("--feat-img",'url("'+String(f.image).replace(/["\\]/g,"")+'")')}
+    if(f){var fi=imageFor(f,false);fe.classList.add("has-img");fe.style.setProperty("--feat-img",'url("'+String(fi).replace(/["\\]/g,"")+'")')}
     if(f)document.getElementById("feature").innerHTML='<a class="feature-link" href="'+esc(f.url)+'"><p class="kicker">Ultimo articolo · '+data(f.date)+'</p><span class="chip '+cc(f.category)+'">'+esc(f.category)+'</span><h2>'+esc(f.title)+'</h2><p>'+esc(f.excerpt)+'</p><span class="read">Leggi l’articolo <span aria-hidden="true">→</span></span></a>';
     else document.getElementById("feature").innerHTML='<p class="kicker">In arrivo</p><h2>Il primo articolo sta per uscire.</h2>';
     var radar=d.radar||[];
@@ -48,8 +55,9 @@ var more=document.getElementById("more");
 if(more){
   load().then(function(d){
     var cur=more.dataset.current,me=d.articles.filter(function(a){return a.slug===cur})[0],cv=document.getElementById("cover");
-    if(me&&me.image&&cv&&!cv.dataset.ready){
-      cv.innerHTML='<img src="'+esc(me.image)+'" alt="'+esc(me.imageAlt||me.title)+'" width="1600" height="900">'+(me.imageCredit?'<figcaption>Foto di <a href="'+esc(me.imageCredit.url)+'" target="_blank" rel="noopener">'+esc(me.imageCredit.name)+'</a> su <a href="'+esc(me.imageSourceUrl||"https://unsplash.com/")+'" target="_blank" rel="noopener">Unsplash</a></figcaption>':'');
+    if(me&&cv&&!cv.dataset.ready){
+      var mi=imageFor(me,false);
+      cv.innerHTML='<img src="'+esc(mi)+'" alt="'+esc(me.imageAlt||me.title)+'" width="1600" height="900">'+(me.imageCredit?'<figcaption>Foto di <a href="'+esc(me.imageCredit.url)+'" target="_blank" rel="noopener">'+esc(me.imageCredit.name)+'</a> su <a href="'+esc(me.imageSourceUrl||"https://unsplash.com/")+'" target="_blank" rel="noopener">Unsplash</a></figcaption>':'');
       cv.hidden=false;cv.dataset.ready="1";
     }
     var list=d.articles.filter(function(a){return a.slug!==cur}).slice(0,3);
