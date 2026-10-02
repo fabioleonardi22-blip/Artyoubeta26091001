@@ -25,6 +25,7 @@ jobs:
           node-version: "20"
       - name: Genera articolo con OpenRouter Free
         env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: node scripts/generate-blog.mjs
       - name: Commit se ci sono novità
