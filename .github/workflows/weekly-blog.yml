@@ -1,6 +1,11 @@
 name: Weekly blog - La finestra sul cortile
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - blog-finestra-sul-cortile
+    paths:
+      - ".github/workflows/weekly-blog.yml"
   schedule:
     - cron: "15 8 * * 3"
 permissions:
