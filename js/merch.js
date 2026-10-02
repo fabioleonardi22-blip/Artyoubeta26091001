@@ -6,7 +6,8 @@
    Un prodotto senza nessuna foto mostra un segnaposto "Foto in arrivo".
    gallery (facoltativo): altre foto del prodotto (retro, dettagli...), es.
    gallery:["/img/merch/tee-actor-retro.webp"]: diventano miniature nella
-   pagina prodotto. */
+   pagina prodotto. Per legare una foto extra a un colore:
+   gallery:[{src:"/img/merch/foto.webp",color:"Bordeaux"}]. */
 const WHATSAPP="393271881956";
 const CATS=[
   {id:"all",label:"Tutti"},
@@ -15,32 +16,79 @@ const CATS=[
   {id:"pantaloni",label:"Pantaloni"},
   {id:"calzini",label:"Calzini"}
 ];
-const SWATCH={Nero:"#111",Bianco:"#F6F3EC",Bordeaux:"#8E2941",Grigio:"#8B8F92",Arancio:"#F09000",Verde:"#174F39",Blu:"#173B68",Cyan:"#12B9D6"};
+const SWATCH={Nero:"#111",Bianco:"#F6F3EC",Bordeaux:"#8E2941",Grigio:"#8B8F92","Grigio antracite":"#3B3D40",Arancio:"#F09000",Verde:"#174F39",Blu:"#1F3F9A","Blu notte":"#1D2640",Viola:"#5E4A8C",Cyan:"#12B9D6","Verde petrolio":"#15524F",Azzurro:"#6FA8DC",Rosso:"#C8102E"};
+const M="/img/merch/";
+/* Guida taglie: misure del capo in cm. VALORI INDICATIVI da sostituire
+   con la scheda misure del fornitore. Le colonne si possono cambiare. */
+const SIZE_GUIDE={
+  tshirt:{note:"Misure del capo steso, in centimetri.",cols:["Larghezza petto","Lunghezza"],rows:{S:[47,70],M:[52,73],L:[56,76],XL:[61,79]},
+    how:"Larghezza: da ascella ad ascella, con la maglia stesa. Lunghezza: dal punto più alto della spalla all'orlo."},
+  felpe:{note:"Misure del capo steso, in centimetri.",cols:["Larghezza petto","Lunghezza","Manica"],rows:{S:[53,68,61],M:[56,70,62],L:[59,72,63],XL:[62,74,64]},
+    how:"Larghezza: da ascella ad ascella, con la zip chiusa. Lunghezza: dalla spalla all'orlo. Manica: dalla spalla al polsino."},
+  pantaloni:{note:"Misure del capo steso, in centimetri.",cols:["Vita (rilassata)","Lunghezza esterna"],rows:{S:[34,100],M:[37,102],L:[40,104],XL:[43,106]},
+    how:"Vita: metà circonferenza dell'elastico, a riposo. Lunghezza: lungo la cucitura esterna, dalla vita all'orlo."},
+  calzini:{note:"Le taglie dei calzini corrispondono al numero di scarpa.",cols:["Numero di scarpa"],rows:{"35-38":["35 – 38"],"39-42":["39 – 42"],"43-46":["43 – 46"]},how:""}
+};
 const PRODUCTS=[
+ {id:"tee-trust-the-play",nuovo:true,family:"T-shirt Artyou",cat:"tshirt",name:"Trust the Play",price:14,
+  desc:"Per chi improvvisa: “I’m an improviser · Trust the play” sul petto e il cervello Artyou sulla manica.",
+  colors:["Nero","Bordeaux"],sizes:["S","M","L","XL"],images:{Nero:M+"tee-trust-the-play-nero.webp",Bordeaux:M+"tee-trust-the-play-bordeaux.webp",default:M+"tee-trust-the-play-nero.webp"}},
+ {id:"tee-learn-to-play",nuovo:true,family:"T-shirt Artyou",cat:"tshirt",name:"Learn to Play",price:14,
+  desc:"Per chi improvvisa e non smette di imparare: “I’m an improviser · Learn to play” sul petto e il cervello Artyou sulla manica.",
+  colors:["Verde petrolio"],sizes:["S","M","L","XL"],images:{"Verde petrolio":M+"tee-learn-to-play-petrolio.webp",default:M+"tee-learn-to-play-petrolio.webp"}},
+ {id:"tee-inspire-the-other",nuovo:true,family:"T-shirt Artyou",cat:"tshirt",name:"Inspire the Other",price:14,
+  desc:"Per chi insegna: “I’m a teacher · Inspire the other” sul petto e il vortice Artyou sul fianco.",
+  colors:["Blu notte"],sizes:["S","M","L","XL"],images:{"Blu notte":M+"tee-inspire-the-other-blunotte.webp",default:M+"tee-inspire-the-other-blunotte.webp"}},
+ {id:"tee-yep-2024",family:"T-shirt Artyou",cat:"tshirt",name:"YEP 2024",price:14,
+  desc:"La maglietta di YEP 2024: “Shine a light on someone to make them glow, use your extra power” sul petto, firmata Artyou Roma.",
+  colors:["Rosso","Azzurro"],sizes:["S","M","L","XL"],images:{Rosso:M+"tee-yep-2024-rosso.webp",Azzurro:M+"tee-yep-2024-azzurro.webp",default:M+"tee-yep-2024-rosso.webp"}},
+ {id:"tee-act-believe",nuovo:true,family:"T-shirt Artyou",cat:"tshirt",name:"Act Believe Improv",price:14,
+  desc:"La grafica Artyou · Act · Believe · Improv stampata sul petto, per chi in scena ci crede davvero.",
+  colors:["Verde","Blu notte"],sizes:["S","M","L","XL"],
+  images:{Verde:M+"tee-act-believe-verde.webp","Blu notte":M+"tee-act-believe-blu.webp",default:M+"tee-act-believe-verde.webp"},gallery:[M+"tee-act-believe-verde-2.webp"]},
+ {id:"tee-standup999",nuovo:true,family:"T-shirt Artyou",cat:"tshirt",name:"Standup999",price:14,
+  desc:"Per chi sale sul palco con un microfono in mano: scritta Standup999 sul petto e vortice Artyou multicolore sul fianco.",
+  colors:["Viola"],sizes:["S","M","L","XL"],images:{Viola:M+"tee-standup999-viola.webp",default:M+"tee-standup999-viola.webp"}},
  {id:"tee-wordcloud",family:"T-shirt Artyou",cat:"tshirt",name:"Improv Wordcloud",price:14,
-  desc:"La t-shirt con la nuvola di parole dell’improvvisazione stampata sul petto e il vortice Artyou sul fianco.",
-  colors:["Verde","Nero"],sizes:["S","M","L","XL"],images:{default:"/img/merch/tee-wordcloud.webp"}},
+  desc:"La nuvola di parole dell’improvvisazione (ascolto, status, emozioni, gioco…) stampata sul petto e il vortice Artyou sul fianco.",
+  colors:["Verde"],sizes:["S","M","L","XL"],images:{Verde:M+"tee-wordcloud-verde-2.webp",default:M+"tee-wordcloud-verde-2.webp"},gallery:[M+"tee-wordcloud-verde-flat.webp"]},
  {id:"tee-actor",family:"T-shirt Artyou",cat:"tshirt",name:"I’m an Actor",price:14,
   desc:"Per chi in scena c’è, e lo dice. Scritta frontale e vortice Artyou sul fianco.",
-  colors:["Nero"],sizes:["S","M","L","XL"],images:{default:"/img/merch/tee-actor.webp"}},
+  colors:["Nero"],sizes:["S","M","L","XL"],images:{Nero:M+"tee-actor-donna.webp",default:M+"tee-actor-donna.webp"},gallery:[M+"tee-actor-uomo.webp"]},
  {id:"tee-memory",family:"T-shirt Artyou",cat:"tshirt",name:"Improvviso",price:14,
-  desc:"“Improvviso perché odio fare la memoria”: la scusa perfetta, stampata sul petto.",
-  colors:["Blu","Nero"],sizes:["S","M","L","XL"],images:{default:"/img/merch/tee-memory.webp"}},
+  desc:"“Improvviso perché odio fare la memoria”: la scusa perfetta, stampata sul petto, con il vortice Artyou sul fianco.",
+  colors:["Blu","Blu notte"],sizes:["S","M","L","XL"],
+  images:{Blu:M+"tee-improvviso-blu.webp","Blu notte":M+"tee-improvviso-blunotte.webp",default:M+"tee-improvviso-blu.webp"}},
  {id:"tee-arte",family:"T-shirt Artyou",cat:"tshirt",name:"Io sono Arte",price:14,
   desc:"Essenziale e diretta: “Io sono Arte” sul petto, vortice Artyou sul fianco.",
-  colors:["Nero"],sizes:["S","M","L","XL"],images:{default:"/img/merch/tee-arte.webp"}},
+  colors:["Nero"],sizes:["S","M","L","XL"],images:{Nero:M+"tee-arte-nero.webp",default:M+"tee-arte-nero.webp"},gallery:[M+"tee-arte-nero-flat.webp"]},
+ {id:"tee-its-all-theater",nuovo:true,family:"T-shirt Artyou",cat:"tshirt",name:"It’s All Theater",price:14,
+  desc:"Perché alla fine è tutto teatro: “It’s all theater” sul petto e il vortice Artyou sul fianco. Sulla versione bianca la stampa è nera.",
+  colors:["Blu notte","Nero","Bianco"],sizes:["S","M","L","XL"],images:{"Blu notte":M+"tee-its-all-theater-blunotte.webp",Nero:M+"tee-its-all-theater-nero.webp",Bianco:M+"tee-its-all-theater-bianco.webp",default:M+"tee-its-all-theater-blunotte.webp"}},
+ {id:"tee-im-theatre",nuovo:true,family:"T-shirt Artyou",cat:"tshirt",name:"I’m Theatre",price:14,
+  desc:"Corta e chiara: “I’m Theatre” sul petto, il vortice Artyou sul fianco e il cervello Artyou sulla manica.",
+  colors:["Nero"],sizes:["S","M","L","XL"],images:{Nero:M+"tee-im-theatre-nero-foto.webp",default:M+"tee-im-theatre-nero-foto.webp"},gallery:[M+"tee-im-theatre-nero.webp"]},
  {id:"hoodie-thinkbig",family:"Felpa Artyou",cat:"felpe",name:"Think Big",price:30,
-  desc:"Felpa con zip e cappuccio, logo Artyou sul petto e il manifesto “Think Big” stampato sulla tasca.",
+  desc:"Felpa con zip e cappuccio, logo Artyou sul petto e il manifesto “Think big, believe big, act big” scritto a mano sulla tasca.",
   colors:["Cyan","Nero","Verde","Bordeaux"],sizes:["S","M","L","XL"],
-  images:{Cyan:"/img/merch/hoodie-cyan.webp",Nero:"/img/merch/hoodie-black.webp",Verde:"/img/merch/hoodie-green.webp",default:"/img/merch/hoodie-cyan.webp"},
-  noPhoto:["Bordeaux"]},
+  images:{Cyan:M+"felpa-thinkbig-cyan.webp",Nero:M+"felpa-thinkbig-nero.webp",default:M+"felpa-thinkbig-cyan.webp"},
+  noPhoto:["Verde","Bordeaux"]},
+ {id:"hoodie-ithink",nuovo:true,family:"Felpa Artyou",cat:"felpe",name:"I Think",price:30,
+  desc:"Felpa con zip e cappuccio, logo Artyou sul petto e la frase “I think therefore I am, and I act because I think” sulla tasca.",
+  colors:["Nero","Grigio antracite","Verde"],sizes:["S","M","L","XL"],
+  images:{Nero:M+"felpa-ithink-nero.webp","Grigio antracite":M+"felpa-ithink-antracite.webp",Verde:M+"felpa-ithink-verde.webp",default:M+"felpa-ithink-nero.webp"}},
+ {id:"hoodie-ithink-variant",nuovo:true,family:"Felpa Artyou",cat:"felpe",name:"I Think - Variant Ed.",price:30,
+  desc:"L’edizione variant della felpa I Think: logo Artyou a colori sul petto e la frase “I think therefore I am, and I act because I think” sulla tasca.",
+  colors:["Bianco","Bordeaux"],sizes:["S","M","L","XL"],
+  images:{Bianco:M+"felpa-ithink-variant-bianco.webp",Bordeaux:M+"felpa-ithink-variant-bordeaux.webp",default:M+"felpa-ithink-variant-bianco.webp"},
+  gallery:[{src:M+"felpa-ithink-variant-bordeaux-2.webp",color:"Bordeaux"}]},
  {id:"jogger",family:"Pantaloni Artyou",cat:"pantaloni",name:"Jogger",price:20,
-  desc:"Pantaloni jogger comodi per le lezioni e per tutto il resto, con logo Artyou sulla gamba.",
-  colors:["Nero","Grigio"],sizes:["S","M","L","XL"],images:{default:"/img/merch/jogger-artyou-roma.jpg"},noPhoto:["Grigio"]},
+  desc:"Pantaloni jogger comodi per le lezioni e per tutto il resto, con il logo Artyou multicolore lungo la gamba.",
+  colors:["Nero","Grigio"],sizes:["S","M","L","XL"],images:{Nero:M+"jogger-nero.webp",default:M+"jogger-nero.webp"},noPhoto:["Grigio"]},
  {id:"socks",family:"Calzini antiscivolo",cat:"calzini",name:"Calzini Grip",price:5,
   desc:"Calzini antiscivolo per lavorare in sala in sicurezza, senza scarpe.",
   colors:["Nero","Arancio"],sizes:["35-38","39-42","43-46"],
-  images:{Nero:"/img/merch/calzini-grip-nero.webp",default:"/img/merch/calzini-grip-nero.webp"},noPhoto:["Arancio"]}
+  images:{Nero:M+"calzini-grip-nero.webp",default:M+"calzini-grip-nero.webp"},noPhoto:["Arancio"]}
 ];
 
 /* ===== Magazzino (Google Sheet tramite /api/merch) =====
@@ -294,17 +342,27 @@ if(grid){
     const top=$("#shop").getBoundingClientRect().top+scrollY-170;
     if(scrollY>top)scrollTo({top,behavior:"smooth"});
   });
+  // seconda foto mostrata al passaggio del mouse: foto extra o altro colore
+  const hoverImg=(p,color)=>{
+    const main=imgFor(p,color);
+    const alts=(p.gallery||[]).map(g=>typeof g==="string"?g:g.src).concat(colorsOf(p).map(c=>p.images[c]).filter(Boolean)).filter(x=>x&&x!==main);
+    return alts[0]||"";
+  };
   const cardHTML=p=>{
-    const s=sel[p.id],can=maxAddable(p,s.color,s.size)>0,url=productUrl(p,s.color);
-    return '<article class="card" data-id="'+p.id+'">'+
-      '<a class="media" href="'+url+'" aria-label="'+esc(p.name)+': vedi il prodotto">'+mediaHTML(p,s.color)+badgeHTML(p)+'</a>'+
-      '<div class="card-body">'+
-        '<div class="card-top"><div><div class="cat">'+esc(p.family)+'</div><h3><a href="'+url+'">'+esc(p.name)+'</a></h3></div><div class="price">'+euro(priceOf(p))+'</div></div>'+
-        '<div class="options"><div class="opt-label">Colore: <strong>'+s.color+'</strong></div><div class="swatches">'+swatchesHTML(p,s.color)+'</div></div>'+
-        '<div class="options"><div class="opt-label">Taglia</div><div class="sizes">'+sizesHTML(p,s.color,s.size)+'</div></div>'+
-        '<div class="card-actions">'+
-          '<button class="btn btn-orange add" data-add '+(can?'':'disabled')+'>'+addLabel(p,s.color,s.size)+'</button>'+
-          '<a class="btn more" href="'+url+'">Dettagli</a>'+
+    const s=sel[p.id],url=productUrl(p,s.color),t=totalOf(p),alt=hoverImg(p,s.color),cols=colorsOf(p);
+    const badges=(t===0?'<span class="badge out">Esaurito</span>':t!==null&&t<=5?'<span class="badge low">Ultimi pezzi</span>':p.nuovo?'<span class="badge new">Nuovo</span>':'');
+    const quick=t===0?'':'<div class="quick-add" aria-label="Aggiunta veloce, colore '+s.color+'"><span>Aggiungi in taglia</span><div class="qa-sizes">'+
+      p.sizes.map(z=>{const out=qtyOf(p,s.color,z)===0||maxAddable(p,s.color,z)===0;return '<button type="button" data-quick="'+z+'"'+(out?' disabled':'')+'>'+z+'</button>'}).join("")+'</div></div>';
+    return '<article class="card'+(alt?' has-alt':'')+(t===0?' is-out':'')+'" data-id="'+p.id+'">'+
+      '<div class="media">'+
+        '<a class="media-link" href="'+url+'" aria-label="'+esc(p.family+" "+p.name)+': vedi il prodotto">'+
+          '<span class="img-a">'+mediaHTML(p,s.color)+'</span>'+(alt?'<span class="img-b"><img src="'+alt+'" alt="" loading="lazy"></span>':'')+
+        '</a>'+badges+quick+
+      '</div>'+
+      '<div class="card-info">'+
+        '<div class="card-line"><h3><a href="'+url+'">'+esc(p.name)+'</a></h3><span class="price">'+euro(priceOf(p))+'</span></div>'+
+        '<div class="card-line sub"><span class="cat">'+esc(p.family)+'</span>'+
+          (cols.length>1?'<span class="dots">'+cols.map(c=>'<button type="button" class="dot" data-color="'+c+'" aria-pressed="'+(c===s.color)+'" aria-label="Colore '+c+'" title="'+c+'" style="background:'+SWATCH[c]+'"></button>').join("")+'</span>':'<span class="one-color">'+esc(cols[0]||"")+'</span>')+
         '</div>'+
       '</div></article>';
   };
@@ -315,14 +373,9 @@ if(grid){
   grid.addEventListener("click",e=>{
     const card=e.target.closest(".card");if(!card)return;
     const p=PRODUCTS.find(x=>x.id===card.dataset.id),s=sel[p.id];
-    const c=e.target.closest("[data-color]"),z=e.target.closest("[data-size]");
-    if(c){s.color=c.dataset.color;fixSel(p,s);card.outerHTML=cardHTML(p);return}
-    if(z){s.size=z.dataset.size;card.outerHTML=cardHTML(p);return}
-    if(e.target.closest("[data-add]")){
-      // sul telefono le opzioni sono nascoste: si sceglie nella pagina prodotto
-      if(matchMedia("(max-width:820px)").matches){location.href=productUrl(p,s.color);return}
-      if(addToCart(p,s.color,s.size,1))card.outerHTML=cardHTML(p);
-    }
+    const c=e.target.closest("[data-color]"),q=e.target.closest("[data-quick]");
+    if(c){e.preventDefault();s.color=c.dataset.color;fixSel(p,s);card.outerHTML=cardHTML(p);return}
+    if(q){e.preventDefault();if(addToCart(p,s.color,q.dataset.quick,1)){const n=grid.querySelector('[data-id="'+p.id+'"]');n.outerHTML=cardHTML(p)}}
   });
   onStock.push(()=>{renderTabs();renderGrid()});
   renderTabs();renderGrid();
@@ -346,7 +399,7 @@ if(pdp){
     const gal=[];
     p.colors.forEach(c=>{const src=p.images[c];if(src&&!gal.some(g=>g.src===src))gal.push({src,color:c})});
     if(p.images.default&&!gal.some(g=>g.src===p.images.default))gal.unshift({src:p.images.default});
-    (p.gallery||[]).forEach(src=>gal.push({src}));
+    (p.gallery||[]).forEach(g=>gal.push(typeof g==="string"?{src:g,color:p.galleryColor||p.colors[0]}:g));
 
     document.title=p.family+" "+p.name+" | Merchandising Artyou Roma";
     const md=document.querySelector('meta[name="description"]');if(md)md.content=p.desc;
@@ -356,10 +409,8 @@ if(pdp){
     const crumbs=$("#pdpCrumbs");
     crumbs.innerHTML='<a href="/">Home</a><span>/</span><a href="'+SHOP_URL+'">Merchandising</a><span>/</span><span>'+esc(p.name)+'</span>';
 
-    const similar=PRODUCTS.filter(x=>x.cat===p.cat&&x.id!==p.id&&isActive(x));
     pdp.innerHTML=
       '<div class="gallery'+(gal.length>1?'':' single')+'">'+
-        '<div class="thumbs" role="list" aria-label="Foto del prodotto"></div>'+
         '<div class="main-img"></div>'+
       '</div>'+
       '<div class="buy">'+
@@ -367,14 +418,14 @@ if(pdp){
         '<h1>'+esc(p.name)+'</h1>'+
         '<div class="pdp-price" id="pPrice"></div>'+
         '<p class="pdp-desc">'+esc(p.desc)+'</p>'+
-        (similar.length?'<div class="similar">'+railHTML("Altri modelli simili",similar,"rSimilar")+'</div>':'')+
         '<div class="opt"><div class="opt-label">Colore: <strong id="pColor"></strong></div><div class="swatches" id="pColors"></div></div>'+
-        '<div class="opt"><div class="opt-label">Taglia: <strong id="pSize"></strong></div><div class="sizes" id="pSizes"></div></div>'+
+        '<div class="opt"><div class="opt-label opt-row"><span>Taglia: <strong id="pSize"></strong></span>'+(SIZE_GUIDE[p.cat]?'<button type="button" class="guide-link" data-guide><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 15 15 3l6 6L9 21l-6-6Z"/><path d="m7 11 2 2M10 8l2 2M13 5l2 2M11 15l-1 1M14 12l-1 1"/></svg>Guida alle taglie</button>':'')+'</div><div class="sizes" id="pSizes"></div></div>'+
+        (gal.length>1?'<div class="opt"><div class="opt-label">Foto</div><div class="thumbs" aria-label="Foto del prodotto"></div></div>':'')+
         '<div class="note" id="pNote" hidden></div>'+
-        '<div class="opt-label qty-label">Quantità</div>'+
-        '<div class="buy-row">'+
-          '<div class="qty" aria-label="Quantità"><button type="button" data-q="-1" aria-label="Diminuisci">−</button><output id="pQty">1</output><button type="button" data-q="1" aria-label="Aumenta">+</button></div>'+
-          '<button class="btn btn-orange" id="pAdd" type="button"></button>'+
+        '<div class="buy-box">'+
+          '<div class="buy-row"><span class="opt-label">Quantità</span>'+
+            '<div class="qty" aria-label="Quantità"><button type="button" data-q="-1" aria-label="Diminuisci">−</button><output id="pQty">1</output><button type="button" data-q="1" aria-label="Aumenta">+</button></div></div>'+
+          '<button class="btn btn-orange add-big" id="pAdd" type="button"></button>'+
         '</div>'+
         '<ul class="perks"><li>Ritiro gratuito in tutte le sedi Artyou</li><li>Paghi al ritiro, niente pagamenti online</li><li>Dubbi sulla taglia? <a href="https://wa.me/'+WHATSAPP+'?text='+encodeURIComponent("Ciao Artyou! Ho una domanda sulla taglia di "+p.family+" "+p.name+".")+'" target="_blank" rel="noopener">Scrivici su WhatsApp</a></li></ul>'+
       '</div>';
@@ -383,9 +434,9 @@ if(pdp){
       fixSel(p,s);
       const max=maxAddable(p,s.color,s.size);
       qty=Math.max(1,Math.min(qty,max||1));
-      const colorImg=p.images[s.color];if(colorImg)mainSrc=colorImg;
+      
       pdp.querySelector(".main-img").innerHTML=imgHTML(mainSrc,p.family+" "+p.name+" – "+s.color,true)+badgeHTML(p);
-      pdp.querySelector(".thumbs").innerHTML=gal.length>1?gal.map((g,i)=>'<button type="button" class="thumb'+(g.src===mainSrc?' on':'')+'" data-g="'+i+'" aria-label="Foto '+(i+1)+(g.color?" – "+g.color:"")+'" aria-pressed="'+(g.src===mainSrc)+'"><img src="'+g.src+'" alt=""></button>').join(""):"";
+      const th=pdp.querySelector(".thumbs");if(th)th.innerHTML=gal.length>1?gal.map((g,i)=>'<button type="button" class="thumb'+(g.src===mainSrc?' on':'')+'" data-g="'+i+'" aria-label="Foto '+(i+1)+(g.color?" – "+g.color:"")+'" aria-pressed="'+(g.src===mainSrc)+'"><img src="'+g.src+'" alt=""></button>').join(""):"";
       $("#pPrice").textContent=euro(priceOf(p,s.color,s.size));
       $("#pColor").textContent=s.color;$("#pSize").textContent=s.size;
       $("#pColors").innerHTML=swatchesHTML(p,s.color);
@@ -396,18 +447,42 @@ if(pdp){
       if(Object.keys(p.images).length&&(p.noPhoto||[]).includes(s.color))msgs.push("La foto del colore "+s.color+" è in arrivo: il capo è lo stesso, cambia solo il colore.");
       if(q!==null&&q>0&&q<=3)msgs.push("Ne restano solo "+q+" in questa taglia.");
       const note=$("#pNote");note.hidden=!msgs.length;note.textContent=msgs.join(" ");
-      const b=$("#pAdd"),narrow=matchMedia("(max-width:820px)").matches;b.disabled=max===0;b.innerHTML=(max>0?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>':'')+esc(addLabel(p,s.color,s.size,qty).replace(narrow?"Aggiungi al carrello":"\u0000","Aggiungi"));
+      const b=$("#pAdd"),narrow=false;b.disabled=max===0;b.innerHTML=(max>0?'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>':'')+esc(addLabel(p,s.color,s.size,qty).replace(narrow?"Aggiungi al carrello":"\u0000","Aggiungi"));
       history.replaceState(null,"",productUrl(p,s.color));
       setLd();
     }
     pdp.addEventListener("click",e=>{
       const c=e.target.closest("#pColors [data-color]"),z=e.target.closest("#pSizes [data-size]"),q=e.target.closest("[data-q]"),g=e.target.closest("[data-g]");
-      if(c){s.color=c.dataset.color;render()}
+      if(c){s.color=c.dataset.color;mainSrc=p.images[s.color]||mainSrc;render()}
       else if(z){s.size=z.dataset.size;render()}
       else if(q){qty+=Number(q.dataset.q);render()}
       else if(g){const it=gal[+g.dataset.g];mainSrc=it.src;if(it.color&&colorsOf(p).indexOf(it.color)>=0)s.color=it.color;render()}
+      else if(e.target.closest("[data-guide]"))openGuide();
       else if(e.target.closest("#pAdd")){if(addToCart(p,s.color,s.size,qty)){sel[p.id]={...s};qty=1;render()}}
     });
+
+    // guida alle taglie
+    const G=SIZE_GUIDE[p.cat];
+    if(G){
+      document.body.insertAdjacentHTML("beforeend",'<div class="overlay" id="guide" aria-hidden="true"><div class="guide" role="dialog" aria-modal="true" aria-labelledby="guideTitle">'+
+        '<div class="guide-head"><h2 id="guideTitle">Guida alle taglie</h2><button class="close" data-close aria-label="Chiudi">×</button></div>'+
+        '<p class="guide-sub">'+esc(p.family+" · "+p.name)+' — '+esc(G.note)+'</p>'+
+        '<div class="guide-table"><table><thead><tr><th>Taglia</th>'+G.cols.map(c=>'<th>'+esc(c)+'</th>').join("")+'</tr></thead><tbody id="guideRows"></tbody></table></div>'+
+        (G.how?'<p class="guide-how"><strong>Come misurare.</strong> '+esc(G.how)+'</p>':'')+
+        '<p class="guide-help">Sei tra due taglie? <a href="https://wa.me/'+WHATSAPP+'?text='+encodeURIComponent("Ciao Artyou! Sono indeciso sulla taglia di "+p.family+" "+p.name+".")+'" target="_blank" rel="noopener">Scrivici su WhatsApp</a>: ti aiutiamo a scegliere.</p>'+
+        '</div></div>');
+      const gEl=$("#guide");
+      gEl.addEventListener("click",e=>{
+        const r=e.target.closest("[data-pick]");
+        if(r){s.size=r.dataset.pick;render();closeOverlay(gEl);return}
+        if(e.target===gEl||e.target.closest("[data-close]"))closeOverlay(gEl);
+      });
+      window.openGuide=function(){
+        $("#guideRows").innerHTML=Object.keys(G.rows).map(z=>'<tr class="'+(z===s.size?'on':'')+'"><th><button type="button" data-pick="'+z+'" aria-label="Scegli la taglia '+z+'">'+z+'</button></th>'+G.rows[z].map(v=>'<td>'+v+'</td>').join("")+'</tr>').join("");
+        openOverlay(gEl);
+      };
+    }
+    function openGuide(){window.openGuide&&window.openGuide()}
 
     // dati strutturati per Google
     function setLd(){
@@ -422,14 +497,17 @@ if(pdp){
     // caroselli in fondo: le altre categorie (quella del prodotto è già sopra in "Altri modelli simili")
     const more=$("#pdpMore");
     function renderMore(){
-      const groups=CATS.filter(c=>c.id!=="all"&&c.id!==p.cat).map(c=>({c,list:PRODUCTS.filter(x=>x.cat===c.id&&isActive(x))})).filter(g=>g.list.length);
-      if(!similar.length){const same=PRODUCTS.filter(x=>x.cat===p.cat&&x.id!==p.id&&isActive(x));if(same.length)groups.unshift({c:{id:p.cat,label:"Altre "+catLabel(p.cat)},list:same})}
+      // 1) stessa categoria  2) "Completa il look": tutto il resto in un solo carosello
+      const same=PRODUCTS.filter(x=>x.cat===p.cat&&x.id!==p.id&&isActive(x));
+      const rest=CATS.filter(c=>c.id!=="all"&&c.id!==p.cat).reduce((a,c)=>a.concat(PRODUCTS.filter(x=>x.cat===c.id&&isActive(x))),[]);
+      const groups=[];
+      if(same.length)groups.push({c:{label:p.cat==="tshirt"?"Altre t-shirt":p.cat==="felpe"?"Altre felpe":"Altri modelli"},list:same});
+      if(rest.length)groups.push({c:{label:"Completa il look"},list:rest});
       more.hidden=!groups.length;
-      more.querySelector(".rails").style.gridTemplateColumns=groups.map(g=>Math.min(g.list.length,3)+"fr").join(" ");
       more.querySelector(".rails").innerHTML=groups.map((g,i)=>railHTML(g.c.label,g.list,"rMore"+i)).join("");
       wireRails(more);
     }
-    onStock.push(()=>{render();renderMore();const sim=pdp.querySelector(".similar .track");if(sim)sim.innerHTML=similar.filter(isActive).map(miniHTML).join("")});
+    onStock.push(()=>{render();renderMore()});
     render();renderMore();wireRails(pdp);
   }
 }
