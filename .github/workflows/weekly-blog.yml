@@ -1,13 +1,6 @@
 name: Weekly blog - La finestra sul cortile
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - blog-finestra-sul-cortile
-    paths:
-      - ".github/workflows/weekly-blog.yml"
-      - "scripts/generate-blog.mjs"
-      - "blog/sources.json"
   schedule:
     - cron: "15 8 * * 3"
 
@@ -22,8 +15,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - name: Genera articolo con OpenRouter Free
+          node-version: "24"
+      - name: Genera articolo con Gemini + fallback OpenRouter
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
