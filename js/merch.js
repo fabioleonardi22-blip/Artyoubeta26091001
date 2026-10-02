@@ -8,7 +8,7 @@
    gallery:["/img/merch/tee-actor-retro.webp"]: diventano miniature nella
    pagina prodotto. Per legare una foto extra a un colore:
    gallery:[{src:"/img/merch/foto.webp",color:"Bordeaux"}]. */
-const WHATSAPP="393271881956";
+const WHATSAPP="393271881956",PAYPAL_EMAIL="info@artyouroma.it";
 const CATS=[
   {id:"all",label:"Tutti"},
   {id:"tshirt",label:"T-shirt"},
@@ -180,6 +180,7 @@ document.body.insertAdjacentHTML("beforeend",`
       <div class="fields">
         <label>Nome e cognome<input name="nome" autocomplete="name" required></label>
         <label>Telefono<input name="tel" type="tel" autocomplete="tel" required></label>
+        <label class="full">Email<input name="email" type="email" autocomplete="email" required placeholder="Ti mandiamo qui la conferma"></label>
         <label class="full">Sede di ritiro
           <select name="sede" required>
             <option value="">Scegli la sede</option>
@@ -189,15 +190,25 @@ document.body.insertAdjacentHTML("beforeend",`
         </label>
         <label class="full">Note (facoltative)<textarea name="note" rows="2" placeholder="Es. corso del martedì, ritiro dopo lezione"></textarea></label>
       </div>
+      <fieldset class="pay">
+        <legend>Come vuoi pagare?</legend>
+        <label class="pay-opt"><input type="radio" name="pagamento" value="In sede" checked>
+          <span class="pay-card"><span class="pay-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-5h4v5"/></svg></span>
+          <span><strong>Paga in sede</strong><small>Contanti o carta al ritiro</small></span></span></label>
+        <label class="pay-opt"><input type="radio" name="pagamento" value="PayPal">
+          <span class="pay-card"><span class="pay-ico pp" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/><path d="M6.5 15h3"/></svg></span>
+          <span><strong>Paga ora con PayPal</strong><small>Paghi subito online</small></span></span></label>
+      </fieldset>
       <div class="err" id="formErr" role="alert"></div>
       <button type="submit" class="btn btn-orange send">Invia l’ordine</button>
-      <p class="fine">Ti mettiamo da parte i capi e li paghi al ritiro in sede. I dati servono solo a gestire l’ordine (<a href="/privacy-policy/" target="_blank" rel="noopener">privacy</a>).</p>
+      <p class="fine" id="payFine">Ti mettiamo da parte i capi e li paghi al ritiro in sede. I dati servono solo a gestire l’ordine (<a href="/privacy-policy/" target="_blank" rel="noopener">privacy</a>).</p>
     </form>
     <div class="done" id="done" hidden>
       <div class="done-icon" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
       <h3>Ordine ricevuto!</h3>
       <p>Il tuo ordine <strong id="doneId"></strong> è registrato e i capi sono messi da parte per te.</p>
-      <p>Ritiro nella sede <strong id="doneSede"></strong> · totale <strong id="doneTot"></strong>, da pagare al ritiro. Ti scriviamo quando è pronto.</p>
+      <p>Ritiro nella sede <strong id="doneSede"></strong> · totale <strong id="doneTot"></strong><span id="donePay">, da pagare al ritiro</span>. Ti abbiamo mandato la conferma via email e ti scriviamo quando è pronto.</p>
+      <a class="btn btn-orange" id="donePaypal" href="#" hidden>Paga ora con PayPal</a>
       <a class="btn-wa" id="doneWa" href="#" target="_blank" rel="noopener">Scrivici su WhatsApp</a>
       <button class="btn more" data-close>Continua lo shopping</button>
     </div>
@@ -255,19 +266,26 @@ document.addEventListener("click",e=>{
 /* ===== Invio ordine ===== */
 function waText(lines,extra){return ["Ciao Artyou! Vorrei ordinare dal merchandising:",""].concat(lines,[""],extra).join("\n")}
 function waUrl(t){return "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(t)}
-const ERRORI={campi_mancanti:"Compila nome, telefono e sede di ritiro.",telefono_non_valido:"Controlla il numero di telefono.",
+function paypalUrl(id,tot){return "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business="+encodeURIComponent(PAYPAL_EMAIL)+"&item_name="+encodeURIComponent("Artyou Merch "+id)+"&invoice="+encodeURIComponent(id)+"&amount="+encodeURIComponent(Number(tot).toFixed(2))+"&currency_code=EUR"}
+function sendLabel(){const f=$("#checkout"),pp=(f.querySelector('[name=pagamento]:checked')||{}).value==="PayPal";
+  f.querySelector(".send").textContent=pp?"Ordina e paga con PayPal":"Invia l’ordine";
+  $("#payFine").innerHTML=(pp?"Dopo l’invio ti portiamo su PayPal per pagare: i capi restano riservati per te.":"Ti mettiamo da parte i capi e li paghi al ritiro in sede.")+' I dati servono solo a gestire l’ordine (<a href="/privacy-policy/" target="_blank" rel="noopener">privacy</a>).'}
+$("#checkout").addEventListener("change",e=>{if(e.target.name==="pagamento")sendLabel()});
+const ERRORI={campi_mancanti:"Compila nome, telefono, email e sede di ritiro.",email_non_valida:"Controlla l’indirizzo email.",email_mancante:"Per pagare con PayPal serve l’email.",telefono_non_valido:"Controlla il numero di telefono.",
   sede_non_valida:"Scegli una sede dall’elenco.",quantita_eccessiva:"Puoi ordinare al massimo 10 pezzi per articolo e 20 in tutto.",
   carrello_vuoto:"Il carrello è vuoto.",server_occupato:"Troppe richieste in questo momento: riprova tra qualche secondo."};
 $("#checkout").addEventListener("submit",e=>{
   e.preventDefault();
   const f=e.target,err=$("#formErr"),send=f.querySelector(".send");
   const nome=f.nome.value.trim(),tel=f.tel.value.trim(),sede=f.sede.value,note=f.note.value.trim();
+  const email=f.email.value.trim(),pagamento=(f.querySelector('[name=pagamento]:checked')||{}).value||"In sede";
   err.innerHTML="";
   if(!cart.length){err.textContent=ERRORI.carrello_vuoto;return}
-  if(!nome||!tel||!sede){err.textContent=ERRORI.campi_mancanti;(!nome?f.nome:!tel?f.tel:f.sede).focus();return}
+  if(!nome||!tel||!email||!sede){err.textContent=ERRORI.campi_mancanti;(!nome?f.nome:!tel?f.tel:!email?f.email:f.sede).focus();return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){err.textContent=ERRORI.email_non_valida;f.email.focus();return}
   if(tel.replace(/\D/g,"").length<8){err.textContent=ERRORI.telefono_non_valido;f.tel.focus();return}
   const righe=cart.map(l=>{const p=lineP(l);return "• "+l.qty+"× "+p.family+" "+p.name+" – "+l.color+", taglia "+l.size+" ("+euro(priceOf(p,l.color,l.size)*l.qty)+")"});
-  const dati=["Totale: "+euro(cartTotal()),"Nome: "+nome,"Telefono: "+tel,"Ritiro: sede "+sede].concat(note?["Note: "+note]:[]);
+  const dati=["Totale: "+euro(cartTotal()),"Nome: "+nome,"Telefono: "+tel,"Email: "+email,"Ritiro: sede "+sede,"Pagamento: "+pagamento].concat(note?["Note: "+note]:[]);
   if(!live()){
     window.open(waUrl(waText(righe,dati)),"_blank","noopener");
     cart=[];saveCart();renderCart();f.reset();closeOverlay(drawer);
@@ -275,12 +293,15 @@ $("#checkout").addEventListener("submit",e=>{
   }
   send.disabled=true;send.textContent="Invio in corso…";
   fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({
-    action:"ordine",nome,telefono:tel,sede,note,
+    action:"ordine",nome,telefono:tel,email,sede,note,pagamento,
     items:cart.map(l=>({id:l.id,colore:l.color,taglia:l.size,qty:l.qty}))
   })}).then(r=>r.json()).then(j=>{
     if(j&&j.ok&&/^MERCH-/.test(j.id||"")){
       const tot=typeof j.totale==="number"?j.totale:cartTotal();
       $("#doneId").textContent=j.id;$("#doneSede").textContent=sede;$("#doneTot").textContent=euro(tot);
+      const pp=pagamento==="PayPal"?(j.paypal||paypalUrl(j.id,tot)):"";
+      $("#donePay").textContent=pp?", da pagare con PayPal":", da pagare al ritiro";
+      const ppBtn=$("#donePaypal");ppBtn.hidden=!pp;if(pp){ppBtn.href=pp;setTimeout(()=>{location.href=pp},1800)}
       $("#doneWa").href=waUrl("Ciao Artyou! Ho appena fatto l’ordine "+j.id+" dal sito ("+euro(tot)+"), ritiro nella sede "+sede+". Nome: "+nome+".");
       cart=[];saveCart();f.reset();renderCart();showStep("done");loadStock();return;
     }
@@ -295,7 +316,7 @@ $("#checkout").addEventListener("submit",e=>{
     const m=ERRORI[x&&x.message];
     if(m){err.textContent=m;return}
     err.innerHTML='Non riusciamo a registrare l’ordine in questo momento. <a href="'+waUrl(waText(righe,dati))+'" target="_blank" rel="noopener">Invialo su WhatsApp</a> e lo registriamo noi.';
-  }).finally(()=>{send.disabled=false;send.textContent="Invia l’ordine"});
+  }).finally(()=>{send.disabled=false;sendLabel()});
 });
 addEventListener("storage",e=>{if(e.key===K_CART){cart=store.get(K_CART,[]);renderCart();onStock.forEach(f=>f())}});
 
