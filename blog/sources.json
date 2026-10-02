@@ -1,0 +1,32 @@
+[
+  {
+    "name": "iO Theater Chicago - Classes",
+    "url": "https://ioimprov.com/classes/",
+    "type": "school",
+    "region": "USA"
+  },
+  {
+    "name": "iO Theater Chicago - About",
+    "url": "https://ioimprov.com/about-us/",
+    "type": "school",
+    "region": "USA"
+  },
+  {
+    "name": "The Second City Chicago",
+    "url": "https://www.secondcity.com/chicago",
+    "type": "school",
+    "region": "USA"
+  },
+  {
+    "name": "Barcelona Improv Group",
+    "url": "https://www.barcelonaimprovgroup.com/",
+    "type": "school",
+    "region": "Spain"
+  },
+  {
+    "name": "The Free Association London",
+    "url": "https://thefreeassociation.co.uk/",
+    "type": "school",
+    "region": "UK"
+  }
+]
