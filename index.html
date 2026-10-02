@@ -803,6 +803,57 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div>
 </section>
 
+
+<section class="artyou-exercise-search" aria-labelledby="exerciseSearchTitle" style="background:#F6F3EC;padding:34px 120px 44px;">
+  <style>
+    .artyou-exercise-search .aes-box{
+      max-width:1200px;margin:0 auto;background:#FFFFFF;border:1px solid #E8DED0;border-radius:24px;
+      padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:28px;
+      box-shadow:0 14px 32px rgba(19,24,29,.08);
+    }
+    .artyou-exercise-search .aes-copy{min-width:0;flex:1}
+    .artyou-exercise-search .aes-kicker{margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase;color:#F09000}
+    .artyou-exercise-search h2{margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:34px;line-height:1.05;letter-spacing:-.8px;color:#13181D}
+    .artyou-exercise-search .aes-sub{margin:8px 0 0;font-size:15px;line-height:1.5;color:#5A6268}
+    .artyou-exercise-search form{display:flex;align-items:center;gap:10px;flex:0 0 min(520px,48%)}
+    .artyou-exercise-search input{
+      width:100%;height:52px;border:1px solid #D8D0C4;border-radius:999px;padding:0 20px;font:600 15px 'Instrument Sans',sans-serif;
+      color:#13181D;background:#FFF;outline:none;
+    }
+    .artyou-exercise-search input:focus{border-color:#F09000;box-shadow:0 0 0 3px rgba(240,144,0,.13)}
+    .artyou-exercise-search button{
+      height:52px;border:0;border-radius:999px;padding:0 22px;background:#F09000;color:#1C1606;font:800 15px 'Instrument Sans',sans-serif;
+      display:inline-flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 8px 20px rgba(240,144,0,.24);white-space:nowrap;
+    }
+    .artyou-exercise-search button:hover{transform:translateY(-1px)}
+    .artyou-exercise-search .aes-note{margin-top:8px;font-size:11px;color:#8B8F92}
+    @media(max-width:900px){
+      .artyou-exercise-search{padding:24px 20px 30px!important}
+      .artyou-exercise-search .aes-box{padding:22px;flex-direction:column;align-items:stretch;gap:18px;border-radius:20px}
+      .artyou-exercise-search h2{font-size:28px}
+      .artyou-exercise-search form{flex:1 1 auto;width:100%;max-width:none}
+    }
+    @media(max-width:560px){
+      .artyou-exercise-search form{flex-direction:column;align-items:stretch}
+      .artyou-exercise-search button{justify-content:center;width:100%}
+    }
+  </style>
+  <div class="aes-box">
+    <div class="aes-copy">
+      <p class="aes-kicker">Risorse per improvvisatori</p>
+      <h2 id="exerciseSearchTitle">Cerca il tuo esercizio</h2>
+      <p class="aes-sub">Trova giochi, tecniche ed esercizi di improvvisazione su ImproWiki.</p>
+      <div class="aes-note">Ricerca esterna su ImproWiki</div>
+    </div>
+    <form action="https://improwiki.com/it" method="get" target="_blank" rel="noopener" onsubmit="event.preventDefault();window.open('https://www.google.com/search?q=site%3Aimprowiki.com%2Fit+'+encodeURIComponent(this.q.value),'_blank','noopener');">
+      <input type="search" name="q" placeholder="Es. ascolto, status, emozioni..." aria-label="Cerca un esercizio di improvvisazione" required>
+      <button type="submit" aria-label="Cerca su ImproWiki">
+        Cerca
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      </button>
+    </form>
+  </div>
+</section>
 <section id="workshow" class="am-px am-py" style="background: #FDF1DE; padding: 112px 120px; display: flex; flex-direction: column; gap: 40px;">
 <div class="am-grid1" style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr); gap: 24px;">
 <div class="am-ws-steps" style="display: flex; flex-direction: column; gap: 16px;"><div style="display: flex; flex-direction: column; gap: 4px;"><span class="am-fs-xxl" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 80px; line-height: 0.95; letter-spacing: -2.2px; color: #C46A00;">WorkshoW</span><span class="am-fs-l" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 40px; line-height: 1.08; letter-spacing: -1px; color: #13181D;">Weekend di allenamento e spettacolo</span></div><div style="padding: 4px 4px 8px;"><p class="am-fs-lead" style="margin: 0; font-size: 17px; line-height: 1.5; color: #3F474E;">Un weekend per tuffarsi a capofitto in un tema, uno stile o uno strumento, con docenti Artyou e ospiti esterni. E alla fine si va in scena.</p></div><div class="am-wrap" style="display: flex; gap: 18px; align-items: center; background: #FFFFFF; border-radius: 18px; padding: 18px 22px; border: 1px solid #EADFCB;"><span class="am-wrap am-fs-m" style="width: 60px; height: 60px; border-radius: 30px; background: #F09000; color: #1C1606; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px; flex-shrink: 0;">1</span><span class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 24px; line-height: 1.15;">Due giorni di laboratorio intensivo</span></div><div class="am-wrap" style="display: flex; gap: 18px; align-items: center; background: #FFFFFF; border-radius: 18px; padding: 18px 22px; border: 1px solid #EADFCB;"><span class="am-wrap am-fs-m" style="width: 60px; height: 60px; border-radius: 30px; background: #F09000; color: #1C1606; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px; flex-shrink: 0;">2</span><span class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 24px; line-height: 1.15;">Messinscena finale davanti al pubblico</span></div><div class="am-wrap" style="display: flex; gap: 18px; align-items: center; background: #FFFFFF; border-radius: 18px; padding: 18px 22px; border: 1px solid #EADFCB;"><span class="am-wrap am-fs-m" style="width: 60px; height: 60px; border-radius: 30px; background: #F09000; color: #1C1606; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px; flex-shrink: 0;">3</span><span class="am-fs-s" style="font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 24px; line-height: 1.15;">Un tema diverso a ogni appuntamento</span></div></div>
