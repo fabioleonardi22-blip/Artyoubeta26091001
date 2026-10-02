@@ -1,6 +1,26 @@
 {
   "redirects": [
     {
+      "source": "/merchandising-prodotto/",
+      "destination": "/merchandising-prodotto.html",
+      "permanent": false
+    },
+    {
+      "source": "/merchandising-prodotto",
+      "destination": "/merchandising-prodotto.html",
+      "permanent": false
+    },
+    {
+      "source": "/merchandising/",
+      "destination": "/merchandising.html",
+      "permanent": false
+    },
+    {
+      "source": "/merchandising",
+      "destination": "/merchandising.html",
+      "permanent": false
+    },
+    {
       "source": "/teatro",
       "destination": "/teatro/",
       "permanent": true
