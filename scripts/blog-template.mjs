@@ -1,6 +1,4 @@
 // Modello grafico condiviso del blog "La finestra sul cortile".
-import { } from "node:fs";
-
 export const safe = s => String(s ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
 
 const MESI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
