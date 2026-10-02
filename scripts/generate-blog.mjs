@@ -1,8 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const key=process.env.OPENROUTER_API_KEY;
-if(!key){console.log("OPENROUTER_API_KEY assente: nessun articolo generato.");process.exit(0)}
+const geminiKey=process.env.GEMINI_API_KEY;
+const openrouterKey=process.env.OPENROUTER_API_KEY;
+if(!geminiKey&&!openrouterKey){
+  console.log("Nessuna chiave AI configurata: nessun articolo generato.");
+  process.exit(0);
+}
 
 const root=process.cwd();
 const dataPath=path.join(root,"blog","articles.json");
@@ -62,41 +66,94 @@ Requisiti:
 - body totale circa 1000-1500 caratteri
 - se la categoria finale non è Festival Radar, radar deve essere []`;
 
-const payload={
-  model:"openrouter/free",
-  messages:[
-    {role:"system",content:"Rispondi esclusivamente con JSON valido e senza markdown."},
-    {role:"user",content:prompt}
-  ],
-  temperature:0.4
-};
-
-const models=["openrouter/free","meta-llama/llama-3.3-70b-instruct:free","google/gemma-3-27b-it:free"];
-let res=null, lastErr="";
-for(const model of models){
-  try{
-    const ctrl=new AbortController();
-    const timer=setTimeout(()=>ctrl.abort(),45000);
-    res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
-  method:"POST",
-  headers:{
-    "Authorization":`Bearer ${key}`,
-    "Content-Type":"application/json",
-    "HTTP-Referer":"https://artyouroma.it/",
-    "X-Title":"Artyou Blog"
-  },
-  body:JSON.stringify({...payload,model}),
-  signal:ctrl.signal
-    });
-    clearTimeout(timer);
-    if(res.ok) break;
-    lastErr="OpenRouter API "+res.status+" "+await res.text();
-  }catch(e){lastErr=String(e);}
+async function callGemini(){
+  if(!geminiKey) return null;
+  const models=["gemini-3.8-flash","gemini-3.5-flash-lite","gemini-2.5-flash"];
+  for(const model of models){
+    try{
+      const ctrl=new AbortController();
+      const timer=setTimeout(()=>ctrl.abort(),45000);
+      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{
+        method:"POST",
+        headers:{
+          "x-goog-api-key":geminiKey,
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          contents:[{role:"user",parts:[{text:prompt}]}],
+          generationConfig:{
+            temperature:0.4,
+            responseMimeType:"application/json"
+          }
+        }),
+        signal:ctrl.signal
+      });
+      clearTimeout(timer);
+      if(!res.ok){
+        console.log(`Gemini ${model} ${res.status}: ${await res.text()}`);
+        continue;
+      }
+      const out=await res.json();
+      const text=(out.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("").trim();
+      if(text){
+        console.log("Provider usato: Gemini "+model);
+        return text;
+      }
+    }catch(e){
+      console.log("Gemini errore:",String(e));
+    }
+  }
+  console.log("Gemini non disponibile, passo a OpenRouter.");
+  return null;
 }
-if(!res||!res.ok) throw new Error(lastErr||"OpenRouter non disponibile");
-const out=await res.json();
-let text=out.choices?.[0]?.message?.content||"";
-text=text.trim().replace(/^\`\`\`json\s*/i,"").replace(/\`\`\`$/,"").trim();
+
+async function callOpenRouter(){
+  if(!openrouterKey) return null;
+  const models=["openrouter/free","meta-llama/llama-3.3-70b-instruct:free","google/gemma-3-27b-it:free"];
+  for(const model of models){
+    try{
+      const ctrl=new AbortController();
+      const timer=setTimeout(()=>ctrl.abort(),45000);
+      const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
+        method:"POST",
+        headers:{
+          "Authorization":`Bearer ${openrouterKey}`,
+          "Content-Type":"application/json",
+          "HTTP-Referer":"https://artyouroma.it/",
+          "X-Title":"Artyou Blog"
+        },
+        body:JSON.stringify({
+          model,
+          messages:[
+            {role:"system",content:"Rispondi esclusivamente con JSON valido e senza markdown."},
+            {role:"user",content:prompt}
+          ],
+          temperature:0.4
+        }),
+        signal:ctrl.signal
+      });
+      clearTimeout(timer);
+      if(!res.ok){
+        console.log(`OpenRouter ${model} ${res.status}: ${await res.text()}`);
+        continue;
+      }
+      const out=await res.json();
+      const text=out.choices?.[0]?.message?.content?.trim();
+      if(text){
+        console.log("Provider usato: OpenRouter "+model);
+        return text;
+      }
+    }catch(e){
+      console.log("OpenRouter errore:",String(e));
+    }
+  }
+  return null;
+}
+
+let text=await callGemini();
+if(!text) text=await callOpenRouter();
+if(!text) throw new Error("Nessun provider gratuito disponibile.");
+text=text.trim().replace(/^```json\s*/i,"").replace(/```$/,"").trim();
 const a=JSON.parse(text);
 
 if(!a.title||!a.slug||!Array.isArray(a.body)||!Array.isArray(a.sources)||!a.sources.length) throw new Error("Articolo incompleto");
