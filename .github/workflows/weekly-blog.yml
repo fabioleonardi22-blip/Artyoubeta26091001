@@ -16,11 +16,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
-      - name: Genera articolo con Gemini + fallback OpenRouter
+      - name: Genera articolo con Gemini + fallback OpenRouter (con foto Unsplash)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
         run: node scripts/generate-blog.mjs
+      - name: Foto per gli articoli che non ce l'hanno
+        env:
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+        run: node scripts/blog-images.mjs
       - name: Commit se ci sono novità
         run: |
           if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
