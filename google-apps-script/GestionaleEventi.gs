@@ -3,7 +3,8 @@ const GEST_CFG = {
   PIN_PROPERTY: "ARTYOU_GESTIONALE_PIN",
   IMAGE_FOLDER_PROPERTY: "ARTYOU_EVENT_IMAGES_FOLDER_ID",
   SHEET_SITE: "EventiSito",
-  SHEET_BOOKING: "Eventi"
+  SHEET_BOOKING: "Eventi",
+  SHEET_AUDIT: "GestionaleAudit"
 };
 
 function doGet(e) {
@@ -134,6 +135,9 @@ function setupGestionale() {
   gestEnsureSheet_(ss, GEST_CFG.SHEET_BOOKING, [
     "Evento","Titolo","Data","Capienza","Prezzo","Attivo"
   ]);
+  gestEnsureSheet_(ss, GEST_CFG.SHEET_AUDIT, [
+    "DataOra","Azione","ID","Slug","Titolo","Dettaglio"
+  ]);
 }
 
 function gestSpreadsheet_() {
@@ -244,6 +248,7 @@ function gestSaveEvent_(e) {
   else sh.appendRow(arr);
 
   gestSyncBooking_(obj,dates);
+  gestAudit_("save", {id:id, slug:slug, title:obj.Titolo, detail:row>0?"update":"create"});
   return gestAdminEvents_().filter(x=>x.id===id)[0];
 }
 
@@ -283,6 +288,7 @@ function gestDeleteEvent_(id) {
     if(String(v[i][idx])===id){slug=String(v[i][idxSlug]||"");sh.deleteRow(i+1);break;}
   }
   if(slug){
+    gestAudit_("delete", {id:id, slug:slug, title:"", detail:""});
     const bk=ss.getSheetByName(GEST_CFG.SHEET_BOOKING);
     if(bk && bk.getLastRow()>1){
       const b=bk.getDataRange().getValues(), ie=b[0].indexOf("Evento"), ia=b[0].indexOf("Attivo");
@@ -309,7 +315,28 @@ function gestUploadImage_(data) {
   const ext = mime === "image/png" ? ".png" : (mime === "image/webp" ? ".webp" : ".jpg");
   const file = DriveApp.getFolderById(folderId).createFile(Utilities.newBlob(bytes, mime, clean + "-" + Date.now() + ext));
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  gestAudit_("uploadimage", {id:"", slug:"", title:clean, detail:mime});
   return "https://drive.google.com/uc?export=view&id=" + file.getId();
+}
+
+function gestAudit_(action, meta) {
+  try {
+    meta = meta || {};
+    const ss = gestSpreadsheet_();
+    const sh = gestEnsureSheet_(ss, GEST_CFG.SHEET_AUDIT, [
+      "DataOra","Azione","ID","Slug","Titolo","Dettaglio"
+    ]);
+    sh.appendRow([
+      new Date(),
+      String(action || ""),
+      String(meta.id || ""),
+      String(meta.slug || ""),
+      String(meta.title || ""),
+      String(meta.detail || "").slice(0,500)
+    ]);
+  } catch (_) {
+    // L'audit non deve mai bloccare il gestionale.
+  }
 }
 
 function gestSlug_(s){
