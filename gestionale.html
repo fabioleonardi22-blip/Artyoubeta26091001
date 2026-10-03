@@ -123,6 +123,29 @@ label{font-size:13px;font-weight:800;display:flex;flex-direction:column;gap:7px}
       <div class="topline" style="margin-bottom:12px"><div><h2 style="margin:0">5. Cast</h2><p>Facoltativo. Lo slug collega il nome alla pagina docente.</p></div><button class="btn soft" id="addCastBtn">+ Aggiungi persona</button></div>
       <div class="repeat" id="cast"></div>
     </section>
+
+    <section class="section" id="instagramSection">
+      <div class="topline" style="margin-bottom:12px">
+        <div>
+          <h2 style="margin:0">6. Instagram</h2>
+          <p>Prepara il post partendo dai dati dello spettacolo. In questa versione di prova non viene ancora pubblicato automaticamente.</p>
+        </div>
+      </div>
+      <div class="grid2">
+        <div>
+          <label>Testo del post<textarea id="instagramCaption" style="min-height:220px" placeholder="Il testo verrà generato dai dati dell'evento."></textarea></label>
+          <div class="toolbar" style="margin-top:12px">
+            <button class="btn primary" id="prepareInstagramBtn" type="button">Prepara post Instagram</button>
+            <button class="btn soft" id="copyInstagramBtn" type="button">Copia testo</button>
+          </div>
+          <p class="field-help" style="margin-top:10px">Per la pubblicazione automatica servirà collegare l'account Instagram professionale tramite Meta API.</p>
+        </div>
+        <div>
+          <div class="poster-preview" id="instagramPreview">Anteprima immagine Instagram</div>
+          <div id="instagramPreviewMeta" class="status info" style="margin-top:10px">Seleziona o compila un evento, poi premi “Prepara post Instagram”.</div>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
@@ -226,6 +249,43 @@ function del(){
 }
 function updatePoster(){var u=$("poster").value.trim();if(u){$("posterPreview").style.backgroundImage='url("'+u.replace(/"/g,"%22")+'")';$("posterPreview").textContent=""}else{$("posterPreview").style.backgroundImage="";$("posterPreview").textContent="Anteprima locandina"}}
 function updatePreviewLink(){var s=$("slug").value.trim()||slugify($("title").value);$("previewBtn").href="/spettacolo.html"+(s?"#"+encodeURIComponent(s):"")}
+function prepareInstagram(){
+  var e=collect();
+  if(!e.title){setStatus("Inserisci almeno il titolo prima di preparare il post Instagram.","err");return}
+  var date=(e.dates&&e.dates[0]&&e.dates[0].label)||"";
+  var lines=[];
+  lines.push("🎭 "+e.title);
+  if(date) lines.push("📅 "+date);
+  if(e.venue) lines.push("📍 "+e.venue+(e.addr?" · "+e.addr:""));
+  if(e.price!==""&&e.price!=null) lines.push("🎟️ "+(Number(e.price)===0?"Ingresso gratuito":"€"+Number(e.price).toFixed(2).replace(".00","")));
+  lines.push("");
+  if(e.desc) lines.push(e.desc);
+  lines.push("");
+  lines.push("Prenota dal sito Artyou Roma.");
+  var slug=e.slug||slugify(e.title);
+  if(slug) lines.push("artyouroma.it/spettacolo.html#"+slug);
+  lines.push("");
+  lines.push("#artyour​oma #improvvisazione #teatro #roma".replace("\u200b",""));
+  $("instagramCaption").value=lines.join("\n");
+  var u=e.poster||"";
+  if(u){$("instagramPreview").style.backgroundImage='url("'+u.replace(/"/g,"%22")+'")';$("instagramPreview").textContent=""}
+  else{$("instagramPreview").style.backgroundImage="";$("instagramPreview").textContent="Nessuna locandina impostata"}
+  $("instagramPreviewMeta").className="status ok";
+  $("instagramPreviewMeta").textContent="Post pronto in anteprima. Nessuna pubblicazione è stata effettuata.";
+}
+function copyInstagram(){
+  var t=$("instagramCaption").value.trim();
+  if(!t){prepareInstagram();t=$("instagramCaption").value.trim()}
+  if(!t)return;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){setStatus("Testo Instagram copiato negli appunti.","ok")}).catch(function(){fallbackCopyInstagram(t)});
+  }else fallbackCopyInstagram(t);
+}
+function fallbackCopyInstagram(t){
+  var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();
+  try{document.execCommand("copy");setStatus("Testo Instagram copiato negli appunti.","ok")}catch(e){setStatus("Copia non riuscita: seleziona il testo manualmente.","err")}
+  ta.remove();
+}
 function upload(){
   var file=$("posterFile").files[0];if(!file){setStatus("Scegli prima un'immagine.","err");return}
   if(file.size>5*1024*1024){setStatus("Immagine troppo grande: massimo 5 MB.","err");return}
@@ -242,6 +302,7 @@ $("logoutBtn").onclick=function(){
   setStatus("Sessione chiusa. Inserisci il PIN per accedere.","info");
 };
 $("addDateBtn").onclick=function(){addDate()};$("addCastBtn").onclick=function(){addCast()};$("poster").oninput=updatePoster;$("uploadBtn").onclick=upload;
+$("prepareInstagramBtn").onclick=prepareInstagram;$("copyInstagramBtn").onclick=copyInstagram;
 $("title").oninput=function(){if(!currentId&&!$("slug").value.trim())$("slug").value=slugify(this.value);updatePreviewLink()};$("slug").oninput=updatePreviewLink;$("eventType").onchange=toggleSaggiFields;
 clearForm();
 var savedPin="";
