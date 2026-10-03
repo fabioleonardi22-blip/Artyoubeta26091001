@@ -1536,11 +1536,9 @@ class Component extends DCLogic {
 
 <script id="artyou-instagram-live-feed">
 (function () {
-  const feed = document.getElementById("artyou-instagram-feed");
-  if (!feed) return;
-
-  const fallbackHtml = feed.innerHTML;
-  let loading = false;
+  var lastPosts = null;
+  var loading = false;
+  var fallbackHtml = null;
 
   function esc(value) {
     return String(value || "").replace(/[&<>"']/g, function (ch) {
@@ -1548,39 +1546,94 @@ class Component extends DCLogic {
     });
   }
 
-  function render(posts) {
-    if (!Array.isArray(posts) || !posts.length) return;
-    feed.innerHTML = posts.slice(0, 9).map(function (post) {
-      const href = /^https:\/\//i.test(post.permalink || "") ? post.permalink : "https://www.instagram.com/artyouroma/";
-      const image = /^https:\/\//i.test(post.image_url || "") ? post.image_url : "";
-      if (!image) return "";
-      const caption = String(post.caption || "Post Instagram Artyou Roma").replace(/\s+/g, " ").trim();
-      const label = caption ? caption.slice(0, 120) : "Post Instagram Artyou Roma";
-      return '<a href="' + esc(href) + '" target="_blank" rel="noopener" aria-label="' +
-        esc(label) + '" style="display:block;aspect-ratio:1 / 1;border-radius:4px;background-color:#1E252C;' +
-        'background-image:url(&quot;' + esc(image) + '&quot;);background-size:cover;background-position:center;"></a>';
-    }).join("") || fallbackHtml;
+  function getFeed() {
+    return document.getElementById("artyou-instagram-feed");
   }
 
-  async function refreshInstagram() {
+  function render(posts) {
+    var feed = getFeed();
+    if (!feed || !Array.isArray(posts) || !posts.length) return false;
+    if (fallbackHtml === null) fallbackHtml = feed.innerHTML;
+
+    var html = posts.slice(0, 9).map(function (post) {
+      var href = /^https:\/\//i.test(post.permalink || "") ? post.permalink : "https://www.instagram.com/artyouroma/";
+      var image = /^https:\/\//i.test(post.image_url || "") ? post.image_url : "";
+      if (!image) return "";
+      var caption = String(post.caption || "Post Instagram Artyou Roma").replace(/\s+/g, " ").trim();
+      var label = caption ? caption.slice(0, 120) : "Post Instagram Artyou Roma";
+      return '<a href="' + esc(href) + '" target="_blank" rel="noopener" aria-label="' + esc(label) +
+        '" style="display:block;aspect-ratio:1/1;border-radius:4px;background:#1E252C;overflow:hidden;">' +
+        '<img src="' + esc(image) + '" alt="' + esc(label) +
+        '" loading="lazy" decoding="async" referrerpolicy="no-referrer" ' +
+        'style="display:block;width:100%;height:100%;object-fit:cover;object-position:center;">' +
+        '</a>';
+    }).join("");
+
+    if (!html) return false;
+    feed.innerHTML = html;
+    feed.setAttribute("data-instagram-live", "1");
+    return true;
+  }
+
+  async function refreshInstagram(force) {
     if (loading) return;
+    var feed = getFeed();
+    if (!feed) return;
+
+    if (lastPosts && !force) {
+      render(lastPosts);
+      return;
+    }
+
     loading = true;
     try {
-      const response = await fetch("/api/instagram-feed?_=" + Date.now(), { cache: "no-store" });
-      const data = await response.json();
-      if (response.ok && data && data.ok) render(data.posts);
+      var response = await fetch("/api/instagram-feed?_=" + Date.now(), {
+        cache: "no-store",
+        headers: { "Accept": "application/json" }
+      });
+      var data = await response.json();
+      if (response.ok && data && data.ok && Array.isArray(data.posts) && data.posts.length) {
+        lastPosts = data.posts;
+        render(lastPosts);
+      }
     } catch (_) {
-      if (!feed.children.length) feed.innerHTML = fallbackHtml;
+      if (fallbackHtml !== null && feed && !feed.children.length) feed.innerHTML = fallbackHtml;
     } finally {
       loading = false;
     }
   }
 
-  refreshInstagram();
-  setInterval(refreshInstagram, 5 * 60 * 1000);
+  function init() {
+    var feed = getFeed();
+    if (!feed) return false;
+    if (fallbackHtml === null) fallbackHtml = feed.innerHTML;
+    refreshInstagram(true);
+    return true;
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+
+  setTimeout(init, 300);
+  setTimeout(init, 1200);
+  setTimeout(init, 3000);
+
+  setInterval(function () { refreshInstagram(true); }, 5 * 60 * 1000);
+
   document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "visible") refreshInstagram();
+    if (document.visibilityState === "visible") refreshInstagram(true);
   });
+
+  new MutationObserver(function () {
+    var feed = getFeed();
+    if (!feed) return;
+    if (lastPosts && feed.getAttribute("data-instagram-live") !== "1") {
+      render(lastPosts);
+    }
+  }).observe(document.documentElement, { childList: true, subtree: true });
 })();
 </script>
 </body>
