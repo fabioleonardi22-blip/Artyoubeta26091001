@@ -80,3 +80,7 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',apply);
   else apply();
 })();
+
+
+/* Site-wide multilingual selector */
+(function(){if(document.getElementById('artyou-language-loader'))return;var s=document.createElement('script');s.id='artyou-language-loader';s.src='/js/artyou-language.js';s.defer=true;document.head.appendChild(s);})();
