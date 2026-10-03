@@ -211,13 +211,6 @@ async function handlePost(req, res) {
           "UPDATE product_variants SET stock_qty = stock_qty - ? WHERE id = ?",
           [it.qty, it.variant.id]
         );
-
-        await conn.execute(
-          `INSERT INTO inventory_movements
-             (product_variant_id, order_id, movement_type, quantity_delta, note)
-           VALUES (?, ?, 'RESERVE', ?, ?)`,
-          [it.variant.id, orderId, -it.qty, "Ordine web " + id]
-        );
       }
 
       return {
