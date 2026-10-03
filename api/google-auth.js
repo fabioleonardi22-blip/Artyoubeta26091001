@@ -1,28 +1,55 @@
 const { verifyGoogleIdToken } = require("../lib/google-auth");
+const {
+  rateLimit,
+  applyRateLimitHeaders,
+  rejectRateLimited,
+  sameOrigin,
+  setSecurityHeaders
+} = require("../lib/security");
 
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgqQguCWRt7yCTroh2qi4az1rCTZ7kgw0IxNRNDb9LZLOGPUD5Jy3K56NTi6FxAfKx/exec";
 
 module.exports = async function handler(req, res) {
-  res.setHeader("Cache-Control", "no-store");
+  setSecurityHeaders(res);
+
   if (String(req.method || "POST").toUpperCase() !== "POST") {
-    return res.status(405).json({ok:false, errore:"method_not_allowed"});
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({ ok:false, errore:"method_not_allowed" });
   }
+  if (!sameOrigin(req)) {
+    return res.status(403).json({ ok:false, errore:"origin_non_consentita" });
+  }
+
+  const limit = rateLimit(req, { key:"google-auth", limit:20, windowMs:60 * 1000 });
+  applyRateLimitHeaders(res, limit);
+  if (!limit.ok) return rejectRateLimited(res, limit);
+
   try {
     let body = req.body || {};
     if (typeof body === "string") {
-      try { body = JSON.parse(body); } catch (e) { body = {}; }
+      if (Buffer.byteLength(body, "utf8") > 32 * 1024) {
+        return res.status(413).json({ ok:false, errore:"payload_too_large" });
+      }
+      try { body = JSON.parse(body); } catch (_) { body = {}; }
     }
+
     const credential = String(body.credential || "");
+    if (!credential || credential.length > 8192) {
+      return res.status(400).json({ ok:false, errore:"credential_non_valida" });
+    }
+
     const identity = await verifyGoogleIdToken(credential);
 
     const url = APPS_SCRIPT_URL + "?action=po_session&token=" + encodeURIComponent(credential) + "&_=" + Date.now();
     const upstream = await fetch(url, { method:"GET", redirect:"follow" });
     const text = await upstream.text();
     let session;
-    try { session = JSON.parse(text); } catch (e) { throw new Error("backend_response_invalid"); }
+    try { session = JSON.parse(text); } catch (_) { throw new Error("backend_response_invalid"); }
+
     if (!session || !session.ok) {
-      return res.status(403).json({ok:false, errore:(session && session.errore) || "accesso_non_autorizzato"});
+      return res.status(403).json({ ok:false, errore:"accesso_non_autorizzato" });
     }
+
     return res.status(200).json({
       ok:true,
       email:identity.email,
@@ -34,7 +61,7 @@ module.exports = async function handler(req, res) {
     });
   } catch (err) {
     const code = String(err && err.message || "auth_error");
-    const status = /missing/.test(code) ? 503 : 401;
-    return res.status(status).json({ok:false, errore:code});
+    if (/missing/.test(code)) return res.status(503).json({ ok:false, errore:"auth_non_configurata" });
+    return res.status(401).json({ ok:false, errore:"autenticazione_non_valida" });
   }
 };
