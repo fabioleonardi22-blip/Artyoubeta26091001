@@ -475,6 +475,31 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Cosa è incluso</h2>
 <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #F7E6EA;">Hotel con pensione completa per tre giorni · workshop del livello scelto nella <strong>formula workshop</strong> · momenti insieme e serate. Chi preferisce vivere solo il weekend, senza seguire i corsi, può scegliere la <strong>formula vacanza</strong> quando disponibile. · [trasporto: da confermare]</p>
 </div>
+<section id="yep-pricing" style="display:flex;flex-direction:column;gap:18px;">
+<h2 class="am-fs-l" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:36px;">Prezzi YEP 2027</h2>
+<p style="margin:0;color:#555D64;font-size:15px;line-height:1.5;">Le tariffe cambiano in base alla data di iscrizione. La camera singola è disponibile su richiesta con supplemento.</p>
+<div class="am-grid1" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;">
+  <article style="background:#13181D;color:#fff;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px;">
+    <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#F09000;">Alloggio + workshop</span>
+    <div style="font-size:14px;color:#D5DCE1;">Entro 30 giugno</div>
+    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong style="float:right;">320 €</strong></span><span>Tripla <strong style="float:right;">330 €</strong></span><span>Doppia <strong style="float:right;">350 €</strong></span></div>
+    <div style="font-size:14px;color:#D5DCE1;margin-top:6px;">Dopo 1 luglio</div>
+    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong style="float:right;">350 €</strong></span><span>Tripla <strong style="float:right;">360 €</strong></span><span>Doppia <strong style="float:right;">380 €</strong></span></div>
+  </article>
+  <article style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px;">
+    <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#1467E8;">Solo workshop</span>
+    <div style="font-size:15px;">Entro 30 giugno <strong style="float:right;">250 €</strong></div>
+    <div style="font-size:15px;">Dopo 1 luglio <strong style="float:right;">280 €</strong></div>
+  </article>
+  <article style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px;">
+    <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#F09000;">Solo vacanza</span>
+    <div style="font-size:14px;color:#555D64;">Entro 30 giugno</div>
+    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong style="float:right;">200 €</strong></span><span>Tripla <strong style="float:right;">210 €</strong></span><span>Doppia <strong style="float:right;">230 €</strong></span></div>
+    <div style="font-size:14px;color:#555D64;margin-top:6px;">Dopo 1 luglio</div>
+    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong style="float:right;">230 €</strong></span><span>Tripla <strong style="float:right;">240 €</strong></span><span>Doppia <strong style="float:right;">260 €</strong></span></div>
+  </article>
+</div>
+</section>
 <div style="display: flex; flex-direction: column; gap: 12px;">
 <h2 class="am-fs-m" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px;">Prenotare o riservare</h2>
 <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #3F474E;">I posti nei workshop e le camere sono limitati. Puoi scegliere se <strong>pagare 10 € di iscrizione e saldare prima del Festival</strong> oppure <strong>pagare subito 20 €</strong>. I pagamenti vengono gestiti tramite PayPal all’indirizzo <strong>info@artyouroma.it</strong>.</p>
@@ -530,14 +555,14 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </sc-for>
 </div></div>
 </sc-if>
-<div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Preferenza camera</span><div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-if value="{{hasStay}}" hint-placeholder-val="{{ true }}"><div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Preferenza camera</span><div style="display: flex; flex-direction: column; gap: 10px;">
 <sc-for list="{{rooms}}" as="r" hint-placeholder-count="3">
 <button type="button" onClick="{{r.pick}}" class="am-wrap" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; border: 2px solid {{r.border}}; background: {{r.bg}}; font-family: inherit; color: #13181D; cursor: pointer; text-align: left;">
 <span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 16px; font-weight: 700;">{{r.label}}</span><span style="font-size: 13px; color: #555D64;">{{r.sub}}</span></span>
 <span class="am-fs-body am-wrap-text" style="font-size: 14px; font-weight: {{r.leftWeight}}; color: {{r.leftColor}}; white-space: nowrap;">{{r.left}}</span>
 </button>
 </sc-for>
-</div></div>
+</div></div></sc-if>
 <sc-if value="{{available}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <div style="display:flex;flex-direction:column;gap:10px;">
@@ -650,7 +675,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     var self = this, st = this.state || {};
-    var typeNames = ["Workshop + soggiorno", "Solo soggiorno"];
+    var typeNames = ["Alloggio + workshop", "Solo vacanza", "Solo workshop"];
     var type = st.type || 0, lv = st.lv || 0, room = st.room || 0, pay = st.pay == null ? 0 : st.pay;
     var capMap = window.ARTYOU_CAP || {};
     var eventMap = window.ARTYOU_EVENT_INFO || {};
@@ -690,10 +715,10 @@ class Component extends DCLogic {
     });
 
     var roomData = [
-      { label: "Camera doppia", sub: "Preferenza, non garantisce disponibilità" },
-      { label: "Camera tripla", sub: "Preferenza, non garantisce disponibilità" },
-      { label: "Camera singola", sub: "Preferenza camera singola · eventuale supplemento da definire" },
-      { label: "Nessuna preferenza", sub: "Sistemazione da definire con l’organizzazione" }
+      { label: "Camera quadrupla", key:"quadrupla", sub: "Preferenza, non garantisce disponibilità" },
+      { label: "Camera tripla", key:"tripla", sub: "Preferenza, non garantisce disponibilità" },
+      { label: "Camera doppia", key:"doppia", sub: "Preferenza, non garantisce disponibilità" },
+      { label: "Camera singola", key:"singola", sub: "Su richiesta, con supplemento" }
     ];
 
     if (lv >= lvData.length) lv = 0;
@@ -705,7 +730,9 @@ class Component extends DCLogic {
         : null;
     });
 
-    var isWs = type === 0;
+    var hasWorkshop = type === 0 || type === 2;
+    var hasStay = type === 0 || type === 1;
+    var isWs = hasWorkshop;
     var levelRem = lvRem[lv];
     var capacityReady = !isWs || (levelRem !== null && levelRem !== undefined);
     var rem = !isWs ? 1 : levelRem;
@@ -749,7 +776,7 @@ class Component extends DCLogic {
 
     var payOpts = [
       "Paga l’iscrizione · 10 € e salda prima del Festival",
-      "Paga tutto · 20 €"
+      "Paga tutto · prezzo completo"
     ].map(function(l,i){
       return Object.assign({
         label:l,
@@ -757,30 +784,43 @@ class Component extends DCLogic {
       },self.chip(i===pay));
     });
 
-    var what = typeNames[type] + (isWs ? " · " + lvData[lv].label : "") + " · " + roomData[room].label;
-    var eventId = isWs ? levelIds[lv] : "yep-2027-solo-soggiorno";
+    var what = typeNames[type] + (hasWorkshop ? " · " + lvData[lv].label : "") + (hasStay ? " · " + roomData[room].label : "");
+    var eventId = hasWorkshop ? levelIds[lv] : "yep-2027-solo-soggiorno";
+
+    var defaults={cutoff:"2027-06-30",early:{alloggioWorkshop:{quadrupla:320,tripla:330,doppia:350},soloVacanza:{quadrupla:200,tripla:210,doppia:230},soloWorkshop:250},late:{alloggioWorkshop:{quadrupla:350,tripla:360,doppia:380},soloVacanza:{quadrupla:230,tripla:240,doppia:260},soloWorkshop:280}};
+    var pricing=defaults;
+    for(var pk=0;pk<keys.length;pk++){var pi=eventMap[keys[pk]]||{};if(pi.yepPricing){pricing=pi.yepPricing;break;}}
+    var now=new Date(), cutoff=new Date((pricing.cutoff||"2027-06-30")+"T23:59:59");
+    var tier=now<=cutoff?(pricing.early||defaults.early):(pricing.late||defaults.late);
+    var roomKey=roomData[room].key;
+    var fullPrice=0;
+    if(type===0) fullPrice=roomKey==="singola"?0:Number((tier.alloggioWorkshop||{})[roomKey]||0);
+    else if(type===1) fullPrice=roomKey==="singola"?0:Number((tier.soloVacanza||{})[roomKey]||0);
+    else fullPrice=Number(tier.soloWorkshop||0);
+    var priceText=fullPrice?fullPrice+" €":"Supplemento su richiesta";
+    var roomNote=hasStay?"Preferenza camera: "+roomData[room].label:"Nessun alloggio";
 
     return {
       accent: this.props.accent ?? "#F09000",
       eventId: eventId,
       bookingResources: "",
       bookingChoice: what,
-      bookingNote: "Preferenza camera: " + roomData[room].label,
+      bookingNote: roomNote + " · Prezzo YEP: " + priceText,
       bookingSeats: 1,
       payOnline: true,
-      paymentMode: pay===0 ? "Iscrizione 10 € + saldo prima del Festival" : "Pagamento completo 20 €",
-      paymentAmount: pay===0 ? 10 : 20,
+      paymentMode: pay===0 ? "Iscrizione 10 € + saldo prima del Festival" : "Pagamento completo",
+      paymentAmount: pay===0 ? 10 : fullPrice,
       payOpts: payOpts,
       wsCards: wsCards,
       types: types, levels: levels, rooms: rooms,
-      isWs: isWs,
+      isWs: isWs, hasStay: hasStay,
       available: capacityReady && rem > 0,
       soldOut: capacityReady && rem === 0,
       capacityPending: !capacityReady,
       soldTitle: "Workshop al completo",
       payNote: pay===0
         ? "Paghi ora <strong>10 €</strong> di iscrizione con PayPal a info@artyouroma.it e saldi il restante importo prima del Festival. La camera resta una preferenza."
-        : "Paghi ora l’intero importo di <strong>20 €</strong> con PayPal a info@artyouroma.it. La camera resta una preferenza.",
+        : "Paghi ora l’intero importo di <strong>"+(fullPrice?fullPrice+" €":"da confermare")+"</strong> con PayPal a info@artyouroma.it." + (hasStay ? " La camera resta una preferenza." : ""),
       ctaLabel: "Conferma e paga con PayPal",
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare YEP 2027: " + what + "."),
       waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Per YEP 2027 (" + what + ") il workshop risulta completo: potete mettermi in lista d’attesa?"),
