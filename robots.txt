@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /gestionale.html
+Disallow: /scanner.html
+Disallow: /dashboard-prenotazioni/
+Disallow: /calendario-docenti/
+Disallow: /api/
 
 Sitemap: https://artyouroma.it/sitemap.xml
