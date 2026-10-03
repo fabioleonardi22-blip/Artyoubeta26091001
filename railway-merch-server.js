@@ -8,6 +8,10 @@ const PAGAMENTI = new Set(["In sede", "PayPal"]);
 const PAYPAL_EMAIL = "info@artyouroma.it";
 const MAX_PEZZI_RIGA = 10;
 const MAX_PEZZI_ORDINE = 20;
+const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
+const MERCH_FROM_EMAIL = process.env.MERCH_FROM_EMAIL || "Artyou Roma <ordini@artyouroma.it>";
+const MERCH_ADMIN_EMAIL = process.env.MERCH_ADMIN_EMAIL || "info@artyouroma.it";
+const MERCH_BACKUP_EMAIL = process.env.MERCH_BACKUP_EMAIL || "artyouroma@gmail.com";
 
 const pool = mysql.createPool({
   host: process.env.MYSQLHOST,
@@ -41,6 +45,63 @@ async function readBody(req){
   let raw="";
   for await(const chunk of req){raw+=chunk;if(raw.length>20000)throw Object.assign(new Error("too_large"),{status:413});}
   try{return JSON.parse(raw||"{}")}catch(_){throw Object.assign(new Error("bad_json"),{status:400});}
+}
+
+
+function escHtml(s){
+  return String(s==null?"":s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+}
+const euro=n=>"€ "+Number(n||0).toFixed(2).replace(".",",");
+
+async function sendMail({to,subject,html,text,replyTo,bcc}){
+  if(!RESEND_API_KEY) return {ok:false,skipped:true};
+  const payload={from:MERCH_FROM_EMAIL,to:Array.isArray(to)?to:[to],subject,html,text};
+  if(replyTo) payload.reply_to=replyTo;
+  if(bcc) payload.bcc=Array.isArray(bcc)?bcc:[bcc];
+  const r=await fetch("https://api.resend.com/emails",{
+    method:"POST",
+    headers:{"Authorization":"Bearer "+RESEND_API_KEY,"Content-Type":"application/json"},
+    body:JSON.stringify(payload)
+  });
+  if(!r.ok) throw new Error("mail_provider_error");
+  return {ok:true};
+}
+
+async function sendOrderEmails(o){
+  if(!RESEND_API_KEY) return;
+  const itemsHtml=o.righe.map(r=>"<li>"+escHtml(r)+"</li>").join("");
+  const adminHtml=
+    "<h2>Nuovo ordine merchandising "+escHtml(o.id)+"</h2>"+
+    "<p><b>"+escHtml(o.nome)+"</b> · "+escHtml(o.telefono)+" · "+escHtml(o.email)+"<br>Ritiro: sede "+escHtml(o.sede)+"</p>"+
+    "<ul>"+itemsHtml+"</ul>"+
+    "<p><b>Totale: "+euro(o.totale)+"</b> · Pagamento: "+escHtml(o.pagamento)+"</p>"+
+    (o.note?"<p>Note: "+escHtml(o.note)+"</p>":"");
+  await sendMail({
+    to:MERCH_ADMIN_EMAIL,
+    bcc:MERCH_BACKUP_EMAIL||undefined,
+    replyTo:o.email,
+    subject:"Ordine merch "+o.id+" – "+o.nome,
+    html:adminHtml,
+    text:"Nuovo ordine "+o.id+"\n"+o.righe.join("\n")+"\nTotale: "+euro(o.totale)
+  });
+
+  const pay=o.pagamento==="PayPal"
+    ? "<p>Hai scelto PayPal. Puoi completare il pagamento qui: <a href=\""+o.paypal+"\">"+euro(o.totale)+"</a>.</p>"
+    : "<p>Pagherai direttamente al ritiro in sede.</p>";
+  const customerHtml=
+    "<h2>Grazie "+escHtml(o.nome.split(" ")[0])+", abbiamo ricevuto il tuo ordine!</h2>"+
+    "<p>Numero d’ordine: <b>"+escHtml(o.id)+"</b></p>"+
+    "<ul>"+itemsHtml+"</ul>"+
+    "<p><b>Totale: "+euro(o.totale)+"</b><br>Ritiro: sede <b>"+escHtml(o.sede)+"</b></p>"+
+    pay+
+    "<p>Ti avvisiamo quando è pronto. Per qualsiasi domanda scrivici a "+escHtml(MERCH_ADMIN_EMAIL)+".</p>";
+  await sendMail({
+    to:o.email,
+    replyTo:MERCH_ADMIN_EMAIL,
+    subject:"Il tuo ordine Artyou "+o.id,
+    html:customerHtml,
+    text:"Grazie! Ordine "+o.id+"\n"+o.righe.join("\n")+"\nTotale: "+euro(o.totale)+"\nRitiro: sede "+o.sede
+  });
 }
 
 async function createOrder(data){
@@ -96,7 +157,9 @@ async function createOrder(data){
       await conn.execute("UPDATE product_variants SET stock_qty=stock_qty-? WHERE id=?",[it.qty,it.variant.id]);
     }
     await conn.commit();
-    return {status:200,body:{ok:true,id,totale:Number(totale.toFixed(2)),righe,pagamento,paypal:pagamento==="PayPal"?paypalUrl(id,totale):""}};
+    const paypal=pagamento==="PayPal"?paypalUrl(id,totale):"";
+    return {status:200,body:{ok:true,id,totale:Number(totale.toFixed(2)),righe,pagamento,paypal},
+      mail:{id,nome,telefono,email,sede,note,totale:Number(totale.toFixed(2)),righe,pagamento,paypal}};
   }catch(e){try{await conn.rollback()}catch(_){}throw e}finally{conn.release()}
 }
 
@@ -108,6 +171,10 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="POST"&&url.pathname==="/merch"){
       const data=await readBody(req);
       const out=await createOrder(data);
+      if(out.status===200&&out.mail){
+        try{await sendOrderEmails(out.mail);console.log("MERCH_EMAIL_SUCCESS")}
+        catch(_){console.log("MERCH_EMAIL_FAILURE")}
+      }
       return send(res,out.status,out.body);
     }
     return send(res,404,{ok:false,errore:"not_found"});
