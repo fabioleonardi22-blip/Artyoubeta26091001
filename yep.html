@@ -432,44 +432,98 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <h2 class="am-fs-m" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:29px;line-height:1.15;">Il weekend di fine estate di Artyou</h2>
 <p style="margin:0;font-size:17px;line-height:1.65;color:#3F474E;">YEP nasce nel <strong>2019</strong> per ritrovarsi alla fine dell'estate, fare improvvisazione insieme e ripartire a settembre carichi di energia. Negli anni è diventato un appuntamento per allievi, improvvisatori, docenti e amici di Artyou: formazione e vacanza convivono nello stesso weekend.</p>
 </article>
-<div style="display: flex; flex-direction: column; gap: 18px;">
-<h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 40px;">Com’è fatto YEP</h2>
-<div class="am-grid1" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;">
-  <div style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px;">
-    <span style="font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#FF6B1A;">Venerdì 3 settembre</span>
-    <span class="am-fs-s" style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:22px;">Arrivo e primo workshop</span>
-    <div style="font-size:14px;line-height:1.5;color:#3F474E;display:grid;gap:6px;">
-      <span><strong>14:00–16:00</strong> · Check-in</span>
-      <span><strong>16:30–18:30</strong> · Inizio workshop</span>
-      <span><strong>19:30</strong> · Brindisi di saluto</span>
-      <span><strong>21:00</strong> · Cena</span>
-      <span><strong>22:00</strong> · Spettacolo</span>
-    </div>
+<div class="yep-program">
+<style>
+.yep-program{display:flex;flex-direction:column;gap:18px}
+.yep-program-head{display:flex;align-items:end;justify-content:space-between;gap:18px}
+.yep-program-head h2{margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:40px;line-height:1}
+.yep-program-kicker{font-size:12px;font-weight:850;letter-spacing:1.7px;text-transform:uppercase;color:#7A1631;margin-bottom:7px}
+.yep-program-note{margin:0;color:#6D7378;font-size:14px;line-height:1.45;max-width:260px;text-align:right}
+.yep-day{background:#fff;border:1px solid #E5DED6;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(36,28,20,.05)}
+.yep-day-head{display:grid;grid-template-columns:150px minmax(0,1fr);align-items:center;gap:18px;padding:18px 20px;border-bottom:1px solid #EEE6DF;background:#FFF9F5}
+.yep-day:nth-of-type(3) .yep-day-head{background:#F5F8FF}
+.yep-date{display:flex;align-items:center;gap:11px;font-size:12px;font-weight:900;letter-spacing:1.15px;text-transform:uppercase;color:#7A1631}
+.yep-date-dot{width:10px;height:10px;border-radius:50%;background:#FF6B1A;box-shadow:0 0 0 5px rgba(255,107,26,.12);flex:0 0 auto}
+.yep-day:nth-of-type(3) .yep-date{color:#1467E8}
+.yep-day:nth-of-type(3) .yep-date-dot{background:#1467E8;box-shadow:0 0 0 5px rgba(20,103,232,.12)}
+.yep-day-title{font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:22px;line-height:1.15;color:#171A1D}
+.yep-slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;padding:8px 20px 14px}
+.yep-slot{display:grid;grid-template-columns:104px minmax(0,1fr);align-items:center;gap:12px;min-height:52px;padding:8px 0;border-bottom:1px solid #F0EBE7}
+.yep-slot:nth-last-child(-n+2){border-bottom-color:transparent}
+.yep-time{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:5px 9px;border-radius:999px;background:#171A1D;color:#fff;font-size:12px;font-weight:850;letter-spacing:.2px;white-space:nowrap}
+.yep-activity{font-size:14px;line-height:1.35;color:#343A3F;font-weight:650}
+.yep-activity em{font-style:normal;color:#747B80;font-weight:550}
+@media(max-width:900px){
+  .yep-program-head{align-items:flex-start;flex-direction:column;gap:7px}
+  .yep-program-head h2{font-size:34px}
+  .yep-program-note{text-align:left;max-width:none}
+  .yep-day-head{grid-template-columns:1fr;gap:5px;padding:17px 18px}
+  .yep-slots{grid-template-columns:1fr;padding:6px 18px 12px}
+  .yep-slot{grid-template-columns:100px minmax(0,1fr)}
+  .yep-slot:nth-last-child(-n+2){border-bottom:1px solid #F0EBE7}
+  .yep-slot:last-child{border-bottom-color:transparent}
+}
+@media(max-width:520px){
+  .yep-program{gap:14px}
+  .yep-program-head h2{font-size:30px}
+  .yep-day{border-radius:18px}
+  .yep-day-head{padding:15px 16px}
+  .yep-slots{padding:4px 16px 10px}
+  .yep-slot{grid-template-columns:92px minmax(0,1fr);gap:10px;min-height:49px}
+  .yep-time{font-size:11px;padding:5px 7px}
+  .yep-activity{font-size:13.5px}
+}
+</style>
+<div class="yep-program-head">
+  <div>
+    <div class="yep-program-kicker">Programma 2027</div>
+    <h2 class="am-fs-l">Com’è fatto YEP</h2>
   </div>
-  <div style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px;">
-    <span style="font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#1467E8;">Sabato 4 settembre</span>
-    <span class="am-fs-s" style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:22px;">La giornata piena</span>
-    <div style="font-size:14px;line-height:1.5;color:#3F474E;display:grid;gap:6px;">
-      <span><strong>08:00–09:30</strong> · Colazione</span>
-      <span><strong>10:00–13:00</strong> · Workshop</span>
-      <span><strong>13:00–14:30</strong> · Pranzo al sacco</span>
-      <span><strong>14:30–16:30</strong> · Workshop</span>
-      <span><strong>16:30–20:00</strong> · Free time / attività extra</span>
-      <span><strong>20:30</strong> · Cena</span>
-      <span><strong>22:00</strong> · Party</span>
-    </div>
-  </div>
-  <div style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px;">
-    <span style="font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#FF6B1A;">Domenica 5 settembre</span>
-    <span class="am-fs-s" style="font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:22px;">Finale e rientro</span>
-    <div style="font-size:14px;line-height:1.5;color:#3F474E;display:grid;gap:6px;">
-      <span><strong>08:00–09:30</strong> · Colazione</span>
-      <span><strong>10:00–13:00</strong> · Workshop</span>
-      <span><strong>13:30</strong> · Pranzo</span>
-      <span><strong>14:30</strong> · Foto &amp; saluti / attività extra</span>
-    </div>
-  </div>
+  <p class="yep-program-note">Tre giorni tra workshop, relax, spettacoli e momenti insieme.</p>
 </div>
+
+<section class="yep-day">
+  <div class="yep-day-head">
+    <div class="yep-date"><span class="yep-date-dot"></span>Venerdì 3 settembre</div>
+    <div class="yep-day-title">Arrivo e primo workshop</div>
+  </div>
+  <div class="yep-slots">
+    <div class="yep-slot"><span class="yep-time">14:00–16:00</span><span class="yep-activity">Check-in</span></div>
+    <div class="yep-slot"><span class="yep-time">16:30–18:30</span><span class="yep-activity">Inizio workshop</span></div>
+    <div class="yep-slot"><span class="yep-time">19:30</span><span class="yep-activity">Brindisi di saluto</span></div>
+    <div class="yep-slot"><span class="yep-time">21:00</span><span class="yep-activity">Cena</span></div>
+    <div class="yep-slot"><span class="yep-time">22:00</span><span class="yep-activity">Spettacolo</span></div>
+  </div>
+</section>
+
+<section class="yep-day">
+  <div class="yep-day-head">
+    <div class="yep-date"><span class="yep-date-dot"></span>Sabato 4 settembre</div>
+    <div class="yep-day-title">La giornata piena</div>
+  </div>
+  <div class="yep-slots">
+    <div class="yep-slot"><span class="yep-time">08:00–09:30</span><span class="yep-activity">Colazione</span></div>
+    <div class="yep-slot"><span class="yep-time">10:00–13:00</span><span class="yep-activity">Workshop</span></div>
+    <div class="yep-slot"><span class="yep-time">13:00–14:30</span><span class="yep-activity">Pranzo al sacco</span></div>
+    <div class="yep-slot"><span class="yep-time">14:30–16:30</span><span class="yep-activity">Workshop</span></div>
+    <div class="yep-slot"><span class="yep-time">16:30–20:00</span><span class="yep-activity">Free time <em>/ attività extra</em></span></div>
+    <div class="yep-slot"><span class="yep-time">20:30</span><span class="yep-activity">Cena</span></div>
+    <div class="yep-slot"><span class="yep-time">22:00</span><span class="yep-activity">Party</span></div>
+  </div>
+</section>
+
+<section class="yep-day">
+  <div class="yep-day-head">
+    <div class="yep-date"><span class="yep-date-dot"></span>Domenica 5 settembre</div>
+    <div class="yep-day-title">Finale e rientro</div>
+  </div>
+  <div class="yep-slots">
+    <div class="yep-slot"><span class="yep-time">08:00–09:30</span><span class="yep-activity">Colazione</span></div>
+    <div class="yep-slot"><span class="yep-time">10:00–13:00</span><span class="yep-activity">Workshop</span></div>
+    <div class="yep-slot"><span class="yep-time">13:30</span><span class="yep-activity">Pranzo</span></div>
+    <div class="yep-slot"><span class="yep-time">14:30</span><span class="yep-activity">Foto &amp; saluti <em>/ attività extra</em></span></div>
+  </div>
+</section>
 </div>
 <div style="background: #7A1631; color: #FFFFFF; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 14px;">
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Cosa è incluso</h2>
