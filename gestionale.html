@@ -137,6 +137,7 @@ label{font-size:13px;font-weight:800;display:flex;flex-direction:column;gap:7px}
           <div class="toolbar" style="margin-top:12px">
             <button class="btn primary" id="prepareInstagramBtn" type="button">Prepara post Instagram</button>
             <button class="btn soft" id="copyInstagramBtn" type="button">Copia testo</button>
+            <button class="btn dark" id="publishInstagramBtn" type="button">Pubblica su Instagram</button>
           </div>
           <p class="field-help" style="margin-top:10px">Per la pubblicazione automatica servirà collegare l'account Instagram professionale tramite Meta API.</p>
         </div>
@@ -286,6 +287,36 @@ function fallbackCopyInstagram(t){
   try{document.execCommand("copy");setStatus("Testo Instagram copiato negli appunti.","ok")}catch(e){setStatus("Copia non riuscita: seleziona il testo manualmente.","err")}
   ta.remove();
 }
+function publishInstagram(){
+  var e=collect();
+  if(!e.title){setStatus("Inserisci il titolo prima di pubblicare su Instagram.","err");return}
+  if(!$("instagramCaption").value.trim())prepareInstagram();
+  var caption=$("instagramCaption").value.trim();
+  var image=e.poster||"";
+  if(!image){setStatus("Per pubblicare su Instagram serve una locandina.","err");return}
+  try{image=new URL(image,window.location.origin).href}catch(err){}
+  if(!/^https:\/\//i.test(image)){setStatus("La locandina deve avere un URL pubblico HTTPS.","err");return}
+  if(!confirm("Pubblicare davvero questo contenuto su Instagram @artyouroma?"))return;
+  $("publishInstagramBtn").disabled=true;
+  setStatus("Pubblicazione su Instagram in corso…","info");
+  fetch("/api/instagram-publish",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({pin:pin(),caption:caption,imageUrl:image})
+  }).then(function(r){return r.json().then(function(j){return {ok:r.ok,data:j}})})
+    .then(function(x){
+      if(!x.ok||!x.data||!x.data.ok)throw new Error((x.data&&x.data.errore)||"Pubblicazione non riuscita");
+      $("instagramPreviewMeta").className="status ok";
+      $("instagramPreviewMeta").textContent="Pubblicato su Instagram. Media ID: "+x.data.media_id;
+      setStatus("Post pubblicato su Instagram.","ok");
+    })
+    .catch(function(err){
+      $("instagramPreviewMeta").className="status err";
+      $("instagramPreviewMeta").textContent="Errore Instagram: "+err.message;
+      setStatus("Errore Instagram: "+err.message,"err");
+    })
+    .finally(function(){$("publishInstagramBtn").disabled=false});
+}
 function upload(){
   var file=$("posterFile").files[0];if(!file){setStatus("Scegli prima un'immagine.","err");return}
   if(file.size>5*1024*1024){setStatus("Immagine troppo grande: massimo 5 MB.","err");return}
@@ -302,7 +333,7 @@ $("logoutBtn").onclick=function(){
   setStatus("Sessione chiusa. Inserisci il PIN per accedere.","info");
 };
 $("addDateBtn").onclick=function(){addDate()};$("addCastBtn").onclick=function(){addCast()};$("poster").oninput=updatePoster;$("uploadBtn").onclick=upload;
-$("prepareInstagramBtn").onclick=prepareInstagram;$("copyInstagramBtn").onclick=copyInstagram;
+$("prepareInstagramBtn").onclick=prepareInstagram;$("copyInstagramBtn").onclick=copyInstagram;$("publishInstagramBtn").onclick=publishInstagram;
 $("title").oninput=function(){if(!currentId&&!$("slug").value.trim())$("slug").value=slugify(this.value);updatePreviewLink()};$("slug").oninput=updatePreviewLink;$("eventType").onchange=toggleSaggiFields;
 clearForm();
 var savedPin="";
