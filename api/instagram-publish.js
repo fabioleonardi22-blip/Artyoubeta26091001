@@ -1,7 +1,15 @@
+const {
+  rateLimit,
+  applyRateLimitHeaders,
+  rejectRateLimited,
+  sameOrigin,
+  setSecurityHeaders
+} = require("../lib/security");
+
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgqQguCWRt7yCTroh2qi4az1rCTZ7kgw0IxNRNDb9LZLOGPUD5Jy3K56NTi6FxAfKx/exec";
 
 async function validateAdminPin(pin) {
-  if (!pin) return false;
+  if (!pin || pin.length > 128) return false;
   const url = APPS_SCRIPT_URL + "?action=list&pin=" + encodeURIComponent(pin) + "&_=" + Date.now();
   const r = await fetch(url, { redirect: "follow" });
   if (!r.ok) return false;
@@ -11,11 +19,19 @@ async function validateAdminPin(pin) {
 }
 
 module.exports = async function handler(req, res) {
-  res.setHeader("Cache-Control", "no-store");
+  setSecurityHeaders(res);
 
   if (String(req.method || "GET").toUpperCase() !== "POST") {
+    res.setHeader("Allow", "POST");
     return res.status(405).json({ ok: false, errore: "method_not_allowed" });
   }
+  if (!sameOrigin(req)) {
+    return res.status(403).json({ ok:false, errore:"origin_non_consentita" });
+  }
+
+  const general = rateLimit(req, { key:"instagram-publish", limit:10, windowMs:10 * 60 * 1000 });
+  applyRateLimitHeaders(res, general);
+  if (!general.ok) return rejectRateLimited(res, general);
 
   try {
     const token = process.env.INSTAGRAM_ACCESS_TOKEN;
@@ -24,16 +40,33 @@ module.exports = async function handler(req, res) {
       return res.status(500).json({ ok: false, errore: "instagram_not_configured" });
     }
 
-    const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
+    let body = req.body || {};
+    if (typeof body === "string") {
+      if (Buffer.byteLength(body, "utf8") > 64 * 1024) {
+        return res.status(413).json({ ok:false, errore:"payload_too_large" });
+      }
+      try { body = JSON.parse(body || "{}"); }
+      catch (_) { return res.status(400).json({ ok:false, errore:"json_non_valido" }); }
+    }
+
     const pin = String(body.pin || "").trim();
     const caption = String(body.caption || "").trim();
     const imageUrl = String(body.imageUrl || "").trim();
 
     if (!(await validateAdminPin(pin))) {
+      const failed = rateLimit(req, { key:"instagram-pin-fail", limit:5, windowMs:10 * 60 * 1000 });
+      applyRateLimitHeaders(res, failed);
+      if (!failed.ok) return rejectRateLimited(res, failed);
       return res.status(401).json({ ok: false, errore: "pin_non_valido" });
     }
-    if (!caption) return res.status(400).json({ ok: false, errore: "caption_mancante" });
-    if (!/^https:\/\//i.test(imageUrl)) {
+
+    if (!caption || caption.length > 2200) {
+      return res.status(400).json({ ok: false, errore: "caption_non_valida" });
+    }
+
+    let parsedImage;
+    try { parsedImage = new URL(imageUrl); } catch (_) {}
+    if (!parsedImage || parsedImage.protocol !== "https:") {
       return res.status(400).json({ ok: false, errore: "image_url_non_pubblico" });
     }
 
@@ -54,8 +87,7 @@ module.exports = async function handler(req, res) {
     if (!createResp.ok || !createData.id) {
       return res.status(createResp.status || 502).json({
         ok: false,
-        errore: "instagram_container_error",
-        dettaglio: createData.error || createText
+        errore: "instagram_container_error"
       });
     }
 
@@ -75,9 +107,7 @@ module.exports = async function handler(req, res) {
     if (!publishResp.ok || !publishData.id) {
       return res.status(publishResp.status || 502).json({
         ok: false,
-        errore: "instagram_publish_error",
-        dettaglio: publishData.error || publishText,
-        creation_id: createData.id
+        errore: "instagram_publish_error"
       });
     }
 
@@ -86,11 +116,10 @@ module.exports = async function handler(req, res) {
       media_id: publishData.id,
       creation_id: createData.id
     });
-  } catch (err) {
+  } catch (_) {
     return res.status(500).json({
       ok: false,
-      errore: "instagram_publish_exception",
-      dettaglio: String(err && err.message || err)
+      errore: "instagram_publish_exception"
     });
   }
 };
