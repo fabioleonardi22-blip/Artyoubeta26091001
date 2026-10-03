@@ -6,7 +6,7 @@ const {
   setSecurityHeaders
 } = require("../lib/security");
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgqQguCWRt7yCTroh2qi4az1rCTZ7kgw0IxNRNDb9LZLOGPUD5Jy3K56NTi6FxAfKx/exec";
+const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "").trim();
 
 function getQuery(req) {
   const rawUrl = String(req.url || "");
@@ -16,6 +16,7 @@ function getQuery(req) {
 
 module.exports = async function handler(req, res) {
   setSecurityHeaders(res);
+  if (!APPS_SCRIPT_URL) return res.status(503).json({ ok:false, errore:"backend_non_configurato" });
 
   try {
     const method = String(req.method || "GET").toUpperCase();
