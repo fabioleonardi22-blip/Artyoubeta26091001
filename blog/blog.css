@@ -83,13 +83,16 @@ header nav a.menu-extra{display:none}
 .feature-link:hover .read span,.card-link:hover .read span{transform:translateX(4px)}
 .radar{background:#fff;border:1px solid var(--line);border-radius:26px;padding:30px 30px 26px}
 .radar h3{margin:0 0 10px;font-family:var(--display);font-weight:800;font-size:28px;letter-spacing:-.4px}
-.radar-item{padding:14px 0;border-top:1px solid var(--line)}
+.radar-item{display:grid;grid-template-columns:78px 1fr 20px;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--line);color:var(--ink);text-decoration:none}
 .radar-item:first-child{border-top:0}
-.radar-item strong{display:block;font-size:16px}
-.radar-item a{color:var(--ink);text-decoration:none}.radar-item a:hover strong{color:var(--orange-d)}
-.radar-item span{font-size:13px;color:var(--muted-2)}
-.radar-item .ok{display:block;font-style:normal;font-size:12px;font-weight:700;color:var(--c-inside);margin-top:2px}
-.radar-upd{margin:12px 0 0;font-size:12px;color:var(--muted-2)}
+.radar-item:hover strong{color:var(--orange-d)}
+.radar-date{font-size:12px;font-weight:800;line-height:1.15;text-transform:uppercase;letter-spacing:.02em;color:var(--c-radar)}
+.radar-copy{min-width:0}
+.radar-copy strong{display:block;font-size:15px;line-height:1.22}
+.radar-copy small{display:block;margin-top:3px;font-size:12px;line-height:1.25;color:var(--muted-2)}
+.radar-arrow{font-size:14px;color:var(--muted-2);text-align:right}
+.radar-all{display:inline-flex;align-items:center;gap:7px;margin-top:15px;color:var(--ink);font-weight:800;font-size:13px;text-decoration:none;border-bottom:1px solid var(--ink);padding-bottom:2px}
+.radar-all:hover{color:var(--orange-d);border-color:var(--orange-d)}
 .radar-empty{margin:0;color:var(--muted);line-height:1.6}
 .section-title{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:22px}
 .section-title h2{margin:0;font-family:var(--display);font-weight:800;font-size:38px;letter-spacing:-1px}
