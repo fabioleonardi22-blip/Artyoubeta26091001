@@ -123,3 +123,87 @@ CREATE TABLE IF NOT EXISTS operational_tasks (
   CONSTRAINT fk_tasks_event FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE SET NULL,
   CONSTRAINT fk_tasks_owner FOREIGN KEY (owner_user_id) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- Merchandising Artyou
+CREATE TABLE IF NOT EXISTS products (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  product_code VARCHAR(190) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  metadata JSON NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_products_code (product_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS product_variants (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  product_id BIGINT UNSIGNED NOT NULL,
+  color VARCHAR(120) NOT NULL DEFAULT '',
+  size VARCHAR(120) NOT NULL DEFAULT '',
+  price DECIMAL(10,2) NOT NULL DEFAULT 0,
+  stock_qty INT NOT NULL DEFAULT 0,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  metadata JSON NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_product_variant (product_id,color,size),
+  KEY idx_variants_active_stock (active,stock_qty),
+  CONSTRAINT fk_variants_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS merch_orders (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  order_code VARCHAR(190) NOT NULL,
+  ordered_at DATETIME NULL,
+  status VARCHAR(80) NOT NULL DEFAULT 'Riservato',
+  customer_name VARCHAR(255) NULL,
+  phone VARCHAR(100) NULL,
+  email VARCHAR(254) NULL,
+  venue VARCHAR(190) NULL,
+  pieces INT UNSIGNED NOT NULL DEFAULT 0,
+  total DECIMAL(10,2) NOT NULL DEFAULT 0,
+  notes TEXT NULL,
+  returned_pieces INT UNSIGNED NOT NULL DEFAULT 0,
+  payment_method VARCHAR(120) NULL,
+  metadata JSON NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_merch_orders_code (order_code),
+  KEY idx_merch_orders_status_date (status,ordered_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS merch_order_items (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  order_id BIGINT UNSIGNED NOT NULL,
+  product_variant_id BIGINT UNSIGNED NULL,
+  item_key VARCHAR(500) NULL,
+  description VARCHAR(500) NULL,
+  quantity INT UNSIGNED NOT NULL DEFAULT 1,
+  unit_price DECIMAL(10,2) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_order_items_order (order_id),
+  KEY idx_order_items_variant (product_variant_id),
+  CONSTRAINT fk_order_items_order FOREIGN KEY (order_id) REFERENCES merch_orders(id) ON DELETE CASCADE,
+  CONSTRAINT fk_order_items_variant FOREIGN KEY (product_variant_id) REFERENCES product_variants(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS inventory_movements (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  product_variant_id BIGINT UNSIGNED NOT NULL,
+  order_id BIGINT UNSIGNED NULL,
+  movement_type ENUM('IMPORT','SALE','RESERVE','RELEASE','RETURN','ADJUSTMENT') NOT NULL,
+  quantity_delta INT NOT NULL,
+  note VARCHAR(500) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_inventory_variant_date (product_variant_id,created_at),
+  KEY idx_inventory_order (order_id),
+  CONSTRAINT fk_inventory_variant FOREIGN KEY (product_variant_id) REFERENCES product_variants(id) ON DELETE CASCADE,
+  CONSTRAINT fk_inventory_order FOREIGN KEY (order_id) REFERENCES merch_orders(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
