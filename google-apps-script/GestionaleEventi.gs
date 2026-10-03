@@ -128,7 +128,7 @@ function setupGestionale() {
   }
   gestEnsureSheet_(ss, GEST_CFG.SHEET_SITE, [
     "ID","Slug","Titolo","Categoria","Descrizione","Poster","Luogo","Indirizzo",
-    "Maps","Prezzo","PagaOnline","Capienza","DateJSON","CastJSON","TBD","Attivo",
+    "Maps","Prezzo","PagaOnline","Capienza","DateJSON","CastJSON","YEPPrezziJSON","TBD","Attivo",
     "Ordine","Aggiornato"
   ]);
   gestEnsureSheet_(ss, GEST_CFG.SHEET_BOOKING, [
@@ -153,7 +153,16 @@ function gestEnsureSheet_(ss, name, headers) {
   let sh = ss.getSheetByName(name);
   if (!sh) sh = ss.insertSheet(name);
   if (sh.getLastRow() === 0) sh.getRange(1,1,1,headers.length).setValues([headers]);
+  else gestEnsureHeaders_(sh, headers);
   return sh;
+}
+
+function gestEnsureHeaders_(sh, headers) {
+  const lastCol = Math.max(1, sh.getLastColumn());
+  const current = sh.getRange(1,1,1,lastCol).getValues()[0].map(String);
+  const missing = headers.filter(h=>current.indexOf(h)===-1);
+  if (!missing.length) return;
+  sh.getRange(1,current.length+1,1,missing.length).setValues([missing]);
 }
 
 function gestAdminEvents_() {
@@ -174,7 +183,7 @@ function gestPublicEvents_() {
   return gestAdminEvents_().filter(e=>e.attivo).map(e=>({
     slug:e.slug,title:e.title,cat:e.cat,poster:e.poster,desc:e.desc,venue:e.venue,
     addr:e.addr,maps:e.maps,price:e.price,pagaOnline:e.pagaOnline,
-    capienza:e.capienza,dates:e.dates,cast:e.cast,tbd:e.tbd
+    capienza:e.capienza,dates:e.dates,cast:e.cast,yepPricing:e.yepPricing,tbd:e.tbd
   }));
 }
 
@@ -195,6 +204,7 @@ function gestRowToObj_(h,r) {
     capienza:Math.max(0,parseInt(o.Capienza||0,10)||0),
     dates:gestParseJson_(o.DateJSON,[]),
     cast:gestParseJson_(o.CastJSON,[]),
+    yepPricing:gestParseJson_(o.YEPPrezziJSON,null),
     tbd:gestBool_(o.TBD),
     attivo:gestBool_(o.Attivo),
     ordine:Number(o.Ordine)||9999,
@@ -204,7 +214,7 @@ function gestRowToObj_(h,r) {
 
 function gestSaveEvent_(e) {
   const ss=gestSpreadsheet_();
-  const headers=["ID","Slug","Titolo","Categoria","Descrizione","Poster","Luogo","Indirizzo","Maps","Prezzo","PagaOnline","Capienza","DateJSON","CastJSON","TBD","Attivo","Ordine","Aggiornato"];
+  const headers=["ID","Slug","Titolo","Categoria","Descrizione","Poster","Luogo","Indirizzo","Maps","Prezzo","PagaOnline","Capienza","DateJSON","CastJSON","YEPPrezziJSON","TBD","Attivo","Ordine","Aggiornato"];
   const sh=gestEnsureSheet_(ss,GEST_CFG.SHEET_SITE,headers);
 
   const id=String(e.id||Utilities.getUuid());
@@ -221,6 +231,7 @@ function gestSaveEvent_(e) {
     Indirizzo:String(e.addr||""),Maps:String(e.maps||""),Prezzo:e.price===""?"":Number(e.price||0),
     PagaOnline:!!e.pagaOnline,Capienza:Math.max(0,parseInt(e.capienza||0,10)||0),
     DateJSON:JSON.stringify(dates),CastJSON:JSON.stringify(Array.isArray(e.cast)?e.cast:[]),
+    YEPPrezziJSON:e.yepPricing?JSON.stringify(e.yepPricing):"",
     TBD:!!e.tbd,Attivo:e.attivo!==false,Ordine:Number(e.ordine)||9999,Aggiornato:new Date()
   };
 
