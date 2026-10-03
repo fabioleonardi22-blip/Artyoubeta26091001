@@ -452,17 +452,25 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 .rif-event-dark strong{color:#7A1631}
 
 .rif-price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.rif-price-card{position:relative;overflow:hidden;background:#fff;border:1px solid #E4DED2;border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:10px;min-height:190px;box-shadow:0 12px 30px rgba(19,24,29,.05)}
-.rif-price-card:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:#F09000}
-.rif-price-tag{font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#7A1631}
-.rif-price{font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:44px;line-height:1;color:#13181D}
-.rif-price-card p{margin:auto 0 0;font-size:14px;line-height:1.55;color:#555D64}
-.rif-price-card b{color:#13181D}
-.rif-price-featured{background:#13181D;border-color:#13181D;grid-column:1/-1;min-height:205px}
-.rif-price-featured:before{background:#F09000;height:7px}
-.rif-price-featured .rif-price-tag,.rif-price-featured .rif-price,.rif-price-featured p,.rif-price-featured b{color:#F6F3EC}
+.rif-price-card{position:relative;overflow:hidden;background:#FFFFFF;border:1px solid #E4DED2;border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:14px;min-height:205px;box-shadow:0 10px 26px rgba(19,24,29,.05);transition:transform .18s ease,box-shadow .18s ease}
+.rif-price-card:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(19,24,29,.08)}
+.rif-price-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:#F09000}
+.rif-price-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rif-price-tag{font-size:13px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:#7A1631}
+.rif-price-duration{display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:6px 9px;border-radius:999px;background:#F6F3EC;color:#13181D;font-size:11px;font-weight:800;letter-spacing:.6px}
+.rif-price{font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:46px;line-height:1;color:#13181D;letter-spacing:-1px}
+.rif-price-card p{margin:0;font-size:15px;line-height:1.5;color:#555D64}
+.rif-included,.rif-not-included{margin-top:auto;padding-top:12px;border-top:1px solid #EEE8DD;font-size:13px;font-weight:700}
+.rif-included{color:#1F6B3E}
+.rif-not-included{color:#7A1631}
+.rif-price-featured{grid-column:1/-1;min-height:0;background:#13181D;border-color:#13181D;padding:26px 28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.85fr);align-items:center;gap:28px}
+.rif-price-featured:before{width:7px;background:#F09000}
 .rif-price-featured .rif-price-tag{color:#F6B84A}
-.rif-price-badge{align-self:flex-start;background:#F09000;color:#13181D;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:900;letter-spacing:1px}
+.rif-price-featured .rif-price{color:#F6F3EC;font-size:52px}
+.rif-price-badge{align-self:flex-start;background:#F09000;color:#13181D;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:900;letter-spacing:1px;width:max-content}
+.rif-featured-copy{display:flex;flex-direction:column;gap:9px}
+.rif-featured-details{display:flex;flex-direction:column;gap:8px;padding-left:24px;border-left:1px solid #394148;color:#DDE3E7;font-size:14px;line-height:1.45}
+.rif-featured-details strong{color:#FFFFFF}
 
 @media(max-width:820px){
   .rif-program-v2,.rif-price-grid{grid-template-columns:minmax(0,1fr)!important}
@@ -472,6 +480,8 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
   .rif-day-head h3{font-size:21px}
   .rif-price-card{min-height:0}
   .rif-price{font-size:40px}
+  .rif-price-featured{grid-template-columns:1fr;gap:18px;padding:24px}
+  .rif-featured-details{padding-left:0;padding-top:16px;border-left:0;border-top:1px solid #394148}
 }
 </style>
 
@@ -580,40 +590,49 @@ a{color:#1A6E99}a:hover{color:#12506F}
 
   <div class="rif-price-grid">
     <article class="rif-price-card">
-      <span class="rif-price-tag">Doppio workshop 6H</span>
+      <div class="rif-price-top"><span class="rif-price-tag">Doppio workshop</span><span class="rif-price-duration">2 × 6H</span></div>
       <strong class="rif-price">€ 165</strong>
-      <p>2 workshop da 6 ore a scelta<br><b>Spettacolo e T-Shirt inclusi</b></p>
+      <p>2 workshop da 6 ore a scelta</p>
+      <div class="rif-included">Spettacolo + T-Shirt inclusi</div>
     </article>
 
     <article class="rif-price-card">
-      <span class="rif-price-tag">Workshop 6H</span>
+      <div class="rif-price-top"><span class="rif-price-tag">Workshop</span><span class="rif-price-duration">6H</span></div>
       <strong class="rif-price">€ 95</strong>
-      <p>1 workshop da 6 ore a scelta<br><b>Spettacolo e T-Shirt inclusi</b></p>
+      <p>1 workshop da 6 ore a scelta</p>
+      <div class="rif-included">Spettacolo + T-Shirt inclusi</div>
     </article>
 
     <article class="rif-price-card">
-      <span class="rif-price-tag">Workshop Special 3H</span>
+      <div class="rif-price-top"><span class="rif-price-tag">Workshop Special</span><span class="rif-price-duration">3H</span></div>
       <strong class="rif-price">€ 40</strong>
-      <p>1 workshop da 3 ore<br>Spettacolo e T-Shirt non inclusi</p>
+      <p>1 workshop da 3 ore</p>
+      <div class="rif-not-included">Spettacolo e T-Shirt non inclusi</div>
     </article>
 
     <article class="rif-price-card">
-      <span class="rif-price-tag">Spettacolo ALL IN</span>
+      <div class="rif-price-top"><span class="rif-price-tag">Spettacolo</span><span class="rif-price-duration">ALL IN</span></div>
       <strong class="rif-price">€ 15</strong>
-      <p>Spettacolo di improvvisazione<br>multi-lingua</p>
+      <p>Spettacolo di improvvisazione multi-lingua</p>
     </article>
 
     <article class="rif-price-card">
-      <span class="rif-price-tag">MO’ CCA A SHIRT</span>
+      <div class="rif-price-top"><span class="rif-price-tag">T-Shirt</span><span class="rif-price-duration">Festival</span></div>
       <strong class="rif-price">€ 10</strong>
-      <p>La mitica T-Shirt<br>del Festival</p>
+      <p>La T-Shirt ufficiale del Festival</p>
     </article>
 
     <article class="rif-price-card rif-price-featured">
-      <span class="rif-price-badge">PACCHETTO COMPLETO</span>
-      <span class="rif-price-tag">Tutto MO’ CCA</span>
-      <strong class="rif-price">€ 200</strong>
-      <p>2 workshop da 6 ore<br>1 workshop special da 3 ore<br><b>Eventi e gadget inclusi</b></p>
+      <div class="rif-featured-copy">
+        <span class="rif-price-badge">PACCHETTO COMPLETO</span>
+        <span class="rif-price-tag">Full Festival</span>
+        <strong class="rif-price">€ 200</strong>
+      </div>
+      <div class="rif-featured-details">
+        <span>2 workshop da 6 ore</span>
+        <span>1 workshop special da 3 ore</span>
+        <strong>Eventi e gadget inclusi</strong>
+      </div>
     </article>
   </div>
 </div>
