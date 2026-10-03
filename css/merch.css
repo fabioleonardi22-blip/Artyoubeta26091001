@@ -32,7 +32,7 @@ header nav a[aria-current="page"]{color:var(--orange);font-weight:700}
 .short{display:none}
 .menu-btn{display:none;width:44px;height:44px;border-radius:22px;border:1px solid #3A444D;align-items:center;justify-content:center;color:var(--cream);cursor:pointer}
 .menu-btn .x{display:none}
-.band{height:6px;background:var(--orange)}
+.band{display:none!important}
 header nav a.menu-extra{display:none}
 
 /* ===== Hero ===== */
