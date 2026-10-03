@@ -1,0 +1,9 @@
+{
+  "name": "artyou-roma",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Artyou Roma - sito, API Vercel e backend MySQL",
+  "dependencies": {
+    "mysql2": "^3.14.5"
+  }
+}
