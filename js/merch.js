@@ -91,7 +91,7 @@ const PRODUCTS=[
   images:{Nero:M+"calzini-grip-nero.webp",default:M+"calzini-grip-nero.webp"},noPhoto:["Arancio"]}
 ];
 
-/* ===== Magazzino (Google Sheet tramite /api/merch) =====
+/* ===== Magazzino live MySQL tramite /api/merch =====
    Se il magazzino non risponde, il sito resta usabile: niente
    disponibilità mostrate e l'ordine parte solo via WhatsApp. */
 const API="/api/merch",K_CART="artyou_merch_cart",SHOP_URL="/merchandising/";
@@ -207,7 +207,7 @@ document.body.insertAdjacentHTML("beforeend",`
       <div class="done-icon" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
       <h3>Ordine ricevuto!</h3>
       <p>Il tuo ordine <strong id="doneId"></strong> è registrato e i capi sono messi da parte per te.</p>
-      <p>Ritiro nella sede <strong id="doneSede"></strong> · totale <strong id="doneTot"></strong><span id="donePay">, da pagare al ritiro</span>. Ti abbiamo mandato la conferma via email e ti scriviamo quando è pronto.</p>
+      <p>Ritiro nella sede <strong id="doneSede"></strong> · totale <strong id="doneTot"></strong><span id="donePay">, da pagare al ritiro</span>. Il tuo ordine è registrato. Ti scriviamo quando è pronto.</p>
       <a class="btn btn-orange" id="donePaypal" href="#" hidden>Paga ora con PayPal</a>
       <a class="btn-wa" id="doneWa" href="#" target="_blank" rel="noopener">Scrivici su WhatsApp</a>
       <button class="btn more" data-close>Continua lo shopping</button>
