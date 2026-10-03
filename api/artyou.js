@@ -1,12 +1,25 @@
+const {
+  rateLimit,
+  applyRateLimitHeaders,
+  rejectRateLimited,
+  sameOrigin,
+  setSecurityHeaders
+} = require("../lib/security");
+
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgqQguCWRt7yCTroh2qi4az1rCTZ7kgw0IxNRNDb9LZLOGPUD5Jy3K56NTi6FxAfKx/exec";
 
 function reject(res, status, errore) {
-  res.setHeader("Cache-Control", "no-store");
-  res.setHeader("X-Content-Type-Options", "nosniff");
+  setSecurityHeaders(res);
   return res.status(status).json({ ok: false, errore });
 }
 
+function validText(value, max) {
+  return String(value == null ? "" : value).trim().length <= max;
+}
+
 module.exports = async function handler(req, res) {
+  setSecurityHeaders(res);
+
   try {
     const method = String(req.method || "GET").toUpperCase();
     if (!["GET", "HEAD", "POST"].includes(method)) {
@@ -20,18 +33,29 @@ module.exports = async function handler(req, res) {
     const params = new URLSearchParams(query);
     const queryAction = String(params.get("action") || "").toLowerCase();
 
-    // Il proxy pubblico espone solo letture e creazione prenotazioni.
-    // Le azioni amministrative devono passare dagli endpoint riservati.
-    if ((method === "GET" || method === "HEAD") && queryAction && queryAction !== "public") {
-      return reject(res, 403, "azione_non_consentita");
+    if (method === "GET" || method === "HEAD") {
+      const limit = rateLimit(req, { key:"booking-read", limit:180, windowMs:60 * 1000 });
+      applyRateLimitHeaders(res, limit);
+      if (!limit.ok) return rejectRateLimited(res, limit);
+
+      if (queryAction && queryAction !== "public") {
+        return reject(res, 403, "azione_non_consentita");
+      }
     }
 
     let url = APPS_SCRIPT_URL;
     if (query) url += "?" + query;
-
     const options = { method, redirect: "follow", headers: {} };
 
     if (method === "POST") {
+      if (!sameOrigin(req)) {
+        return reject(res, 403, "origin_non_consentita");
+      }
+
+      const limit = rateLimit(req, { key:"booking-write", limit:15, windowMs:10 * 60 * 1000 });
+      applyRateLimitHeaders(res, limit);
+      if (!limit.ok) return rejectRateLimited(res, limit);
+
       const raw = typeof req.body === "string" ? req.body : JSON.stringify(req.body || {});
       if (Buffer.byteLength(raw, "utf8") > 32 * 1024) {
         return reject(res, 413, "payload_too_large");
@@ -45,6 +69,33 @@ module.exports = async function handler(req, res) {
         return reject(res, 403, "azione_non_consentita");
       }
 
+      const posti = Number(parsed.Posti || 1);
+      if (!Number.isInteger(posti) || posti < 1 || posti > 10) {
+        return reject(res, 400, "posti_non_validi");
+      }
+
+      if (!validText(parsed.Evento, 180) ||
+          !validText(parsed.Nome, 100) ||
+          !validText(parsed.Cognome, 100) ||
+          !validText(parsed.Telefono, 40) ||
+          !validText(parsed.Email, 180) ||
+          !validText(parsed.Note, 2000) ||
+          !validText(parsed.Scelte, 1000) ||
+          !validText(parsed.Risorse, 1000)) {
+        return reject(res, 400, "dati_non_validi");
+      }
+
+      if (!String(parsed.Evento || "").trim() ||
+          !String(parsed.Nome || "").trim() ||
+          !String(parsed.Cognome || "").trim()) {
+        return reject(res, 400, "campi_obbligatori_mancanti");
+      }
+
+      const email = String(parsed.Email || "").trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return reject(res, 400, "email_non_valida");
+      }
+
       options.headers["Content-Type"] = "text/plain;charset=utf-8";
       options.body = JSON.stringify(parsed);
     }
@@ -54,10 +105,8 @@ module.exports = async function handler(req, res) {
 
     res.status(upstream.status);
     res.setHeader("Content-Type", upstream.headers.get("content-type") || "application/json; charset=utf-8");
-    res.setHeader("Cache-Control", "no-store");
-    res.setHeader("X-Content-Type-Options", "nosniff");
     res.send(body);
-  } catch (err) {
+  } catch (_) {
     return reject(res, 502, "proxy_error");
   }
 };
