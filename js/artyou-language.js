@@ -19,12 +19,12 @@ function css(){
  if(document.getElementById('artyou-language-style'))return;
  var s=document.createElement('style');s.id='artyou-language-style';
  s.textContent='#artyou-language{position:relative;display:inline-flex;flex:0 0 auto;z-index:1105;font-family:inherit}'+
- '.artyou-lang-trigger{height:44px;min-width:58px;padding:0 11px;border:1px solid #3A444D;border-radius:22px;background:#13181D;color:#F6F3EC;display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;font:800 13px/1 inherit;white-space:nowrap}'+
+ '.artyou-lang-trigger{height:36px;min-width:48px;padding:0 8px;border:1px solid #3A444D;border-radius:22px;background:#13181D;color:#F6F3EC;display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;font:800 11px/1 inherit;white-space:nowrap}'+
  '.artyou-lang-menu{position:absolute;right:0;top:calc(100% + 9px);width:210px;padding:8px;background:#13181D;border:1px solid #34404A;border-radius:14px;box-shadow:0 18px 42px rgba(0,0,0,.34);display:none;z-index:99999}'+
  '#artyou-language[data-open="1"] .artyou-lang-menu{display:block}.artyou-lang-option{width:100%;min-height:40px;padding:9px 11px;border:0;border-radius:9px;background:transparent;color:#F6F3EC;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;text-align:left;font:14px/1.2 inherit}'+
  '.artyou-lang-option:hover,.artyou-lang-option:focus-visible{background:#232C33;outline:none}.artyou-lang-option[aria-current="true"]{background:#2A343C;color:#FFD45A}.artyou-lang-code{opacity:.64;font-size:11px;font-weight:800}'+
  '#artyou-google-translate-element{position:fixed!important;left:-9999px!important;top:-9999px!important;width:1px!important;height:1px!important;overflow:hidden!important}.goog-te-banner-frame{display:none!important}body{top:0!important}'+
- '@media(max-width:820px){.artyou-lang-trigger{min-width:52px;padding:0 9px}.artyou-lang-menu{position:fixed;right:14px;top:70px;width:min(230px,calc(100vw - 28px));max-height:calc(100vh - 90px);overflow:auto}}';
+ '@media(max-width:820px){.artyou-lang-trigger{height:34px;min-width:44px;padding:0 7px;font-size:10px}.artyou-lang-menu{position:fixed;right:14px;top:70px;width:min(230px,calc(100vw - 28px));max-height:calc(100vh - 90px);overflow:auto}}';
  document.head.appendChild(s)
 }
 function build(){
