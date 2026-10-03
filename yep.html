@@ -482,21 +482,21 @@ a{color:#1A6E99}a:hover{color:#12506F}
   <article style="background:#13181D;color:#fff;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px;">
     <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#F09000;">Alloggio + workshop</span>
     <div style="font-size:14px;color:#D5DCE1;">Entro 30 giugno</div>
-    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong style="float:right;">320 €</strong></span><span>Tripla <strong style="float:right;">330 €</strong></span><span>Doppia <strong style="float:right;">350 €</strong></span></div>
+    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong id="yp-aw-e-quad" style="float:right;">320 €</strong></span><span>Tripla <strong id="yp-aw-e-trip" style="float:right;">330 €</strong></span><span>Doppia <strong id="yp-aw-e-double" style="float:right;">350 €</strong></span></div>
     <div style="font-size:14px;color:#D5DCE1;margin-top:6px;">Dopo 1 luglio</div>
-    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong style="float:right;">350 €</strong></span><span>Tripla <strong style="float:right;">360 €</strong></span><span>Doppia <strong style="float:right;">380 €</strong></span></div>
+    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong id="yp-aw-l-quad" style="float:right;">350 €</strong></span><span>Tripla <strong id="yp-aw-l-trip" style="float:right;">360 €</strong></span><span>Doppia <strong id="yp-aw-l-double" style="float:right;">380 €</strong></span></div>
   </article>
   <article style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px;">
     <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#1467E8;">Solo workshop</span>
-    <div style="font-size:15px;">Entro 30 giugno <strong style="float:right;">250 €</strong></div>
-    <div style="font-size:15px;">Dopo 1 luglio <strong style="float:right;">280 €</strong></div>
+    <div style="font-size:15px;">Entro 30 giugno <strong id="yp-ws-e" style="float:right;">250 €</strong></div>
+    <div style="font-size:15px;">Dopo 1 luglio <strong id="yp-ws-l" style="float:right;">280 €</strong></div>
   </article>
   <article style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px;">
     <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#F09000;">Solo vacanza</span>
     <div style="font-size:14px;color:#555D64;">Entro 30 giugno</div>
-    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong style="float:right;">200 €</strong></span><span>Tripla <strong style="float:right;">210 €</strong></span><span>Doppia <strong style="float:right;">230 €</strong></span></div>
+    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong id="yp-h-e-quad" style="float:right;">200 €</strong></span><span>Tripla <strong id="yp-h-e-trip" style="float:right;">210 €</strong></span><span>Doppia <strong id="yp-h-e-double" style="float:right;">230 €</strong></span></div>
     <div style="font-size:14px;color:#555D64;margin-top:6px;">Dopo 1 luglio</div>
-    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong style="float:right;">230 €</strong></span><span>Tripla <strong style="float:right;">240 €</strong></span><span>Doppia <strong style="float:right;">260 €</strong></span></div>
+    <div style="display:grid;gap:6px;font-size:15px;"><span>Quadrupla <strong id="yp-h-l-quad" style="float:right;">230 €</strong></span><span>Tripla <strong id="yp-h-l-trip" style="float:right;">240 €</strong></span><span>Doppia <strong id="yp-h-l-double" style="float:right;">260 €</strong></span></div>
   </article>
 </div>
 </section>
@@ -837,6 +837,29 @@ class Component extends DCLogic {
 </script>
 
 
+<script id="yep-pricing-sync">
+(function(){
+  var fallback={early:{alloggioWorkshop:{quadrupla:320,tripla:330,doppia:350},soloVacanza:{quadrupla:200,tripla:210,doppia:230},soloWorkshop:250},late:{alloggioWorkshop:{quadrupla:350,tripla:360,doppia:380},soloVacanza:{quadrupla:230,tripla:240,doppia:260},soloWorkshop:280}};
+  function set(id,v){var el=document.getElementById(id);if(el&&v!=null&&v!=="")el.textContent=Number(v)+" €";}
+  function getPricing(){
+    var map=window.ARTYOU_EVENT_INFO||{}, keys=Object.keys(map);
+    for(var i=0;i<keys.length;i++){var e=map[keys[i]]||{};if(e.yepPricing)return e.yepPricing;}
+    return fallback;
+  }
+  function sync(){
+    var p=getPricing(), e=p.early||fallback.early, l=p.late||fallback.late;
+    var a=e.alloggioWorkshop||fallback.early.alloggioWorkshop, al=l.alloggioWorkshop||fallback.late.alloggioWorkshop;
+    var h=e.soloVacanza||fallback.early.soloVacanza, hl=l.soloVacanza||fallback.late.soloVacanza;
+    set("yp-aw-e-quad",a.quadrupla);set("yp-aw-e-trip",a.tripla);set("yp-aw-e-double",a.doppia);
+    set("yp-aw-l-quad",al.quadrupla);set("yp-aw-l-trip",al.tripla);set("yp-aw-l-double",al.doppia);
+    set("yp-ws-e",e.soloWorkshop);set("yp-ws-l",l.soloWorkshop);
+    set("yp-h-e-quad",h.quadrupla);set("yp-h-e-trip",h.tripla);set("yp-h-e-double",h.doppia);
+    set("yp-h-l-quad",hl.quadrupla);set("yp-h-l-trip",hl.tripla);set("yp-h-l-double",hl.doppia);
+  }
+  window.addEventListener("artyou:capacity-updated",sync);
+  window.addEventListener("load",function(){sync();setTimeout(sync,500);setTimeout(sync,1500);});
+})();
+</script>
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
