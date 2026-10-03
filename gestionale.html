@@ -63,6 +63,53 @@ label{font-size:13px;font-weight:800;display:flex;flex-direction:column;gap:7px}
       <label style="margin-top:14px">Descrizione<textarea id="desc" placeholder="Descrivi lo spettacolo, il format e cosa aspettarsi."></textarea></label>
     </section>
 
+    <section class="section" id="yepPricingFields" style="display:none">
+      <h2>Prezzi YEP 2027</h2>
+      <p class="field-help" style="margin:-6px 0 14px">Prezzi utilizzati automaticamente nella pagina YEP in base alla data di iscrizione.</p>
+      <div class="grid2">
+        <div>
+          <h3 style="margin:0 0 10px;font-size:16px">Alloggio + workshop · entro 30 giugno</h3>
+          <div class="grid2">
+            <label>Quadrupla €<input id="yepAwEarlyQuad" type="number" value="320"></label>
+            <label>Tripla €<input id="yepAwEarlyTriple" type="number" value="330"></label>
+            <label>Doppia €<input id="yepAwEarlyDouble" type="number" value="350"></label>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:16px">Alloggio + workshop · dopo 1 luglio</h3>
+          <div class="grid2">
+            <label>Quadrupla €<input id="yepAwLateQuad" type="number" value="350"></label>
+            <label>Tripla €<input id="yepAwLateTriple" type="number" value="360"></label>
+            <label>Doppia €<input id="yepAwLateDouble" type="number" value="380"></label>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:16px">Solo vacanza · entro 30 giugno</h3>
+          <div class="grid2">
+            <label>Quadrupla €<input id="yepHolidayEarlyQuad" type="number" value="200"></label>
+            <label>Tripla €<input id="yepHolidayEarlyTriple" type="number" value="210"></label>
+            <label>Doppia €<input id="yepHolidayEarlyDouble" type="number" value="230"></label>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:16px">Solo vacanza · dopo 1 luglio</h3>
+          <div class="grid2">
+            <label>Quadrupla €<input id="yepHolidayLateQuad" type="number" value="230"></label>
+            <label>Tripla €<input id="yepHolidayLateTriple" type="number" value="240"></label>
+            <label>Doppia €<input id="yepHolidayLateDouble" type="number" value="260"></label>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:16px">Solo workshop</h3>
+          <div class="grid2">
+            <label>Entro 30 giugno €<input id="yepWorkshopEarly" type="number" value="250"></label>
+            <label>Dopo 1 luglio €<input id="yepWorkshopLate" type="number" value="280"></label>
+          </div>
+        </div>
+      </div>
+      <p class="field-help" style="margin-top:12px">Camera singola: supplemento su richiesta.</p>
+    </section>
+
     <section class="section" id="saggiFields" style="display:none">
       <h2>Dettagli SAGGI</h2>
       <div class="grid2">
@@ -160,7 +207,7 @@ function $(id){return document.getElementById(id)}
 function pin(){return $("pin").value.trim()}
 function setStatus(msg,type){var s=$("status");s.className="status "+(type||"info");s.textContent=msg}
 function slugify(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")}
-function toggleSaggiFields(){var on=$("eventType")&&$("eventType").value==="SAGGI";var box=$("saggiFields");if(box)box.style.display=on?"block":"none"}
+function toggleSaggiFields(){var on=$("eventType")&&$("eventType").value==="SAGGI";var box=$("saggiFields");if(box)box.style.display=on?"block":"none";var y=$("yepPricingFields");if(y)y.style.display=$("eventType")&&$("eventType").value==="YEP"?"block":"none"}
 function apiGet(action){if(!endpoint) return Promise.reject(new Error("Endpoint Gestionale non configurato"));return fetch(endpoint+"?action="+encodeURIComponent(action)+"&pin="+encodeURIComponent(pin())+"&_="+Date.now()).then(r=>r.json())}
 function apiPost(body){if(!endpoint) return Promise.reject(new Error("Endpoint Gestionale non configurato"));body.pin=pin();return fetch(endpoint,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)}).then(r=>r.json())}
 function assert(res){if(!res||!res.ok)throw new Error((res&&res.errore)||"Operazione non riuscita");return res}
@@ -188,6 +235,7 @@ function clearForm(){
   $("ordine").value=100;$("desc").value="";$("venue").value="";$("addr").value="";$("maps").value="";
   $("price").value="";$("capienza").value=60;$("pagaOnline").checked=false;$("tbd").checked=false;$("attivo").checked=true;
   $("poster").value="";$("posterFile").value="";$("posterPreview").style.backgroundImage="";$("posterPreview").textContent="Anteprima locandina";
+  ["yepAwEarlyQuad","yepAwEarlyTriple","yepAwEarlyDouble","yepAwLateQuad","yepAwLateTriple","yepAwLateDouble","yepHolidayEarlyQuad","yepHolidayEarlyTriple","yepHolidayEarlyDouble","yepHolidayLateQuad","yepHolidayLateTriple","yepHolidayLateDouble","yepWorkshopEarly","yepWorkshopLate"].forEach(function(id){var defaults={yepAwEarlyQuad:320,yepAwEarlyTriple:330,yepAwEarlyDouble:350,yepAwLateQuad:350,yepAwLateTriple:360,yepAwLateDouble:380,yepHolidayEarlyQuad:200,yepHolidayEarlyTriple:210,yepHolidayEarlyDouble:230,yepHolidayLateQuad:230,yepHolidayLateTriple:240,yepHolidayLateDouble:260,yepWorkshopEarly:250,yepWorkshopLate:280};$(id).value=defaults[id]});
   $("saggiStart").value="21:00";$("saggio1Title").value="";$("saggio1Teacher").value="";$("saggio1Poster").value="";$("saggio2Title").value="";$("saggio2Teacher").value="";$("saggio2Poster").value="";toggleSaggiFields();
   $("dates").innerHTML="";addDate();$("cast").innerHTML="";$("deleteBtn").style.display="none";$("formTitle").textContent="Nuovo evento";
   document.querySelectorAll(".event").forEach(x=>x.classList.remove("active"));updatePreviewLink();
@@ -197,6 +245,13 @@ function loadForm(e){
   $("ordine").value=e.ordine||100;$("desc").value=e.desc||"";$("venue").value=e.venue||"";$("addr").value=e.addr||"";$("maps").value=e.maps||"";
   $("price").value=e.price===""?"":e.price;$("capienza").value=e.capienza||0;$("pagaOnline").checked=!!e.pagaOnline;$("tbd").checked=!!e.tbd;$("attivo").checked=!!e.attivo;
   $("poster").value=e.poster||"";
+  var yp=e.yepPricing||{};
+  var ep=yp.early||{}, lp=yp.late||{}, awE=ep.alloggioWorkshop||{}, awL=lp.alloggioWorkshop||{}, hvE=ep.soloVacanza||{}, hvL=lp.soloVacanza||{};
+  $("yepAwEarlyQuad").value=awE.quadrupla!=null?awE.quadrupla:320;$("yepAwEarlyTriple").value=awE.tripla!=null?awE.tripla:330;$("yepAwEarlyDouble").value=awE.doppia!=null?awE.doppia:350;
+  $("yepAwLateQuad").value=awL.quadrupla!=null?awL.quadrupla:350;$("yepAwLateTriple").value=awL.tripla!=null?awL.tripla:360;$("yepAwLateDouble").value=awL.doppia!=null?awL.doppia:380;
+  $("yepHolidayEarlyQuad").value=hvE.quadrupla!=null?hvE.quadrupla:200;$("yepHolidayEarlyTriple").value=hvE.tripla!=null?hvE.tripla:210;$("yepHolidayEarlyDouble").value=hvE.doppia!=null?hvE.doppia:230;
+  $("yepHolidayLateQuad").value=hvL.quadrupla!=null?hvL.quadrupla:230;$("yepHolidayLateTriple").value=hvL.tripla!=null?hvL.tripla:240;$("yepHolidayLateDouble").value=hvL.doppia!=null?hvL.doppia:260;
+  $("yepWorkshopEarly").value=ep.soloWorkshop!=null?ep.soloWorkshop:250;$("yepWorkshopLate").value=lp.soloWorkshop!=null?lp.soloWorkshop:280;
   var sg=e.saggi||{};
   $("saggiStart").value=sg.start||"21:00";$("saggio1Title").value=(sg.show1&&sg.show1.title)||"";$("saggio1Teacher").value=(sg.show1&&sg.show1.teacher)||"";$("saggio1Poster").value=(sg.show1&&sg.show1.poster)||"";
   $("saggio2Title").value=(sg.show2&&sg.show2.title)||"";$("saggio2Teacher").value=(sg.show2&&sg.show2.teacher)||"";$("saggio2Poster").value=(sg.show2&&sg.show2.poster)||"";toggleSaggiFields();
@@ -210,6 +265,7 @@ function collect(){
   return {id:currentId,slug:$("slug").value.trim()||slugify($("title").value),title:$("title").value.trim(),cat:$("cat").value,eventType:$("eventType").value,tipo:$("eventType").value,ordine:Number($("ordine").value)||100,
     desc:$("desc").value.trim(),venue:$("venue").value.trim(),addr:$("addr").value.trim(),maps:$("maps").value.trim(),price:$("price").value===""?"":Number($("price").value),
     capienza:Number($("capienza").value)||0,pagaOnline:$("pagaOnline").checked,tbd:$("tbd").checked,attivo:$("attivo").checked,poster:$("poster").value.trim(),dates:dates,cast:cast,
+    yepPricing:$("eventType").value==="YEP"?{cutoff:"2027-06-30",early:{alloggioWorkshop:{quadrupla:Number($("yepAwEarlyQuad").value)||0,tripla:Number($("yepAwEarlyTriple").value)||0,doppia:Number($("yepAwEarlyDouble").value)||0},soloVacanza:{quadrupla:Number($("yepHolidayEarlyQuad").value)||0,tripla:Number($("yepHolidayEarlyTriple").value)||0,doppia:Number($("yepHolidayEarlyDouble").value)||0},soloWorkshop:Number($("yepWorkshopEarly").value)||0},late:{alloggioWorkshop:{quadrupla:Number($("yepAwLateQuad").value)||0,tripla:Number($("yepAwLateTriple").value)||0,doppia:Number($("yepAwLateDouble").value)||0},soloVacanza:{quadrupla:Number($("yepHolidayLateQuad").value)||0,tripla:Number($("yepHolidayLateTriple").value)||0,doppia:Number($("yepHolidayLateDouble").value)||0},soloWorkshop:Number($("yepWorkshopLate").value)||0}}:null,
     saggi:$("eventType").value==="SAGGI"?{start:$("saggiStart").value||"",show1:{title:$("saggio1Title").value.trim(),teacher:$("saggio1Teacher").value.trim(),poster:$("saggio1Poster").value.trim()},show2:{title:$("saggio2Title").value.trim(),teacher:$("saggio2Teacher").value.trim(),poster:$("saggio2Poster").value.trim()}}:null};
 }
 function renderList(){
