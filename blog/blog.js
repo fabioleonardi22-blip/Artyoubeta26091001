@@ -21,6 +21,21 @@ function card(a){
 }
 function load(){return fetch("/blog/articles.json",{cache:"no-store"}).then(function(r){return r.json()}).then(function(d){
   d.articles=(d.articles||[]).slice().sort(function(a,b){return String(b.date).localeCompare(String(a.date))});return d})}
+function festivalRadarItem(x){
+  return '<a class="radar-item" href="'+esc(x.url||"https://improvfestivals.org/")+'" target="_blank" rel="noopener noreferrer">'+
+    '<span class="radar-date">'+esc(x.date||"")+'</span>'+
+    '<span class="radar-copy"><strong>'+esc(x.name||"Festival")+'</strong><small>'+esc(x.place||"")+'</small></span>'+
+    '<span class="radar-arrow" aria-hidden="true">↗</span></a>';
+}
+function loadFestivalRadar(){
+  var box=document.getElementById("radar");if(!box)return;
+  fetch("/api/improv-festivals",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("radar");return r.json()}).then(function(d){
+    var list=(d.items||[]).slice(0,5);
+    box.innerHTML=list.length?list.map(festivalRadarItem).join(""):'<p class="radar-empty">Nessun festival in arrivo al momento.</p>';
+  }).catch(function(){
+    box.innerHTML='<p class="radar-empty">Calendario momentaneamente non disponibile. Usa il link qui sotto per vedere tutti i festival.</p>';
+  });
+}
 
 /* Archivio */
 var grid=document.getElementById("grid");
@@ -38,9 +53,7 @@ if(grid){
     if(f){var fi=imageFor(f,false);fe.classList.add("has-img");fe.style.setProperty("--feat-img",'url("'+String(fi).replace(/["\\]/g,"")+'")')}
     if(f)document.getElementById("feature").innerHTML='<a class="feature-link" href="'+esc(f.url)+'"><p class="kicker">Ultimo articolo · '+data(f.date)+'</p><span class="chip '+cc(f.category)+'">'+esc(f.category)+'</span><h2>'+esc(f.title)+'</h2><p>'+esc(f.excerpt)+'</p><span class="read">Leggi l’articolo <span aria-hidden="true">→</span></span></a>';
     else document.getElementById("feature").innerHTML='<p class="kicker">In arrivo</p><h2>Il primo articolo sta per uscire.</h2>';
-    var radar=d.radar||[];
-    if(radar.length)document.getElementById("radar").innerHTML=radar.slice(0,5).map(function(x){
-      return '<div class="radar-item">'+(x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">':'')+'<strong>'+esc(x.name)+'</strong>'+(x.url?'</a>':'')+'<span>'+esc(x.place)+(x.place&&x.date?' · ':'')+esc(x.date)+'</span>'+(x.verified?'<em class="ok">Verificato sul sito ufficiale</em>':'')+'</div>'}).join("")+(d.radarUpdated?'<p class="radar-upd">Aggiornato il '+data(d.radarUpdated)+'</p>':'');
+    loadFestivalRadar();
     render();
   }).catch(function(){grid.innerHTML='<div class="empty">Archivio momentaneamente non disponibile.</div>'});
   document.querySelector(".tabs").addEventListener("click",function(e){
