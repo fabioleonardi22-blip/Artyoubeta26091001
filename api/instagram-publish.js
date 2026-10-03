@@ -6,7 +6,7 @@ const {
   setSecurityHeaders
 } = require("../lib/security");
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgqQguCWRt7yCTroh2qi4az1rCTZ7kgw0IxNRNDb9LZLOGPUD5Jy3K56NTi6FxAfKx/exec";
+const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "").trim();
 
 async function validateAdminPin(pin) {
   if (!pin || pin.length > 128) return false;
@@ -20,6 +20,7 @@ async function validateAdminPin(pin) {
 
 module.exports = async function handler(req, res) {
   setSecurityHeaders(res);
+  if (!APPS_SCRIPT_URL) return res.status(503).json({ ok:false, errore:"backend_non_configurato" });
 
   if (String(req.method || "GET").toUpperCase() !== "POST") {
     res.setHeader("Allow", "POST");
