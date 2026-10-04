@@ -163,6 +163,25 @@
         header>a:first-of-type img{max-width:min(170px,44vw)!important;height:auto!important;object-fit:contain!important}
         [style*="position: sticky"][style*="top: 96px"],
         [style*="position:sticky"][style*="top:96px"]{top:64px!important}
+        /* Course strip: one horizontal row, with no vertical scroll or bounce. */
+        nav[aria-label="Corsi"]{
+          display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+          align-items:center!important;justify-content:flex-start!important;
+          height:56px!important;min-height:56px!important;max-height:56px!important;
+          padding-top:0!important;padding-bottom:0!important;
+          overflow-x:auto!important;overflow-y:hidden!important;
+          touch-action:pan-x!important;overscroll-behavior:none!important;
+          -webkit-overflow-scrolling:touch;scrollbar-width:none;
+        }
+        nav[aria-label="Corsi"]>*{
+          flex:0 0 auto!important;max-height:56px!important;
+          white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important;
+        }
+        nav[aria-label="Corsi"] a{
+          height:56px!important;padding-top:0!important;padding-bottom:0!important;
+          align-items:center!important;box-sizing:border-box!important;
+        }
+        nav[aria-label="Corsi"]::-webkit-scrollbar{display:none;}
         nav[aria-label="Chi siamo"],nav[aria-label="Festival"]{
           scrollbar-width:none;-webkit-overflow-scrolling:touch
         }
