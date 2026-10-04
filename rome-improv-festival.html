@@ -824,8 +824,10 @@ class Component extends DCLogic {
     var maxPer = 6;
     var typeNames = ["Pass festival", "Solo workshop", "Spettacoli"];
     var type = st.type || 0;
-    var capMap = window.ARTYOU_RIF_MYSQL_CAP || window.ARTYOU_CAP || {};
-    var eventMap = window.ARTYOU_RIF_MYSQL_EVENT_INFO || window.ARTYOU_EVENT_INFO || {};
+    var mysqlCap = window.ARTYOU_RIF_MYSQL_CAP || {};
+    var mysqlEvents = window.ARTYOU_RIF_MYSQL_EVENT_INFO || {};
+    var capMap = Object.keys(mysqlCap).length ? mysqlCap : (window.ARTYOU_CAP || {});
+    var eventMap = Object.keys(mysqlEvents).length ? mysqlEvents : (window.ARTYOU_EVENT_INFO || {});
     var keys = Object.keys(eventMap || {});
 
     function isRif(k, info) {
@@ -1035,7 +1037,7 @@ class Component extends DCLogic {
 
   function signal(cap,ev,source){
     var changed=false;
-    if(ev&&ev.eventi&&typeof ev.eventi==="object"){
+    if(ev&&ev.eventi&&typeof ev.eventi==="object"&&Object.keys(ev.eventi).length){
       if(source==="mysql"){
         window.ARTYOU_RIF_MYSQL_EVENT_INFO=Object.assign({},ev.eventi);
       }else{
@@ -1043,7 +1045,7 @@ class Component extends DCLogic {
       }
       changed=true;
     }
-    if(cap&&cap.disponibilita&&typeof cap.disponibilita==="object"){
+    if(cap&&cap.disponibilita&&typeof cap.disponibilita==="object"&&Object.keys(cap.disponibilita).length){
       if(source==="mysql"){
         window.ARTYOU_RIF_MYSQL_CAP=Object.assign({},cap.disponibilita);
       }else{
@@ -1052,8 +1054,9 @@ class Component extends DCLogic {
       changed=true;
     }
     if(changed){
-      var finalCap=window.ARTYOU_RIF_MYSQL_CAP||window.ARTYOU_CAP||{};
-      var finalEvents=window.ARTYOU_RIF_MYSQL_EVENT_INFO||window.ARTYOU_EVENT_INFO||{};
+      var mCap=window.ARTYOU_RIF_MYSQL_CAP||{},mEv=window.ARTYOU_RIF_MYSQL_EVENT_INFO||{};
+      var finalCap=Object.keys(mCap).length?mCap:(window.ARTYOU_CAP||{});
+      var finalEvents=Object.keys(mEv).length?mEv:(window.ARTYOU_EVENT_INFO||{});
       window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{
         disponibilita:finalCap,eventi:finalEvents,source:source
       }}));
