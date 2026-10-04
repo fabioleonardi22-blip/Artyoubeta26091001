@@ -45,7 +45,7 @@ function build(){
  var select=w.querySelector('.artyou-lang-select');
  Object.keys(L).forEach(function(c){var option=document.createElement('option');option.value=c;option.textContent=L[c][0];option.selected=c===cur;select.appendChild(option)});
  select.onchange=function(){choose(select.value)};
- w.querySelector('.artyou-lang-current').textContent='Lingue · '+L[cur][1];
+ w.querySelector('.artyou-lang-current').textContent='Lang. · '+L[cur][1];
  var mb=h.querySelector('.artyou-menu-btn'), actions=mb&&mb.parentElement, nav=h.querySelector('nav');
  var desktopHome=null;
  if(actions&&actions.parentElement===h) desktopHome=actions;
@@ -78,7 +78,7 @@ function build(){
      w.querySelector('.artyou-lang-trigger').setAttribute('aria-expanded','true');
      w.classList.add('artyou-language-mobile');
      var label=w.querySelector('.artyou-lang-current');
-     if(label) label.textContent='Lingue · '+L[cur][1];
+     if(label) label.textContent='Lang. · '+L[cur][1];
    }else{
      if(desktopHome){
        if(mb&&mb.parentElement===desktopHome) desktopHome.insertBefore(w,mb);
@@ -86,7 +86,7 @@ function build(){
      }else if(w.parentElement!==h) h.appendChild(w);
      w.classList.remove('artyou-language-mobile');
      var label2=w.querySelector('.artyou-lang-current');
-     if(label2) label2.textContent='Lingue · '+L[cur][1];
+     if(label2) label2.textContent='Lang. · '+L[cur][1];
      w.querySelector('.artyou-lang-trigger').setAttribute('aria-expanded',w.getAttribute('data-open')==='1'?'true':'false');
    }
  }
