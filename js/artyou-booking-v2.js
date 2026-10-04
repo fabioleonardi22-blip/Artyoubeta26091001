@@ -22,6 +22,7 @@ var rs=document.getElementById("f-risorse"),sr=document.getElementById("f-scelta
 if(rs&&rs.value)d.Risorse=rs.value;
 if(sr&&sr.value)d.Scelte=sr.value;else if(sy&&sy.value)d.Scelte=sy.value;
 var ny=document.getElementById("f-note-yep");if(ny&&ny.value)d.Note=ny.value;
+var pv=document.getElementById("f-privacy");if(pv)d.Privacy=!!pv.checked;
 document.querySelectorAll("#f-camera,#f-cibo,#f-scuola").forEach(function(el){if(el&&el.value&&el.value.trim())d[el.id.replace(/^f-/,"")]=el.value.trim();});
 return d;
 }
