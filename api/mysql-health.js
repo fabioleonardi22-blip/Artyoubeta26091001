@@ -9,7 +9,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    await query("SELECT 1 AS ok");
+    await query("SELECT COUNT(*) AS c FROM events");
     return res.status(200).json({
       ok: true,
       mysql: true
