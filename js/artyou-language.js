@@ -12,9 +12,14 @@ function detect(){var a=navigator.languages&&navigator.languages.length?navigato
 function cookie(lang){
  var val=lang===SOURCE?'':'/'+SOURCE+'/'+lang, exp=lang===SOURCE?'; expires=Thu, 01 Jan 1970 00:00:00 GMT':'';
  document.cookie='googtrans='+val+'; path=/; SameSite=Lax'+exp;
+ // Google may also create a domain cookie: keep both copies consistent.
+ document.cookie='googtrans='+val+'; path=/; SameSite=Lax; domain='+location.hostname+exp;
 }
 function choose(lang){if(!L[lang])lang=SOURCE;save(lang);cookie(lang);location.reload()}
-var first=saved();if(!first){first=detect();save(first);if(first!==SOURCE){cookie(first);location.reload();return}}else if(!L[first]){save(SOURCE);first=SOURCE}
+var first=saved();if(!first){first=detect();save(first)}else if(!L[first]){save(SOURCE);first=SOURCE}
+// Restore the translation cookie on every page, even if the browser cleared it.
+cookie(first);
+var translationTimer=null;
 function css(){
  if(document.getElementById('artyou-language-style'))return;
  var s=document.createElement('style');s.id='artyou-language-style';
@@ -62,16 +67,49 @@ function build(){
  var t=w.querySelector('.artyou-lang-trigger');t.onclick=function(e){e.stopPropagation();var o=w.getAttribute('data-open')==='1';w.setAttribute('data-open',o?'0':'1');t.setAttribute('aria-expanded',o?'false':'true')};
  document.addEventListener('click',function(e){if(!w.contains(e.target)){w.setAttribute('data-open','0');t.setAttribute('aria-expanded','false')}});
 }
-window.artyouGoogleTranslateInit=function(){try{new google.translate.TranslateElement({pageLanguage:SOURCE,includedLanguages:'it,en,es,fr,de,pt,pl,ru,zh-CN',autoDisplay:false},'artyou-google-translate-element')}catch(e){}};
+function translationStatus(message,failed){
+ var s=document.getElementById('artyou-language-status');
+ if(!message){if(s)s.remove();return}
+ if(!s){s=document.createElement('div');s.id='artyou-language-status';s.className='notranslate';s.setAttribute('translate','no');s.setAttribute('role','status');s.setAttribute('aria-live','polite');s.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:100000;max-width:calc(100vw - 32px);box-sizing:border-box;padding:12px 16px;border:1px solid #3A444D;border-radius:12px;background:#13181D;color:#F6F3EC;font:14px/1.4 sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.3)';document.body.appendChild(s)}
+ s.textContent=message;
+ if(failed){var b=document.createElement('button');b.type='button';b.textContent='Riprova';b.style.cssText='margin-left:10px;padding:6px 10px;border:0;border-radius:6px;cursor:pointer';b.onclick=function(){location.reload()};s.appendChild(b)}
+}
+function applyTranslation(){
+ var lang=saved()&&L[saved()]?saved():SOURCE, attempts=0, dispatched=false;
+ if(lang===SOURCE)return;
+ if(translationTimer)clearInterval(translationTimer);
+ translationTimer=setInterval(function(){
+   attempts++;
+   var combo=document.querySelector('#artyou-google-translate-element .goog-te-combo');
+   // Apply the actual widget selection; the cookie alone is not a reliable trigger.
+   if(combo&&!dispatched){
+     var available=Array.prototype.some.call(combo.options,function(o){return o.value===lang});
+     if(available){dispatched=true;combo.value=lang;combo.dispatchEvent(new Event('change',{bubbles:true}))}
+   }
+   var root=document.documentElement;
+   if(root.classList.contains('translated-ltr')||root.classList.contains('translated-rtl')){
+     clearInterval(translationTimer);translationTimer=null;translationStatus('');hideGoogleChrome();
+   }else if(attempts>=100){
+     clearInterval(translationTimer);translationTimer=null;
+     translationStatus('Traduzione non disponibile. Controlla la connessione e riprova.',true);
+   }
+ },300);
+}
+window.artyouGoogleTranslateInit=function(){
+ try{new google.translate.TranslateElement({pageLanguage:SOURCE,includedLanguages:'it,en,es,fr,de,pt,pl,ru,zh-CN',autoDisplay:false},'artyou-google-translate-element')}
+ catch(e){translationStatus('Impossibile avviare la traduzione.',true)}
+};
 function load(){
  if(!document.getElementById('artyou-google-translate-element')){var d=document.createElement('div');d.id='artyou-google-translate-element';document.body.appendChild(d)}
- if(!document.getElementById('artyou-google-translate-script')){var s=document.createElement('script');s.id='artyou-google-translate-script';s.src='https://translate.google.com/translate_a/element.js?cb=artyouGoogleTranslateInit';s.async=true;document.head.appendChild(s)}
+ if(!document.getElementById('artyou-google-translate-script')){var s=document.createElement('script');s.id='artyou-google-translate-script';s.src='https://translate.google.com/translate_a/element.js?cb=artyouGoogleTranslateInit';s.async=true;s.onerror=function(){if(translationTimer)clearInterval(translationTimer);translationTimer=null;translationStatus('Impossibile caricare la traduzione. Controlla la connessione e riprova.',true)};document.head.appendChild(s)}
 }
 function hideGoogleChrome(){try{var q=document.querySelectorAll('.goog-te-banner-frame,.goog-te-banner-frame.skiptranslate,.VIpgJd-ZVi9od-ORHb-OEVmcd');for(var i=0;i<q.length;i++){q[i].style.setProperty('display','none','important')}document.documentElement.style.setProperty('margin-top','0px','important');if(document.body){document.body.style.setProperty('top','0px','important');document.body.style.setProperty('margin-top','0px','important')}}catch(e){}}
 function init(){
  build();
  var current=saved()&&L[saved()]?saved():SOURCE;
  if(current!==SOURCE){
+   translationStatus('Traduzione in corso…');
+   applyTranslation();
    load();
    hideGoogleChrome();
    setTimeout(hideGoogleChrome,250);
