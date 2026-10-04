@@ -27,7 +27,9 @@ module.exports = async function handler(req, res) {
     const rawUrl = String(req.url || "");
     const qIndex = rawUrl.indexOf("?");
     const params = new URLSearchParams(qIndex >= 0 ? rawUrl.slice(qIndex+1) : "");
-    const slug = String(params.get("evento") || "").trim();
+    const query = req.query || {};
+    const slug = String(query.evento || params.get("evento") || "").trim();
+    const wantsDisponibilita = String(query.disponibilita || params.get("disponibilita") || "") === "1";
 
     if (slug) {
       const rows = await query(
@@ -69,7 +71,7 @@ module.exports = async function handler(req, res) {
        ORDER BY e.sort_order,e.title`
     );
 
-    if (params.get("disponibilita") === "1") {
+    if (wantsDisponibilita) {
       const disponibilita = {};
       for (const r of rows) {
         disponibilita[r.slug] = Math.max(0, Number(r.capacity||0)-Number(r.prenotati||0));
