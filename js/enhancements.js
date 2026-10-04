@@ -16,7 +16,14 @@
       document.documentElement.classList.add('artyou-consent-saved'); hide();
     }
   },true);
-  new MutationObserver(function(){if(saved())hide()}).observe(document.documentElement,{childList:true,subtree:true});
+  if(saved()){
+    var obs=new MutationObserver(function(){
+      hide();
+      if(document.querySelector('[role="dialog"][aria-labelledby="cookie-title"]')) setTimeout(function(){try{obs.disconnect()}catch(e){}},50);
+    });
+    obs.observe(document.documentElement,{childList:true,subtree:true});
+    setTimeout(function(){try{obs.disconnect()}catch(e){}},4000);
+  }
 })();
 
 
