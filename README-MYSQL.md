@@ -42,6 +42,17 @@ Risposta attesa:
 {"ok":true,"mysql":true}
 ```
 
+## Stato beta · 4 ottobre 2026
+
+La beta usa un MySQL Railway separato dal database merchandising.
+
+- schema operativo migrato in modo compatibile con il vecchio schema di test;
+- 23 eventi pubblici importati dalla sorgente Apps Script;
+- Vercel configurato con `DATABASE_URL` come secret e `MYSQL_SSL=true`;
+- `/api/artyou` mantiene Apps Script come fonte primaria e replica in MySQL soltanto le prenotazioni concluse con successo;
+- un errore nel mirror MySQL non blocca la prenotazione principale;
+- passaggio a MySQL come fonte primaria rimandato finché il dual-write non è verificato.
+
 ## Compatibilità con il sito attuale
 
 `/api/mysql-events?eventi=1` restituisce:
