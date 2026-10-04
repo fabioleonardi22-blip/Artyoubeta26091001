@@ -1067,14 +1067,14 @@ class Component extends DCLogic {
 
   async function fetchPair(endpoint){
     var stamp=Date.now();
-    var er=await fetch(endpoint+"?ts="+stamp,{cache:"no-store"});
-    if(!er.ok)throw new Error("eventi_http_"+er.status);
-    var ev=await er.json();
-
-    var cr=await fetch(endpoint+"?disponibilita=1&ts="+stamp,{cache:"no-store"});
-    if(!cr.ok)throw new Error("cap_http_"+cr.status);
-    var cap=await cr.json();
-    return {ev:ev,cap:cap};
+    var responses=await Promise.all([
+      fetch(endpoint+"?ts="+stamp,{cache:"no-store"}),
+      fetch(endpoint+"?disponibilita=1&ts="+stamp,{cache:"no-store"})
+    ]);
+    if(!responses[0].ok)throw new Error("eventi_http_"+responses[0].status);
+    if(!responses[1].ok)throw new Error("cap_http_"+responses[1].status);
+    var payloads=await Promise.all([responses[0].json(),responses[1].json()]);
+    return {ev:payloads[0],cap:payloads[1]};
   }
 
   async function loadRif(){
@@ -1092,15 +1092,17 @@ class Component extends DCLogic {
         return;
       }catch(fallbackErr){
         if(attempts<maxAttempts){
-          timers.push(setTimeout(loadRif,attempts*1200));
+          timers.push(setTimeout(loadRif,attempts*800));
         }
       }
     }
   }
 
-  window.addEventListener("load",function(){
-    timers.push(setTimeout(loadRif,250));
-  });
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",loadRif,{once:true});
+  }else{
+    loadRif();
+  }
 })();
 </script>
 
