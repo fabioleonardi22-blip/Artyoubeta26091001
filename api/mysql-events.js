@@ -27,13 +27,14 @@ module.exports = async function handler(req, res) {
     const rawUrl = String(req.url || "");
     const qIndex = rawUrl.indexOf("?");
     const params = new URLSearchParams(qIndex >= 0 ? rawUrl.slice(qIndex+1) : "");
-    const query = req.query || {};
-    const slug = String(query.evento || params.get("evento") || "").trim();
-    const wantsDisponibilita = String(query.disponibilita || params.get("disponibilita") || "") === "1";
+    const qs = req.query || {};
+    const slug = String(qs.evento || params.get("evento") || "").trim();
+    const wantsDisponibilita = String(qs.disponibilita || params.get("disponibilita") || "") === "1";
 
     if (slug) {
       const rows = await query(
-        `SELECT e.slug,e.title,e.category,e.event_type,e.price,e.capacity,e.active,
+        `SELECT e.slug,e.title,e.category,e.event_type,e.description,e.price,e.capacity,e.active,
+                (SELECT ed.date_label FROM event_dates ed WHERE ed.event_id=e.id AND ed.active=1 ORDER BY ed.starts_at,ed.id LIMIT 1) AS date_label,
                 COALESCE(SUM(CASE WHEN ${activeBookingWhere()} THEN b.seats ELSE 0 END),0) AS prenotati
          FROM events e
          LEFT JOIN bookings b ON b.event_id=e.id
@@ -52,6 +53,8 @@ module.exports = async function handler(req, res) {
           titolo:r.title,
           categoria:r.category || "",
           tipo:r.event_type || "",
+          descrizione:r.description || "",
+          data:r.date_label || "",
           prezzo:r.price == null ? null : Number(r.price),
           capienza:cap,
           prenotati:booked,
@@ -62,7 +65,8 @@ module.exports = async function handler(req, res) {
     }
 
     const rows = await query(
-      `SELECT e.slug,e.title,e.category,e.event_type,e.price,e.capacity,e.active,
+      `SELECT e.slug,e.title,e.category,e.event_type,e.description,e.price,e.capacity,e.active,
+                (SELECT ed.date_label FROM event_dates ed WHERE ed.event_id=e.id AND ed.active=1 ORDER BY ed.starts_at,ed.id LIMIT 1) AS date_label,
               COALESCE(SUM(CASE WHEN ${activeBookingWhere()} THEN b.seats ELSE 0 END),0) AS prenotati
        FROM events e
        LEFT JOIN bookings b ON b.event_id=e.id
@@ -88,7 +92,9 @@ module.exports = async function handler(req, res) {
         titolo:r.title,
         categoria:r.category || "",
         tipo:r.event_type || "",
-        prezzo:r.price == null ? null : Number(r.price),
+          descrizione:r.description || "",
+          data:r.date_label || "",
+          prezzo:r.price == null ? null : Number(r.price),
         capienza:cap,
         prenotati:booked,
         liberi:Math.max(0,cap-booked),
