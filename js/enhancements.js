@@ -121,6 +121,12 @@
         header{max-width:100vw!important}
         header>a:first-of-type{min-width:0!important}
         header>a:first-of-type img{max-width:min(170px,44vw)!important;height:auto!important;object-fit:contain!important}
+        [style*="position: sticky"][style*="top: 96px"],
+        [style*="position:sticky"][style*="top:96px"]{top:64px!important}
+        nav[aria-label="Chi siamo"],nav[aria-label="Festival"]{
+          scrollbar-width:none;-webkit-overflow-scrolling:touch
+        }
+        nav[aria-label="Chi siamo"]::-webkit-scrollbar,nav[aria-label="Festival"]::-webkit-scrollbar{display:none}
         .artyou-menu-btn{touch-action:manipulation}
         button,
         input[type="button"],
@@ -139,6 +145,7 @@
         [style*="min-width: 600px"],[style*="min-width:600px"],
         [style*="min-width: 700px"],[style*="min-width:700px"],
         [style*="min-width: 800px"],[style*="min-width:800px"]{min-width:0!important}
+        [style*="width: 1440px"],[style*="width:1440px"],
         [style*="width: 1200px"],[style*="width:1200px"],
         [style*="width: 1100px"],[style*="width:1100px"],
         [style*="width: 1000px"],[style*="width:1000px"],
