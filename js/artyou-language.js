@@ -27,10 +27,10 @@ function normalizeHeaderUi(){
     var cta=h.querySelector('a[href*="lezione-gratuita"]');
     if(cta){
       var long=cta.querySelector('.am-long'), short=cta.querySelector('.am-short');
-      if(long) long.textContent='PROVA GRATUITA';
-      if(short) short.textContent='PROVA GRATUITA';
-      if(!long&&!short) cta.textContent='PROVA GRATUITA';
-      cta.setAttribute('aria-label','Prova Gratuita');
+      if(long && long.textContent!=='PROVA GRATUITA') long.textContent='PROVA GRATUITA';
+      if(short && short.textContent!=='PROVA GRATUITA') short.textContent='PROVA GRATUITA';
+      if(!long&&!short && cta.textContent!=='PROVA GRATUITA') cta.textContent='PROVA GRATUITA';
+      if(cta.getAttribute('aria-label')!=='Prova Gratuita') cta.setAttribute('aria-label','Prova Gratuita');
     }
   }catch(e){}
 }
