@@ -60,6 +60,19 @@ function build(){
    actions=mb&&mb.parentElement;
    desktopHome=actions||h.querySelector(':scope > div:last-child');
    var mobile=window.matchMedia&&window.matchMedia('(max-width:820px)').matches;
+   // Inline visibility wins over generic mobile navigation button rules.
+   var legacyTrigger=w.querySelector('.artyou-lang-trigger');
+   var legacyMenu=w.querySelector('.artyou-lang-menu');
+   legacyTrigger.hidden=!!mobile;
+   legacyMenu.hidden=!!mobile;
+   if(mobile){
+     legacyTrigger.style.setProperty('display','none','important');
+     legacyMenu.style.setProperty('display','none','important');
+     w.setAttribute('data-open','0');
+   }else{
+     legacyTrigger.style.removeProperty('display');
+     legacyMenu.style.removeProperty('display');
+   }
    if(mobile&&nav){
      if(w.parentElement!==nav) nav.appendChild(w);
      w.querySelector('.artyou-lang-trigger').setAttribute('aria-expanded','true');
