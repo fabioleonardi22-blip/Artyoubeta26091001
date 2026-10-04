@@ -636,6 +636,18 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
   #spettacoli .home-show-filters button:nth-of-type(2){grid-column:span 4!important;}
 }
 </style>
+<style id="home-course-whatsapp-button">
+a.home-course-whatsapp{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:fit-content!important;max-width:100%!important;min-height:44px!important;
+  padding:11px 18px!important;border:1px solid #1db954!important;border-radius:24px!important;
+  background:#25d366!important;color:#082b16!important;text-decoration:none!important;
+  font-weight:700!important;font-size:15px!important;line-height:1.3!important;
+  text-align:center!important;box-sizing:border-box!important;white-space:normal!important;
+}
+a.home-course-whatsapp:hover{background:#20c55e!important;}
+a.home-course-whatsapp:focus-visible{outline:3px solid #082b16;outline-offset:3px;}
+</style>
 </head>
 <body>
 <x-dc>
@@ -775,7 +787,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div>
 <p class="am-fs-body" style="margin: 0; font-size: 15px; line-height: 1.5; color: #555D64;">{{course.saggi}}</p>
 <div class="am-wrap" style="display: flex; gap: 12px; align-items: center; margin-top: 6px;">
-<a target="_blank" rel="noopener" href="https://wa.me/393271881956" class="am-fs-body" style="font-weight: 700; font-size: 15px;">Chiedi info su WhatsApp</a>
+<a target="_blank" rel="noopener" href="https://wa.me/393271881956" class="am-fs-body home-course-whatsapp" style="font-weight: 700; font-size: 15px;">Chiedi info su WhatsApp</a>
 </div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 24px;">
