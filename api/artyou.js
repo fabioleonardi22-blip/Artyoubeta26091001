@@ -7,6 +7,7 @@ const {
 } = require("../lib/security");
 
 const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "").trim();
+const { query } = require("../lib/db");
 
 function reject(res, status, errore) {
   setSecurityHeaders(res);
@@ -15,6 +16,71 @@ function reject(res, status, errore) {
 
 function validText(value, max) {
   return String(value == null ? "" : value).trim().length <= max;
+}
+
+async function mirrorBookingToMysql(requestData, upstreamData) {
+  if (!(process.env.DATABASE_URL || process.env.MYSQL_URL)) {
+    return { ok:false, skipped:true, reason:"mysql_not_configured" };
+  }
+
+  const code = String(
+    (upstreamData && (upstreamData.codice || upstreamData.id)) || ""
+  ).trim();
+  if (!code) return { ok:false, skipped:true, reason:"booking_code_missing" };
+
+  const slug = String(requestData.Evento || "").trim();
+  const rows = await query("SELECT id FROM events WHERE slug=? LIMIT 1", [slug]);
+  if (!rows.length) {
+    return { ok:false, skipped:true, reason:"event_not_found" };
+  }
+
+  const eventId = rows[0].id;
+  const seats = Math.max(1, Math.min(10, Number(requestData.Posti || 1)));
+  const status = String(upstreamData.stato || "RISERVATO").toUpperCase();
+  const safeStatus = ["HOLD","RISERVATO","PAGATO","SCADUTO","ANNULLATO"].includes(status)
+    ? status : "RISERVATO";
+
+  const holdMinutes = Math.max(0, Number(upstreamData.holdMinutes || 0));
+  const holdExpiresAt = safeStatus === "HOLD" && holdMinutes > 0
+    ? new Date(Date.now() + holdMinutes * 60000)
+    : null;
+
+  const metadata = JSON.stringify({
+    migration_source: "dual_write",
+    pagamento: String(requestData.Pagamento || ""),
+    importo: String(requestData.Importo || ""),
+    scelte: String(requestData.Scelte || ""),
+    risorse: String(requestData.Risorse || ""),
+    camera: String(requestData.camera || ""),
+    cibo: String(requestData.cibo || ""),
+    scuola: String(requestData.scuola || "")
+  });
+
+  await query(
+    `INSERT INTO bookings
+      (public_id,event_id,first_name,last_name,email,phone,seats,status,hold_expires_at,checkin_code,privacy_accepted,notes,metadata)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+     ON DUPLICATE KEY UPDATE
+       status=VALUES(status),
+       hold_expires_at=VALUES(hold_expires_at),
+       updated_at=CURRENT_TIMESTAMP`,
+    [
+      code,
+      eventId,
+      String(requestData.Nome || "").trim(),
+      String(requestData.Cognome || "").trim(),
+      String(requestData.Email || "").trim().toLowerCase(),
+      String(requestData.Telefono || "").trim(),
+      seats,
+      safeStatus,
+      holdExpiresAt,
+      code,
+      1,
+      String(requestData.Note || "").trim(),
+      metadata
+    ]
+  );
+  return { ok:true, code };
 }
 
 module.exports = async function handler(req, res) {
@@ -103,6 +169,19 @@ module.exports = async function handler(req, res) {
 
     const upstream = await fetch(url, options);
     const body = await upstream.text();
+
+    if (method === "POST" && upstream.ok) {
+      try {
+        const upstreamData = JSON.parse(body);
+        if (upstreamData && upstreamData.ok) {
+          try {
+            await mirrorBookingToMysql(JSON.parse(options.body || "{}"), upstreamData);
+          } catch (mirrorErr) {
+            console.error("ARTYOU_MYSQL_MIRROR_ERROR", String(mirrorErr && mirrorErr.message || mirrorErr));
+          }
+        }
+      } catch (_) {}
+    }
 
     res.status(upstream.status);
     res.setHeader("Content-Type", upstream.headers.get("content-type") || "application/json; charset=utf-8");
