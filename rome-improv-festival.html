@@ -824,8 +824,8 @@ class Component extends DCLogic {
     var maxPer = 6;
     var typeNames = ["Pass festival", "Solo workshop", "Spettacoli"];
     var type = st.type || 0;
-    var capMap = window.ARTYOU_CAP || {};
-    var eventMap = window.ARTYOU_EVENT_INFO || {};
+    var capMap = window.ARTYOU_RIF_MYSQL_CAP || window.ARTYOU_CAP || {};
+    var eventMap = window.ARTYOU_RIF_MYSQL_EVENT_INFO || window.ARTYOU_EVENT_INFO || {};
     var keys = Object.keys(eventMap || {});
 
     function isRif(k, info) {
@@ -1029,55 +1029,74 @@ class Component extends DCLogic {
 
 <script id="rif-capacity-retry">
 (function(){
-  var ENDPOINT=window.ARTYOU_BOOKING_ENDPOINT||"/api/artyou";
-  var attempts=0,maxAttempts=4,timers=[];
+  var MYSQL_ENDPOINT="/api/mysql-events";
+  var FALLBACK_ENDPOINT=window.ARTYOU_BOOKING_ENDPOINT||"/api/artyou";
+  var attempts=0,maxAttempts=3,timers=[];
 
-  function mergeAndSignal(cap,ev){
+  function signal(cap,ev,source){
     var changed=false;
     if(ev&&ev.eventi&&typeof ev.eventi==="object"){
-      window.ARTYOU_EVENT_INFO=Object.assign({},window.ARTYOU_EVENT_INFO||{},ev.eventi);
+      if(source==="mysql"){
+        window.ARTYOU_RIF_MYSQL_EVENT_INFO=Object.assign({},ev.eventi);
+      }else{
+        window.ARTYOU_EVENT_INFO=Object.assign({},window.ARTYOU_EVENT_INFO||{},ev.eventi);
+      }
       changed=true;
     }
     if(cap&&cap.disponibilita&&typeof cap.disponibilita==="object"){
-      window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},cap.disponibilita);
+      if(source==="mysql"){
+        window.ARTYOU_RIF_MYSQL_CAP=Object.assign({},cap.disponibilita);
+      }else{
+        window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},cap.disponibilita);
+      }
       changed=true;
     }
     if(changed){
+      var finalCap=window.ARTYOU_RIF_MYSQL_CAP||window.ARTYOU_CAP||{};
+      var finalEvents=window.ARTYOU_RIF_MYSQL_EVENT_INFO||window.ARTYOU_EVENT_INFO||{};
       window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{
-        disponibilita:window.ARTYOU_CAP||{},
-        eventi:window.ARTYOU_EVENT_INFO||{}
+        disponibilita:finalCap,eventi:finalEvents,source:source
       }}));
       window.dispatchEvent(new Event("hashchange"));
     }
     return changed;
   }
 
+  async function fetchPair(endpoint){
+    var stamp=Date.now();
+    var er=await fetch(endpoint+"?ts="+stamp,{cache:"no-store"});
+    if(!er.ok)throw new Error("eventi_http_"+er.status);
+    var ev=await er.json();
+
+    var cr=await fetch(endpoint+"?disponibilita=1&ts="+stamp,{cache:"no-store"});
+    if(!cr.ok)throw new Error("cap_http_"+cr.status);
+    var cap=await cr.json();
+    return {ev:ev,cap:cap};
+  }
+
   async function loadRif(){
     attempts++;
     try{
-      // Sequenziale: evita due letture Apps Script pesanti nello stesso istante.
-      var er=await fetch(ENDPOINT+"?eventi=1&ts="+Date.now(),{cache:"no-store"});
-      if(!er.ok)throw new Error("eventi_http_"+er.status);
-      var ev=await er.json();
-
-      var cr=await fetch(ENDPOINT+"?disponibilita=1&ts="+Date.now(),{cache:"no-store"});
-      if(!cr.ok)throw new Error("cap_http_"+cr.status);
-      var cap=await cr.json();
-
-      if(!mergeAndSignal(cap,ev))throw new Error("dati_vuoti");
-    }catch(e){
-      if(attempts<maxAttempts){
-        timers.push(setTimeout(loadRif,attempts*1200));
+      var mysql=await fetchPair(MYSQL_ENDPOINT);
+      if(!signal(mysql.cap,mysql.ev,"mysql"))throw new Error("mysql_dati_vuoti");
+      window.ARTYOU_RIF_DATA_SOURCE="mysql";
+      return;
+    }catch(mysqlErr){
+      try{
+        var fallback=await fetchPair(FALLBACK_ENDPOINT);
+        if(!signal(fallback.cap,fallback.ev,"apps-script"))throw new Error("fallback_dati_vuoti");
+        window.ARTYOU_RIF_DATA_SOURCE="apps-script-fallback";
+        return;
+      }catch(fallbackErr){
+        if(attempts<maxAttempts){
+          timers.push(setTimeout(loadRif,attempts*1200));
+        }
       }
     }
   }
 
   window.addEventListener("load",function(){
-    timers.push(setTimeout(function(){
-      var hasInfo=Object.keys(window.ARTYOU_EVENT_INFO||{}).length>0;
-      var hasCap=Object.keys(window.ARTYOU_CAP||{}).length>0;
-      if(!hasInfo||!hasCap)loadRif();
-    },900));
+    timers.push(setTimeout(loadRif,250));
   });
 })();
 </script>
