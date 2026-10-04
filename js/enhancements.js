@@ -117,6 +117,7 @@
         #artyou-menu-toggle:checked~nav{
           display:flex!important;
           flex-direction:column!important;
+          flex-wrap:nowrap!important;
           grid-template-columns:minmax(0,1fr)!important;
           grid-auto-flow:row!important;
           align-items:stretch!important;
