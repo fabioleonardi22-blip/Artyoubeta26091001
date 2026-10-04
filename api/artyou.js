@@ -75,7 +75,7 @@ async function mirrorBookingToMysql(requestData, upstreamData) {
       safeStatus,
       holdExpiresAt,
       code,
-      1,
+      requestData.Privacy === true ? 1 : 0,
       String(requestData.Note || "").trim(),
       metadata
     ]
