@@ -30,16 +30,18 @@ function css(){
  '.artyou-lang-option:hover,.artyou-lang-option:focus-visible{background:#232C33;outline:none}.artyou-lang-option[aria-current="true"]{background:#2A343C;color:#FFD45A}.artyou-lang-code{opacity:.64;font-size:11px;font-weight:800}'+
  '#artyou-google-translate-element{position:fixed!important;left:-9999px!important;top:-9999px!important;width:1px!important;height:1px!important;overflow:hidden!important}.goog-te-banner-frame,.goog-te-banner-frame.skiptranslate,.VIpgJd-ZVi9od-ORHb-OEVmcd{display:none!important}html,body{top:0!important;margin-top:0!important}'+
  '@media(max-width:820px){#artyou-language{display:block!important;width:100%!important;max-width:100%!important;position:relative!important;z-index:auto!important}#artyou-language .artyou-lang-trigger{width:100%!important;height:auto!important;min-height:48px!important;padding:14px 2px!important;border:0!important;border-radius:0!important;border-bottom:1px solid #2A333B!important;background:transparent!important;color:#F6F3EC!important;justify-content:flex-start!important;font-size:18px!important;font-weight:500!important;line-height:1.2!important}.artyou-lang-menu{position:static!important;right:auto!important;top:auto!important;width:100%!important;max-width:100%!important;max-height:260px!important;overflow:auto!important;margin:4px 0 6px!important;padding:6px!important;box-sizing:border-box!important;box-shadow:none!important;border-radius:12px!important;background:#192128!important}.artyou-lang-option{min-height:44px!important;font-size:15px!important;padding:10px 12px!important}}';
+ s.textContent+='.artyou-lang-heading{display:none}'+
+ '@media(max-width:820px){#artyou-language{padding:4px 0 12px!important;border-bottom:1px solid #34404A!important;margin-bottom:10px!important}#artyou-language .artyou-lang-heading{display:block!important;padding:8px 6px!important;color:#FFD45A!important;font-size:16px!important;font-weight:700!important;line-height:1.3!important}header #artyou-language button.artyou-lang-trigger[aria-expanded]{display:none!important}#artyou-language .artyou-lang-menu{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px!important;max-height:none!important;overflow:visible!important;margin:0!important;padding:6px!important}#artyou-language .artyou-lang-option{width:100%!important;min-width:0!important;min-height:44px!important;gap:4px!important;padding:10px 8px!important;font-size:14px!important;background:#222C34!important;box-sizing:border-box!important}#artyou-language .artyou-lang-option[aria-current="true"]{background:#344139!important;box-shadow:inset 0 0 0 1px #FFD45A!important}#artyou-language .artyou-lang-code{font-size:10px!important}}';
  document.head.appendChild(s);var cta=document.createElement('style');cta.id='artyou-global-trial-cta';cta.textContent='header a[href*="lezione-gratuita"]{min-height:34px!important;height:34px!important;padding:0 12px!important;border-radius:999px!important;background:#25D366!important;color:#0B2E1A!important;border:1px solid #79FF9C!important;box-shadow:0 0 0 1px rgba(121,255,156,.16),0 4px 12px rgba(37,211,102,.18)!important;font-size:12px!important;font-weight:700!important;line-height:1!important;white-space:nowrap!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;max-width:none!important;box-sizing:border-box!important;text-decoration:none!important}header a[href*="lezione-gratuita"] span{white-space:nowrap!important}@media(max-width:820px){header a[href*="lezione-gratuita"]{min-height:30px!important;height:30px!important;padding:0 9px!important;font-size:11px!important}header a[href*="lezione-gratuita"] .am-long{display:none!important}header a[href*="lezione-gratuita"] .am-short{display:inline!important}}@media(max-width:380px){header a[href*="lezione-gratuita"]{min-height:28px!important;height:28px!important;padding:0 8px!important;font-size:10px!important}}';document.head.appendChild(cta)
 }
 function build(){
  if(document.getElementById('artyou-language'))return;css();
  var h=document.querySelector('header');if(!h)return;
  var w=document.createElement('div');w.id='artyou-language';w.className='notranslate';w.setAttribute('translate','no');
- w.innerHTML='<button type="button" class="artyou-lang-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua"><span aria-hidden="true">🌐</span><span class="artyou-lang-current"></span><span aria-hidden="true">▾</span></button><div class="artyou-lang-menu" role="menu" aria-label="Lingua del sito"></div>';
+ w.innerHTML='<div class="artyou-lang-heading">🌐 Lingue / Languages</div><button type="button" class="artyou-lang-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua"><span aria-hidden="true">🌐</span><span class="artyou-lang-current"></span><span aria-hidden="true">▾</span></button><div class="artyou-lang-menu" role="menu" aria-label="Lingua del sito"></div>';
  var m=w.querySelector('.artyou-lang-menu'), cur=saved()&&L[saved()]?saved():SOURCE;
  Object.keys(L).forEach(function(c){var b=document.createElement('button');b.type='button';b.className='artyou-lang-option';b.dataset.lang=c;b.setAttribute('aria-current',c===cur?'true':'false');b.innerHTML='<span>'+L[c][0]+'</span><span class="artyou-lang-code">'+L[c][1]+'</span>';b.onclick=function(){choose(c)};m.appendChild(b)});
- w.querySelector('.artyou-lang-current').textContent=L[cur][1];
+ w.querySelector('.artyou-lang-current').textContent='Lingue · '+L[cur][1];
  var mb=h.querySelector('.artyou-menu-btn'), actions=mb&&mb.parentElement, nav=h.querySelector('nav');
  var desktopHome=null;
  if(actions&&actions.parentElement===h) desktopHome=actions;
@@ -48,7 +50,8 @@ function build(){
  function placeLanguage(){
    var mobile=window.matchMedia&&window.matchMedia('(max-width:820px)').matches;
    if(mobile&&nav){
-     if(w.parentElement!==nav) nav.appendChild(w);
+     if(w.parentElement!==nav) nav.insertBefore(w,nav.firstChild);
+     w.querySelector('.artyou-lang-trigger').setAttribute('aria-expanded','true');
      w.classList.add('artyou-language-mobile');
      var label=w.querySelector('.artyou-lang-current');
      if(label) label.textContent='Lingue · '+L[cur][1];
@@ -59,7 +62,8 @@ function build(){
      }else if(w.parentElement!==h) h.appendChild(w);
      w.classList.remove('artyou-language-mobile');
      var label2=w.querySelector('.artyou-lang-current');
-     if(label2) label2.textContent=L[cur][1];
+     if(label2) label2.textContent='Lingue · '+L[cur][1];
+     w.querySelector('.artyou-lang-trigger').setAttribute('aria-expanded',w.getAttribute('data-open')==='1'?'true':'false');
    }
  }
  placeLanguage();
