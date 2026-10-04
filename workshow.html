@@ -1178,9 +1178,31 @@ class Component extends DCLogic {
   }, true);
 
   if (ENDPOINT) {
-    fetch(ENDPOINT + "?disponibilita=1").then(function(r){ return r.json(); }).then(function(res){
-      if (res && res.disponibilita) { window.ARTYOU_CAP = Object.assign({}, window.ARTYOU_CAP, res.disponibilita); window.dispatchEvent(new Event("hashchange")); }
-    }).catch(function(){});
+    var mysql="/api/mysql-events";
+    fetch(mysql + "?disponibilita=1&_=" + Date.now(),{cache:"no-store"})
+      .then(function(r){if(!r.ok)throw new Error("mysql_http_"+r.status);return r.json();})
+      .then(function(res){
+        if(res&&res.disponibilita&&Object.keys(res.disponibilita).length){
+          window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},res.disponibilita);
+          window.ARTYOU_WORKSHOW_LIST_DATA_SOURCE="mysql";
+          window.dispatchEvent(new Event("hashchange"));
+          window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{disponibilita:window.ARTYOU_CAP,source:"mysql"}}));
+          return;
+        }
+        throw new Error("mysql_dati_vuoti");
+      })
+      .catch(function(){
+        return fetch(ENDPOINT + "?disponibilita=1&_=" + Date.now(),{cache:"no-store"})
+          .then(function(r){if(!r.ok)throw new Error("fallback_http_"+r.status);return r.json();})
+          .then(function(res){
+            if(res&&res.disponibilita){
+              window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},res.disponibilita);
+              window.ARTYOU_WORKSHOW_LIST_DATA_SOURCE="apps-script-fallback";
+              window.dispatchEvent(new Event("hashchange"));
+              window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{disponibilita:window.ARTYOU_CAP,source:"apps-script-fallback"}}));
+            }
+          }).catch(function(){});
+      });
   }
 })();
 </script>
