@@ -814,8 +814,10 @@ class Component extends DCLogic {
     var self = this, st = this.state || {};
     var typeNames = ["Alloggio + workshop", "Solo vacanza", "Solo workshop"];
     var type = st.type || 0, lv = st.lv || 0, room = st.room || 0, pay = st.pay == null ? 0 : st.pay;
-    var capMap = window.ARTYOU_CAP || {};
-    var eventMap = window.ARTYOU_EVENT_INFO || {};
+    var mysqlCap = window.ARTYOU_YEP_MYSQL_CAP || {};
+    var mysqlEvents = window.ARTYOU_YEP_MYSQL_EVENT_INFO || {};
+    var capMap = Object.keys(mysqlCap).length ? mysqlCap : (window.ARTYOU_CAP || {});
+    var eventMap = Object.keys(mysqlEvents).length ? mysqlEvents : (window.ARTYOU_EVENT_INFO || {});
     var keys = Object.keys(eventMap || {});
 
     function isYep(k, info) {
@@ -1003,6 +1005,61 @@ class Component extends DCLogic {
 <script>window.ARTYOU_BOOKING_MODULE="YEP";window.ARTYOU_BOOKING_DEBUG=true;</script>
 <script src="/js/artyou-booking-config.js"></script>
 <script src="/js/artyou-booking-v2.js?v=20260929-pay-choice-fix"></script>
+<script id="yep-mysql-first">
+(function(){
+  var MYSQL="/api/mysql-events";
+  var FALLBACK=window.ARTYOU_BOOKING_ENDPOINT||"/api/artyou";
+  function isYep(id,ev){
+    var t=(id+" "+String(ev&&((ev.titolo||"")+" "+(ev.tipo||"")+" "+(ev.descrizione||"")))).toLowerCase();
+    return /^yep[-_]/i.test(id)||/\byep\b/.test(t);
+  }
+  function pickRelevant(ev,cap){
+    var outEv={},outCap={},ids=Object.keys((ev&&ev.eventi)||{});
+    ids.forEach(function(id){
+      var x=ev.eventi[id]||{};
+      if(isYep(id,x)){
+        outEv[id]=x;
+        if(cap&&cap.disponibilita&&Object.prototype.hasOwnProperty.call(cap.disponibilita,id)) outCap[id]=cap.disponibilita[id];
+      }
+    });
+    return {eventi:outEv,disponibilita:outCap};
+  }
+  function publish(data,source){
+    if(!data||!Object.keys(data.eventi||{}).length)return false;
+    if(source==="mysql"){
+      window.ARTYOU_YEP_MYSQL_EVENT_INFO=data.eventi;
+      window.ARTYOU_YEP_MYSQL_CAP=data.disponibilita||{};
+      window.ARTYOU_YEP_DATA_SOURCE="mysql";
+    }
+    window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{
+      eventi:data.eventi||{},disponibilita:data.disponibilita||{},source:source
+    }}));
+    window.dispatchEvent(new Event("hashchange"));
+    return true;
+  }
+  async function pair(ep){
+    var ts=Date.now();
+    var rs=await Promise.all([
+      fetch(ep+"?ts="+ts,{cache:"no-store"}),
+      fetch(ep+"?disponibilita=1&ts="+ts,{cache:"no-store"})
+    ]);
+    if(!rs[0].ok||!rs[1].ok)throw new Error("http");
+    return {ev:await rs[0].json(),cap:await rs[1].json()};
+  }
+  async function load(){
+    try{
+      var m=await pair(MYSQL),rel=pickRelevant(m.ev,m.cap);
+      if(publish(rel,"mysql"))return;
+    }catch(e){}
+    try{
+      var a=await pair(FALLBACK),rel2=pickRelevant(a.ev,a.cap);
+      publish(rel2,"apps-script-fallback");
+    }catch(e){}
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",function(){setTimeout(load,0)},{once:true});
+  else setTimeout(load,0);
+})();
+</script>
 <script>
 (function(){
   var ids=[
@@ -1012,8 +1069,9 @@ class Component extends DCLogic {
     "yep-2027-livello-tutti"
   ];
   function syncYep(){
-    var info=window.ARTYOU_EVENT_INFO||{};
-    var cap=window.ARTYOU_CAP||{};
+    var mInfo=window.ARTYOU_YEP_MYSQL_EVENT_INFO||{},mCap=window.ARTYOU_YEP_MYSQL_CAP||{};
+    var info=Object.keys(mInfo).length?mInfo:(window.ARTYOU_EVENT_INFO||{});
+    var cap=Object.keys(mCap).length?mCap:(window.ARTYOU_CAP||{});
     var buttons=Array.from(document.querySelectorAll("button")).filter(function(b){
       return /Livello\s*[1-4]|YEP 2027\s*[·-]\s*Livello/i.test((b.textContent||""));
     });
