@@ -33,7 +33,7 @@ module.exports = async function handler(req, res) {
 
     if (slug) {
       const rows = await query(
-        `SELECT e.slug,e.title,e.category,e.event_type,e.description,e.price,e.capacity,e.active,
+        `SELECT e.slug,e.title,e.category,e.event_type,e.description,e.price,e.capacity,e.active,e.metadata,
                 (SELECT ed.date_label FROM event_dates ed WHERE ed.event_id=e.id AND ed.active=1 ORDER BY ed.starts_at,ed.id LIMIT 1) AS date_label,
                 COALESCE(SUM(CASE WHEN ${activeBookingWhere()} THEN b.seats ELSE 0 END),0) AS prenotati
          FROM events e
@@ -46,6 +46,8 @@ module.exports = async function handler(req, res) {
       const r = rows[0];
       const cap = Number(r.capacity || 0);
       const booked = Number(r.prenotati || 0);
+      let meta = {};
+      try { meta = typeof r.metadata === "string" ? JSON.parse(r.metadata || "{}") : (r.metadata || {}); } catch (_) {}
       return res.status(200).json({
         ok:true,
         evento:{
@@ -55,6 +57,11 @@ module.exports = async function handler(req, res) {
           tipo:r.event_type || "",
           descrizione:r.description || "",
           data:r.date_label || "",
+          ora:meta.ora || "",
+          ordine:meta.ordine == null ? null : Number(meta.ordine),
+          stato:meta.stato || "",
+          saggi:meta.saggi || null,
+          yepPricing:meta.yepPricing || null,
           prezzo:r.price == null ? null : Number(r.price),
           capienza:cap,
           prenotati:booked,
@@ -65,7 +72,7 @@ module.exports = async function handler(req, res) {
     }
 
     const rows = await query(
-      `SELECT e.slug,e.title,e.category,e.event_type,e.description,e.price,e.capacity,e.active,
+      `SELECT e.slug,e.title,e.category,e.event_type,e.description,e.price,e.capacity,e.active,e.metadata,
                 (SELECT ed.date_label FROM event_dates ed WHERE ed.event_id=e.id AND ed.active=1 ORDER BY ed.starts_at,ed.id LIMIT 1) AS date_label,
               COALESCE(SUM(CASE WHEN ${activeBookingWhere()} THEN b.seats ELSE 0 END),0) AS prenotati
        FROM events e
@@ -87,6 +94,8 @@ module.exports = async function handler(req, res) {
     for (const r of rows) {
       const cap = Number(r.capacity || 0);
       const booked = Number(r.prenotati || 0);
+      let meta = {};
+      try { meta = typeof r.metadata === "string" ? JSON.parse(r.metadata || "{}") : (r.metadata || {}); } catch (_) {}
       eventi[r.slug] = {
         slug:r.slug,
         titolo:r.title,
