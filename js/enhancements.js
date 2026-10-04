@@ -112,6 +112,39 @@
       main,section,article,header,footer,nav,form{min-width:0}
       table{max-width:100%}
       iframe[loading="lazy"]{content-visibility:auto}
+      /* One shared trial CTA, overriding per-page header rules. */
+      header a#artyou-trial-header-cta{
+        display:inline-flex!important;align-items:center!important;justify-content:center!important;
+        flex:0 0 auto!important;width:auto!important;max-width:none!important;min-width:0!important;
+        height:38px!important;min-height:38px!important;max-height:38px!important;
+        padding:0 15px!important;margin:0!important;box-sizing:border-box!important;
+        background:#25D366!important;color:#0B2E1A!important;border:1px solid #79FF9C!important;
+        border-radius:999px!important;box-shadow:0 0 0 1px rgba(121,255,156,.18),0 4px 12px rgba(37,211,102,.18)!important;
+        font-family:Inter,Arial,sans-serif!important;font-size:13px!important;font-weight:700!important;
+        line-height:1!important;letter-spacing:normal!important;text-decoration:none!important;
+        text-align:center!important;white-space:nowrap!important;overflow:visible!important;
+      }
+      header a#artyou-trial-header-cta :is(span,font){
+        font:inherit!important;color:inherit!important;white-space:nowrap!important;
+        overflow-wrap:normal!important;word-break:normal!important;
+      }
+      header a#artyou-trial-header-cta .am-long{display:inline!important;}
+      header a#artyou-trial-header-cta .am-short{display:none!important;}
+      @media(max-width:820px){
+        header a#artyou-trial-header-cta{
+          width:112px!important;height:34px!important;min-height:34px!important;max-height:34px!important;
+          padding:0 11px!important;font-size:12px!important;
+        }
+        header a#artyou-trial-header-cta .am-long{display:none!important;}
+        header a#artyou-trial-header-cta .am-short{display:inline!important;}
+      }
+      @media(max-width:380px){
+        header a#artyou-trial-header-cta{
+          width:104px!important;height:32px!important;min-height:32px!important;max-height:32px!important;
+          padding:0 9px!important;font-size:11px!important;
+        }
+      }
+
       .artyou-scroll-x{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
       @media(max-width:820px){
         #artyou-menu-toggle:checked~nav{
