@@ -645,6 +645,9 @@ a{color:#1A6E99}a:hover{color:#12506F}
   function endpoint(){
     return window.ARTYOU_BOOKING_ENDPOINT || "/api/artyou";
   }
+  function mysqlEndpoint(){
+    return "/api/mysql-events";
+  }
 
   function candidates(){
     var a=Array.isArray(window.ARTYOU_BOOKING_EVENT_IDS)
@@ -671,25 +674,32 @@ a{color:#1A6E99}a:hover{color:#12506F}
       .finally(function(){clearTimeout(t);});
   }
 
-  function publishExact(id,res){
+  function publishExact(id,res,source){
     stopped=true;
     window.ARTYOU_BOOKING_EVENT_ID=id;
     window.ARTYOU_BOOKING_RESOLVED_EVENT_ID=id;
     var hidden=document.getElementById("f-evento-id");
     if(hidden)hidden.value=id;
 
-    window.ARTYOU_CAP=window.ARTYOU_CAP||{};
-    window.ARTYOU_CAP[id]=Math.max(0,Number(res.liberi)||0);
+    var ev=res&&res.evento?res.evento:(res&&res.info?res.info:{});
+    var liberi=res&&res.evento&&typeof res.evento.liberi==="number"
+      ? res.evento.liberi
+      : (res&&typeof res.liberi==="number"?res.liberi:null);
 
-    if(res.info){
+    window.ARTYOU_CAP=window.ARTYOU_CAP||{};
+    if(liberi!==null)window.ARTYOU_CAP[id]=Math.max(0,Number(liberi)||0);
+
+    if(ev&&typeof ev==="object"){
       window.ARTYOU_EVENT_INFO=window.ARTYOU_EVENT_INFO||{};
-      window.ARTYOU_EVENT_INFO[id]=res.info;
+      window.ARTYOU_EVENT_INFO[id]=ev;
     }
 
+    window.ARTYOU_WORKSHOW_DATA_SOURCE=source||"unknown";
     window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{
       disponibilita:window.ARTYOU_CAP,
       eventi:window.ARTYOU_EVENT_INFO||{},
-      evento:id
+      evento:id,
+      source:source||"unknown"
     }}));
   }
 
@@ -698,15 +708,25 @@ a{color:#1A6E99}a:hover{color:#12506F}
     if(i>=ids.length)return Promise.resolve(false);
 
     var id=ids[i];
-    return fetchJson(endpoint()+"?evento="+encodeURIComponent(id)+"&_="+Date.now(),7000)
+    return fetchJson(mysqlEndpoint()+"?evento="+encodeURIComponent(id)+"&_="+Date.now(),4500)
       .then(function(res){
-        if(res && res.ok!==false && typeof res.liberi==="number"){
-          publishExact(id,res);
+        if(res && res.ok!==false && res.evento && typeof res.evento.liberi==="number"){
+          publishExact(id,res,"mysql");
           return true;
         }
-        return tryCandidate(ids,i+1);
+        throw new Error("mysql_evento_non_valido");
       })
-      .catch(function(){return tryCandidate(ids,i+1);});
+      .catch(function(){
+        return fetchJson(endpoint()+"?evento="+encodeURIComponent(id)+"&_="+Date.now(),7000)
+          .then(function(res){
+            if(res && res.ok!==false && typeof res.liberi==="number"){
+              publishExact(id,res,"apps-script-fallback");
+              return true;
+            }
+            return tryCandidate(ids,i+1);
+          })
+          .catch(function(){return tryCandidate(ids,i+1);});
+      });
   }
 
   function discover(){
@@ -715,10 +735,25 @@ a{color:#1A6E99}a:hover{color:#12506F}
     if(cnt){cnt.textContent="Ricerca nel gestionale…";cnt.style.color="#7A4A00";}
     if(meta){meta.textContent="Sto cercando il nome reale del WorkshoW nel gestionale";}
 
-    return Promise.all([
-      fetchJson(endpoint()+"?eventi=1&_="+Date.now(),10000).catch(function(){return null;}),
-      fetchJson(endpoint()+"?disponibilita=1&_="+Date.now(),10000).catch(function(){return null;})
-    ]).then(function(all){
+    function pair(ep,ms){
+      var stamp=Date.now();
+      return Promise.all([
+        fetchJson(ep+"?eventi=1&_="+stamp,ms).catch(function(){return null;}),
+        fetchJson(ep+"?disponibilita=1&_="+stamp,ms).catch(function(){return null;})
+      ]);
+    }
+
+    return pair(mysqlEndpoint(),6000).then(function(all){
+      var ev=all[0],cap=all[1];
+      if(ev&&ev.eventi&&Object.keys(ev.eventi).length&&cap&&cap.disponibilita&&Object.keys(cap.disponibilita).length){
+        window.ARTYOU_WORKSHOW_DATA_SOURCE="mysql";
+        return all;
+      }
+      throw new Error("mysql_dati_vuoti");
+    }).catch(function(){
+      window.ARTYOU_WORKSHOW_DATA_SOURCE="apps-script-fallback";
+      return pair(endpoint(),10000);
+    }).then(function(all){
       var ev=all[0],cap=all[1],changed=false;
 
       if(ev&&ev.eventi&&typeof ev.eventi==="object"){
