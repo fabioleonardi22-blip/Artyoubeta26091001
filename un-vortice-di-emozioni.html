@@ -629,7 +629,9 @@ class Component extends DCLogic {
     window.VORTICE_SAGGIO_STAT=h?h.value:"";
   }
   function sync(){
-    var info=window.ARTYOU_EVENT_INFO||{},cap=window.ARTYOU_CAP||{};
+    var mInfo=window.ARTYOU_VORTICE_MYSQL_EVENT_INFO||{},mCap=window.ARTYOU_VORTICE_MYSQL_CAP||{};
+    var info=Object.keys(mInfo).length?mInfo:(window.ARTYOU_EVENT_INFO||{});
+    var cap=Object.keys(mCap).length?mCap:(window.ARTYOU_CAP||{});
     var ids=Object.keys(info).filter(function(k){return isSaggio(info[k]);}).sort(function(a,b){
       return dateKey(info[a]).localeCompare(dateKey(info[b]));
     });
@@ -741,15 +743,54 @@ class Component extends DCLogic {
   }
 
   function loadAll(){
-    var ep=window.ARTYOU_BOOKING_ENDPOINT||"/api/artyou";
-    Promise.all([
-      fetch(ep+"?eventi=1&ts="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}),
-      fetch(ep+"?disponibilita=1&ts="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;})
-    ]).then(function(all){
-      var ev=all[0],cp=all[1],changed=false;
-      if(ev&&ev.eventi){window.ARTYOU_EVENT_INFO=Object.assign({},window.ARTYOU_EVENT_INFO||{},ev.eventi);changed=true;}
-      if(cp&&cp.disponibilita){window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},cp.disponibilita);changed=true;}
-      if(changed)window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{eventi:window.ARTYOU_EVENT_INFO||{},disponibilita:window.ARTYOU_CAP||{}}}));
+    var mysql="/api/mysql-events";
+    var fallback=window.ARTYOU_BOOKING_ENDPOINT||"/api/artyou";
+
+    function pair(ep){
+      var ts=Date.now();
+      return Promise.all([
+        fetch(ep+"?ts="+ts,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("eventi");return r.json();}),
+        fetch(ep+"?disponibilita=1&ts="+ts,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("cap");return r.json();})
+      ]);
+    }
+
+    function relevant(ev,cp){
+      var outEv={},outCap={};
+      Object.keys((ev&&ev.eventi)||{}).forEach(function(id){
+        var x=ev.eventi[id]||{};
+        if(isSaggio(x)){
+          outEv[id]=x;
+          if(cp&&cp.disponibilita&&Object.prototype.hasOwnProperty.call(cp.disponibilita,id))outCap[id]=cp.disponibilita[id];
+        }
+      });
+      return {eventi:outEv,disponibilita:outCap};
+    }
+
+    function publish(data,source){
+      if(!data||!Object.keys(data.eventi||{}).length)return false;
+      if(source==="mysql"){
+        window.ARTYOU_VORTICE_MYSQL_EVENT_INFO=data.eventi;
+        window.ARTYOU_VORTICE_MYSQL_CAP=data.disponibilita||{};
+        window.ARTYOU_VORTICE_DATA_SOURCE="mysql";
+      }else{
+        window.ARTYOU_EVENT_INFO=Object.assign({},window.ARTYOU_EVENT_INFO||{},data.eventi||{});
+        window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},data.disponibilita||{});
+        window.ARTYOU_VORTICE_DATA_SOURCE="apps-script-fallback";
+      }
+      window.dispatchEvent(new CustomEvent("artyou:capacity-updated",{detail:{
+        eventi:data.eventi||{},disponibilita:data.disponibilita||{},source:source
+      }}));
+      return true;
+    }
+
+    pair(mysql).then(function(all){
+      var data=relevant(all[0],all[1]);
+      if(publish(data,"mysql"))return;
+      throw new Error("mysql_vortice_incompleto");
+    }).catch(function(){
+      return pair(fallback).then(function(all){
+        publish(relevant(all[0],all[1]),"apps-script-fallback");
+      }).catch(function(){});
     });
   }
   window.addEventListener("artyou:capacity-updated",sync);
