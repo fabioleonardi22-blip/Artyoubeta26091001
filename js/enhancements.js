@@ -98,7 +98,7 @@
   function installStyles(){
     if(document.getElementById('artyou-global-ux-v1')) return;
     var s=document.createElement('style');
-    s.id='artyou-global-ux-v1';
+    s.id='artyou-global-ux-v1'; /* artyou-menu-teachers-fix */
     s.textContent=`
       html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
       body{overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
@@ -114,6 +114,29 @@
       iframe[loading="lazy"]{content-visibility:auto}
       .artyou-scroll-x{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
       @media(max-width:820px){
+        #artyou-menu-toggle:checked~nav{
+          display:flex!important;
+          flex-direction:column!important;
+          grid-template-columns:none!important;
+          align-items:stretch!important;
+        }
+        #artyou-menu-toggle:checked~nav a,
+        #artyou-menu-toggle:checked~nav a.artyou-menu-extra{
+          width:100%!important;
+          display:block!important;
+          padding:14px 0!important;
+          padding-left:0!important;
+          font-size:18px!important;
+          line-height:1.25!important;
+          font-weight:500!important;
+          color:#F6F3EC!important;
+          border-bottom:1px solid #2A333B!important;
+        }
+        #artyou-menu-toggle:checked~nav a[href*="/insegnanti/"]{
+          font-size:18px!important;
+          font-weight:500!important;
+          color:#F6F3EC!important;
+        }
         html,body{width:100%;max-width:100%;overflow-x:hidden!important}
         html.artyou-menu-open body{overflow:hidden!important}
         html.artyou-form-focus .artyou-menu-btn{opacity:0!important;pointer-events:none!important;transform:translateY(12px)!important}
@@ -180,6 +203,19 @@
     if(!toggle||!btn) return;
     var nav=document.querySelector('header nav');
     if(nav && !nav.id) nav.id='artyou-mobile-nav';
+    if(nav){
+      var links=Array.from(nav.querySelectorAll('a'));
+      var chi=links.find(function(a){return /chi\s*siamo/i.test((a.textContent||'').trim())});
+      var doc=links.find(function(a){return /docenti/i.test((a.textContent||'').trim())});
+      if(chi&&doc&&doc!==chi.nextElementSibling) chi.insertAdjacentElement('afterend',doc);
+      if(doc){
+        doc.classList.remove('artyou-menu-extra');
+        doc.style.display='';
+        doc.style.color='#E6EBEE';
+        doc.style.fontSize='16px';
+        doc.style.fontWeight='500';
+      }
+    }
     btn.setAttribute('role','button');
     btn.setAttribute('tabindex','0');
     btn.setAttribute('aria-controls',btn.getAttribute('aria-controls')||(nav&&nav.id)||'artyou-mobile-nav');
