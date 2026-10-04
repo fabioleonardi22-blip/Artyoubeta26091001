@@ -32,6 +32,7 @@ function css(){
  '@media(max-width:820px){#artyou-language{display:block!important;width:100%!important;max-width:100%!important;position:relative!important;z-index:auto!important}#artyou-language .artyou-lang-trigger{width:100%!important;height:auto!important;min-height:48px!important;padding:14px 2px!important;border:0!important;border-radius:0!important;border-bottom:1px solid #2A333B!important;background:transparent!important;color:#F6F3EC!important;justify-content:flex-start!important;font-size:18px!important;font-weight:500!important;line-height:1.2!important}.artyou-lang-menu{position:static!important;right:auto!important;top:auto!important;width:100%!important;max-width:100%!important;max-height:260px!important;overflow:auto!important;margin:4px 0 6px!important;padding:6px!important;box-sizing:border-box!important;box-shadow:none!important;border-radius:12px!important;background:#192128!important}.artyou-lang-option{min-height:44px!important;font-size:15px!important;padding:10px 12px!important}}';
  s.textContent+='.artyou-lang-row{display:none}'+
  '@media(max-width:820px){#artyou-language{padding:4px 0 12px!important;border-bottom:1px solid #34404A!important;margin-bottom:10px!important}#artyou-language .artyou-lang-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;width:100%!important;min-width:0!important}#artyou-language .artyou-lang-heading{margin:0!important;padding:8px 0!important;color:#F6F3EC!important;font-size:18px!important;font-weight:500!important;line-height:1.3!important;white-space:nowrap!important}#artyou-language .artyou-lang-select{display:block!important;flex:1 1 auto!important;min-width:0!important;max-width:180px!important;min-height:44px!important;padding:8px 10px!important;border:1px solid #3A444D!important;border-radius:9px!important;background:#192128!important;color:#F6F3EC!important;font:16px/1.2 inherit!important;box-sizing:border-box!important;color-scheme:dark}header #artyou-language button.artyou-lang-trigger[aria-expanded],header #artyou-language .artyou-lang-menu{display:none!important}}';
+ s.textContent+='@media(max-width:820px){header nav #artyou-language{position:sticky!important;bottom:-16px!important;flex:0 0 auto!important;background:#13181D!important;padding:10px 0!important;margin:0!important;border-top:1px solid #34404A!important;z-index:2!important}#artyou-menu-toggle:checked~nav #artyou-language .artyou-lang-trigger{display:none!important}}';
  document.head.appendChild(s);var cta=document.createElement('style');cta.id='artyou-global-trial-cta';cta.textContent='header a[href*="lezione-gratuita"]{min-height:34px!important;height:34px!important;padding:0 12px!important;border-radius:999px!important;background:#25D366!important;color:#0B2E1A!important;border:1px solid #79FF9C!important;box-shadow:0 0 0 1px rgba(121,255,156,.16),0 4px 12px rgba(37,211,102,.18)!important;font-size:12px!important;font-weight:700!important;line-height:1!important;white-space:nowrap!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;max-width:none!important;box-sizing:border-box!important;text-decoration:none!important}header a[href*="lezione-gratuita"] span{white-space:nowrap!important}@media(max-width:820px){header a[href*="lezione-gratuita"]{min-height:30px!important;height:30px!important;padding:0 9px!important;font-size:11px!important}header a[href*="lezione-gratuita"] .am-long{display:none!important}header a[href*="lezione-gratuita"] .am-short{display:inline!important}}@media(max-width:380px){header a[href*="lezione-gratuita"]{min-height:28px!important;height:28px!important;padding:0 8px!important;font-size:10px!important}}';document.head.appendChild(cta)
 }
 function build(){
@@ -51,9 +52,16 @@ function build(){
  else desktopHome=h.querySelector(':scope > div:last-child');
 
  function placeLanguage(){
+   // The page renderer may replace the header after DOMContentLoaded.
+   h=document.querySelector('header');
+   if(!h)return;
+   nav=h.querySelector('nav');
+   mb=h.querySelector('.artyou-menu-btn');
+   actions=mb&&mb.parentElement;
+   desktopHome=actions||h.querySelector(':scope > div:last-child');
    var mobile=window.matchMedia&&window.matchMedia('(max-width:820px)').matches;
    if(mobile&&nav){
-     if(w.parentElement!==nav) nav.insertBefore(w,nav.firstChild);
+     if(w.parentElement!==nav) nav.appendChild(w);
      w.querySelector('.artyou-lang-trigger').setAttribute('aria-expanded','true');
      w.classList.add('artyou-language-mobile');
      var label=w.querySelector('.artyou-lang-current');
@@ -71,6 +79,12 @@ function build(){
  }
  placeLanguage();
  window.addEventListener('resize',placeLanguage,{passive:true});
+ // Keep the existing selector and its handlers when a rendered header is replaced.
+ var headerObserver=new MutationObserver(function(){
+   var liveHeader=document.querySelector('header');
+   if(liveHeader&&(!w.isConnected||!liveHeader.contains(w)))placeLanguage();
+ });
+ headerObserver.observe(document.body,{childList:true,subtree:true});
  var t=w.querySelector('.artyou-lang-trigger');t.onclick=function(e){e.stopPropagation();var o=w.getAttribute('data-open')==='1';w.setAttribute('data-open',o?'0':'1');t.setAttribute('aria-expanded',o?'false':'true')};
  document.addEventListener('click',function(e){if(!w.contains(e.target)){w.setAttribute('data-open','0');t.setAttribute('aria-expanded','false')}});
 }
