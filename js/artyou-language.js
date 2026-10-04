@@ -20,6 +20,20 @@ var first=saved();if(!first){first=detect();save(first)}else if(!L[first]){save(
 // Restore the translation cookie on every page, even if the browser cleared it.
 cookie(first);
 var translationTimer=null;
+function normalizeHeaderUi(){
+  try{
+    var h=document.querySelector('header');
+    if(!h)return;
+    var cta=h.querySelector('a[href*="lezione-gratuita"]');
+    if(cta){
+      var long=cta.querySelector('.am-long'), short=cta.querySelector('.am-short');
+      if(long) long.textContent='PROVA GRATUITA';
+      if(short) short.textContent='PROVA GRATUITA';
+      if(!long&&!short) cta.textContent='PROVA GRATUITA';
+      cta.setAttribute('aria-label','Prova Gratuita');
+    }
+  }catch(e){}
+}
 function css(){
  if(document.getElementById('artyou-language-style'))return;
  var s=document.createElement('style');s.id='artyou-language-style';
@@ -33,10 +47,10 @@ function css(){
  s.textContent+='.artyou-lang-row{display:none}'+
  '@media(max-width:820px){#artyou-language{padding:4px 0 12px!important;border-bottom:1px solid #34404A!important;margin-bottom:10px!important}#artyou-language .artyou-lang-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;width:100%!important;min-width:0!important}#artyou-language .artyou-lang-heading{margin:0!important;padding:8px 0!important;color:#F6F3EC!important;font-size:18px!important;font-weight:500!important;line-height:1.3!important;white-space:nowrap!important}#artyou-language .artyou-lang-select{display:block!important;flex:1 1 auto!important;min-width:0!important;max-width:180px!important;min-height:44px!important;padding:8px 10px!important;border:1px solid #3A444D!important;border-radius:9px!important;background:#192128!important;color:#F6F3EC!important;font:16px/1.2 inherit!important;box-sizing:border-box!important;color-scheme:dark}header #artyou-language button.artyou-lang-trigger[aria-expanded],header #artyou-language .artyou-lang-menu{display:none!important}}';
  s.textContent+='@media(max-width:820px){header nav #artyou-language{position:sticky!important;bottom:-16px!important;flex:0 0 auto!important;background:#13181D!important;padding:10px 0!important;margin:0!important;border-top:1px solid #34404A!important;z-index:2!important}#artyou-menu-toggle:checked~nav #artyou-language .artyou-lang-trigger{display:none!important}}';
- document.head.appendChild(s);var cta=document.createElement('style');cta.id='artyou-global-trial-cta';cta.textContent='header a[href*="lezione-gratuita"]{min-height:34px!important;height:34px!important;padding:0 12px!important;border-radius:999px!important;background:#25D366!important;color:#0B2E1A!important;border:1px solid #79FF9C!important;box-shadow:0 0 0 1px rgba(121,255,156,.16),0 4px 12px rgba(37,211,102,.18)!important;font-size:12px!important;font-weight:700!important;line-height:1!important;white-space:nowrap!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;max-width:none!important;box-sizing:border-box!important;text-decoration:none!important}header a[href*="lezione-gratuita"] span{white-space:nowrap!important}@media(max-width:820px){header a[href*="lezione-gratuita"]{min-height:30px!important;height:30px!important;padding:0 9px!important;font-size:11px!important}header a[href*="lezione-gratuita"] .am-long{display:none!important}header a[href*="lezione-gratuita"] .am-short{display:inline!important}}@media(max-width:380px){header a[href*="lezione-gratuita"]{min-height:28px!important;height:28px!important;padding:0 8px!important;font-size:10px!important}}';document.head.appendChild(cta)
+ document.head.appendChild(s);var cta=document.createElement('style');cta.id='artyou-global-trial-cta';cta.textContent='header a[href*="lezione-gratuita"]{min-height:34px!important;height:34px!important;padding:0 11px!important;border-radius:999px!important;background:#25D366!important;color:#0B2E1A!important;border:1px solid #79FF9C!important;box-shadow:0 0 0 1px rgba(121,255,156,.16),0 4px 12px rgba(37,211,102,.18)!important;font-size:12px!important;font-weight:800!important;line-height:1!important;white-space:nowrap!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;max-width:none!important;box-sizing:border-box!important;text-decoration:none!important;text-transform:uppercase!important}header a[href*="lezione-gratuita"] span{white-space:nowrap!important}@media(min-width:821px){header.am-wrap{gap:18px!important;padding-left:clamp(28px,5vw,80px)!important;padding-right:clamp(28px,5vw,80px)!important}header nav.am-wrap{gap:clamp(12px,1.4vw,22px)!important;min-width:0!important;flex:1 1 auto!important;justify-content:center!important}header nav.am-wrap>a{font-size:clamp(12px,1.05vw,15px)!important;white-space:nowrap!important}header>div:last-child{gap:8px!important;flex:0 0 auto!important}}@media(min-width:821px) and (max-width:1120px){header.am-wrap{gap:12px!important;padding-left:22px!important;padding-right:22px!important}header nav.am-wrap{gap:10px!important}header nav.am-wrap>a{font-size:12px!important}header a[href*="lezione-gratuita"]{height:30px!important;min-height:30px!important;padding:0 9px!important;font-size:11px!important}}@media(max-width:820px){header a[href*="lezione-gratuita"]{min-height:30px!important;height:30px!important;padding:0 9px!important;font-size:11px!important;text-transform:uppercase!important}header a[href*="lezione-gratuita"] .am-long{display:none!important}header a[href*="lezione-gratuita"] .am-short{display:inline!important}}@media(max-width:380px){header a[href*="lezione-gratuita"]{min-height:28px!important;height:28px!important;padding:0 8px!important;font-size:10px!important}}';document.head.appendChild(cta)
 }
 function build(){
- if(document.getElementById('artyou-language'))return;css();
+ if(document.getElementById('artyou-language')){normalizeHeaderUi();return;}css();normalizeHeaderUi();
  var h=document.querySelector('header');if(!h)return;
  var w=document.createElement('div');w.id='artyou-language';w.className='notranslate';w.setAttribute('translate','no');
  w.innerHTML='<div class="artyou-lang-row"><label class="artyou-lang-heading" for="artyou-lang-select">🌐 Lingue</label><select id="artyou-lang-select" class="artyou-lang-select" aria-label="Scegli la lingua"></select></div><button type="button" class="artyou-lang-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua"><span aria-hidden="true">🌐</span><span class="artyou-lang-current"></span><span aria-hidden="true">▾</span></button><div class="artyou-lang-menu" role="menu" aria-label="Lingua del sito"></div>';
@@ -55,6 +69,7 @@ function build(){
    // The page renderer may replace the header after DOMContentLoaded.
    h=document.querySelector('header');
    if(!h)return;
+   normalizeHeaderUi();
    nav=h.querySelector('nav');
    mb=h.querySelector('.artyou-menu-btn');
    actions=mb&&mb.parentElement;
@@ -95,6 +110,7 @@ function build(){
  // Keep the existing selector and its handlers when a rendered header is replaced.
  var headerObserver=new MutationObserver(function(){
    var liveHeader=document.querySelector('header');
+   normalizeHeaderUi();
    if(liveHeader&&(!w.isConnected||!liveHeader.contains(w)))placeLanguage();
  });
  headerObserver.observe(document.body,{childList:true,subtree:true});
@@ -139,6 +155,7 @@ function load(){
 }
 function hideGoogleChrome(){try{var q=document.querySelectorAll('.goog-te-banner-frame,.goog-te-banner-frame.skiptranslate,.VIpgJd-ZVi9od-ORHb-OEVmcd');for(var i=0;i<q.length;i++){q[i].style.setProperty('display','none','important')}document.documentElement.style.setProperty('margin-top','0px','important');if(document.body){document.body.style.setProperty('top','0px','important');document.body.style.setProperty('margin-top','0px','important')}}catch(e){}}
 function init(){
+ normalizeHeaderUi();
  build();
  var current=saved()&&L[saved()]?saved():SOURCE;
  if(current!==SOURCE){
