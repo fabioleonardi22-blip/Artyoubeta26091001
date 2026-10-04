@@ -108,6 +108,8 @@
       .artyou-scroll-x{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
       @media(max-width:820px){
         html,body{width:100%;max-width:100%;overflow-x:hidden!important}
+        html.artyou-menu-open body{overflow:hidden!important}
+        html.artyou-form-focus .artyou-menu-btn{opacity:0!important;pointer-events:none!important;transform:translateY(12px)!important}
         body{padding-bottom:env(safe-area-inset-bottom,0px)}
         header{max-width:100vw!important}
         header>a:first-of-type{min-width:0!important}
@@ -162,9 +164,11 @@
     var toggle=document.getElementById('artyou-menu-toggle');
     var btn=document.querySelector('.artyou-menu-btn');
     if(!toggle||!btn) return;
+    var nav=document.querySelector('header nav');
+    if(nav && !nav.id) nav.id='artyou-mobile-nav';
     btn.setAttribute('role','button');
     btn.setAttribute('tabindex','0');
-    btn.setAttribute('aria-controls',btn.getAttribute('aria-controls')||'artyou-mobile-nav');
+    btn.setAttribute('aria-controls',btn.getAttribute('aria-controls')||(nav&&nav.id)||'artyou-mobile-nav');
     function sync(){
       btn.setAttribute('aria-expanded',toggle.checked?'true':'false');
       document.documentElement.classList.toggle('artyou-menu-open',!!toggle.checked);
@@ -185,6 +189,52 @@
     sync();
   }
 
+  function improveForms(){
+    var map=[
+      ['f-nome','given-name',null],
+      ['p-nome','given-name',null],
+      ['f-cognome','family-name',null],
+      ['p-cognome','family-name',null],
+      ['f-mail','email','email'],
+      ['p-mail','email','email'],
+      ['f-email','email','email'],
+      ['f-tel','tel','tel'],
+      ['p-tel','tel','tel'],
+      ['f-telefono','tel','tel']
+    ];
+    map.forEach(function(row){
+      var el=document.getElementById(row[0]);
+      if(!el) return;
+      if(!el.getAttribute('autocomplete')) el.setAttribute('autocomplete',row[1]);
+      if(row[2] && !el.getAttribute('inputmode')) el.setAttribute('inputmode',row[2]);
+      if(row[2] && (!el.getAttribute('type') || el.getAttribute('type')==='text')) el.setAttribute('type',row[2]);
+    });
+    document.addEventListener('focusin',function(e){
+      if(e.target && /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) document.documentElement.classList.add('artyou-form-focus');
+    });
+    document.addEventListener('focusout',function(){
+      setTimeout(function(){
+        var a=document.activeElement;
+        if(!a || !/^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) document.documentElement.classList.remove('artyou-form-focus');
+      },30);
+    });
+    var obs=new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        (m.addedNodes||[]).forEach(function(n){
+          if(!n || n.nodeType!==1) return;
+          var els=[];
+          if(n.matches && n.matches('.artyou-booking-msg,.artyou-form-msg')) els.push(n);
+          if(n.querySelectorAll) els=els.concat(Array.from(n.querySelectorAll('.artyou-booking-msg,.artyou-form-msg')));
+          els.forEach(function(el){
+            el.setAttribute('role','status');
+            el.setAttribute('aria-live','polite');
+          });
+        });
+      });
+    });
+    obs.observe(document.body,{childList:true,subtree:true});
+  }
+
   function improveExternalLinks(){
     document.querySelectorAll('a[target="_blank"]').forEach(function(a){
       var rel=(a.getAttribute('rel')||'').split(/\s+/).filter(Boolean);
@@ -198,6 +248,7 @@
     installStyles();
     improveMedia();
     improveMenu();
+    improveForms();
     improveExternalLinks();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true});
