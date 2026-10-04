@@ -25,12 +25,16 @@ async function main() {
 
     for (const [slug, ev] of Object.entries(payload.eventi)) {
       await conn.execute(`
-        INSERT INTO events (slug,title,price,capacity,active,metadata)
-        VALUES (?,?,?,?,1,JSON_OBJECT('migration_source','google_apps_script'))
+        INSERT INTO events (slug,title,category,event_type,description,price,capacity,active,metadata)
+        VALUES (?,?,?,?,?,?,?,1,?)
         ON DUPLICATE KEY UPDATE
           title=VALUES(title),
+          category=VALUES(category),
+          event_type=VALUES(event_type),
+          description=VALUES(description),
           price=VALUES(price),
           capacity=VALUES(capacity),
+          metadata=VALUES(metadata),
           active=1,
           updated_at=CURRENT_TIMESTAMP
       `, [
