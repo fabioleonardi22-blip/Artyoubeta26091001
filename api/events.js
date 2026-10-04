@@ -7,11 +7,47 @@ const {
 } = require("../lib/security");
 
 const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "").trim();
+const { transaction } = require("../lib/db");
 
 function getQuery(req) {
   const rawUrl = String(req.url || "");
   const qIndex = rawUrl.indexOf("?");
   return new URLSearchParams(qIndex >= 0 ? rawUrl.slice(qIndex + 1) : "");
+}
+
+async function syncPublicEventsToMysql() {
+  if (!(process.env.DATABASE_URL || process.env.MYSQL_URL)) return;
+  const r = await fetch(APPS_SCRIPT_URL + "?eventi=1&_=" + Date.now(), { redirect:"follow" });
+  if (!r.ok) throw new Error("events_sync_source_unavailable");
+  const data = await r.json();
+  if (!data || !data.ok || !data.eventi) throw new Error("events_sync_payload_invalid");
+
+  await transaction(async (conn) => {
+    await conn.execute("UPDATE events SET active=0");
+    for (const [slug, ev] of Object.entries(data.eventi)) {
+      const e = ev || {};
+      await conn.execute(
+        `INSERT INTO events (slug,title,category,event_type,price,capacity,active,source_updated_at)
+         VALUES (?,?,?,?,?,?,1,NOW())
+         ON DUPLICATE KEY UPDATE
+           title=VALUES(title),
+           category=VALUES(category),
+           event_type=VALUES(event_type),
+           price=VALUES(price),
+           capacity=VALUES(capacity),
+           active=1,
+           source_updated_at=NOW()`,
+        [
+          String(slug),
+          String(e.titolo || e.descrizione || slug),
+          String(e.categoria || ""),
+          String(e.tipo || ""),
+          e.prezzo === "" || e.prezzo == null ? null : Number(e.prezzo || 0),
+          Math.max(0, Number(e.capienza || 0))
+        ]
+      );
+    }
+  });
 }
 
 module.exports = async function handler(req, res) {
@@ -52,6 +88,7 @@ module.exports = async function handler(req, res) {
     }
 
     let options = { method, redirect:"follow", headers:{} };
+    let requestBody = null;
     let url = APPS_SCRIPT_URL;
 
     if (method === "POST") {
@@ -78,6 +115,7 @@ module.exports = async function handler(req, res) {
         }
       }
 
+      requestBody = body;
       options.headers["Content-Type"] = "text/plain;charset=utf-8";
       options.body = JSON.stringify(body);
     } else {
@@ -87,6 +125,16 @@ module.exports = async function handler(req, res) {
 
     const upstream = await fetch(url, options);
     const bodyText = await upstream.text();
+
+    if (method === "POST" && upstream.ok && requestBody &&
+        ["save","delete"].includes(String(requestBody.action || "").toLowerCase())) {
+      try {
+        const result = JSON.parse(bodyText);
+        if (result && result.ok) await syncPublicEventsToMysql();
+      } catch (syncErr) {
+        console.error("ARTYOU_MYSQL_EVENT_SYNC_ERROR", String(syncErr && syncErr.message || syncErr));
+      }
+    }
 
     res.status(upstream.status);
     res.setHeader("Content-Type", upstream.headers.get("content-type") || "application/json; charset=utf-8");
