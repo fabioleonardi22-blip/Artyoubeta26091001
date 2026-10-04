@@ -189,7 +189,7 @@
         }
         html,body{width:100%;max-width:100%;overflow-x:hidden!important}
         html.artyou-menu-open body{overflow:hidden!important}
-        html.artyou-form-focus .artyou-menu-btn{opacity:0!important;pointer-events:none!important;transform:translateY(12px)!important}
+        html body .artyou-menu-btn{display:flex!important;position:fixed!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;transform:none!important;z-index:10000!important;}
         body{padding-bottom:env(safe-area-inset-bottom,0px)}
         header{max-width:100vw!important}
         header>a:first-of-type{min-width:0!important}
@@ -328,15 +328,7 @@
       if(row[2] && !el.getAttribute('inputmode')) el.setAttribute('inputmode',row[2]);
       if(row[2] && (!el.getAttribute('type') || el.getAttribute('type')==='text')) el.setAttribute('type',row[2]);
     });
-    document.addEventListener('focusin',function(e){
-      if(e.target && /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) document.documentElement.classList.add('artyou-form-focus');
-    });
-    document.addEventListener('focusout',function(){
-      setTimeout(function(){
-        var a=document.activeElement;
-        if(!a || !/^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) document.documentElement.classList.remove('artyou-form-focus');
-      },30);
-    });
+    document.documentElement.classList.remove('artyou-form-focus');
     var obs=new MutationObserver(function(muts){
       muts.forEach(function(m){
         (m.addedNodes||[]).forEach(function(n){
