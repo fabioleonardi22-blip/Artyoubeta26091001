@@ -17,7 +17,8 @@ const allow = [
   /\$\{\{\s*secrets\./,
   /DATABASE_URL non configurato/,
   /DATABASE_URL deve iniziare/,
-  /mysql:\/\/USER:PASSWORD@HOST/
+  /mysql:\/\/USER:PASSWORD@HOST/,
+  /mysql:\/\/\.\.\.(?:["\s]|$)/i
 ];
 
 function walk(dir, out=[]) {
