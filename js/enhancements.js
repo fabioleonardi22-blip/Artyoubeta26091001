@@ -117,11 +117,27 @@
         #artyou-menu-toggle:checked~nav{
           display:flex!important;
           flex-direction:column!important;
-          grid-template-columns:none!important;
+          grid-template-columns:minmax(0,1fr)!important;
+          grid-auto-flow:row!important;
           align-items:stretch!important;
+          justify-content:flex-start!important;
+          width:auto!important;
+          max-width:calc(100vw - 24px)!important;
+          min-width:0!important;
+          box-sizing:border-box!important;
+          overflow-x:hidden!important;
+          overflow-y:auto!important;
+        }
+        #artyou-menu-toggle:checked~nav>*{
+          grid-column:1!important;
+          width:100%!important;
+          max-width:100%!important;
+          min-width:0!important;
+          box-sizing:border-box!important;
         }
         #artyou-menu-toggle:checked~nav a,
-        #artyou-menu-toggle:checked~nav a.artyou-menu-extra{
+        #artyou-menu-toggle:checked~nav a.artyou-menu-extra,
+        #artyou-menu-toggle:checked~nav .artyou-lang-trigger{
           width:100%!important;
           display:block!important;
           padding:14px 0!important;
