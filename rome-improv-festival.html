@@ -1040,6 +1040,7 @@ class Component extends DCLogic {
     if(ev&&ev.eventi&&typeof ev.eventi==="object"&&Object.keys(ev.eventi).length){
       if(source==="mysql"){
         window.ARTYOU_RIF_MYSQL_EVENT_INFO=Object.assign({},ev.eventi);
+        window.ARTYOU_EVENT_INFO=Object.assign({},window.ARTYOU_EVENT_INFO||{},ev.eventi);
       }else{
         window.ARTYOU_EVENT_INFO=Object.assign({},window.ARTYOU_EVENT_INFO||{},ev.eventi);
       }
@@ -1048,6 +1049,7 @@ class Component extends DCLogic {
     if(cap&&cap.disponibilita&&typeof cap.disponibilita==="object"&&Object.keys(cap.disponibilita).length){
       if(source==="mysql"){
         window.ARTYOU_RIF_MYSQL_CAP=Object.assign({},cap.disponibilita);
+        window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},cap.disponibilita);
       }else{
         window.ARTYOU_CAP=Object.assign({},window.ARTYOU_CAP||{},cap.disponibilita);
       }
