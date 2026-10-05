@@ -1,6 +1,21 @@
 {
   "redirects": [
     {
+      "source": "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-barcellona-e-londra",
+      "destination": "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-londra-e-barcellona/",
+      "permanent": true
+    },
+    {
+      "source": "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-barcellona-e-londra/",
+      "destination": "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-londra-e-barcellona/",
+      "permanent": true
+    },
+    {
+      "source": "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-barcellona-e-londra/index.html",
+      "destination": "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-londra-e-barcellona/",
+      "permanent": true
+    },
+    {
       "source": "/merchandising.html",
       "destination": "/merchandising/",
       "permanent": true
