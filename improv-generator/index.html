@@ -39,7 +39,7 @@ body{display:flex;justify-content:center}
 .gen-actions{display:block}.gen-roll{width:100%;height:40px;border-radius:12px;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:6px;border:0;background:#13181D;color:#fff;cursor:pointer}.gen-roll:active{transform:scale(.98)}
 .gen-place{background:#DDF2FB;color:#0F4A66}.gen-status{background:#FFEBC8;color:#744500}.gen-emotion{background:#F9DFEC;color:#7C1241}.gen-character{background:#E8F3C9;color:#3D5410}.gen-relation{background:#E8E0FF;color:#4B3181}.gen-objective{background:#DDF4E8;color:#145E42}.gen-genre{background:#FFE2D4;color:#8A3A13}.gen-object{background:#E7EAED;color:#34404A}
 .controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.secondary{border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px;font-weight:850;color:var(--ink);cursor:pointer}.secondary.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
-.history{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.history::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:12px;font-weight:700}.seo-nav{display:flex;gap:7px;overflow-x:auto;padding:0 1px 10px;scrollbar-width:none}.seo-nav::-webkit-scrollbar{display:none}.seo-nav .chip{background:#fff;box-shadow:0 2px 7px rgba(20,25,30,.04)}
+.chip{flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:12px;font-weight:700}.seo-nav{display:flex;gap:7px;overflow-x:auto;padding:0 1px 10px;scrollbar-width:none}.seo-nav::-webkit-scrollbar{display:none}.seo-nav .chip{background:#fff;box-shadow:0 2px 7px rgba(20,25,30,.04)}
 .footer{text-align:center;color:#7A8085;font-size:11px;padding:10px 8px 0}.footer a{color:inherit}.install-sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;align-items:flex-end;justify-content:center;padding:14px}.install-sheet.open{display:flex}.install-card{width:100%;max-width:520px;background:#fff;border-radius:24px 24px 18px 18px;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.35)}.install-card h3{margin:0 0 8px;font-size:22px}.install-card p{margin:0 0 14px;color:#5E6870;line-height:1.45}.install-steps{display:flex;flex-direction:column;gap:10px;margin:12px 0 16px}.install-step{background:#F6F3EC;border-radius:14px;padding:12px;font-size:14px;line-height:1.35}.install-step b{display:inline-block;min-width:24px}.install-close{width:100%;border:0;border-radius:14px;background:#13181D;color:#fff;padding:13px;font-weight:900;cursor:pointer}
 .flash{animation:flash .22s ease}@keyframes flash{0%{transform:scale(.985);opacity:.72}100%{transform:scale(1);opacity:1}}
 @media(min-width:480px){.app{padding-left:20px;padding-right:20px}.top{margin-left:-20px;margin-right:-20px;padding-left:24px;padding-right:24px}}
@@ -151,10 +151,6 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
       <div id="timerHint" style="font-size:12px;color:#C7CFD4;margin-top:5px">Scegli un preset o imposta la durata</div>
     </div>
   </section>
-
-  <div class="section-title"><h2>Ultimi spunti</h2><span id="historyCount">0</span></div>
-  <div class="history" id="history"><span class="chip">Ancora nessuno</span></div>
-
   <div class="footer">Artyou Roma · strumento per allenamenti, lezioni e jam di improvvisazione</div>
 </main>
 
@@ -196,7 +192,7 @@ object:[
 "Chiave","Valigia","Telefono rotto","Lettera sigillata","Anello","Fotografia","Biglietto aereo","Torta","Martello","Ombrello","Libro raro","Scarpa","Microfono","Passaporto","Mappa","Fiala misteriosa","Busta di denaro","Pupazzo","Orologio","Maschera","Coltello da cucina","Telecomando","Trofeo","Diario","Chitarra","Pacco regalo","Bicicletta","Piantina","Cappello","Occhiali","Registratore","Vecchia videocassetta","Contratto","Biglietto della lotteria","Cane immaginario","Scatola chiusa","Foto compromettente","Menu di ristorante","Medaglia","Campanello"
 ]
 };
-var current={place:"",status:"",emotion:"",character:"",relation:"",objective:"",genre:"",object:""},history=[],timerId=null;
+var current={place:"",status:"",emotion:"",character:"",relation:"",objective:"",genre:"",object:""},timerId=null;
 function $(id){return document.getElementById(id)}
 function random(kind){var a=DATA[kind],prev=current[kind],v=prev;if(a.length<2)return a[0];while(v===prev)v=a[Math.floor(Math.random()*a.length)];current[kind]=v;return v}
 function flash(el){el.classList.remove("flash");void el.offsetWidth;el.classList.add("flash")}
@@ -207,19 +203,13 @@ function sync(kind){
  flash(document.querySelector('[data-card-kind="'+kind+'"]'));
 }
 function one(kind){random(kind);sync(kind)}
-function addHistory(){
- var text=current.place+" · "+current.status+" · "+current.emotion+" · "+current.character+" · "+current.relation+" · "+current.objective+" · "+current.genre+" · "+current.object;
- history.unshift(text);history=history.slice(0,8);
- $("historyCount").textContent=history.length;
- $("history").innerHTML=history.map(function(x){return'<span class="chip">'+x.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</span>'}).join("");
- try{localStorage.setItem("artyou_improv_history",JSON.stringify(history))}catch(e){}
-}
+
 function all(){
  ["place","status","emotion","character","relation","objective","genre","object"].forEach(function(k){random(k);sync(k)});
- flash($("sceneCard"));addHistory();
+ flash($("sceneCard"));
  if(navigator.vibrate)navigator.vibrate(20)
 }
-function reset(){history=[];try{localStorage.removeItem("artyou_improv_history")}catch(e){};$("historyCount").textContent="0";$("history").innerHTML='<span class="chip">Ancora nessuno</span>';all()}
+function reset(){all()}
 document.querySelectorAll(".gen-roll").forEach(function(b){b.onclick=function(){one(b.getAttribute("data-kind"))}});
 $("generateAll").onclick=all;
 $("resetScene").onclick=reset;
@@ -285,8 +275,6 @@ if(focusKind){
     setTimeout(function(){focusBtn.scrollIntoView({behavior:"smooth",block:"center"})},250);
   }
 }
-try{history=JSON.parse(localStorage.getItem("artyou_improv_history")||"[]")}catch(e){history=[]}
-if(history.length){$("historyCount").textContent=history.length;$("history").innerHTML=history.map(function(x){return'<span class="chip">'+x.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</span>'}).join("")}
 all();
 if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("/improv-generator/sw.js").catch(function(){})});
 var deferredPrompt=null;
