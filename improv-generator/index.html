@@ -46,6 +46,13 @@ body{display:flex;justify-content:center}
 @media(min-width:480px){.app{padding-left:20px;padding-right:20px}.top{margin-left:-20px;margin-right:-20px;padding-left:24px;padding-right:24px}}
 button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 @media(prefers-reduced-motion:reduce){.flash{animation:none}}
+.timer-modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.timer-modes button{min-width:0;min-height:44px;padding:10px 6px}
+.timer-modes button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.timer-modes button:disabled{cursor:default;opacity:.65}
+.timer-tools{margin-top:10px}.timer-tools button{min-width:0;min-height:44px}
+.timer-settings.stopwatch{grid-template-columns:minmax(0,1fr) auto}
+.timer-settings label[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -134,9 +141,13 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
   </section>
 
   <section class="card" style="margin-top:14px">
-    <div class="scene-label">Durata scena</div>
+    <h2 class="scene-label" style="margin-top:0">Tempo della scena</h2>
+    <div class="timer-modes" role="group" aria-label="Scegli come misurare il tempo">
+      <button class="secondary" id="modeCountdown" type="button" aria-pressed="true">⏳ Countdown</button>
+      <button class="secondary" id="modeStopwatch" type="button" aria-pressed="false">⏱ Cronometro</button>
+    </div>
     <div class="timer-settings">
-      <label style="font-size:14px;font-weight:900;color:#56616A">Minuti
+      <label id="timerMinutesLabel" style="font-size:14px;font-weight:900;color:#56616A">Minuti
         <input id="timerMinutes" type="number" min="1" max="60" value="3" inputmode="numeric" style="display:block;width:100%;min-width:0;margin-top:7px;height:64px;font-size:30px;font-weight:950;padding:0 12px;border-radius:14px">
       </label>
       <button class="secondary" id="soundToggle" type="button" aria-pressed="true" aria-label="Suono finale" style="min-width:0;min-height:64px;padding:8px;font-size:12px;line-height:1.35">🔊 Suono attivo</button>
@@ -144,8 +155,12 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
     </div>
     <div id="timerBox" style="margin-top:12px;background:#13181D;color:#fff;border-radius:16px;padding:16px;text-align:center">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#AEB8BF;font-weight:900">Pronti?</div>
-      <div id="timerValue" style="font-size:46px;font-weight:950;line-height:1;margin-top:4px">—</div>
-      <div id="timerHint" style="font-size:12px;color:#C7CFD4;margin-top:5px">Scegli un preset o imposta la durata</div>
+      <div id="timerValue" style="font-size:46px;font-weight:950;line-height:1;margin-top:4px">3:00</div>
+      <div id="timerHint" style="font-size:12px;color:#C7CFD4;margin-top:5px">Countdown: imposta i minuti e premi Avvia</div>
+    </div>
+    <div class="controls timer-tools">
+      <button class="secondary" id="timerPause" type="button" disabled>Pausa</button>
+      <button class="secondary" id="timerReset" type="button">Azzera</button>
     </div>
   </section>
   <div class="footer">Artyou Roma · strumento per allenamenti, lezioni e jam di improvvisazione</div>
@@ -211,7 +226,7 @@ $("generateAll").onclick=all;
 
 function formatTime(total){
  var m=Math.floor(total/60),sec=total%60;
- return m>0?String(m)+":"+String(sec).padStart(2,"0"):String(sec);
+ return String(m)+":"+String(sec).padStart(2,"0");
 }
 var soundEnabled=true,audioContext=null,alarmNodes=[];
 try{soundEnabled=localStorage.getItem("artyou-timer-sound")!=="off"}catch(e){}
@@ -260,28 +275,64 @@ function playAlarm(){
    });
  }catch(e){}
 }
-function startTimer(seconds){
- stopAlarm();
- prepareAudio();
- seconds=Math.max(1,Math.min(3600,Number(seconds)||0));
- if(timerId)clearInterval(timerId);
- var n=seconds;$("timerValue").textContent=formatTime(n);$("timerHint").textContent="Scena in corso";
- timerId=setInterval(function(){
-   n--;
-   $("timerValue").textContent=n>0?formatTime(n):"STOP!";
-   if(n<=3&&n>0&&navigator.vibrate)navigator.vibrate(35);
-   if(n<=0){
-     clearInterval(timerId);timerId=null;$("timerHint").textContent="Tempo terminato";
-     playAlarm();
-     if(navigator.vibrate)navigator.vibrate([180,100,180,100,260]);
-     setTimeout(function(){$("timerValue").textContent="—";$("timerHint").textContent="Imposta la durata in minuti"},2600);
-   }
- },1000);
+var timerMode="countdown",timerState="idle",timerBaseMs=180000,timerAnchor=0;
+function timerDuration(){var mins=Math.max(1,Math.min(60,parseInt($("timerMinutes").value||"3",10)||3));$("timerMinutes").value=mins;return mins*60000}
+function timerNow(){var delta=timerState==="running"?Date.now()-timerAnchor:0;return timerMode==="countdown"?Math.max(0,timerBaseMs-delta):timerBaseMs+delta}
+function renderTimer(){
+ var ms=timerNow();
+ $("timerValue").textContent=formatTime(timerMode==="countdown"?Math.ceil(ms/1000):Math.floor(ms/1000));
 }
-$("timerCustom").onclick=function(){
- var mins=Math.max(1,Math.min(60,parseInt($("timerMinutes").value||"1",10)||1));
- startTimer(mins*60);
+function timerControls(){
+ $("timerCustom").disabled=timerState==="running";
+ $("timerCustom").textContent=timerState==="paused"?"Riprendi":"Avvia";
+ $("timerPause").disabled=timerState!=="running";
+ $("timerMinutes").disabled=timerState==="running"||timerState==="paused";
+ $("modeCountdown").disabled=timerState==="running";
+ $("modeStopwatch").disabled=timerState==="running";
+}
+function resetTimer(){
+ if(timerId)clearInterval(timerId);timerId=null;stopAlarm();
+ timerState="idle";timerBaseMs=timerMode==="countdown"?timerDuration():0;
+ $("timerHint").textContent=timerMode==="countdown"?"Countdown: imposta i minuti e premi Avvia":"Cronometro: premi Avvia per contare da zero";
+ renderTimer();timerControls();
+}
+function tickTimer(){
+ renderTimer();
+ if(timerMode==="countdown"&&timerNow()<=0){
+   clearInterval(timerId);timerId=null;timerBaseMs=0;timerState="finished";
+   $("timerHint").textContent="Tempo terminato";timerControls();playAlarm();
+   if(navigator.vibrate)navigator.vibrate([180,100,180,100,260]);
+ }
+}
+function startTimer(){
+ if(timerState==="running")return;
+ stopAlarm();prepareAudio();
+ if(timerState!=="paused")timerBaseMs=timerMode==="countdown"?timerDuration():0;
+ timerAnchor=Date.now();timerState="running";
+ $("timerHint").textContent=timerMode==="countdown"?"Countdown in corso":"Cronometro in corso";
+ renderTimer();timerControls();timerId=setInterval(tickTimer,200);
+}
+$("timerCustom").onclick=startTimer;
+$("timerPause").onclick=function(){
+ if(timerState!=="running")return;
+ timerBaseMs=timerNow();clearInterval(timerId);timerId=null;timerState="paused";
+ $("timerHint").textContent="In pausa · premi Riprendi";renderTimer();timerControls();
 };
+$("timerReset").onclick=resetTimer;
+function selectTimerMode(mode){
+ if(timerState==="running"||mode===timerMode)return;
+ timerMode=mode;
+ $("modeCountdown").setAttribute("aria-pressed",String(mode==="countdown"));
+ $("modeStopwatch").setAttribute("aria-pressed",String(mode==="stopwatch"));
+ $("timerMinutesLabel").hidden=mode==="stopwatch";
+ document.querySelector(".timer-settings").classList.toggle("stopwatch",mode==="stopwatch");
+ resetTimer();
+}
+$("modeCountdown").onclick=function(){selectTimerMode("countdown")};
+$("modeStopwatch").onclick=function(){selectTimerMode("stopwatch")};
+$("timerMinutes").addEventListener("change",function(){if(timerState==="idle"||timerState==="finished")resetTimer()});
+$("timerValue").addEventListener("click",stopAlarm);
+resetTimer();
 
 var PATH_FOCUS={
   "luoghi":"place","status":"status","emozioni":"emotion","personaggi":"character",
