@@ -70,6 +70,8 @@ body{display:flex;justify-content:center}
     <div class="controls">
       <button class="secondary dark" id="pauseBtn" disabled>Pausa</button>
       <button class="secondary" id="resetBtn">Reset</button>
+      <button class="secondary" id="fullscreenBtn">⛶ Tutto schermo</button>
+      <button class="secondary" id="soundBtn">🔊 Allarme attivo</button>
     </div>
 
     <div class="status">Alla fine del tempo sentirai un allarme a tre toni e, sui telefoni compatibili, una vibrazione.</div>
@@ -90,7 +92,7 @@ body{display:flex;justify-content:center}
 <script>
 (function(){
 "use strict";
-var timerId=null,remaining=180,running=false,audioCtx=null,deferredPrompt=null;
+var timerId=null,remaining=180,running=false,audioCtx=null,deferredPrompt=null,soundEnabled=true;
 function $(id){return document.getElementById(id)}
 function clampMinutes(){var m=parseInt($("minutes").value||"3",10)||3;m=Math.max(1,Math.min(60,m));$("minutes").value=m;return m}
 function fmt(s){var m=Math.floor(s/60),sec=s%60;return m+":"+String(sec).padStart(2,"0")}
@@ -103,6 +105,7 @@ function ensureAudio(){
  }catch(e){}
 }
 function alarm(){
+ if(!soundEnabled)return;
  ensureAudio();
  try{
    if(!audioCtx)return;
@@ -153,6 +156,23 @@ function reset(){
 $("startBtn").onclick=function(){if(running)return;remaining=clampMinutes()*60;start()};
 $("pauseBtn").onclick=function(){running?pause():resume()};
 $("resetBtn").onclick=reset;
+$("soundBtn").onclick=function(){
+ soundEnabled=!soundEnabled;
+ $("soundBtn").textContent=soundEnabled?"🔊 Allarme attivo":"🔇 Allarme disattivato";
+};
+$("fullscreenBtn").onclick=function(){
+ var el=document.documentElement;
+ if(!document.fullscreenElement){
+   if(el.requestFullscreen)el.requestFullscreen().catch(function(){});
+   else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
+ }else{
+   if(document.exitFullscreen)document.exitFullscreen();
+   else if(document.webkitExitFullscreen)document.webkitExitFullscreen();
+ }
+};
+document.addEventListener("fullscreenchange",function(){
+ $("fullscreenBtn").textContent=document.fullscreenElement?"⤫ Esci da tutto schermo":"⛶ Tutto schermo";
+});
 $("minutes").addEventListener("change",function(){if(!running)reset()});
 render();
 
