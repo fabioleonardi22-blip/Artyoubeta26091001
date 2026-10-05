@@ -616,7 +616,19 @@ function save(){
       return new Promise(function(){});
     }
     return apiGet("list")
-  }).then(assert).then(function(r){events=r.events||[];var cur=events.find(x=>x.id===currentId);if(cur)loadForm(cur);else renderList()}).catch(function(e){setStatus(e.message,"err")});
+  }).then(assert).then(function(r){
+    events=r.events||[];
+    try{
+      var u=new URL(location.href);
+      u.searchParams.delete("edit");
+      u.searchParams.delete("return");
+      history.replaceState(null,"",u.toString());
+    }catch(_){}
+    clearForm();
+    renderList();
+    setStatus("Evento salvato. Sei tornato all'elenco generale degli eventi.","ok");
+    var list=$("eventList");if(list)list.scrollTop=0;
+  }).catch(function(e){setStatus(e.message,"err")});
 }
 function del(){
   if(!currentId)return;if(!confirm("Eliminare questo evento? Verrà disattivato anche nel foglio prenotazioni."))return;
