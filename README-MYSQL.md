@@ -91,3 +91,16 @@ Vanno esportate dal Google Sheet e importate con uno script server-side dedicato
 7. Dopo la verifica, lasciare Google Sheets solo come report/export.
 
 Nessuna pagina pubblica viene modificata in questa prima fase.
+
+
+## Autenticazione area interna · 5 ottobre 2026
+
+L'accesso a Calendario Docenti e Anagrafica usa ora MySQL come fonte primaria delle autorizzazioni:
+
+```
+Google Identity → API Vercel → tabella users MySQL
+```
+
+Per rendere la migrazione non distruttiva, gli utenti non ancora presenti in MySQL vengono verificati una sola volta tramite il vecchio backend Apps Script; se autorizzati, vengono inseriti automaticamente nella tabella `users`. Dagli accessi successivi l'autorizzazione viene letta direttamente da MySQL.
+
+Se MySQL è temporaneamente indisponibile durante questa fase di transizione, Apps Script resta come fallback per evitare di bloccare l'area interna.
