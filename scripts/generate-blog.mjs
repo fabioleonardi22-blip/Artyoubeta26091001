@@ -312,8 +312,8 @@ if(repeatedTitle) throw new Error("Articolo ripetuto: "+repeatedTitle.title);
 const archive=data.articles.map(x=>{
   const file=path.join(root,"la-finestra-sul-cortile",x.slug,"index.html");
   const html=fs.existsSync(file)?fs.readFileSync(file,"utf8"):"";
-  const main=html.match(/<main\\b[^>]*>([\\s\\S]*?)<\\/main>/i)?.[1]||"";
-  const text=main.replace(/<script[\\s\\S]*?<\\/script>/gi," ").replace(/<[^>]+>/g," ").replace(/\\s+/g," ").trim().slice(0,6000);
+  const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1]||"";
+  const text=main.replace(/<script[\s\S]*?<\/script>/gi," ").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().slice(0,6000);
   return {slug:x.slug,title:x.title,excerpt:x.excerpt,text};
 });
 for(let offset=0;offset<archive.length;offset+=12){
