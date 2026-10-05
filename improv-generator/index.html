@@ -137,14 +137,11 @@ body{display:flex;justify-content:center}
     </div>
     <div style="height:12px"></div>
     <div class="scene-label">Durata scena</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;margin-top:12px;align-items:end">
+    <div style="display:grid;grid-template-columns:1fr auto;gap:12px;margin-top:12px;align-items:end">
       <label style="font-size:14px;font-weight:900;color:#56616A">Minuti
-        <input id="timerMinutes" type="number" min="0" max="60" value="3" inputmode="numeric" style="margin-top:7px;height:56px;font-size:24px;font-weight:900;padding:0 14px;border-radius:12px">
+        <input id="timerMinutes" type="number" min="1" max="60" value="3" inputmode="numeric" style="margin-top:7px;height:64px;font-size:30px;font-weight:950;padding:0 16px;border-radius:14px">
       </label>
-      <label style="font-size:14px;font-weight:900;color:#56616A">Secondi
-        <input id="timerSeconds" type="number" min="0" max="59" value="0" inputmode="numeric" style="margin-top:7px;height:56px;font-size:24px;font-weight:900;padding:0 14px;border-radius:12px">
-      </label>
-      <button class="secondary dark" id="timerCustom" style="height:56px;padding:0 22px;font-size:15px;border-radius:12px">Avvia</button>
+      <button class="secondary dark" id="timerCustom" style="height:64px;padding:0 24px;font-size:16px;border-radius:14px">Avvia</button>
     </div>
     <div id="timerBox" style="margin-top:12px;background:#13181D;color:#fff;border-radius:16px;padding:16px;text-align:center">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#AEB8BF;font-weight:900">Pronti?</div>
@@ -246,11 +243,8 @@ function startTimer(seconds){
  },1000);
 }
 $("timerCustom").onclick=function(){
- var mins=Math.max(0,parseInt($("timerMinutes").value||"0",10)||0);
- var secs=Math.max(0,Math.min(59,parseInt($("timerSeconds").value||"0",10)||0));
- var total=(mins*60)+secs;
- if(total<=0){$("timerHint").textContent="Inserisci una durata maggiore di zero";return}
- startTimer(total);
+ var mins=Math.max(1,Math.min(60,parseInt($("timerMinutes").value||"1",10)||1));
+ startTimer(mins*60);
 };
 
 $("copyScene").onclick=function(){
