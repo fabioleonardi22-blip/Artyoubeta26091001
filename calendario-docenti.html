@@ -684,11 +684,11 @@ function openApp(){$("accessScreen").classList.add("hidden");$("app").classList.
 function logout(){ArtyouGoogleAuth.clear();sessionStorage.removeItem("artyouCalendarEmail");location.reload()}
 function refresh(){
   if(!endpoint){loadDemo();render();return Promise.resolve(events)}
-  setSync("Sincronizzazione con Google Calendar…","warn");
+  setSync("Sincronizzazione Piano Operativo con MySQL…","warn");
   var start=new Date(current.getFullYear(),current.getMonth()-1,1),end=new Date(current.getFullYear(),current.getMonth()+2,0);
   return api("list",{from:isoDate(start),to:isoDate(end)}).then(function(r){
     if(!r||!r.ok)throw new Error((r&&r.errore)||"Errore sincronizzazione");
-    events=r.events||[];render();setSync("Google Calendar sincronizzato · "+events.length+" appuntamenti","ok");return events;
+    events=r.events||[];render();setSync("Piano Operativo MySQL sincronizzato · "+events.length+" elementi","ok");return events;
   }).catch(function(e){setSync(e.message,"err");throw e});
 }
 function render(){
