@@ -84,31 +84,3 @@ html{scroll-behavior:smooth;scroll-padding-top:170px}
   html body .az-page>header nav.am-wrap[style]>a{font-size:13px!important}
 }
 
-
-/* Ridimensionamento desktop: proporzioni coerenti con il resto del sito Artyou */
-@media(min-width:821px){
-  .az-page .am-px{padding-left:72px!important;padding-right:72px!important}
-  .az-page .am-py{padding-top:64px!important;padding-bottom:64px!important}
-  .az-page .am-fs-xxl{font-size:52px!important;line-height:1.02!important;letter-spacing:-1.4px!important}
-  .az-page .am-fs-xl{font-size:40px!important;line-height:1.06!important;letter-spacing:-.8px!important}
-  .az-page .am-fs-l{font-size:34px!important;line-height:1.08!important;letter-spacing:-.6px!important}
-  .az-page .am-fs-m{font-size:25px!important;line-height:1.16!important}
-  .az-page .am-fs-s{font-size:19px!important;line-height:1.3!important}
-  .az-page .am-fs-lead{font-size:17px!important;line-height:1.55!important}
-  .az-page .am-fs-body{font-size:15px!important;line-height:1.5!important}
-  .az-page .am-fs-tiny{font-size:12px!important}
-  .az-page .am-himg{height:340px!important}
-  .az-page section.am-grid1{gap:44px!important}
-  .az-page section[id="formati"]{gap:28px!important}
-  .az-page article{border-radius:18px!important}
-  .az-page #aziende-subnav{padding-left:72px!important;padding-right:72px!important}
-}
-@media(min-width:821px) and (max-width:1050px){
-  .az-page .am-px{padding-left:48px!important;padding-right:48px!important}
-  .az-page .am-py{padding-top:52px!important;padding-bottom:52px!important}
-  .az-page .am-fs-xxl{font-size:46px!important}
-  .az-page .am-fs-xl{font-size:36px!important}
-  .az-page .am-fs-l{font-size:31px!important}
-  .az-page .am-himg{height:310px!important}
-  .az-page #aziende-subnav{padding-left:48px!important;padding-right:48px!important}
-}
