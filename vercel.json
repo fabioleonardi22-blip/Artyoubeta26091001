@@ -198,6 +198,16 @@
   ],
   "rewrites": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.romaimprovfestival.it"
+        }
+      ],
+      "destination": "/rome-improv-festival.html"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },
