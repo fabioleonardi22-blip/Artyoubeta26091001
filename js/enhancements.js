@@ -377,6 +377,9 @@
     });
   }
 
+  // Apply shared rules before the first paint, including before the page renderer boots.
+  installStyles();
+
   function boot(){
     installStyles();
     improveMedia();
@@ -411,4 +414,54 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',updateCompaniesMenu);
   else updateCompaniesMenu();
   window.addEventListener('pageshow',updateCompaniesMenu);
+})();
+
+/* Stable header navigation: same-document links must not reload the renderer. */
+(function(){
+  var style=document.createElement('style');
+  style.id='artyou-stable-header';
+  style.textContent=`
+    header>a:first-of-type{flex-shrink:0!important}
+    header>a:first-of-type img{object-fit:contain;animation:none!important;transition:none!important}
+    header nav a{animation:none!important;transition:color .15s ease!important}
+    @media(min-width:821px){
+      header.am-wrap{gap:18px!important;padding-left:clamp(28px,5vw,80px)!important;padding-right:clamp(28px,5vw,80px)!important}
+      header nav.am-wrap{gap:clamp(12px,1.4vw,22px)!important;min-width:0!important;flex:1 1 auto!important;justify-content:center!important}
+      header nav.am-wrap>a{font-size:clamp(12px,1.05vw,15px)!important;white-space:nowrap!important}
+      header>div:last-child{gap:8px!important;flex:0 0 auto!important}
+    }
+    @media(min-width:821px) and (max-width:1120px){
+      header.am-wrap{gap:12px!important;padding-left:22px!important;padding-right:22px!important}
+      header nav.am-wrap{gap:10px!important}
+      header nav.am-wrap>a{font-size:12px!important}
+    }
+  `;
+  document.head.appendChild(style);
+  var logo=document.createElement('link');
+  logo.rel='preload';logo.as='image';logo.href='/img/logo-orizzontale-bianco.png';
+  logo.setAttribute('fetchpriority','high');
+  document.head.appendChild(logo);
+
+  function path(url){return url.pathname.replace(/\/index\.html$/,'/').replace(/\/$/,'')||'/';}
+  document.addEventListener('click',function(e){
+    if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;
+    var a=e.target.closest&&e.target.closest('header a,nav a');
+    if(!a||a.hasAttribute('download')||(a.target&&a.target!=='_self'))return;
+    var url;try{url=new URL(a.href,location.href);}catch(err){return;}
+    var current=new URL(location.href);
+    if(url.origin!==current.origin||path(url)!==path(current)||url.search!==current.search)return;
+    var target=null;
+    if(url.hash){
+      var id;try{id=decodeURIComponent(url.hash.slice(1));}catch(err){return;}
+      target=document.getElementById(id);
+      if(!target)return;
+    }
+    e.preventDefault();
+    var toggle=document.getElementById('artyou-menu-toggle');
+    if(toggle){toggle.checked=false;toggle.dispatchEvent(new Event('change',{bubbles:true}));}
+    document.documentElement.classList.remove('artyou-menu-open');
+    if(url.hash!==current.hash)history.pushState(null,'',url.pathname+url.search+url.hash);
+    if(target)target.scrollIntoView({block:'start',behavior:'smooth'});
+    else window.scrollTo({top:0,behavior:'smooth'});
+  },true);
 })();
