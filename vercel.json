@@ -173,6 +173,10 @@
   ],
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
       "source": "/teatro/",
       "destination": "/teatro.html"
     },
