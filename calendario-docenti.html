@@ -728,8 +728,16 @@ function renderBoard(){
       var card=document.createElement("div");card.className="board-card";
       if(e.taskStatus==="done")card.classList.add("done");
       if(e.taskStatus!=="done"&&e.date){if(e.date<today)card.classList.add("overdue");else{var diff=(new Date(e.date+"T12:00:00")-new Date(today+"T12:00:00"))/86400000;if(diff<=7)card.classList.add("soon")}}
-      card.innerHTML='<strong>'+escapeHtml(e.title||"Attività")+'</strong><div class="board-meta">'+escapeHtml((e.phase?e.phase+" · ":"")+(e.team||e.teacher||(e.source==="site"?"Evento già sul sito":"Senza responsabile")))+'</div><div class="board-meta">'+(e.source==="site"?"Data evento: ":"Scadenza: ")+escapeHtml(e.date||e.siteDateLabel||"da definire")+'</div><span class="board-status">'+escapeHtml(e.source==="site"?"Dal gestionale":(statusLabels[e.taskStatus]||"Da fare"))+'</span>';
-      card.onclick=function(){openModal(e)};
+      card.innerHTML='<strong>'+escapeHtml(e.title||"Attività")+'</strong><div class="board-meta">'+escapeHtml((e.phase?e.phase+" · ":"")+(e.team||e.teacher||(e.source==="site"?"Evento già sul sito":"Senza responsabile")))+'</div><div class="board-meta">'+(e.source==="site"?"Data evento: ":"Scadenza: ")+escapeHtml(e.date||e.siteDateLabel||"da definire")+'</div><span class="board-status">'+escapeHtml(e.source==="site"?"Dal gestionale":(statusLabels[e.taskStatus]||"Da fare"))+'</span>'+(e.source==="site"?'<div class="board-meta" style="margin-top:8px;font-weight:800">✎ Clicca per modificare l\'evento</div>':'');
+      card.onclick=function(){
+        if(e.source==="site"){
+          var key=String(e.slug||e.siteEventId||"").trim();
+          if(key) location.href="/gestionale.html?edit="+encodeURIComponent(key);
+          else location.href="/gestionale.html";
+          return;
+        }
+        openModal(e);
+      };
       list.appendChild(card)
     });
     box.appendChild(col)
