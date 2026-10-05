@@ -8,14 +8,20 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Artyou Countdown">
 <meta name="robots" content="index,follow">
-<title>Countdown Artyou | Timer per Improvvisazione</title>
-<meta name="description" content="Countdown Artyou per improvvisazione teatrale: imposta la durata, avvia il timer e ricevi un allarme sonoro alla fine. Installabile su iPhone e Android.">
+<title>Countdown Artyou | Timer e Cronometro per Improvvisazione</title>
+<meta name="description" content="Timer e cronometro Artyou per improvvisazione teatrale: conto alla rovescia con allarme o tempo trascorso da zero. Installabile su iPhone e Android.">
 <link rel="canonical" href="https://artyouroma.it/countdown/">
 <link rel="manifest" href="/countdown/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/img/favicon-192.png">
 <link rel="icon" href="/favicon.ico">
 <style>
 :root{--ink:#13181D;--paper:#F6F3EC;--orange:#F09000;--white:#fff;--muted:#AEB8BF;--line:#DDD6CA}
+[hidden]{display:none!important}
+.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;background:#EEF1F3;padding:5px;border-radius:16px}
+.mode-switch button{min-width:0;min-height:48px;border:0;border-radius:12px;background:transparent;color:#56616A;font-size:15px;font-weight:900;cursor:pointer}
+.mode-switch button[aria-pressed="true"]{background:#111820;color:#fff;box-shadow:0 3px 8px #0002}
+.stopwatch-mode .duration-row{grid-template-columns:1fr}
+.timer-focus .mode-switch{display:none}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#0E1419;color:#fff}
 body{display:flex;justify-content:center}
@@ -61,13 +67,14 @@ body.timer-focus{overflow:hidden}
 
   <section class="hero">
     <h1>Countdown Artyou</h1>
-    <p>Imposta la durata della scena, avvia il timer e lascia che l'allarme segni la fine.</p>
+    <p>Scegli il timer con allarme finale oppure il cronometro per misurare il tempo della scena.</p>
   </section>
 
   <section class="timer-card">
-    <div class="duration-title">Durata scena</div>
+    <div class="mode-switch" role="group" aria-label="Modalità di misurazione"><button id="timerModeBtn" type="button" aria-pressed="true">⏳ Timer</button><button id="stopwatchModeBtn" type="button" aria-pressed="false">⏱ Cronometro</button></div>
+    <div class="duration-title" id="durationTitle">Durata scena</div>
     <div class="duration-row">
-      <label>Minuti
+      <label id="minutesLabel">Minuti
         <input id="minutes" type="number" min="1" max="60" value="3" inputmode="numeric">
       </label>
       <button class="start" id="startBtn">Avvia</button>
@@ -88,7 +95,7 @@ body.timer-focus{overflow:hidden}
       <button class="secondary" id="testSoundBtn" type="button" style="grid-column:1/-1">♫ Prova suono</button>
     </div>
 
-    <div class="status">Tocca Prova suono per verificare il volume. Alla fine sentirai tre toni; tocca i numeri per interromperli. A tutto schermo, fai doppio tocco sui numeri per avviare o riprendere il countdown. Se è già in corso, il doppio tocco torna ai comandi senza fermarlo.</div>
+    <div class="status" id="modeStatus">Tocca Prova suono per verificare il volume. Alla fine sentirai tre toni; tocca i numeri per interromperli. A tutto schermo, fai doppio tocco sui numeri per avviare o riprendere il countdown. Se è già in corso, il doppio tocco torna ai comandi senza fermarlo.</div>
   </section>
 
   <div class="footer">Artyou Roma · Countdown per lezioni, jam e spettacoli di improvvisazione</div>
@@ -108,6 +115,7 @@ body.timer-focus{overflow:hidden}
 "use strict";
 var timerId=null,remaining=180,running=false,audioCtx=null,deferredPrompt=null,soundEnabled=true,alarmNodes=[],alarmGeneration=0;
 function $(id){return document.getElementById(id)}
+var mode="timer",deadline=0,runStarted=0,elapsedAtStart=0;
 function clampMinutes(){var m=parseInt($("minutes").value||"3",10)||3;m=Math.max(1,Math.min(60,m));$("minutes").value=m;return m}
 function fmt(s){var m=Math.floor(s/60),sec=s%60;return m+":"+String(sec).padStart(2,"0")}
 function render(){ $("clockValue").textContent=fmt(Math.max(0,remaining));fitFocus(); }
@@ -180,33 +188,59 @@ function finish(){
  $("pauseBtn").disabled=true;$("pauseBtn").textContent="Pausa";
  alarm();
 }
-function tick(){remaining--;if(remaining<=0){finish();return}render();if(remaining<=3&&navigator.vibrate)navigator.vibrate(35)}
+function tick(){
+ if(mode==="stopwatch"){remaining=elapsedAtStart+Math.floor((performance.now()-runStarted)/1000);render();return}
+ var previous=remaining;remaining=Math.max(0,Math.ceil((deadline-performance.now())/1000));
+ if(remaining<=0){finish();return}render();if(remaining!==previous&&remaining<=3&&navigator.vibrate)navigator.vibrate(35);
+}
+function beginRun(){
+ running=true;runStarted=performance.now();elapsedAtStart=remaining;deadline=runStarted+remaining*1000;
+ $("clockLabel").textContent=mode==="timer"?"In corso":"Cronometro in corso";
+ $("clockHint").textContent=mode==="timer"?"Scena attiva":"Tempo trascorso";
+ $("pauseBtn").disabled=false;$("pauseBtn").textContent="Pausa";$("startBtn").textContent="Avvia";
+ render();timerId=setInterval(tick,200);
+}
 function start(){
- stopAlarm();ensureAudio();primeMedia();
- if(!running){
-   if(!timerId && remaining<=0)remaining=clampMinutes()*60;
-   if(!timerId && $("clockLabel").textContent!=="In corso")remaining=clampMinutes()*60;
-   running=true;$("clockLabel").textContent="In corso";$("clockHint").textContent="Scena attiva";
-   $("pauseBtn").disabled=false;$("pauseBtn").textContent="Pausa";
-   render();timerId=setInterval(tick,1000);
- }
+ if(running)return;
+ if($("clockLabel").textContent==="In pausa"){resume();return}
+ stopAlarm();
+ if(mode==="timer"){ensureAudio();primeMedia();remaining=clampMinutes()*60}else remaining=0;
+ beginRun();
 }
 function pause(){
  if(!running)return;
+ tick();if(!running)return;
  clearInterval(timerId);timerId=null;running=false;
- $("clockLabel").textContent="In pausa";$("clockHint").textContent="Premi Riprendi per continuare";$("pauseBtn").textContent="Riprendi";
+ $("clockLabel").textContent="In pausa";$("clockHint").textContent="Premi Riprendi per continuare";
+ $("pauseBtn").textContent="Riprendi";$("startBtn").textContent="Riprendi";
 }
 function resume(){
- ensureAudio();primeMedia();
- if(running||remaining<=0)return;
- running=true;$("clockLabel").textContent="In corso";$("clockHint").textContent="Scena attiva";$("pauseBtn").textContent="Pausa";timerId=setInterval(tick,1000);
+ if(running||(mode==="timer"&&remaining<=0))return;
+ if(mode==="timer"){ensureAudio();primeMedia()}
+ beginRun();
 }
 function reset(){
  stopAlarm();
- if(timerId)clearInterval(timerId);timerId=null;running=false;remaining=clampMinutes()*60;render();
- $("clockLabel").textContent="Pronti?";$("clockHint").textContent="Imposta i minuti e premi Avvia";$("pauseBtn").disabled=true;$("pauseBtn").textContent="Pausa";
+ if(timerId)clearInterval(timerId);timerId=null;running=false;
+ remaining=mode==="timer"?clampMinutes()*60:0;render();
+ $("clockLabel").textContent="Pronti?";
+ $("clockHint").textContent=mode==="timer"?"Imposta i minuti e premi Avvia":"Premi Avvia per partire da zero";
+ $("pauseBtn").disabled=true;$("pauseBtn").textContent="Pausa";$("startBtn").textContent="Avvia";
 }
-$("startBtn").onclick=function(){if(running)return;remaining=clampMinutes()*60;start()};
+function selectMode(next){
+ if(mode===next)return;
+ mode=next;document.body.classList.toggle("stopwatch-mode",mode==="stopwatch");
+ $("timerModeBtn").setAttribute("aria-pressed",String(mode==="timer"));
+ $("stopwatchModeBtn").setAttribute("aria-pressed",String(mode==="stopwatch"));
+ $("minutesLabel").hidden=mode==="stopwatch";
+ $("soundBtn").hidden=mode==="stopwatch";$("testSoundBtn").hidden=mode==="stopwatch";
+ $("durationTitle").textContent=mode==="timer"?"Durata scena":"Misura il tempo trascorso";
+ $("modeStatus").textContent=mode==="timer"?"Timer con allarme finale. Tocca Prova suono per verificare il volume. A tutto schermo: doppio tocco per avviare o riprendere; se è in corso, torni ai comandi senza fermarlo.":"Il cronometro parte da zero. Usa Pausa e Riprendi per continuare, Reset per azzerare. A tutto schermo: doppio tocco per avviare o riprendere; se è in corso, torni ai comandi senza fermarlo.";
+ reset();
+}
+$("timerModeBtn").onclick=function(){selectMode("timer")};
+$("stopwatchModeBtn").onclick=function(){selectMode("stopwatch")};
+$("startBtn").onclick=start;
 $("pauseBtn").onclick=function(){running?pause():resume()};
 $("resetBtn").onclick=reset;
 $("soundBtn").onclick=function(){
@@ -223,7 +257,7 @@ var lastFocusTap=null;
 document.querySelector(".clock").addEventListener("pointerup",function(e){
  if(!document.body.classList.contains("timer-focus")||e.target.closest("button"))return;
  var now=performance.now();
- if(lastFocusTap&&now-lastFocusTap.time<400&&Math.hypot(e.clientX-lastFocusTap.x,e.clientY-lastFocusTap.y)<48){lastFocusTap=null;if(!running){remaining>0&&$("clockLabel").textContent==="In pausa"?resume():start()}else exitFocus()}
+ if(lastFocusTap&&now-lastFocusTap.time<400&&Math.hypot(e.clientX-lastFocusTap.x,e.clientY-lastFocusTap.y)<48){lastFocusTap=null;if(!running){$("clockLabel").textContent==="In pausa"?resume():start()}else exitFocus()}
  else lastFocusTap={time:now,x:e.clientX,y:e.clientY};
 });
 function fitFocus(){
