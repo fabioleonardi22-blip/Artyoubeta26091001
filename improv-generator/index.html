@@ -19,26 +19,26 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%;background:var(--ink);font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
 body{display:flex;justify-content:center}
-.app{width:100%;max-width:520px;min-height:100vh;background:linear-gradient(180deg,#11171C 0,#11171C 190px,var(--paper) 190px,var(--paper) 100%);padding:env(safe-area-inset-top) 14px calc(24px + env(safe-area-inset-bottom))}
-.top{height:176px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:18px 4px 16px}
+.app{width:100%;max-width:560px;min-height:100vh;background:linear-gradient(180deg,#11171C 0,#11171C 176px,var(--paper) 176px,var(--paper) 100%);padding:env(safe-area-inset-top) 14px calc(94px + env(safe-area-inset-bottom))}
+.top{height:162px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:16px 4px 14px}
 .brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand img{width:132px}.install{display:inline-flex;align-items:center;gap:7px;border:1px solid #5E6A73;background:#192127;color:#fff;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer;white-space:nowrap}
-.top h1{margin:0;font-size:34px;line-height:.98;letter-spacing:-1px}.top p{margin:7px 0 0;color:#C4CCD2;font-size:14px;line-height:1.35}
-.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 12px 28px rgba(10,15,20,.12);margin-bottom:14px}
-.scene-card{padding:20px;background:#fff}
-.scene-label{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;font-weight:900;color:#7D858B;margin-bottom:12px}
+.top h1{margin:0;font-size:36px;line-height:.98;letter-spacing:-1px}.top p{margin:7px 0 0;color:#D2D9DE;font-size:14px;line-height:1.4;max-width:430px}
+.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 12px 28px rgba(10,15,20,.10);margin-bottom:14px}
+.scene-card{padding:18px;background:#fff;border:2px solid #E9E2D6}
+.scene-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:950;color:#6C747A;margin-bottom:12px}
 .scene-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.scene-item{border-radius:16px;padding:14px;min-height:92px;display:flex;flex-direction:column;justify-content:space-between}
-.scene-item small{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;opacity:.7}.scene-item b{font-size:19px;line-height:1.05}
+.scene-item{border-radius:16px;padding:13px 14px;min-height:94px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid rgba(19,24,29,.05)}
+.scene-item small{font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.8px;opacity:.72}.scene-item b{font-size:20px;line-height:1.08;letter-spacing:-.25px}
 .place{background:#E7F5FB;color:#0F4A66}.status{background:#FFF0D9;color:#744500}.emotion{background:#FCE9F3;color:#7C1241}.character{background:#EEF6D9;color:#3D5410}.relation{background:#EEE8FF;color:#4B3181}.objective{background:#E9F8F0;color:#145E42}.genre{background:#FFE9DF;color:#8A3A13}.object{background:#EEF0F2;color:#34404A}
-.main-action{width:100%;border:0;border-radius:18px;background:var(--orange);color:#211600;font-size:18px;font-weight:950;padding:17px 18px;box-shadow:0 8px 18px rgba(240,144,0,.24);cursor:pointer;margin-top:14px}
+.main-action{width:100%;border:0;border-radius:18px;background:var(--orange);color:#211600;font-size:19px;font-weight:950;padding:18px;box-shadow:0 9px 20px rgba(240,144,0,.28);cursor:pointer;margin-top:14px}
 .main-action:active{transform:scale(.99)}
-.section-title{display:flex;justify-content:space-between;align-items:end;margin:4px 4px 10px}.section-title h2{margin:0;font-size:19px}.section-title span{font-size:12px;color:var(--muted)}
+.section-title{display:flex;justify-content:space-between;align-items:end;margin:18px 4px 10px}.section-title h2{margin:0;font-size:20px;letter-spacing:-.2px}.section-title span{font-size:12px;color:var(--muted)}
 .generators{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.gen{border:0;border-radius:19px;padding:16px;text-align:left;min-height:122px;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between}
-.gen strong{font-size:15px}.gen .value{font-size:18px;font-weight:950;line-height:1.08}.gen .tap{font-size:11px;font-weight:800;opacity:.65}
+.gen{border:1px solid rgba(19,24,29,.06);border-radius:19px;padding:16px;text-align:left;min-height:130px;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 4px 12px rgba(19,24,29,.04)}
+.gen strong{font-size:14px;letter-spacing:.1px}.gen .value{font-size:20px;font-weight:950;line-height:1.08;letter-spacing:-.2px}.gen .tap{font-size:11px;font-weight:900;opacity:.72;text-transform:uppercase;letter-spacing:.5px}
 .gen-place{background:#DDF2FB;color:#0F4A66}.gen-status{background:#FFEBC8;color:#744500}.gen-emotion{background:#F9DFEC;color:#7C1241}.gen-character{background:#E8F3C9;color:#3D5410}.gen-relation{background:#E8E0FF;color:#4B3181}.gen-objective{background:#DDF4E8;color:#145E42}.gen-genre{background:#FFE2D4;color:#8A3A13}.gen-object{background:#E7EAED;color:#34404A}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.secondary{border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px;font-weight:850;color:var(--ink);cursor:pointer}.secondary.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
-.history{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.history::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:12px}
+.history{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.history::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:12px;font-weight:700}.seo-nav{display:flex;gap:7px;overflow-x:auto;padding:0 1px 10px;scrollbar-width:none}.seo-nav::-webkit-scrollbar{display:none}.seo-nav .chip{background:#fff;box-shadow:0 2px 7px rgba(20,25,30,.04)}.sticky-generate{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:80;width:min(520px,calc(100% - 24px));background:#13181D;border:1px solid #333D45;border-radius:18px;padding:10px;box-shadow:0 12px 30px rgba(0,0,0,.28);display:flex;align-items:center;gap:10px}.sticky-generate button{width:100%;border:0;border-radius:13px;background:#F09000;color:#211600;font-size:16px;font-weight:950;padding:14px;cursor:pointer}
 .footer{text-align:center;color:#7A8085;font-size:11px;padding:10px 8px 0}.footer a{color:inherit}.install-sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;align-items:flex-end;justify-content:center;padding:14px}.install-sheet.open{display:flex}.install-card{width:100%;max-width:520px;background:#fff;border-radius:24px 24px 18px 18px;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.35)}.install-card h3{margin:0 0 8px;font-size:22px}.install-card p{margin:0 0 14px;color:#5E6870;line-height:1.45}.install-steps{display:flex;flex-direction:column;gap:10px;margin:12px 0 16px}.install-step{background:#F6F3EC;border-radius:14px;padding:12px;font-size:14px;line-height:1.35}.install-step b{display:inline-block;min-width:24px}.install-close{width:100%;border:0;border-radius:14px;background:#13181D;color:#fff;padding:13px;font-weight:900;cursor:pointer}
 .flash{animation:flash .22s ease}@keyframes flash{0%{transform:scale(.985);opacity:.72}100%{transform:scale(1);opacity:1}}
 @media(min-width:480px){.app{padding-left:20px;padding-right:20px}}
@@ -67,7 +67,7 @@ body{display:flex;justify-content:center}
   </section>
 
   <div class="section-title"><h2>Generatori singoli</h2><span>Tocca per cambiare</span></div>
-  <nav aria-label="Generatori di improvvisazione" style="display:flex;gap:7px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none">
+  <nav class="seo-nav" aria-label="Generatori di improvvisazione">
     <a class="chip" href="/improv-generator/luoghi/">Luoghi</a>
     <a class="chip" href="/improv-generator/status/">Status</a>
     <a class="chip" href="/improv-generator/emozioni/">Emozioni</a>
@@ -77,11 +77,15 @@ body{display:flex;justify-content:center}
     <a class="chip" href="/improv-generator/generi/">Generi</a>
     <a class="chip" href="/improv-generator/oggetti/">Oggetti</a>
   </nav>
+  <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:950;color:#7B8389;margin:2px 4px 8px">Elementi principali</div>
   <section class="generators">
     <button class="gen gen-place" data-kind="place"><strong>📍 Luogo</strong><span class="value" id="placeValue">Stazione</span><span class="tap">Genera</span></button>
     <button class="gen gen-status" data-kind="status"><strong>👑 Status</strong><span class="value" id="statusValue">Molto alto</span><span class="tap">Genera</span></button>
     <button class="gen gen-emotion" data-kind="emotion"><strong>❤️ Emozione</strong><span class="value" id="emotionValue">Gelosia</span><span class="tap">Genera</span></button>
     <button class="gen gen-character" data-kind="character"><strong>🎭 Personaggio</strong><span class="value" id="characterValue">Dentista</span><span class="tap">Genera</span></button>
+  </section>
+  <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:950;color:#7B8389;margin:14px 4px 8px">Arricchisci la scena</div>
+  <section class="generators">
     <button class="gen gen-relation" data-kind="relation"><strong>🤝 Relazione</strong><span class="value" id="relationValue">Fratelli</span><span class="tap">Genera</span></button>
     <button class="gen gen-objective" data-kind="objective"><strong>🎯 Obiettivo</strong><span class="value" id="objectiveValue">Ottenere un sì</span><span class="tap">Genera</span></button>
     <button class="gen gen-genre" data-kind="genre"><strong>🎬 Genere</strong><span class="value" id="genreValue">Noir</span><span class="tap">Genera</span></button>
@@ -111,6 +115,8 @@ body{display:flex;justify-content:center}
 
   <div class="footer">Artyou Roma · strumento per allenamenti, lezioni e jam di improvvisazione</div>
 </main>
+
+<div class="sticky-generate"><button id="stickyGenerate">🎲 Genera una nuova scena</button></div>
 
 <div class="install-sheet" id="installSheet" aria-hidden="true">
   <div class="install-card">
@@ -174,7 +180,7 @@ function all(){
 }
 function reset(){history=[];try{localStorage.removeItem("artyou_improv_history")}catch(e){};$("historyCount").textContent="0";$("history").innerHTML='<span class="chip">Ancora nessuno</span>';all()}
 document.querySelectorAll(".gen").forEach(function(b){b.onclick=function(){one(b.getAttribute("data-kind"))}});
-$("generateAll").onclick=all;
+$("generateAll").onclick=all;$("stickyGenerate").onclick=function(){all();window.scrollTo({top:160,behavior:"smooth"})};
 $("resetScene").onclick=reset;
 
 function startTimer(seconds){
