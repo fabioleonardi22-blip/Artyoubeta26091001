@@ -84,9 +84,10 @@ body.timer-focus{overflow:hidden}
       <button class="secondary" id="resetBtn">Reset</button>
       <button class="secondary" id="fullscreenBtn">⛶ Tutto schermo</button>
       <button class="secondary" id="soundBtn">🔊 Allarme attivo</button>
+      <button class="secondary" id="testSoundBtn" type="button" style="grid-column:1/-1">♫ Prova suono</button>
     </div>
 
-    <div class="status">Alla fine del tempo sentirai un allarme a tre toni e, sui telefoni compatibili, una vibrazione.</div>
+    <div class="status">Tocca Prova suono per verificare il volume. Alla fine sentirai tre toni; tocca i numeri per interromperli.</div>
   </section>
 
   <div class="footer">Artyou Roma · Countdown per lezioni, jam e spettacoli di improvvisazione</div>
@@ -104,33 +105,55 @@ body.timer-focus{overflow:hidden}
 <script>
 (function(){
 "use strict";
-var timerId=null,remaining=180,running=false,audioCtx=null,deferredPrompt=null,soundEnabled=true;
+var timerId=null,remaining=180,running=false,audioCtx=null,deferredPrompt=null,soundEnabled=true,alarmNodes=[],alarmGeneration=0;
 function $(id){return document.getElementById(id)}
 function clampMinutes(){var m=parseInt($("minutes").value||"3",10)||3;m=Math.max(1,Math.min(60,m));$("minutes").value=m;return m}
 function fmt(s){var m=Math.floor(s/60),sec=s%60;return m+":"+String(sec).padStart(2,"0")}
 function render(){ $("clockValue").textContent=fmt(Math.max(0,remaining));fitFocus(); }
+function stopAlarm(){
+ alarmGeneration++;
+ alarmNodes.forEach(function(node){try{node.stop()}catch(e){}});
+ alarmNodes=[];
+}
 function ensureAudio(){
  try{
+   if(navigator.audioSession)navigator.audioSession.type="playback";
    var C=window.AudioContext||window.webkitAudioContext;
-   if(C&&!audioCtx)audioCtx=new C();
-   if(audioCtx&&audioCtx.state==="suspended")audioCtx.resume();
- }catch(e){}
+   if(!C)return Promise.resolve(null);
+   if(!audioCtx||audioCtx.state==="closed")audioCtx=new C();
+   // Start a silent buffer during the user's tap to unlock audio on iPhone.
+   var source=audioCtx.createBufferSource();
+   source.buffer=audioCtx.createBuffer(1,1,audioCtx.sampleRate);
+   source.connect(audioCtx.destination);
+   source.onended=function(){source.disconnect()};
+   source.start(0);
+   if(audioCtx.state!=="running")return audioCtx.resume().then(function(){return audioCtx}).catch(function(){return null});
+   return Promise.resolve(audioCtx);
+ }catch(e){return Promise.resolve(null)}
 }
 function alarm(){
  if(!soundEnabled)return;
- ensureAudio();
- try{
-   if(!audioCtx)return;
-   var now=audioCtx.currentTime;
-   [0,.34,.68].forEach(function(d){
-     var o=audioCtx.createOscillator(),g=audioCtx.createGain();
-     o.type="sine";o.frequency.setValueAtTime(880,now+d);
-     g.gain.setValueAtTime(.0001,now+d);
-     g.gain.exponentialRampToValueAtTime(.34,now+d+.02);
-     g.gain.exponentialRampToValueAtTime(.0001,now+d+.26);
-     o.connect(g);g.connect(audioCtx.destination);o.start(now+d);o.stop(now+d+.28);
-   });
- }catch(e){}
+ stopAlarm();
+ var generation=alarmGeneration;
+ ensureAudio().then(function(ctx){
+   if(!ctx||ctx.state!=="running"||!soundEnabled||generation!==alarmGeneration){
+     if(generation===alarmGeneration)$("clockHint").textContent="Audio non disponibile: tocca Prova suono";
+     return;
+   }
+   try{
+     var now=ctx.currentTime+.04;
+     [0,.55,1.1].forEach(function(d){
+       var o=ctx.createOscillator(),g=ctx.createGain();
+       o.type="sine";o.frequency.setValueAtTime(880,now+d);
+       g.gain.setValueAtTime(.0001,now+d);
+       g.gain.exponentialRampToValueAtTime(.55,now+d+.025);
+       g.gain.exponentialRampToValueAtTime(.0001,now+d+.42);
+       o.connect(g);g.connect(ctx.destination);alarmNodes.push(o);
+       o.onended=function(){o.disconnect();g.disconnect();alarmNodes=alarmNodes.filter(function(node){return node!==o})};
+       o.start(now+d);o.stop(now+d+.45);
+     });
+   }catch(e){}
+ });
  if(navigator.vibrate)navigator.vibrate([220,100,220,100,320]);
 }
 function finish(){
@@ -142,7 +165,7 @@ function finish(){
 }
 function tick(){remaining--;if(remaining<=0){finish();return}render();if(remaining<=3&&navigator.vibrate)navigator.vibrate(35)}
 function start(){
- ensureAudio();
+ stopAlarm();ensureAudio();
  if(!running){
    if(!timerId && remaining<=0)remaining=clampMinutes()*60;
    if(!timerId && $("clockLabel").textContent!=="In corso")remaining=clampMinutes()*60;
@@ -162,6 +185,7 @@ function resume(){
  running=true;$("clockLabel").textContent="In corso";$("clockHint").textContent="Scena attiva";$("pauseBtn").textContent="Pausa";timerId=setInterval(tick,1000);
 }
 function reset(){
+ stopAlarm();
  if(timerId)clearInterval(timerId);timerId=null;running=false;remaining=clampMinutes()*60;render();
  $("clockLabel").textContent="Pronti?";$("clockHint").textContent="Imposta i minuti e premi Avvia";$("pauseBtn").disabled=true;$("pauseBtn").textContent="Pausa";
 }
@@ -170,8 +194,14 @@ $("pauseBtn").onclick=function(){running?pause():resume()};
 $("resetBtn").onclick=reset;
 $("soundBtn").onclick=function(){
  soundEnabled=!soundEnabled;
+ if(soundEnabled)ensureAudio();else stopAlarm();
  $("soundBtn").textContent=soundEnabled?"🔊 Allarme attivo":"🔇 Allarme disattivato";
 };
+$("testSoundBtn").onclick=function(){
+ soundEnabled=true;$("soundBtn").textContent="🔊 Allarme attivo";
+ alarm();
+};
+$("clockValue").addEventListener("click",stopAlarm);
 function fitFocus(){
  if(!document.body.classList.contains("timer-focus"))return;
  var vv=window.visualViewport,root=document.documentElement;
