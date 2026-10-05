@@ -1,7 +1,3 @@
-/* Layout centrato come le altre pagine del sito (equivalente delle regole su x-dc) */
-.az-page{width:100%!important;max-width:1200px!important;margin:0 auto!important;background:#F6F3EC!important;box-shadow:0 0 36px rgba(44,31,8,.30)!important;min-height:100vh!important;box-sizing:border-box}
-@media(min-width:1200px){.az-page{width:1200px!important}}
-@media(max-width:1199px){.az-page{max-width:100%!important;box-shadow:none!important}}
 .az-page *,.az-page *::before,.az-page *::after{box-sizing:border-box}
 .az-page a{color:#1A6E99}.az-page a:hover{color:#12506F}
 .az-page header a,.az-page footer a{color:inherit}
@@ -71,16 +67,4 @@ html{scroll-behavior:smooth;scroll-padding-top:170px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
-/* Header del sito dentro il riquadro da 1200px */
-@media(min-width:821px){
-  html body .az-page>header[style]{padding:20px 36px!important;gap:20px!important}
-  html body .az-page>header nav.am-wrap[style]{gap:18px!important;flex:1;justify-content:center}
-  .az-page>header>div{flex-shrink:0}
-}
-@media(min-width:821px) and (max-width:1180px){
-  html body .az-page>header[style]{padding:16px 22px!important;gap:12px!important}
-  html body .az-page>header>a img{height:42px!important}
-  html body .az-page>header nav.am-wrap[style]{gap:12px!important}
-  html body .az-page>header nav.am-wrap[style]>a{font-size:13px!important}
-}
 
