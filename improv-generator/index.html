@@ -227,18 +227,37 @@ function formatTime(total){
  var m=Math.floor(total/60),sec=total%60;
  return m>0?String(m)+":"+String(sec).padStart(2,"0"):String(sec);
 }
+function playAlarm(){
+ try{
+   var AudioCtx=window.AudioContext||window.webkitAudioContext;
+   if(!AudioCtx)return;
+   var ctx=new AudioCtx();
+   var now=ctx.currentTime;
+   [0,0.32,0.64].forEach(function(delay){
+     var osc=ctx.createOscillator(),gain=ctx.createGain();
+     osc.type="sine";osc.frequency.setValueAtTime(880,now+delay);
+     gain.gain.setValueAtTime(0.0001,now+delay);
+     gain.gain.exponentialRampToValueAtTime(0.32,now+delay+0.02);
+     gain.gain.exponentialRampToValueAtTime(0.0001,now+delay+0.24);
+     osc.connect(gain);gain.connect(ctx.destination);
+     osc.start(now+delay);osc.stop(now+delay+0.26);
+   });
+   setTimeout(function(){try{ctx.close()}catch(e){}},1400);
+ }catch(e){}
+}
 function startTimer(seconds){
  seconds=Math.max(1,Math.min(3600,Number(seconds)||0));
  if(timerId)clearInterval(timerId);
- var n=seconds;$("timerValue").textContent=formatTime(n);$("timerHint").textContent="Preparazione";
+ var n=seconds;$("timerValue").textContent=formatTime(n);$("timerHint").textContent="Scena in corso";
  timerId=setInterval(function(){
    n--;
-   $("timerValue").textContent=n>0?formatTime(n):"VIA!";
+   $("timerValue").textContent=n>0?formatTime(n):"STOP!";
    if(n<=3&&n>0&&navigator.vibrate)navigator.vibrate(35);
    if(n<=0){
-     clearInterval(timerId);timerId=null;$("timerHint").textContent="Inizia la scena";
-     if(navigator.vibrate)navigator.vibrate([60,40,60]);
-     setTimeout(function(){$("timerValue").textContent="—";$("timerHint").textContent="Scegli un preset o imposta la durata"},1800);
+     clearInterval(timerId);timerId=null;$("timerHint").textContent="Tempo terminato";
+     playAlarm();
+     if(navigator.vibrate)navigator.vibrate([180,100,180,100,260]);
+     setTimeout(function(){$("timerValue").textContent="—";$("timerHint").textContent="Imposta la durata in minuti"},2600);
    }
  },1000);
 }
