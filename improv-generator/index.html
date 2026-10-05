@@ -6,9 +6,9 @@
 <meta name="theme-color" content="#13181D">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Artyou Generator">
+<meta name="apple-mobile-web-app-title" content="Generatore Input">
 <meta name="robots" content="index,follow">
-<title>Generatore Improv | Artyou Roma</title>
+<title>Generatore di Input | Artyou Roma</title>
 <meta name="description" content="Generatore casuale per improvvisazione teatrale: luoghi, status, emozioni e personaggi. Crea spunti per scene e allenamenti con Artyou Roma.">
 <link rel="canonical" href="https://artyouroma.it/improv-generator/">
 <link rel="manifest" href="/improv-generator/manifest.webmanifest">
@@ -51,7 +51,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
 <main class="app">
   <section class="top">
     <div class="brand"><a href="/"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a><button id="installBtn" class="install">📲 Salva sul telefono</button></div>
-    <div><h1>Generatore Improv</h1><p>Uno spunto al volo per iniziare una scena. Tocca una categoria o genera tutto insieme.</p></div>
+    <div><h1>Generatore di Input</h1><p>Uno spunto al volo per iniziare una scena. Tocca una categoria o genera tutto insieme.</p></div>
   </section>
 
   <section class="card scene-card" id="sceneCard">
@@ -158,7 +158,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
 <div class="install-sheet" id="installSheet" aria-hidden="true">
   <div class="install-card">
     <h3 id="installTitle">Salva sul telefono</h3>
-    <p id="installIntro">Puoi aggiungere il Generatore Improv alla schermata Home e usarlo come una piccola app.</p>
+    <p id="installIntro">Puoi aggiungere il Generatore di Input alla schermata Home e usarlo come una piccola app.</p>
     <div class="install-steps" id="installSteps"></div>
     <button class="install-close" id="installClose">Chiudi</button>
   </div>
@@ -297,7 +297,7 @@ function openInstallSheet(){
       '<div class="install-step"><b>4.</b> Tocca <strong>Aggiungi</strong>.</div>';
   }else{
     $("installTitle").textContent="Installa su Android";
-    $("installIntro").textContent="Puoi salvare il Generatore Improv come app sul telefono.";
+    $("installIntro").textContent="Puoi salvare il Generatore di Input come app sul telefono.";
     steps.innerHTML='<div class="install-step"><b>1.</b> Tocca <strong>Installa</strong> quando appare la richiesta.</div>'+
       '<div class="install-step"><b>2.</b> Se non appare, apri il menu del browser <strong>⋮</strong>.</div>'+
       '<div class="install-step"><b>3.</b> Scegli <strong>Installa app</strong> o <strong>Aggiungi a schermata Home</strong>.</div>';
@@ -309,7 +309,7 @@ function openInstallSheet(){
 $("installBtn").onclick=function(){
   if(isStandalone){
     $("installTitle").textContent="App già installata";
-    $("installIntro").textContent="Il Generatore Improv risulta già aperto in modalità app.";
+    $("installIntro").textContent="Il Generatore di Input risulta già aperto in modalità app.";
     $("installSteps").innerHTML='<div class="install-step">Puoi trovarlo direttamente nella schermata Home del telefono.</div>';
     $("installSheet").classList.add("open");
     return;
