@@ -151,16 +151,15 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
         <input id="timerMinutes" type="number" min="1" max="60" value="3" inputmode="numeric" style="display:block;width:100%;min-width:0;margin-top:7px;height:64px;font-size:30px;font-weight:950;padding:0 12px;border-radius:14px">
       </label>
       <button class="secondary" id="soundToggle" type="button" aria-pressed="true" aria-label="Suono finale" style="min-width:0;min-height:64px;padding:8px;font-size:12px;line-height:1.35">🔊 Suono attivo</button>
-      <button class="secondary dark" id="timerCustom" style="height:64px;padding:0 16px;font-size:16px;border-radius:14px">Avvia</button>
+      <button class="secondary dark" id="timerCustom" style="height:64px;padding:0 16px;font-size:16px;border-radius:14px">Start</button>
     </div>
     <div id="timerBox" style="margin-top:12px;background:#13181D;color:#fff;border-radius:16px;padding:16px;text-align:center">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#AEB8BF;font-weight:900">Pronti?</div>
       <div id="timerValue" style="font-size:46px;font-weight:950;line-height:1;margin-top:4px">3:00</div>
-      <div id="timerHint" style="font-size:12px;color:#C7CFD4;margin-top:5px">Countdown: imposta i minuti e premi Avvia</div>
+      <div id="timerHint" style="font-size:12px;color:#C7CFD4;margin-top:5px">Countdown: imposta i minuti e premi Start</div>
     </div>
     <div class="controls timer-tools">
-      <button class="secondary" id="timerPause" type="button" disabled>Pausa</button>
-      <button class="secondary" id="timerReset" type="button">Azzera</button>
+      <button class="secondary" id="timerReset" type="button" style="grid-column:1/-1">Azzera</button>
     </div>
   </section>
   <div class="footer">Artyou Roma · strumento per allenamenti, lezioni e jam di improvvisazione</div>
@@ -283,9 +282,9 @@ function renderTimer(){
  $("timerValue").textContent=formatTime(timerMode==="countdown"?Math.ceil(ms/1000):Math.floor(ms/1000));
 }
 function timerControls(){
- $("timerCustom").disabled=timerState==="running";
- $("timerCustom").textContent=timerState==="paused"?"Riprendi":"Avvia";
- $("timerPause").disabled=timerState!=="running";
+ $("timerCustom").disabled=false;
+ $("timerCustom").textContent=timerState==="running"?"Pausa":"Start";
+ $("timerCustom").setAttribute("aria-pressed",String(timerState==="running"));
  $("timerMinutes").disabled=timerState==="running"||timerState==="paused";
  $("modeCountdown").disabled=timerState==="running";
  $("modeStopwatch").disabled=timerState==="running";
@@ -293,7 +292,7 @@ function timerControls(){
 function resetTimer(){
  if(timerId)clearInterval(timerId);timerId=null;stopAlarm();
  timerState="idle";timerBaseMs=timerMode==="countdown"?timerDuration():0;
- $("timerHint").textContent=timerMode==="countdown"?"Countdown: imposta i minuti e premi Avvia":"Cronometro: premi Avvia per contare da zero";
+ $("timerHint").textContent=timerMode==="countdown"?"Countdown: imposta i minuti e premi Start":"Cronometro: premi Start per contare da zero";
  renderTimer();timerControls();
 }
 function tickTimer(){
@@ -312,12 +311,12 @@ function startTimer(){
  $("timerHint").textContent=timerMode==="countdown"?"Countdown in corso":"Cronometro in corso";
  renderTimer();timerControls();timerId=setInterval(tickTimer,200);
 }
-$("timerCustom").onclick=startTimer;
-$("timerPause").onclick=function(){
+function pauseTimer(){
  if(timerState!=="running")return;
  timerBaseMs=timerNow();clearInterval(timerId);timerId=null;timerState="paused";
- $("timerHint").textContent="In pausa · premi Riprendi";renderTimer();timerControls();
-};
+ $("timerHint").textContent="In pausa · premi Start per continuare";renderTimer();timerControls();
+}
+$("timerCustom").onclick=function(){timerState==="running"?pauseTimer():startTimer()};
 $("timerReset").onclick=resetTimer;
 function selectTimerMode(mode){
  if(timerState==="running"||mode===timerMode)return;
