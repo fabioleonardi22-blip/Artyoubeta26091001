@@ -202,6 +202,26 @@
       "has": [
         {
           "type": "host",
+          "value": "romaimprovfestival.it"
+        }
+      ],
+      "destination": "/rome-improv-festival.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.romaimprovfestival.com"
+        }
+      ],
+      "destination": "/rome-improv-festival.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
           "value": "romaimprovfestival.com"
         }
       ],
