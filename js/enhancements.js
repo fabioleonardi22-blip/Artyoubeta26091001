@@ -430,10 +430,14 @@
       header nav.am-wrap>a{font-size:clamp(12px,1.05vw,15px)!important;white-space:nowrap!important}
       header>div:last-child{gap:8px!important;flex:0 0 auto!important}
     }
-    @media(min-width:821px) and (max-width:1120px){
-      header.am-wrap{gap:12px!important;padding-left:22px!important;padding-right:22px!important}
-      header nav.am-wrap{gap:10px!important}
+    @media(min-width:821px) and (max-width:1320px){
+      header.am-wrap{gap:10px!important;padding-left:18px!important;padding-right:18px!important}
+      header>a:first-of-type img{height:44px!important;width:auto!important;max-width:150px!important}
+      header nav.am-wrap{gap:8px!important}
       header nav.am-wrap>a{font-size:12px!important}
+      header>div:last-child{gap:6px!important}
+      header a#artyou-trial-header-cta{height:32px!important;min-height:32px!important;max-height:32px!important;padding:0 10px!important;font-size:11px!important}
+      #artyou-language .artyou-lang-trigger{height:26px!important;min-height:26px!important;padding:0 4px!important}
     }
   `;
   document.head.appendChild(style);
@@ -482,10 +486,12 @@
       }
       html body header.am-wrap nav.am-wrap>a{font-size:clamp(12px,1.05vw,15px)!important;white-space:nowrap!important}
     }
-    @media(min-width:821px) and (max-width:1120px){
-      html body header.am-wrap{padding-left:22px!important;padding-right:22px!important;gap:12px!important}
-      html body header.am-wrap nav.am-wrap{gap:10px!important}
+    @media(min-width:821px) and (max-width:1320px){
+      html body header.am-wrap{padding-left:18px!important;padding-right:18px!important;gap:10px!important}
+      html body header.am-wrap>a:first-of-type img{height:44px!important;width:auto!important;max-width:150px!important}
+      html body header.am-wrap nav.am-wrap{gap:8px!important}
       html body header.am-wrap nav.am-wrap>a{font-size:12px!important}
+      html body header.am-wrap>div:last-child{gap:6px!important}
     }
     @media(max-width:820px){
       html body header.am-wrap{padding:10px 14px!important;gap:10px!important;min-height:64px!important}
