@@ -364,6 +364,75 @@ input,select,textarea{border:1px solid #CCD5DC;border-radius:6px}
   }
 }
 
+
+/* Tabs calendario operativo · Artyou */
+.view-switch{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:4px;
+  background:#EEF2F5;
+  border:1px solid #D9E1E7;
+  border-radius:12px;
+}
+.view-switch button{
+  border:1px solid transparent;
+  border-radius:9px;
+  padding:10px 15px;
+  min-height:40px;
+  font-size:15px;
+  font-weight:900;
+  line-height:1;
+  cursor:pointer;
+  color:#17212A;
+  box-shadow:0 2px 6px rgba(19,24,29,.08);
+  transition:transform .16s ease,box-shadow .16s ease,filter .16s ease;
+}
+.view-switch button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 5px 12px rgba(19,24,29,.12);
+  filter:brightness(.99);
+}
+.view-switch button[data-view="month"]{
+  background:#FFFFFF;
+  border-color:#D8E0E6;
+}
+.view-switch button[data-view="agenda"]{
+  background:#DDF2FF;
+  border-color:#8CCFF2;
+}
+.view-switch button[data-view="board"]{
+  background:#FFF1C7;
+  border-color:#E8C765;
+}
+.view-switch button[data-view="plan"]{
+  background:#DCF7E7;
+  border-color:#82D2A4;
+}
+.view-switch button.active{
+  background:#11181F !important;
+  color:#FFFFFF !important;
+  border-color:#11181F !important;
+  box-shadow:0 5px 14px rgba(19,24,29,.20);
+}
+@media(max-width:760px){
+  .right-tools{
+    gap:8px;
+    align-items:stretch;
+  }
+  .view-switch{
+    gap:7px;
+    width:100%;
+  }
+  .view-switch button{
+    flex:1 1 calc(50% - 7px);
+    padding:10px 10px;
+    font-size:14px;
+    white-space:nowrap;
+  }
+}
+
 </style>
 </head>
 <body>
