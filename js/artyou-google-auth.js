@@ -8,8 +8,18 @@ function getSession(){try{return JSON.parse(sessionStorage.getItem(SESSION_KEY)|
 function clear(){sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem(SESSION_KEY);sessionStorage.removeItem("artyouCalendarEmail")}
 
 async function authorizeCredential(credential){
-  const r=await fetch("/api/google-auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({credential:credential})});
-  const data=await r.json();
+  var controller=new AbortController();
+  var timeout=setTimeout(function(){controller.abort()},18000);
+  var r;
+  try{
+    r=await fetch("/api/google-auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({credential:credential}),signal:controller.signal});
+  }catch(e){
+    if(e&&e.name==="AbortError")throw new Error("auth_timeout");
+    throw e;
+  }finally{
+    clearTimeout(timeout);
+  }
+  const data=await r.json().catch(function(){return {ok:false,errore:"backend_response_invalid"}});
   if(!r.ok||!data.ok)throw new Error(data.errore||"accesso_non_autorizzato");
   sessionStorage.setItem(TOKEN_KEY,credential);
   sessionStorage.setItem(SESSION_KEY,JSON.stringify(data));
@@ -59,6 +69,8 @@ async function init(opts){
           var m=String(e.message||"");
           if(m==="accesso_non_autorizzato")m="Questo account Google non è autorizzato.";
           else if(m==="google_token_expired")m="Sessione Google scaduta. Accedi di nuovo.";
+          else if(m==="auth_timeout"||m==="backend_timeout")m="Il server di autorizzazione sta impiegando troppo tempo. Riprova tra qualche secondo.";
+          else if(m==="backend_response_invalid")m="Risposta del server non valida. Riprova.";
           setStatus(m,"err");
           if(opts.onDenied)opts.onDenied(e);
         }
