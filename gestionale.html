@@ -32,6 +32,56 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
 @media(max-width:1180px){.topnav-admin{gap:14px}.topnav-admin a{font-size:12px}.app{grid-template-columns:280px minmax(0,1fr)}}
 @media(max-width:900px){.topnav-admin{display:none}.shell-admin{grid-template-columns:1fr}.navrail{position:static;height:auto;display:flex;gap:6px;overflow:auto;padding:10px}.nav-title,.nav-sep{display:none}.nav-group{display:flex;flex-direction:row;min-width:max-content}.nav-link{padding:10px 12px}.workspace{padding:14px}.app{grid-template-columns:1fr}.sidebar{position:static;height:auto}.grid2,.grid3{grid-template-columns:1fr}.main{padding:18px}.topline{flex-direction:column}.cast-row{grid-template-columns:1fr}}
 @media(max-width:680px){.topbar-admin{padding:0 14px;height:68px}.brand-admin img{width:128px}.top-actions-admin .site-btn-admin{display:none}.shell-admin{min-height:calc(100vh - 68px)}.workspace{padding:10px}.topline h1{font-size:28px}}
+
+/* Admin mobile horizontal nav 2026-10-05 */
+@media(max-width:900px){
+  html,body{max-width:100%!important;overflow-x:hidden!important}
+  .lang-admin{display:none!important}
+  .shell-admin{display:block!important;min-width:0!important}
+  .navrail{
+    position:sticky!important;
+    top:68px!important;
+    z-index:24!important;
+    width:100%!important;
+    max-width:100vw!important;
+    height:auto!important;
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    gap:6px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:none!important;
+    padding:8px 10px!important;
+    border-right:0!important;
+    border-bottom:1px solid #DCE3E8!important;
+    background:#F8FAFB!important;
+  }
+  .navrail::-webkit-scrollbar{display:none!important}
+  .nav-title,.nav-sep,.nav-section-label{display:none!important}
+  .navrail>.nav-group:first-of-type,
+  .navrail>.nav-group:nth-of-type(2){
+    display:flex!important;
+    flex-direction:row!important;
+    flex:0 0 auto!important;
+    min-width:max-content!important;
+    width:auto!important;
+    gap:6px!important;
+  }
+  .navrail>.nav-group:nth-of-type(n+3){display:none!important}
+  .nav-link{
+    flex:0 0 auto!important;
+    min-width:auto!important;
+    white-space:nowrap!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    justify-content:flex-start!important;
+    padding:10px 12px!important;
+    min-height:42px!important;
+    font-size:14px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -40,7 +90,7 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
   <nav class="topnav-admin">
     <a href="/spettacoli/">Spettacoli</a><a href="/improvvisazione-teatrale/">Corsi</a><a href="/workshow/">WorkshoW</a><a href="/rome-improv-festival/">Festival</a><a href="/chi-siamo/">Chi Siamo</a><a href="/insegnanti/">I docenti</a><a href="/merchandising/">Merchandising</a><a href="/la-finestra-sul-cortile/">Blog</a><a href="/contatti/">Contatti</a>
   </nav>
-  <div class="top-actions-admin"><a class="site-btn-admin" href="/lezione-gratuita/">PROVA GRATUITA</a><span class="lang-admin">🌐 IT⌄</span></div>
+  <div class="top-actions-admin"><a class="site-btn-admin" href="/lezione-gratuita/">PROVA GRATUITA</a></div>
 </header>
 <div class="shell-admin">
   <aside class="navrail">
