@@ -331,6 +331,9 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
 "use strict";
 var endpoint=window.ARTYOU_EVENTS_ENDPOINT||"";
 var events=[],currentId="";
+var returnTo="";
+try{returnTo=new URLSearchParams(location.search).get("return")||""}catch(_){}
+
 
 function $(id){return document.getElementById(id)}
 function pin(){return $("pin").value.trim()}
@@ -605,9 +608,13 @@ function save(){
   apiPost({action:"save",event:e}).then(assert).then(function(r){
     currentId=r.event.id;
     try{
-      var u=new URL(location.href);u.searchParams.set("edit",r.event.slug||e.slug||"");history.replaceState(null,"",u.toString());
+      var u=new URL(location.href);u.searchParams.set("edit",r.event.slug||e.slug||"");if(returnTo)u.searchParams.set("return",returnTo);history.replaceState(null,"",u.toString());
     }catch(_){}
     setStatus("Evento aggiornato e sincronizzato con le prenotazioni.","ok");
+    if(returnTo){
+      location.href=returnTo;
+      return new Promise(function(){});
+    }
     return apiGet("list")
   }).then(assert).then(function(r){events=r.events||[];var cur=events.find(x=>x.id===currentId);if(cur)loadForm(cur);else renderList()}).catch(function(e){setStatus(e.message,"err")});
 }
