@@ -145,6 +145,27 @@
         }
       }
 
+      /* Course navigation remains a single horizontal strip at every viewport. */
+      nav[aria-label="Corsi"]{
+        display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+        align-items:center!important;justify-content:flex-start!important;
+        height:56px!important;min-height:56px!important;max-height:56px!important;
+        padding-top:0!important;padding-bottom:0!important;
+        overflow-x:auto!important;overflow-y:hidden!important;
+        touch-action:pan-x!important;overscroll-behavior:none!important;
+        scrollbar-width:none!important;
+      }
+      nav[aria-label="Corsi"]>*{
+        flex:0 0 auto!important;max-height:56px!important;
+        white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important;
+      }
+      nav[aria-label="Corsi"] a{
+        height:56px!important;min-height:0!important;
+        padding-top:0!important;padding-bottom:0!important;
+        display:flex!important;align-items:center!important;box-sizing:border-box!important;
+      }
+      nav[aria-label="Corsi"]::-webkit-scrollbar{display:none!important;width:0;height:0}
+
       .artyou-scroll-x{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
       @media(max-width:820px){
         #artyou-menu-toggle:checked~nav{
@@ -188,7 +209,8 @@
           color:#F6F3EC!important;
         }
         html,body{width:100%;max-width:100%;overflow-x:hidden!important}
-        html.artyou-menu-open body{overflow:hidden!important}
+        /* Keep the sticky header in the same scroll container when the menu opens. */
+        html.artyou-menu-open body{overflow-x:hidden!important}
         html body .artyou-menu-btn{display:flex!important;position:fixed!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;transform:none!important;z-index:10000!important;}
         body{padding-bottom:env(safe-area-inset-bottom,0px)}
         header{max-width:100vw!important}
