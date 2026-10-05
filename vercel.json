@@ -169,6 +169,11 @@
       "source": "/lezione-gratuita",
       "destination": "/lezione-gratuita/",
       "permanent": true
+    },
+    {
+      "source": "/improv-generator/:slug",
+      "destination": "/improv-generator/:slug/",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -243,6 +248,10 @@
     {
       "source": "/merchandising/",
       "destination": "/merchandising.html"
+    },
+    {
+      "source": "/improv-generator/:slug/",
+      "destination": "/api/improv-generator?slug=:slug"
     }
   ],
   "headers": [
