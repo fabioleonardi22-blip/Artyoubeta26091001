@@ -20,6 +20,7 @@ const STATIC_URLS = [
   "/la-finestra-sul-cortile/perche-guardare-oltre-il-proprio-palco/",
   "/merchandising/",
   "/privacy-policy/",
+  "/countdown/",
   "/improv-generator/",
   "/improv-generator/luoghi/",
 ];
