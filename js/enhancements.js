@@ -365,3 +365,28 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true});
   else boot();
 })();
+
+
+/* artyou-global-companies-menu-v1: replace teachers entry with Companies in every main header */
+(function(){
+  function updateCompaniesMenu(){
+    document.querySelectorAll('header nav').forEach(function(nav){
+      nav.querySelectorAll('a[href*="/insegnanti/"], a.artyou-menu-extra').forEach(function(a){
+        if(/docenti/i.test(a.textContent||'') || a.getAttribute('href')==='/insegnanti/' || (a.getAttribute('href')||'').includes('/insegnanti/')) a.remove();
+      });
+      if(nav.querySelector('a[href="/formazione-aziende/"]')) return;
+      var company=document.createElement('a');
+      company.href='/formazione-aziende/';
+      company.textContent='Aziende';
+      company.style.cssText='color:#E6EBEE;text-decoration:none;font-size:16px;font-weight:500;white-space:nowrap;';
+      var merch=Array.from(nav.querySelectorAll('a')).find(function(a){return /merchandising/i.test(a.textContent||'');});
+      var blog=Array.from(nav.querySelectorAll('a')).find(function(a){return /^\s*blog\s*$/i.test(a.textContent||'');});
+      if(merch) nav.insertBefore(company,merch);
+      else if(blog) nav.insertBefore(company,blog);
+      else nav.appendChild(company);
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',updateCompaniesMenu);
+  else updateCompaniesMenu();
+  window.addEventListener('pageshow',updateCompaniesMenu);
+})();
