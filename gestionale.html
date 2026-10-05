@@ -25,6 +25,10 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .main{padding:24px}.section{border-top:1px solid var(--line);padding-top:22px;margin-top:22px}.section:first-child{border-top:0;padding-top:0;margin-top:0}.section h2{margin:0 0 16px;font-size:18px}.checks{display:flex;gap:22px;flex-wrap:wrap}.checks label{flex-direction:row;align-items:center}.checks input{width:auto}
 .list{overflow:auto;padding-right:2px}.event{padding:12px;border:1px solid var(--line);border-radius:7px;margin-bottom:8px;cursor:pointer;background:#fff}.event:hover{border-color:#93BFEA}.event.active{background:#E9F3FF;border-color:#4C9BE7}.event strong{display:block;margin-bottom:4px}.meta{font-size:11px;color:var(--muted)}
+.event-row-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.event-edit-btn{border:0;border-radius:5px;padding:6px 8px;background:#EEF2F5;color:#17212A;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap}
+.event-edit-btn:hover{background:#DDE8EF}
+
 .repeat{display:flex;flex-direction:column;gap:9px}.repeat-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}.cast-row{grid-template-columns:1fr 1fr auto}
 .status{border-radius:7px;padding:11px 12px;font-size:12px;line-height:1.45}.status.ok{background:#EAF8F2;color:#12634E}.status.err{background:#FCEDEF;color:#8A2438}.status.info{background:#EDF6FB;color:#155A7A}
 .login{display:flex;gap:8px}.login input{flex:1}.empty{color:var(--muted);font-size:13px;padding:10px}.poster-preview{min-height:170px;border-radius:8px;border:1px dashed #CFC8BA;background:#F7F4ED center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:#8A8378;font-size:13px}
@@ -139,6 +143,10 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
       <div class="login"><input id="pin" type="password" autocomplete="current-password" placeholder="PIN"><button class="btn dark" id="loginBtn">Accedi</button><button class="btn soft" id="logoutBtn" style="display:none">Esci</button></div>
     </div>
     <div class="toolbar"><button class="btn primary" id="newBtn">+ Nuovo evento</button><button class="btn soft" id="refreshBtn">Aggiorna</button><button class="btn soft" id="importJuly2027Btn">Importa luglio 2027</button></div>
+    <div style="display:grid;grid-template-columns:1fr 120px;gap:8px">
+      <input id="eventSearch" placeholder="Cerca evento…">
+      <select id="eventStatusFilter"><option value="all">Tutti</option><option value="published">Pubblicati</option><option value="draft">Bozze</option></select>
+    </div>
     <div id="status" class="status info">Configura l'endpoint e inserisci il PIN per iniziare.</div>
     <div class="list" id="eventList"><div class="empty">Nessun evento caricato.</div></div>
   </aside>
@@ -391,11 +399,21 @@ function collect(){
 }
 function renderList(){
   var box=$("eventList");box.innerHTML="";
-  if(!events.length){box.innerHTML='<div class="empty">Nessun evento nel gestionale.</div>';return}
-  events.forEach(function(e){
+  var q=String(($("eventSearch")&&$("eventSearch").value)||"").trim().toLowerCase();
+  var status=String(($("eventStatusFilter")&&$("eventStatusFilter").value)||"all");
+  var list=(events||[]).filter(function(e){
+    if(status==="published"&&!e.attivo)return false;
+    if(status==="draft"&&e.attivo)return false;
+    if(!q)return true;
+    return ((e.title||"")+" "+(e.slug||"")+" "+(e.eventType||e.tipo||e.cat||"")).toLowerCase().indexOf(q)!==-1;
+  });
+  if(!list.length){box.innerHTML='<div class="empty">Nessun evento corrispondente.</div>';return}
+  list.forEach(function(e){
     var d=document.createElement("div");d.className="event"+(e.id===currentId?" active":"");
-    d.innerHTML="<strong>"+escapeHtml(e.title||e.slug)+"</strong><div class='meta'>"+escapeHtml(e.eventType||e.tipo||e.cat||"")+" · "+(e.attivo?"Pubblicato":"Bozza")+" · "+escapeHtml((e.dates&&e.dates[0]&&e.dates[0].label)||"")+"</div>";
-    d.onclick=function(){loadForm(e)};box.appendChild(d);
+    d.innerHTML="<div class='event-row-head'><strong>"+escapeHtml(e.title||e.slug)+"</strong><button type='button' class='event-edit-btn'>Modifica</button></div><div class='meta'>"+escapeHtml(e.eventType||e.tipo||e.cat||"")+" · "+(e.attivo?"Pubblicato":"Bozza")+" · "+escapeHtml((e.dates&&e.dates[0]&&e.dates[0].label)||"")+"</div>";
+    d.onclick=function(){loadForm(e)};
+    d.querySelector(".event-edit-btn").onclick=function(ev){ev.stopPropagation();loadForm(e)};
+    box.appendChild(d);
   });
 }
 function escapeHtml(s){return String(s||"").replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
@@ -406,7 +424,15 @@ function refresh(){
     try{sessionStorage.setItem("artyouGestionalePin",pin())}catch(e){}
     $("logoutBtn").style.display="inline-block";
     renderList();
-    setStatus("Gestionale collegato. "+events.length+" eventi trovati.","ok");
+    var editKey="";
+    try{editKey=new URLSearchParams(location.search).get("edit")||""}catch(_){}
+    if(editKey){
+      var target=events.find(function(e){return String(e.slug||"")===editKey||String(e.id||"")===editKey});
+      if(target){loadForm(target);setStatus("Evento aperto in modifica: "+(target.title||target.slug)+".","ok");}
+      else setStatus("Gestionale collegato. Evento richiesto non trovato; "+events.length+" eventi disponibili.","info");
+    }else{
+      setStatus("Gestionale collegato. "+events.length+" eventi trovati.","ok");
+    }
   }).catch(function(e){
     if(String(e.message||"").indexOf("pin_non_valido")!==-1){
       try{sessionStorage.removeItem("artyouGestionalePin")}catch(x){}
@@ -612,7 +638,7 @@ function upload(){
   var reader=new FileReader();setStatus("Caricamento immagine…","info");
   reader.onload=function(){var b64=String(reader.result).split(",")[1]||"";apiPost({action:"uploadimage",name:file.name,mime:file.type,base64:b64}).then(assert).then(function(r){$("poster").value=r.url;updatePoster();setStatus("Immagine caricata.","ok")}).catch(function(e){setStatus(e.message,"err")})};reader.readAsDataURL(file);
 }
-$("loginBtn").onclick=refresh;$("refreshBtn").onclick=refresh;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("importJuly2027Btn").onclick=openJulyImport;$("closeJulyImportBtn").onclick=closeJulyImport;$("selectAllJulyBtn").onclick=selectAllJuly;$("clearAllJulyBtn").onclick=clearAllJuly;$("confirmJulyImportBtn").onclick=importJuly2027;$("julyImportModal").onclick=function(e){if(e.target===$("julyImportModal"))closeJulyImport()};$("deleteBtn").onclick=del;
+$("loginBtn").onclick=refresh;$("refreshBtn").onclick=refresh;$("eventSearch").oninput=renderList;$("eventStatusFilter").onchange=renderList;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("importJuly2027Btn").onclick=openJulyImport;$("closeJulyImportBtn").onclick=closeJulyImport;$("selectAllJulyBtn").onclick=selectAllJuly;$("clearAllJulyBtn").onclick=clearAllJuly;$("confirmJulyImportBtn").onclick=importJuly2027;$("julyImportModal").onclick=function(e){if(e.target===$("julyImportModal"))closeJulyImport()};$("deleteBtn").onclick=del;
 $("logoutBtn").onclick=function(){
   try{sessionStorage.removeItem("artyouGestionalePin")}catch(e){}
   $("pin").value="";
