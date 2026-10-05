@@ -25,12 +25,60 @@ header strong{font-size:21px}.actions{display:flex;gap:8px;flex-wrap:wrap}.actio
 </style>
 <script src="/js/artyou-language.js" defer></script>
 <script src="/js/enhancements.js"></script>
-<style id="admin-unified-ui">html,body{background:#F5F7F9!important}.topbar-admin{height:78px;background:#13181D;color:#fff;display:flex;align-items:center;gap:34px;padding:0 28px 0 34px;border-bottom:4px solid #9B1237;position:sticky;top:0;z-index:30}.brand-admin img{width:150px;height:auto;display:block}.shell{max-width:1500px;padding:26px}.panel{border-radius:8px!important;border-color:#DCE3E8!important;box-shadow:0 7px 22px rgba(18,26,34,.06)!important}.top h1{font-size:34px!important}.btn{border-radius:6px!important;font-size:13px!important}.btn.primary{background:#0B74E5!important;color:#fff!important}.btn.soft{background:#EEF2F5!important;border-color:#DCE3E8!important}.filters{display:grid!important;grid-template-columns:minmax(280px,1fr) 190px 190px!important;gap:10px!important}.filters input,.filters select,input,select,textarea{border-radius:6px!important;border-color:#CCD5DC!important}.card{border-radius:8px!important;border-color:#DCE3E8!important}.modal{border-radius:10px!important}.close{border-radius:6px!important}.status{border-radius:7px!important}@media(max-width:900px){.shell{padding:14px}.filters{grid-template-columns:1fr!important}}@media(max-width:680px){.topbar-admin{height:68px;padding:0 14px}.brand-admin img{width:128px}.shell{padding:10px}.grid,.grid2,.skills{grid-template-columns:1fr!important}.panel{padding:18px!important}.top h1{font-size:28px!important}}</style></head>
+<style id="admin-unified-ui">html,body{background:#F5F7F9!important}.topbar-admin{height:78px;background:#13181D;color:#fff;display:flex;align-items:center;gap:34px;padding:0 28px 0 34px;border-bottom:4px solid #9B1237;position:sticky;top:0;z-index:30}.brand-admin img{width:150px;height:auto;display:block}.shell{max-width:1500px;padding:26px}.panel{border-radius:8px!important;border-color:#DCE3E8!important;box-shadow:0 7px 22px rgba(18,26,34,.06)!important}.top h1{font-size:34px!important}.btn{border-radius:6px!important;font-size:13px!important}.btn.primary{background:#0B74E5!important;color:#fff!important}.btn.soft{background:#EEF2F5!important;border-color:#DCE3E8!important}.filters{display:grid!important;grid-template-columns:minmax(280px,1fr) 190px 190px!important;gap:10px!important}.filters input,.filters select,input,select,textarea{border-radius:6px!important;border-color:#CCD5DC!important}.card{border-radius:8px!important;border-color:#DCE3E8!important}.modal{border-radius:10px!important}.close{border-radius:6px!important}.status{border-radius:7px!important}@media(max-width:900px){.shell{padding:14px}.filters{grid-template-columns:1fr!important}}@media(max-width:680px){.topbar-admin{height:68px;padding:0 14px}.brand-admin img{width:128px}.shell{padding:10px}.grid,.grid2,.skills{grid-template-columns:1fr!important}.panel{padding:18px!important}.top h1{font-size:28px!important}}</style><style id="responsabili-admin-nav">
+.shell-admin{display:grid;grid-template-columns:235px minmax(0,1fr);min-height:calc(100vh - 78px)}
+.navrail{background:#F8FAFB;border-right:1px solid #DCE3E8;padding:18px 10px 28px;position:sticky;top:78px;height:calc(100vh - 78px);overflow:auto}
+.nav-title{display:flex;align-items:center;gap:10px;padding:12px 16px 16px;font-weight:800;color:#29333C}
+.nav-group{display:flex;flex-direction:column;gap:5px}
+.nav-link{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:8px;color:#26313A;font-size:15px;text-decoration:none}
+.nav-link:hover{background:#EEF3F6}.nav-link.active{background:linear-gradient(90deg,#0F7BDC,#1696E4);color:#fff;font-weight:800}
+.nav-icon{width:20px;text-align:center;font-size:18px}.nav-sep{height:1px;background:#DCE3E8;margin:14px 6px}
+.nav-section-label{padding:2px 16px 8px;color:#7A8791;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.workspace{padding:26px;min-width:0}
+@media(max-width:900px){
+  .shell-admin{grid-template-columns:1fr}
+  .navrail{position:static;height:auto;display:flex;gap:6px;overflow:auto;padding:10px}
+  .nav-title,.nav-sep,.nav-section-label{display:none}
+  .nav-group{display:flex;flex-direction:row;min-width:max-content}
+  .nav-link{padding:10px 12px;white-space:nowrap}
+  .workspace{padding:14px}
+}
+@media(max-width:680px){.workspace{padding:10px}}
+</style>
+</head>
 <body>
 <header class="topbar-admin">
   <a class="brand-admin" href="/"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a>
   <div class="actions"><a href="/calendario-docenti/">Piano Operativo</a><a href="/gestionale.html">Gestionale Eventi</a></div>
 </header>
+<div class="shell-admin">
+<aside class="navrail">
+    <div class="nav-title"><span class="nav-icon">▣</span>Gestionale</div>
+
+    <div class="nav-group">
+      <a class="nav-link" href="/dashboard-prenotazioni/"><span class="nav-icon">👥</span>Prenotazioni</a>
+      <a class="nav-link" href="/gestionale.html"><span class="nav-icon">▦</span>Eventi</a>
+      <a class="nav-link" href="/calendario-docenti/"><span class="nav-icon">▥</span>Piano Operativo</a>
+      <a class="nav-link active" href="/responsabili.html"><span class="nav-icon">◎</span>Anagrafica</a>
+    </div>
+
+    <div class="nav-sep"></div>
+    <div class="nav-group">
+      <a class="nav-link" href="/scanner.html"><span class="nav-icon">⌗</span>Scanner QR</a>
+    </div>
+
+    <div class="nav-sep"></div>
+    <div class="nav-section-label">Link al sito</div>
+    <div class="nav-group">
+      <a class="nav-link" href="/spettacoli/"><span class="nav-icon">🎭</span>Spettacoli</a>
+      <a class="nav-link" href="/workshow/"><span class="nav-icon">✎</span>WorkshoW</a>
+      <a class="nav-link" href="/rome-improv-festival/"><span class="nav-icon">✹</span>RIF</a>
+      <a class="nav-link" href="/yep/"><span class="nav-icon">▧</span>YEP</a>
+      <a class="nav-link" href="/un-vortice-di-emozioni/"><span class="nav-icon">◉</span>Vortice</a>
+      <a class="nav-link" href="/insegnanti/"><span class="nav-icon">●</span>Docenti</a>
+    </div>
+  </aside>
+  <div class="workspace">
 <div id="accessGate" class="shell">
   <section class="panel" style="max-width:520px;margin:55px auto;text-align:center">
     <h1>Accesso riservato</h1>
@@ -53,6 +101,9 @@ header strong{font-size:21px}.actions{display:flex;gap:8px;flex-wrap:wrap}.actio
     <div id="status" class="status">Modalità test: finché il backend non viene attivato, le anagrafiche vengono salvate solo in questo browser.</div>
     <div id="peopleGrid" class="grid"></div>
   </section>
+</div>
+
+  </div>
 </div>
 
 <div class="modal-wrap" id="modalWrap">
