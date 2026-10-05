@@ -180,30 +180,17 @@ input,select,textarea{border:1px solid #CCD5DC;border-radius:6px}
     width:100%!important;
     max-width:100vw!important;
     padding:8px 10px!important;
-    overflow:hidden!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:none!important;
     background:#F8FAFB!important;
     border-right:0!important;
     border-bottom:1px solid var(--line)!important;
   }
-  .navrail>.nav-group:first-of-type{
-    display:grid!important;
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:6px!important;
-    min-width:0!important;
-    width:100%!important;
-  }
-  .navrail>.nav-group:first-of-type .nav-link{
-    min-width:0!important;
-    padding:10px 9px!important;
-    justify-content:center!important;
-    gap:7px!important;
-    font-size:13px!important;
-    white-space:nowrap!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
-  .navrail>.nav-group:not(:first-of-type),
-  .nav-section-label,.nav-title,.nav-sep{display:none!important}
+  .navrail>.nav-group:first-of-type{display:flex!important;flex-direction:row!important;min-width:max-content!important;width:auto!important;gap:6px!important}
+  .navrail>.nav-group:nth-of-type(2){display:flex!important;flex-direction:row!important;min-width:max-content!important;width:auto!important;gap:6px!important}
+  .navrail>.nav-group:nth-of-type(n+3),.nav-section-label,.nav-title,.nav-sep{display:none!important}
 
   body:has(#accessScreen:not(.hidden)) .navrail{display:none!important}
 
@@ -327,6 +314,56 @@ input,select,textarea{border:1px solid #CCD5DC;border-radius:6px}
   .grid2{grid-template-columns:1fr!important}
 }
 
+
+/* Admin mobile horizontal nav 2026-10-05 */
+@media(max-width:900px){
+  html,body{max-width:100%!important;overflow-x:hidden!important}
+  .lang-admin{display:none!important}
+  .shell-admin{display:block!important;min-width:0!important}
+  .navrail{
+    position:sticky!important;
+    top:68px!important;
+    z-index:24!important;
+    width:100%!important;
+    max-width:100vw!important;
+    height:auto!important;
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    gap:6px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:none!important;
+    padding:8px 10px!important;
+    border-right:0!important;
+    border-bottom:1px solid #DCE3E8!important;
+    background:#F8FAFB!important;
+  }
+  .navrail::-webkit-scrollbar{display:none!important}
+  .nav-title,.nav-sep,.nav-section-label{display:none!important}
+  .navrail>.nav-group:first-of-type,
+  .navrail>.nav-group:nth-of-type(2){
+    display:flex!important;
+    flex-direction:row!important;
+    flex:0 0 auto!important;
+    min-width:max-content!important;
+    width:auto!important;
+    gap:6px!important;
+  }
+  .navrail>.nav-group:nth-of-type(n+3){display:none!important}
+  .nav-link{
+    flex:0 0 auto!important;
+    min-width:auto!important;
+    white-space:nowrap!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    justify-content:flex-start!important;
+    padding:10px 12px!important;
+    min-height:42px!important;
+    font-size:14px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -335,7 +372,7 @@ input,select,textarea{border:1px solid #CCD5DC;border-radius:6px}
   <nav class="topnav-admin">
     <a href="/spettacoli/">Spettacoli</a><a href="/improvvisazione-teatrale/">Corsi</a><a href="/workshow/">WorkshoW</a><a href="/rome-improv-festival/">Festival</a><a href="/chi-siamo/">Chi Siamo</a><a href="/insegnanti/">I docenti</a><a href="/merchandising/">Merchandising</a><a href="/la-finestra-sul-cortile/">Blog</a><a href="/contatti/">Contatti</a>
   </nav>
-  <div class="top-actions-admin"><a class="site-btn-admin" href="/lezione-gratuita/">PROVA GRATUITA</a><span class="lang-admin">🌐 IT⌄</span><button id="logoutBtn" class="logout-admin hidden">Esci</button></div>
+  <div class="top-actions-admin"><a class="site-btn-admin" href="/lezione-gratuita/">PROVA GRATUITA</a><button id="logoutBtn" class="logout-admin hidden">Esci</button></div>
 </header>
 <div class="shell-admin">
   <aside class="navrail">
