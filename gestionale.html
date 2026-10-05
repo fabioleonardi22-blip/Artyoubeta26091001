@@ -82,6 +82,18 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
   }
 }
 
+.import-modal-wrap{position:fixed;inset:0;background:rgba(10,14,17,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:80}
+.import-modal-wrap.open{display:flex}
+.import-modal{width:min(760px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:10px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.3)}
+.import-modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.import-modal-head h2{margin:0;font-size:22px}
+.import-list{display:grid;gap:8px;margin:14px 0}
+.import-item{display:grid;grid-template-columns:auto 86px 1fr 110px;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.import-item input{width:auto}
+.import-item .date{font-weight:900}
+.import-item .teacher{font-size:12px;color:var(--muted);text-align:right}
+.import-actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:16px}
+@media(max-width:680px){.import-item{grid-template-columns:auto 70px 1fr}.import-item .teacher{grid-column:2/-1;text-align:left}}
 </style>
 </head>
 <body>
@@ -287,6 +299,25 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
   </div>
 </div>
 
+<div class="import-modal-wrap" id="julyImportModal">
+  <div class="import-modal" role="dialog" aria-modal="true" aria-labelledby="julyImportTitle">
+    <div class="import-modal-head">
+      <h2 id="julyImportTitle">Scegli gli eventi da importare</h2>
+      <button class="btn soft" type="button" id="closeJulyImportBtn">Chiudi</button>
+    </div>
+    <div class="field-help">Seleziona solo gli eventi di luglio 2027 che vuoi creare nel Gestionale.</div>
+    <div class="toolbar" style="margin-top:12px">
+      <button class="btn soft" type="button" id="selectAllJulyBtn">Seleziona tutti</button>
+      <button class="btn soft" type="button" id="clearAllJulyBtn">Deseleziona tutti</button>
+    </div>
+    <div class="import-list" id="julyImportList"></div>
+    <div class="import-actions">
+      <span class="field-help" id="julyImportCount">0 selezionati</span>
+      <button class="btn primary" type="button" id="confirmJulyImportBtn">Importa selezionati</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
 "use strict";
@@ -429,15 +460,48 @@ function july2027Event(x,index){
     saggi:null
   };
 }
-function importJuly2027(){
-  if(!pin()){setStatus("Inserisci prima il PIN amministratore.","err");return}
+function renderJulyImportList(){
+  var box=$("julyImportList");if(!box)return;
   var existing={};(events||[]).forEach(function(e){existing[String(e.slug||"")]=true});
-  var pending=july2027Seed.map(july2027Event).filter(function(e){return !existing[e.slug]});
-  var already=july2027Seed.length-pending.length;
-  if(!pending.length){setStatus("Gli eventi di luglio 2027 risultano già presenti.","ok");return}
-  if(!confirm("Creare "+pending.length+" workshop di luglio 2027 come BOZZE?"+(already?"\\n\\n"+already+" risultano già presenti e non verranno duplicati.":"")+"\\n\\nPrezzo, capienza, sede e locandina resteranno da compilare."))return;
+  box.innerHTML="";
+  july2027Seed.forEach(function(x,index){
+    var ev=july2027Event(x,index),exists=!!existing[ev.slug];
+    var row=document.createElement("label");row.className="import-item";
+    row.innerHTML='<input type="checkbox" class="july-import-check" data-index="'+index+'" '+(exists?'disabled':'checked')+'>'+
+      '<span class="date">'+escapeHtml(x.date.slice(0,5))+'</span>'+
+      '<span><strong>'+escapeHtml(x.title)+'</strong>'+(exists?'<div class="meta">Già presente</div>':'')+'</span>'+
+      '<span class="teacher">'+escapeHtml(x.teacher)+'</span>';
+    box.appendChild(row);
+  });
+  box.querySelectorAll(".july-import-check").forEach(function(cb){cb.onchange=updateJulyImportCount});
+  updateJulyImportCount();
+}
+function updateJulyImportCount(){
+  var selected=[].slice.call(document.querySelectorAll(".july-import-check:checked")).length;
+  var count=$("julyImportCount");if(count)count.textContent=selected+" selezionati";
+  var btn=$("confirmJulyImportBtn");if(btn)btn.disabled=!selected;
+}
+function openJulyImport(){
+  if(!pin()){setStatus("Inserisci prima il PIN amministratore.","err");return}
+  renderJulyImportList();
+  $("julyImportModal").classList.add("open");
+}
+function closeJulyImport(){$("julyImportModal").classList.remove("open")}
+function selectAllJuly(){
+  document.querySelectorAll(".july-import-check:not(:disabled)").forEach(function(cb){cb.checked=true});
+  updateJulyImportCount();
+}
+function clearAllJuly(){
+  document.querySelectorAll(".july-import-check:not(:disabled)").forEach(function(cb){cb.checked=false});
+  updateJulyImportCount();
+}
+function importJuly2027(){
+  var indexes=[].slice.call(document.querySelectorAll(".july-import-check:checked")).map(function(cb){return Number(cb.getAttribute("data-index"))});
+  if(!indexes.length){setStatus("Seleziona almeno un evento da importare.","err");return}
+  var pending=indexes.map(function(i){return july2027Event(july2027Seed[i],i)});
+  if(!confirm("Creare "+pending.length+" workshop selezionati come BOZZE?\\n\\nPrezzo, capienza, sede e locandina resteranno da compilare."))return;
 
-  $("importJuly2027Btn").disabled=true;
+  $("confirmJulyImportBtn").disabled=true;
   var created=0,failed=[];
   var chain=Promise.resolve();
   pending.forEach(function(ev,i){
@@ -449,7 +513,7 @@ function importJuly2027(){
   chain.then(function(){
     return apiGet("list").then(assert);
   }).then(function(r){
-    events=r.events||[];renderList();
+    events=r.events||[];renderList();closeJulyImport();
     if(failed.length){
       setStatus("Creati "+created+" eventi. "+failed.length+" non importati.","err");
       alert("Importazione parziale.\\n\\n"+failed.join("\\n"));
@@ -459,9 +523,10 @@ function importJuly2027(){
   }).catch(function(err){
     setStatus("Importazione non riuscita: "+err.message,"err");
   }).finally(function(){
-    $("importJuly2027Btn").disabled=false;
+    $("confirmJulyImportBtn").disabled=false;
   });
 }
+
 function save(){
   var e=collect();if(!e.title){setStatus("Inserisci il titolo.","err");return}if(!e.dates.length){setStatus("Inserisci almeno una data.","err");return}
   if(e.eventType==="SAGGI"&&(!e.saggi.show1.title||!e.saggi.show2.title)){setStatus("Per SAGGI inserisci entrambi i titoli degli spettacoli.","err");return}
@@ -547,7 +612,7 @@ function upload(){
   var reader=new FileReader();setStatus("Caricamento immagine…","info");
   reader.onload=function(){var b64=String(reader.result).split(",")[1]||"";apiPost({action:"uploadimage",name:file.name,mime:file.type,base64:b64}).then(assert).then(function(r){$("poster").value=r.url;updatePoster();setStatus("Immagine caricata.","ok")}).catch(function(e){setStatus(e.message,"err")})};reader.readAsDataURL(file);
 }
-$("loginBtn").onclick=refresh;$("refreshBtn").onclick=refresh;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("importJuly2027Btn").onclick=importJuly2027;$("deleteBtn").onclick=del;
+$("loginBtn").onclick=refresh;$("refreshBtn").onclick=refresh;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("importJuly2027Btn").onclick=openJulyImport;$("closeJulyImportBtn").onclick=closeJulyImport;$("selectAllJulyBtn").onclick=selectAllJuly;$("clearAllJulyBtn").onclick=clearAllJuly;$("confirmJulyImportBtn").onclick=importJuly2027;$("julyImportModal").onclick=function(e){if(e.target===$("julyImportModal"))closeJulyImport()};$("deleteBtn").onclick=del;
 $("logoutBtn").onclick=function(){
   try{sessionStorage.removeItem("artyouGestionalePin")}catch(e){}
   $("pin").value="";
