@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/formazione-aziende",
+      "destination": "/formazione-aziende/",
+      "permanent": true
+    },
+    {
       "source": "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-barcellona-e-londra",
       "destination": "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-londra-e-barcellona/",
       "permanent": true

@@ -8,6 +8,7 @@ const STATIC_URLS = [
   "/stand-up/",
   "/lezione-gratuita/",
   "/chi-siamo/",
+  "/formazione-aziende/",
   "/insegnanti/",
   "/contatti/",
   "/workshow/",
