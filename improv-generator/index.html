@@ -29,14 +29,14 @@ body{display:flex;justify-content:center}
 .scene-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .scene-item{border-radius:16px;padding:14px;min-height:92px;display:flex;flex-direction:column;justify-content:space-between}
 .scene-item small{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;opacity:.7}.scene-item b{font-size:19px;line-height:1.05}
-.place{background:#E7F5FB;color:#0F4A66}.status{background:#FFF0D9;color:#744500}.emotion{background:#FCE9F3;color:#7C1241}.character{background:#EEF6D9;color:#3D5410}
+.place{background:#E7F5FB;color:#0F4A66}.status{background:#FFF0D9;color:#744500}.emotion{background:#FCE9F3;color:#7C1241}.character{background:#EEF6D9;color:#3D5410}.relation{background:#EEE8FF;color:#4B3181}.objective{background:#E9F8F0;color:#145E42}.genre{background:#FFE9DF;color:#8A3A13}.object{background:#EEF0F2;color:#34404A}
 .main-action{width:100%;border:0;border-radius:18px;background:var(--orange);color:#211600;font-size:18px;font-weight:950;padding:17px 18px;box-shadow:0 8px 18px rgba(240,144,0,.24);cursor:pointer;margin-top:14px}
 .main-action:active{transform:scale(.99)}
 .section-title{display:flex;justify-content:space-between;align-items:end;margin:4px 4px 10px}.section-title h2{margin:0;font-size:19px}.section-title span{font-size:12px;color:var(--muted)}
 .generators{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .gen{border:0;border-radius:19px;padding:16px;text-align:left;min-height:122px;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between}
 .gen strong{font-size:15px}.gen .value{font-size:18px;font-weight:950;line-height:1.08}.gen .tap{font-size:11px;font-weight:800;opacity:.65}
-.gen-place{background:#DDF2FB;color:#0F4A66}.gen-status{background:#FFEBC8;color:#744500}.gen-emotion{background:#F9DFEC;color:#7C1241}.gen-character{background:#E8F3C9;color:#3D5410}
+.gen-place{background:#DDF2FB;color:#0F4A66}.gen-status{background:#FFEBC8;color:#744500}.gen-emotion{background:#F9DFEC;color:#7C1241}.gen-character{background:#E8F3C9;color:#3D5410}.gen-relation{background:#E8E0FF;color:#4B3181}.gen-objective{background:#DDF4E8;color:#145E42}.gen-genre{background:#FFE2D4;color:#8A3A13}.gen-object{background:#E7EAED;color:#34404A}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.secondary{border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px;font-weight:850;color:var(--ink);cursor:pointer}.secondary.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
 .history{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.history::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:12px}
 .footer{text-align:center;color:#7A8085;font-size:11px;padding:10px 8px 0}.footer a{color:inherit}
@@ -58,6 +58,10 @@ body{display:flex;justify-content:center}
       <div class="scene-item status"><small>Status</small><b id="sceneStatus">Molto alto</b></div>
       <div class="scene-item emotion"><small>Emozione</small><b id="sceneEmotion">Gelosia</b></div>
       <div class="scene-item character"><small>Personaggio</small><b id="sceneCharacter">Dentista</b></div>
+      <div class="scene-item relation"><small>Relazione</small><b id="sceneRelation">Fratelli</b></div>
+      <div class="scene-item objective"><small>Obiettivo</small><b id="sceneObjective">Ottenere un sì</b></div>
+      <div class="scene-item genre"><small>Genere</small><b id="sceneGenre">Noir</b></div>
+      <div class="scene-item object"><small>Oggetto</small><b id="sceneObject">Chiave</b></div>
     </div>
     <button class="main-action" id="generateAll">🎲 Genera una scena</button>
   </section>
@@ -68,12 +72,27 @@ body{display:flex;justify-content:center}
     <button class="gen gen-status" data-kind="status"><strong>👑 Status</strong><span class="value" id="statusValue">Molto alto</span><span class="tap">Genera</span></button>
     <button class="gen gen-emotion" data-kind="emotion"><strong>❤️ Emozione</strong><span class="value" id="emotionValue">Gelosia</span><span class="tap">Genera</span></button>
     <button class="gen gen-character" data-kind="character"><strong>🎭 Personaggio</strong><span class="value" id="characterValue">Dentista</span><span class="tap">Genera</span></button>
+    <button class="gen gen-relation" data-kind="relation"><strong>🤝 Relazione</strong><span class="value" id="relationValue">Fratelli</span><span class="tap">Genera</span></button>
+    <button class="gen gen-objective" data-kind="objective"><strong>🎯 Obiettivo</strong><span class="value" id="objectiveValue">Ottenere un sì</span><span class="tap">Genera</span></button>
+    <button class="gen gen-genre" data-kind="genre"><strong>🎬 Genere</strong><span class="value" id="genreValue">Noir</span><span class="tap">Genera</span></button>
+    <button class="gen gen-object" data-kind="object"><strong>🧳 Oggetto</strong><span class="value" id="objectValue">Chiave</span><span class="tap">Genera</span></button>
   </section>
 
   <section class="card" style="margin-top:14px">
     <div class="controls">
       <button class="secondary dark" id="copyScene">Copia scena</button>
       <button class="secondary" id="resetScene">Nuova partenza</button>
+    </div>
+    <div style="height:12px"></div>
+    <div class="scene-label">Countdown scena</div>
+    <div class="controls">
+      <button class="secondary" id="timer30">30 sec</button>
+      <button class="secondary" id="timer60">60 sec</button>
+    </div>
+    <div id="timerBox" style="margin-top:12px;background:#13181D;color:#fff;border-radius:16px;padding:16px;text-align:center">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#AEB8BF;font-weight:900">Pronti?</div>
+      <div id="timerValue" style="font-size:46px;font-weight:950;line-height:1;margin-top:4px">—</div>
+      <div id="timerHint" style="font-size:12px;color:#C7CFD4;margin-top:5px">Scegli 30 o 60 secondi</div>
     </div>
   </section>
 
@@ -97,9 +116,21 @@ emotion:[
 ],
 character:[
 "Dentista","Astronauta","Sindaco","Insegnante","Detective","Chef","Parrucchiere","Notaio","Influencer","Allenatore","Medico","Infermiere","Avvocato","Giudice","Tassista","Portiere di condominio","Bagnino","Vigile del fuoco","Poliziotto","Bibliotecario","Archeologo","Fioraio","Veterinario","Fotografo","Regista","Attore famoso","Musicista","Prete","Monaco","Maggiordomo","Principessa","Re","Guardia del corpo","Pescatore","Contadino","Pilota","Hostess","Controllore","Meccanico","Sarto","Becchino","Wedding planner","Astrologo","Mental coach","Personal trainer","Baby sitter","Investigatore privato","Giornalista","Critico gastronomico","Politico in campagna elettorale","Ex campione","Inventore","Truffatore","Agente immobiliare","Direttore d'orchestra","Custode notturno","Clown","Mago","Professore universitario","Turista perso"
+],
+relation:[
+"Fratelli","Sorelle","Genitore e figlio","Ex fidanzati","Migliori amici","Colleghi rivali","Capo e dipendente","Cliente e venditore","Medico e paziente","Insegnante e allievo","Vicini di casa","Sconosciuti bloccati insieme","Compagni di viaggio","Coinquilini","Coniugi in crisi","Coppia appena sposata","Nemici d'infanzia","Mentore e protetto","Due truffatori complici","Guardia e prigioniero","Regista e attore","Giornalista e politico","Allenatore e atleta","Fratelli che non si vedono da anni","Amici con un segreto","Ex colleghi","Due persone che si sono scambiate l'identità","Fan e celebrità","Investigatore e sospettato","Due eredi dello stesso patrimonio"
+],
+objective:[
+"Ottenere un sì","Nascondere un segreto","Convincere l'altro a restare","Farsi perdonare","Andarsene senza essere fermato","Ottenere una confessione","Vendere qualcosa","Evitare una figuraccia","Essere scelto","Far cambiare idea all'altro","Proteggere qualcuno","Scoprire la verità","Essere invitato","Farsi assumere","Tenere il controllo","Riconquistare la fiducia","Rubare qualcosa senza farsi notare","Impedire una partenza","Farsi riconoscere","Dimostrare di avere ragione","Calmare l'altro","Ricevere un complimento","Ottenere denaro","Salvare la reputazione","Far ridere l'altro","Nascondere la paura","Farsi accompagnare","Ottenere una promessa","Cambiare argomento","Far ammettere una bugia"
+],
+genre:[
+"Noir","Horror","Commedia romantica","Western","Fantascienza","Fantasy","Soap opera","Giallo","Thriller","Melodramma","Sit-com","Film d'azione","Documentario","Telenovela","Teatro greco","Shakespeare","Sceneggiata napoletana","Favola","Musical","Film muto","Reality show","Anime","Supereroi","Catastrofico","Gangster movie","Commedia degli equivoci","Dramma familiare","Avventura","Surreale","Assurdo"
+],
+object:[
+"Chiave","Valigia","Telefono rotto","Lettera sigillata","Anello","Fotografia","Biglietto aereo","Torta","Martello","Ombrello","Libro raro","Scarpa","Microfono","Passaporto","Mappa","Fiala misteriosa","Busta di denaro","Pupazzo","Orologio","Maschera","Coltello da cucina","Telecomando","Trofeo","Diario","Chitarra","Pacco regalo","Bicicletta","Piantina","Cappello","Occhiali","Registratore","Vecchia videocassetta","Contratto","Biglietto della lotteria","Cane immaginario","Scatola chiusa","Foto compromettente","Menu di ristorante","Medaglia","Campanello"
 ]
 };
-var current={place:"",status:"",emotion:"",character:""},history=[];
+var current={place:"",status:"",emotion:"",character:"",relation:"",objective:"",genre:"",object:""},history=[],timerId=null;
 function $(id){return document.getElementById(id)}
 function random(kind){var a=DATA[kind],prev=current[kind],v=prev;if(a.length<2)return a[0];while(v===prev)v=a[Math.floor(Math.random()*a.length)];current[kind]=v;return v}
 function flash(el){el.classList.remove("flash");void el.offsetWidth;el.classList.add("flash")}
@@ -111,14 +142,14 @@ function sync(kind){
 }
 function one(kind){random(kind);sync(kind)}
 function addHistory(){
- var text=current.place+" · "+current.status+" · "+current.emotion+" · "+current.character;
+ var text=current.place+" · "+current.status+" · "+current.emotion+" · "+current.character+" · "+current.relation+" · "+current.objective+" · "+current.genre+" · "+current.object;
  history.unshift(text);history=history.slice(0,8);
  $("historyCount").textContent=history.length;
  $("history").innerHTML=history.map(function(x){return'<span class="chip">'+x.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</span>'}).join("");
  try{localStorage.setItem("artyou_improv_history",JSON.stringify(history))}catch(e){}
 }
 function all(){
- ["place","status","emotion","character"].forEach(function(k){random(k);sync(k)});
+ ["place","status","emotion","character","relation","objective","genre","object"].forEach(function(k){random(k);sync(k)});
  flash($("sceneCard"));addHistory();
  if(navigator.vibrate)navigator.vibrate(20)
 }
@@ -126,8 +157,26 @@ function reset(){history=[];try{localStorage.removeItem("artyou_improv_history")
 document.querySelectorAll(".gen").forEach(function(b){b.onclick=function(){one(b.getAttribute("data-kind"))}});
 $("generateAll").onclick=all;
 $("resetScene").onclick=reset;
+
+function startTimer(seconds){
+ if(timerId)clearInterval(timerId);
+ var n=seconds;$("timerValue").textContent=n;$("timerHint").textContent="Preparazione";
+ timerId=setInterval(function(){
+   n--;
+   $("timerValue").textContent=n>0?n:"VIA!";
+   if(n<=3&&n>0&&navigator.vibrate)navigator.vibrate(35);
+   if(n<=0){
+     clearInterval(timerId);timerId=null;$("timerHint").textContent="Inizia la scena";
+     if(navigator.vibrate)navigator.vibrate([60,40,60]);
+     setTimeout(function(){$("timerValue").textContent="—";$("timerHint").textContent="Scegli 30 o 60 secondi"},1800);
+   }
+ },1000);
+}
+$("timer30").onclick=function(){startTimer(30)};
+$("timer60").onclick=function(){startTimer(60)};
+
 $("copyScene").onclick=function(){
- var t="Luogo: "+current.place+"\nStatus: "+current.status+"\nEmozione: "+current.emotion+"\nPersonaggio: "+current.character;
+ var t="Luogo: "+current.place+"\nStatus: "+current.status+"\nEmozione: "+current.emotion+"\nPersonaggio: "+current.character+"\nRelazione: "+current.relation+"\nObiettivo: "+current.objective+"\nGenere: "+current.genre+"\nOggetto: "+current.object;
  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){$("copyScene").textContent="Copiata ✓";setTimeout(function(){$("copyScene").textContent="Copia scena"},1200)});
 };
 try{history=JSON.parse(localStorage.getItem("artyou_improv_history")||"[]")}catch(e){history=[]}
