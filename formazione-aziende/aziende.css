@@ -223,3 +223,5 @@ body{background:#C79A2B}
  .hero-photo img{aspect-ratio:4/3;max-height:380px;border-radius:16px}
 }
 @media(max-width:380px){.hero h1{font-size:32px}.company-site>header>a img{height:31px!important;max-width:120px}}
+
+@media(min-width:821px){.company-site>header{padding:16px 24px!important;gap:14px}.company-site>header>a img{height:42px!important}.company-site>header nav{flex-wrap:nowrap!important;gap:12px!important;flex:1;justify-content:center}.company-site>header nav>a{font-size:12px!important}.company-site>header>div{flex-shrink:0;gap:8px!important}}
