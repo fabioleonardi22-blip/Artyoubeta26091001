@@ -136,15 +136,24 @@ body{display:flex;justify-content:center}
       <button class="secondary" id="resetScene">Nuova partenza</button>
     </div>
     <div style="height:12px"></div>
-    <div class="scene-label">Countdown scena</div>
+    <div class="scene-label">Durata scena</div>
     <div class="controls">
       <button class="secondary" id="timer30">30 sec</button>
       <button class="secondary" id="timer60">60 sec</button>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:10px;align-items:end">
+      <label style="font-size:11px;font-weight:900;color:#6B737A">Minuti
+        <input id="timerMinutes" type="number" min="0" max="60" value="3" inputmode="numeric" style="margin-top:5px">
+      </label>
+      <label style="font-size:11px;font-weight:900;color:#6B737A">Secondi
+        <input id="timerSeconds" type="number" min="0" max="59" value="0" inputmode="numeric" style="margin-top:5px">
+      </label>
+      <button class="secondary dark" id="timerCustom" style="height:42px">Avvia</button>
+    </div>
     <div id="timerBox" style="margin-top:12px;background:#13181D;color:#fff;border-radius:16px;padding:16px;text-align:center">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#AEB8BF;font-weight:900">Pronti?</div>
       <div id="timerValue" style="font-size:46px;font-weight:950;line-height:1;margin-top:4px">—</div>
-      <div id="timerHint" style="font-size:12px;color:#C7CFD4;margin-top:5px">Scegli 30 o 60 secondi</div>
+      <div id="timerHint" style="font-size:12px;color:#C7CFD4;margin-top:5px">Scegli un preset o imposta la durata</div>
     </div>
   </section>
 
@@ -221,22 +230,34 @@ document.querySelectorAll(".gen-roll").forEach(function(b){b.onclick=function(){
 $("generateAll").onclick=all;$("stickyGenerate").onclick=function(){all();window.scrollTo({top:160,behavior:"smooth"})};
 $("resetScene").onclick=reset;
 
+function formatTime(total){
+ var m=Math.floor(total/60),sec=total%60;
+ return m>0?String(m)+":"+String(sec).padStart(2,"0"):String(sec);
+}
 function startTimer(seconds){
+ seconds=Math.max(1,Math.min(3600,Number(seconds)||0));
  if(timerId)clearInterval(timerId);
- var n=seconds;$("timerValue").textContent=n;$("timerHint").textContent="Preparazione";
+ var n=seconds;$("timerValue").textContent=formatTime(n);$("timerHint").textContent="Preparazione";
  timerId=setInterval(function(){
    n--;
-   $("timerValue").textContent=n>0?n:"VIA!";
+   $("timerValue").textContent=n>0?formatTime(n):"VIA!";
    if(n<=3&&n>0&&navigator.vibrate)navigator.vibrate(35);
    if(n<=0){
      clearInterval(timerId);timerId=null;$("timerHint").textContent="Inizia la scena";
      if(navigator.vibrate)navigator.vibrate([60,40,60]);
-     setTimeout(function(){$("timerValue").textContent="—";$("timerHint").textContent="Scegli 30 o 60 secondi"},1800);
+     setTimeout(function(){$("timerValue").textContent="—";$("timerHint").textContent="Scegli un preset o imposta la durata"},1800);
    }
  },1000);
 }
 $("timer30").onclick=function(){startTimer(30)};
 $("timer60").onclick=function(){startTimer(60)};
+$("timerCustom").onclick=function(){
+ var mins=Math.max(0,parseInt($("timerMinutes").value||"0",10)||0);
+ var secs=Math.max(0,Math.min(59,parseInt($("timerSeconds").value||"0",10)||0));
+ var total=(mins*60)+secs;
+ if(total<=0){$("timerHint").textContent="Inserisci una durata maggiore di zero";return}
+ startTimer(total);
+};
 
 $("copyScene").onclick=function(){
  var t="Luogo: "+current.place+"\nStatus: "+current.status+"\nEmozione: "+current.emotion+"\nPersonaggio: "+current.character+"\nRelazione: "+current.relation+"\nObiettivo: "+current.objective+"\nGenere: "+current.genre+"\nOggetto: "+current.object;
