@@ -50,11 +50,11 @@ body.timer-focus{overflow:hidden}
 .timer-focus .app{position:fixed;inset:auto;left:var(--focus-left,0px);top:var(--focus-top,0px);width:var(--focus-width,100%);max-width:none;height:var(--focus-height,100dvh);min-height:0;padding:0;background:#111820;display:block}
 .timer-focus .top,.timer-focus .hero,.timer-focus .footer,.timer-focus .duration-title,.timer-focus .duration-row,.timer-focus .controls,.timer-focus .status,.timer-focus .clock-label,.timer-focus .clock-hint{display:none}
 .timer-focus .timer-card{position:absolute;inset:0;padding:0;background:#111820;border-radius:0;box-shadow:none}
-.timer-focus .clock{position:absolute;inset:0;margin:0;border-radius:0;padding:calc(12px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(80px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));display:flex;align-items:center;justify-content:center}
-.timer-focus .clock-value{margin:0;font-size:var(--focus-font, min(32vw,65dvh));letter-spacing:-.04em;white-space:nowrap}
-.timer-focus .focus-logo{display:block;position:absolute;right:calc(20px + env(safe-area-inset-right));bottom:calc(12px + env(safe-area-inset-bottom));z-index:5;border:0;padding:8px;background:transparent;cursor:pointer}
+.timer-focus .clock{position:absolute;inset:0;margin:0;border-radius:0;padding:calc(8px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) calc(52px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left));display:flex;align-items:center;justify-content:center}
+.timer-focus .clock-value{margin:0;font-size:var(--focus-font, min(32vw,65dvh));line-height:.8;letter-spacing:-.04em;white-space:nowrap}
+.timer-focus .focus-logo{display:block;position:absolute;right:calc(10px + env(safe-area-inset-right));bottom:calc(6px + env(safe-area-inset-bottom));z-index:5;border:0;padding:4px;background:transparent;cursor:pointer}
 .timer-focus .clock{touch-action:manipulation;user-select:none;-webkit-user-select:none}
-.focus-logo img{display:block;width:52px;height:52px;max-width:100%;object-fit:contain}
+.focus-logo img{display:block;width:36px;height:36px;max-width:100%;object-fit:contain}
 .focus-logo:focus-visible{outline:2px solid #fff;outline-offset:2px}
 </style>
 </head>
@@ -62,7 +62,7 @@ body.timer-focus{overflow:hidden}
 <main class="app">
   <div class="top">
     <a href="/"><img class="logo" src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a>
-    <button class="install" id="installBtn">📲 Salva sul telefono</button>
+    <button class="install" id="installBtn">📲 Senza barra · installa</button>
   </div>
 
   <section class="hero">
@@ -81,7 +81,7 @@ body.timer-focus{overflow:hidden}
     </div>
 
     <div class="clock">
-      <button class="focus-logo" id="focusExit" type="button" aria-label="Esci da tutto schermo"><img src="/img/favicon-192.png" alt="Artyou Roma" width="52" height="52"></button>
+      <button class="focus-logo" id="focusExit" type="button" aria-label="Esci da tutto schermo"><img src="/img/favicon-192.png" alt="Artyou Roma" width="36" height="36"></button>
       <div class="clock-label" id="clockLabel">Pronti?</div>
       <div class="clock-value" id="clockValue">3:00</div>
       <div class="clock-hint" id="clockHint">Imposta i minuti e premi Avvia</div>
@@ -260,6 +260,7 @@ document.querySelector(".clock").addEventListener("pointerup",function(e){
  if(lastFocusTap&&now-lastFocusTap.time<400&&Math.hypot(e.clientX-lastFocusTap.x,e.clientY-lastFocusTap.y)<48){lastFocusTap=null;if(!running){$("clockLabel").textContent==="In pausa"?resume():start()}else exitFocus()}
  else lastFocusTap={time:now,x:e.clientX,y:e.clientY};
 });
+var measureCanvas=document.createElement("canvas"),measureContext=measureCanvas.getContext("2d");
 function fitFocus(){
  if(!document.body.classList.contains("timer-focus"))return;
  var vv=window.visualViewport,root=document.documentElement;
@@ -270,10 +271,12 @@ function fitFocus(){
  var clock=document.querySelector(".clock"),value=$("clockValue"),s=getComputedStyle(clock);
  var width=clock.clientWidth-parseFloat(s.paddingLeft)-parseFloat(s.paddingRight);
  var height=clock.clientHeight-parseFloat(s.paddingTop)-parseFloat(s.paddingBottom);
- // Measure the actual glyphs, leaving the bottom strip free for the logo.
+ // Fit the visible digits rather than the larger font line box.
  root.style.setProperty("--focus-font","100px");
  var naturalWidth=value.getBoundingClientRect().width;
- var size=Math.max(1,Math.floor(Math.min(width*0.96/Math.max(1,naturalWidth)*100,height*0.90)));
+ var inkHeight=80;
+ if(measureContext){measureContext.font="950 100px Arial";var metrics=measureContext.measureText(value.textContent);inkHeight=(metrics.actualBoundingBoxAscent||74)+(metrics.actualBoundingBoxDescent||0)}
+ var size=Math.max(1,Math.floor(Math.min(width*0.98/Math.max(1,naturalWidth)*100,height*0.96/Math.max(1,inkHeight)*100)));
  root.style.setProperty("--focus-font",size+"px");
 }
 window.addEventListener("resize",fitFocus);
@@ -312,12 +315,12 @@ render();
 
 if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("/countdown/sw.js").catch(function(){})});
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e});
-var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isStandalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isStandalone=window.matchMedia("(display-mode: standalone)").matches||window.matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true;
 function openSheet(){
  if(isIOS){
    $("installTitle").textContent="Aggiungi su iPhone";
    $("installIntro").textContent="Per eliminare la barra del browser su iPhone, aggiungi Countdown Artyou alla Home e aprilo dalla sua icona.";
-   $("installSteps").innerHTML='<div class="step"><b>1.</b> Apri questa pagina in Safari.</div><div class="step"><b>2.</b> Tocca Condividi ⎋.</div><div class="step"><b>3.</b> Scegli Aggiungi alla schermata Home.</div><div class="step"><b>4.</b> Se presente, attiva Apri come app web e tocca Aggiungi.</div><div class="step"><b>5.</b> Apri Countdown dalla nuova icona sulla Home: la barra del browser non compare.</div>';
+   $("installSteps").innerHTML='<div class="step"><b>1.</b> Apri questa pagina in Safari.</div><div class="step"><b>2.</b> Tocca Condividi ⎋.</div><div class="step"><b>3.</b> Scegli Aggiungi alla schermata Home.</div><div class="step"><b>4.</b> Attiva <strong>Apri come app web</strong>, se presente, e tocca <strong>Aggiungi</strong>.</div><div class="step"><b>5.</b> Apri Countdown dalla nuova icona sulla Home: la barra del browser non compare.</div>';
  }else{
    $("installTitle").textContent="Installa su Android";
    $("installIntro").textContent="Salva Countdown Artyou come app sul telefono.";
