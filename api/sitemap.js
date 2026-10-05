@@ -101,6 +101,29 @@ module.exports = async function handler(req, res) {
     console.error("SITEMAP_MYSQL_FALLBACK", String(err && err.message || err));
   }
 
+  // Transitional safety net: merge any public show that is still only in the
+  // legacy event service. MySQL remains primary; duplicates are overwritten.
+  try {
+    const r = await fetch(origin + "/api/artyou?eventi=1&sitemap=1", { redirect:"follow" });
+    if (r.ok) {
+      const data = await r.json();
+      const events = data && data.eventi && typeof data.eventi === "object" ? data.eventi : {};
+      for (const [slug, ev] of Object.entries(events)) {
+        const row = {
+          slug,
+          title: ev && (ev.titolo || ev.title),
+          category: ev && (ev.categoria || ev.category),
+          event_type: ev && (ev.tipo || ev.event_type),
+          description: ev && (ev.descrizione || ev.description || ev.desc)
+        };
+        if (!isPublicShow(row)) continue;
+        if (!String(slug || "").trim()) continue;
+        const loc = SITE + "/spettacoli/" + encodeURIComponent(slug) + "/";
+        if (!urls.has(loc)) urls.set(loc, today);
+      }
+    }
+  } catch (_) {}
+
   const xml =
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
