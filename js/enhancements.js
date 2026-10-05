@@ -465,3 +465,32 @@
     else window.scrollTo({top:0,behavior:'smooth'});
   },true);
 })();
+
+/* One header geometry across static and rendered pages, including the blog. */
+(function(){
+  var s=document.createElement('style');s.id='artyou-header-alignment-v2';
+  s.textContent=`
+    @media(min-width:821px){
+      html body header.am-wrap{
+        padding-left:max(22px,calc((100% - 1200px)/2 + 40px))!important;
+        padding-right:max(22px,calc((100% - 1200px)/2 + 40px))!important;
+        gap:18px!important;
+      }
+      html body header.am-wrap nav.am-wrap{
+        gap:clamp(12px,1.4vw,22px)!important;min-width:0!important;
+        flex:1 1 auto!important;justify-content:center!important;
+      }
+      html body header.am-wrap nav.am-wrap>a{font-size:clamp(12px,1.05vw,15px)!important;white-space:nowrap!important}
+    }
+    @media(min-width:821px) and (max-width:1120px){
+      html body header.am-wrap{padding-left:22px!important;padding-right:22px!important;gap:12px!important}
+      html body header.am-wrap nav.am-wrap{gap:10px!important}
+      html body header.am-wrap nav.am-wrap>a{font-size:12px!important}
+    }
+    @media(max-width:820px){
+      html body header.am-wrap{padding:10px 14px!important;gap:10px!important;min-height:64px!important}
+      html body header.am-wrap>a:first-of-type img{height:38px!important;width:auto!important;max-width:min(170px,44vw)!important}
+    }
+  `;
+  document.head.appendChild(s);
+})();
