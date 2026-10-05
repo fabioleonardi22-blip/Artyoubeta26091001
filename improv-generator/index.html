@@ -21,7 +21,7 @@ html,body{margin:0;min-height:100%;background:var(--ink);font-family:Arial,Helve
 body{display:flex;justify-content:center}
 .app{width:100%;max-width:520px;min-height:100vh;background:linear-gradient(180deg,#11171C 0,#11171C 190px,var(--paper) 190px,var(--paper) 100%);padding:env(safe-area-inset-top) 14px calc(24px + env(safe-area-inset-bottom))}
 .top{height:176px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:18px 4px 16px}
-.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand img{width:132px}.install{display:none;border:1px solid #53606A;background:#192127;color:#fff;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand img{width:132px}.install{display:inline-flex;align-items:center;gap:7px;border:1px solid #5E6A73;background:#192127;color:#fff;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer;white-space:nowrap}
 .top h1{margin:0;font-size:34px;line-height:.98;letter-spacing:-1px}.top p{margin:7px 0 0;color:#C4CCD2;font-size:14px;line-height:1.35}
 .card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 12px 28px rgba(10,15,20,.12);margin-bottom:14px}
 .scene-card{padding:20px;background:#fff}
@@ -39,7 +39,7 @@ body{display:flex;justify-content:center}
 .gen-place{background:#DDF2FB;color:#0F4A66}.gen-status{background:#FFEBC8;color:#744500}.gen-emotion{background:#F9DFEC;color:#7C1241}.gen-character{background:#E8F3C9;color:#3D5410}.gen-relation{background:#E8E0FF;color:#4B3181}.gen-objective{background:#DDF4E8;color:#145E42}.gen-genre{background:#FFE2D4;color:#8A3A13}.gen-object{background:#E7EAED;color:#34404A}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.secondary{border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px;font-weight:850;color:var(--ink);cursor:pointer}.secondary.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
 .history{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.history::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:12px}
-.footer{text-align:center;color:#7A8085;font-size:11px;padding:10px 8px 0}.footer a{color:inherit}
+.footer{text-align:center;color:#7A8085;font-size:11px;padding:10px 8px 0}.footer a{color:inherit}.install-sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;align-items:flex-end;justify-content:center;padding:14px}.install-sheet.open{display:flex}.install-card{width:100%;max-width:520px;background:#fff;border-radius:24px 24px 18px 18px;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.35)}.install-card h3{margin:0 0 8px;font-size:22px}.install-card p{margin:0 0 14px;color:#5E6870;line-height:1.45}.install-steps{display:flex;flex-direction:column;gap:10px;margin:12px 0 16px}.install-step{background:#F6F3EC;border-radius:14px;padding:12px;font-size:14px;line-height:1.35}.install-step b{display:inline-block;min-width:24px}.install-close{width:100%;border:0;border-radius:14px;background:#13181D;color:#fff;padding:13px;font-weight:900;cursor:pointer}
 .flash{animation:flash .22s ease}@keyframes flash{0%{transform:scale(.985);opacity:.72}100%{transform:scale(1);opacity:1}}
 @media(min-width:480px){.app{padding-left:20px;padding-right:20px}}
 </style>
@@ -47,7 +47,7 @@ body{display:flex;justify-content:center}
 <body>
 <main class="app">
   <section class="top">
-    <div class="brand"><a href="/"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a><button id="installBtn" class="install">Installa app</button></div>
+    <div class="brand"><a href="/"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a><button id="installBtn" class="install">📲 Salva sul telefono</button></div>
     <div><h1>Generatore Improv</h1><p>Uno spunto al volo per iniziare una scena. Tocca una categoria o genera tutto insieme.</p></div>
   </section>
 
@@ -101,6 +101,15 @@ body{display:flex;justify-content:center}
 
   <div class="footer">Artyou Roma · strumento per allenamenti, lezioni e jam di improvvisazione</div>
 </main>
+
+<div class="install-sheet" id="installSheet" aria-hidden="true">
+  <div class="install-card">
+    <h3 id="installTitle">Salva sul telefono</h3>
+    <p id="installIntro">Puoi aggiungere il Generatore Improv alla schermata Home e usarlo come una piccola app.</p>
+    <div class="install-steps" id="installSteps"></div>
+    <button class="install-close" id="installClose">Chiudi</button>
+  </div>
+</div>
 <script>
 (function(){
 "use strict";
@@ -183,8 +192,52 @@ try{history=JSON.parse(localStorage.getItem("artyou_improv_history")||"[]")}catc
 if(history.length){$("historyCount").textContent=history.length;$("history").innerHTML=history.map(function(x){return'<span class="chip">'+x.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</span>'}).join("")}
 all();
 if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("/improv-generator/sw.js").catch(function(){})});
-var deferredPrompt=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;$("installBtn").style.display="inline-block"});
-$("installBtn").onclick=function(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.finally(function(){deferredPrompt=null;$("installBtn").style.display="none"})};
+var deferredPrompt=null;
+var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+var isStandalone=window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+
+window.addEventListener("beforeinstallprompt",function(e){
+  e.preventDefault();
+  deferredPrompt=e;
+});
+
+function openInstallSheet(){
+  var steps=$("installSteps");
+  if(isIOS){
+    $("installTitle").textContent="Aggiungi su iPhone";
+    $("installIntro").textContent="Su iPhone l'installazione passa dal menu Condividi di Safari.";
+    steps.innerHTML='<div class="install-step"><b>1.</b> Apri questa pagina in <strong>Safari</strong>.</div>'+
+      '<div class="install-step"><b>2.</b> Tocca il pulsante <strong>Condividi ⎋</strong>.</div>'+
+      '<div class="install-step"><b>3.</b> Scorri e scegli <strong>Aggiungi alla schermata Home</strong>.</div>'+
+      '<div class="install-step"><b>4.</b> Tocca <strong>Aggiungi</strong>.</div>';
+  }else{
+    $("installTitle").textContent="Installa su Android";
+    $("installIntro").textContent="Puoi salvare il Generatore Improv come app sul telefono.";
+    steps.innerHTML='<div class="install-step"><b>1.</b> Tocca <strong>Installa</strong> quando appare la richiesta.</div>'+
+      '<div class="install-step"><b>2.</b> Se non appare, apri il menu del browser <strong>⋮</strong>.</div>'+
+      '<div class="install-step"><b>3.</b> Scegli <strong>Installa app</strong> o <strong>Aggiungi a schermata Home</strong>.</div>';
+  }
+  $("installSheet").classList.add("open");
+  $("installSheet").setAttribute("aria-hidden","false");
+}
+
+$("installBtn").onclick=function(){
+  if(isStandalone){
+    $("installTitle").textContent="App già installata";
+    $("installIntro").textContent="Il Generatore Improv risulta già aperto in modalità app.";
+    $("installSteps").innerHTML='<div class="install-step">Puoi trovarlo direttamente nella schermata Home del telefono.</div>';
+    $("installSheet").classList.add("open");
+    return;
+  }
+  if(deferredPrompt&&!isIOS){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.finally(function(){deferredPrompt=null});
+  }else{
+    openInstallSheet();
+  }
+};
+$("installClose").onclick=function(){$("installSheet").classList.remove("open");$("installSheet").setAttribute("aria-hidden","true")};
+$("installSheet").onclick=function(e){if(e.target===$("installSheet"))$("installClose").click()};
 })();
 </script>
 </body>
