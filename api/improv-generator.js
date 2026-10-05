@@ -72,7 +72,7 @@ module.exports=async function handler(req,res){
         url:canonical,
         description:seo.description,
         publisher:{"@type":"Organization","name":"Artyou Roma","url":"https://artyouroma.it/"}
-      }).replace(/</g,"\\u003c")+'<\\/script></head>');
+      }).replace(/</g,"\\u003c")+'</script></head>');
     res.setHeader("Content-Type","text/html; charset=utf-8");
     res.setHeader("Cache-Control","public, s-maxage=3600, stale-while-revalidate=86400");
     return res.status(200).send(html);
