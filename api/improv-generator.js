@@ -51,7 +51,7 @@ module.exports=async function handler(req,res){
     const proto=String(req.headers["x-forwarded-proto"]||"https");
     const host=String(req.headers.host||"");
     const origin=proto+"://"+host;
-    const r=await fetch(origin+"/improv-generator/index.html",{redirect:"follow"});
+    const r=await fetch(origin+"/improv-generator/index.html?seo="+Date.now(),{redirect:"follow",cache:"no-store"});
     let html=await r.text();
     const canonical="https://artyouroma.it/improv-generator/"+slug+"/";
     html=html.replace(/<title>[\s\S]*?<\/title>/i,"<title>"+esc(seo.title)+"</title>");
@@ -74,7 +74,7 @@ module.exports=async function handler(req,res){
         publisher:{"@type":"Organization","name":"Artyou Roma","url":"https://artyouroma.it/"}
       }).replace(/</g,"\\u003c")+'</script></head>');
     res.setHeader("Content-Type","text/html; charset=utf-8");
-    res.setHeader("Cache-Control","public, s-maxage=3600, stale-while-revalidate=86400");
+    res.setHeader("Cache-Control","no-store, max-age=0");
     return res.status(200).send(html);
   }catch(err){
     return res.status(500).send("Errore caricamento generatore");
