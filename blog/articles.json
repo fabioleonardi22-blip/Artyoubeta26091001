@@ -2,6 +2,15 @@
   "updated": "2026-10-05",
   "articles": [
     {
+      "slug": "festival-radar-ottobre",
+      "title": "Festival Radar: gli appuntamenti internazionali di ottobre",
+      "category": "Festival Radar",
+      "date": "2026-10-05",
+      "excerpt": "Un viaggio tra i festival di improvvisazione in arrivo a ottobre 2026: da Wellington a Santiago de Compostela e Walnut Creek.",
+      "url": "/la-finestra-sul-cortile/festival-radar-ottobre/",
+      "imageQuery": "improv theater stage"
+    },
+    {
       "slug": "improv-around-the-world-da-chicago-a-londra-e-barcellona",
       "title": "Improv around the world: da Chicago a Londra e Barcellona",
       "category": "Improv around the world",
@@ -26,6 +35,120 @@
       "imageSourceUrl": "https://unsplash.com/photos/man-in-black-jacket-standing-on-stage-xX21Sxqzb2c"
     }
   ],
-  "radar": [],
-  "festivalsCovered": []
+  "radar": [
+    {
+      "name": "New Zealand Improv Festival",
+      "place": "Wellington, New Zealand",
+      "date": "2–11 ottobre 2026",
+      "start": "2026-10-02",
+      "end": "2026-10-11",
+      "url": "https://improvfest.nz/",
+      "verified": true
+    },
+    {
+      "name": "Imperdible. Festival Internacional de Impro de Galicia",
+      "place": "Santiago de Compostela, Spain",
+      "date": "8–18 ottobre 2026",
+      "start": "2026-10-08",
+      "end": "2026-10-18",
+      "url": "https://imperdible.gal/",
+      "verified": true
+    },
+    {
+      "name": "Secret City Improv Comedy Festival",
+      "place": "Oak Ridge, USA",
+      "date": "8–10 ottobre 2026",
+      "start": "2026-10-08",
+      "end": "2026-10-10",
+      "url": "https://improvfestivals.org/",
+      "verified": false
+    },
+    {
+      "name": "IF Cincy",
+      "place": "Cincinnati, USA",
+      "date": "15–17 ottobre 2026",
+      "start": "2026-10-15",
+      "end": "2026-10-17",
+      "url": "https://improvfestivals.org/",
+      "verified": false
+    },
+    {
+      "name": "Scary Strangers Comedy Festival",
+      "place": "Wentworth Falls, Australia",
+      "date": "15–18 ottobre 2026",
+      "start": "2026-10-15",
+      "end": "2026-10-18",
+      "url": "https://improvfestivals.org/",
+      "verified": false
+    },
+    {
+      "name": "Diablo Improv Festival",
+      "place": "Walnut Creek, USA",
+      "date": "16–18 ottobre 2026",
+      "start": "2026-10-16",
+      "end": "2026-10-18",
+      "url": "https://diabloimprovfestival.org/",
+      "verified": true
+    },
+    {
+      "name": "Floodwater Comedy Festival",
+      "place": "Iowa City, USA",
+      "date": "16–17 ottobre 2026",
+      "start": "2026-10-16",
+      "end": "2026-10-17",
+      "url": "https://improvfestivals.org/",
+      "verified": false
+    },
+    {
+      "name": "Rivertowns Improv Fall Festival",
+      "place": "Croton-on-Hudson, USA",
+      "date": "16–17 ottobre 2026",
+      "start": "2026-10-16",
+      "end": "2026-10-17",
+      "url": "https://improvfestivals.org/",
+      "verified": false
+    },
+    {
+      "name": "Oslo Impro Festival",
+      "place": "Oslo, Norway",
+      "date": "17–24 ottobre 2026",
+      "start": "2026-10-17",
+      "end": "2026-10-24",
+      "url": "https://improvfestivals.org/",
+      "verified": false
+    },
+    {
+      "name": "One Month Improv",
+      "place": "Tavira, Portugal",
+      "date": "19 ottobre – 14 novembre 2026",
+      "start": "2026-10-19",
+      "end": "2026-11-14",
+      "url": "https://www.improfestivals.com/",
+      "verified": false
+    },
+    {
+      "name": "Naked Stage",
+      "place": "Ljubljana, Slovenia",
+      "date": "21–25 ottobre 2026",
+      "start": "2026-10-21",
+      "end": "2026-10-25",
+      "url": "https://en.goli-oder.org/",
+      "verified": true
+    },
+    {
+      "name": "Winnipeg Improv Festival",
+      "place": "Winnipeg, Canada",
+      "date": "21–24 ottobre 2026",
+      "start": "2026-10-21",
+      "end": "2026-10-24",
+      "url": "https://winnipegimprov.com",
+      "verified": true
+    }
+  ],
+  "festivalsCovered": [
+    "New Zealand Improv Festival",
+    "Imperdible. Festival Internacional de Impro de Galicia",
+    "Diablo Improv Festival"
+  ],
+  "radarUpdated": "2026-10-05"
 }
