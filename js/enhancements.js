@@ -133,7 +133,7 @@
       @media(max-width:820px){
         header a#artyou-trial-header-cta{
           width:112px!important;height:34px!important;min-height:34px!important;max-height:34px!important;
-          padding:0 11px!important;font-size:12px!important;
+          padding:0 11px!important;font-size:14px!important;
         }
         header a#artyou-trial-header-cta .am-long{display:none!important;}
         header a#artyou-trial-header-cta .am-short{display:inline!important;}
@@ -513,7 +513,7 @@
       }
       html body header.am-wrap nav.am-wrap>a{
         flex:0 0 auto!important;
-        font-size:14px!important;
+        font-size:16px!important;
         line-height:1!important;
         white-space:nowrap!important;
       }
