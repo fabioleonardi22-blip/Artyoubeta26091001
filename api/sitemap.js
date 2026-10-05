@@ -83,10 +83,10 @@ module.exports = async function handler(req, res) {
   const origin = proto + "://" + host;
 
   const urls = new Map();
-  STATIC_URLS.forEach(path => urls.set(SITE + path, today));
+  STATIC_URLS.forEach(path => urls.set(SITE + path, null));
 
   const teachers = await teacherUrls(origin);
-  teachers.forEach(path => urls.set(SITE + path, today));
+  teachers.forEach(path => urls.set(SITE + path, null));
 
   try {
     const rows = await query(
@@ -123,7 +123,7 @@ module.exports = async function handler(req, res) {
         if (!isPublicShow(row)) continue;
         if (!String(slug || "").trim()) continue;
         const loc = SITE + "/spettacoli/" + encodeURIComponent(slug) + "/";
-        if (!urls.has(loc)) urls.set(loc, today);
+        if (!urls.has(loc)) urls.set(loc, null);
       }
     }
   } catch (_) {}
@@ -132,7 +132,7 @@ module.exports = async function handler(req, res) {
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     Array.from(urls.entries()).map(([loc,lastmod]) =>
-      '  <url><loc>' + escXml(loc) + '</loc><lastmod>' + escXml(lastmod) + '</lastmod></url>'
+      '  <url><loc>' + escXml(loc) + '</loc>' + (lastmod ? '<lastmod>' + escXml(lastmod) + '</lastmod>' : '') + '</url>'
     ).join("\n") +
     '\n</urlset>\n';
 
