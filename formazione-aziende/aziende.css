@@ -1,6 +1,3 @@
-.az-page *,.az-page *::before,.az-page *::after{box-sizing:border-box}
-.az-page a{color:#1A6E99}.az-page a:hover{color:#12506F}
-.az-page header a,.az-page footer a{color:inherit}
 .az-skip{position:absolute;left:-9999px}.az-skip:focus{left:12px;top:12px;z-index:9999;background:#fff;padding:8px 12px;color:#13181D}
 html{scroll-behavior:smooth;scroll-padding-top:170px}
 .az-page :focus-visible{outline:3px solid #F09000;outline-offset:3px;border-radius:4px}
