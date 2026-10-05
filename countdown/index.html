@@ -317,7 +317,11 @@ if("serviceWorker" in navigator)window.addEventListener("load",function(){naviga
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e});
 var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isStandalone=window.matchMedia("(display-mode: standalone)").matches||window.matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true;
 function openSheet(){
- if(isIOS){
+ if(isIOS&&/CriOS/i.test(navigator.userAgent)){
+ $("installTitle").textContent="Chrome su iPhone";
+ $("installIntro").textContent="Aggiungi Countdown Artyou alla schermata Home per aprirlo come app.";
+ $("installSteps").innerHTML='<div class="step"><b>1.</b> Tocca il menu <strong>⋯</strong> di Chrome su iPhone.</div><div class="step"><b>2.</b> Tocca <strong>Visualizza Altro</strong>.</div><div class="step"><b>3.</b> Scegli <strong>Aggiungi alla Schermata Home</strong>.</div><div class="step"><b>4.</b> Attiva <strong>Apri come app web</strong>, se presente, e tocca <strong>Aggiungi</strong>.</div><div class="step"><b>5.</b> Apri Countdown Artyou dalla nuova icona sulla Home.</div>';
+ }else if(isIOS){
    $("installTitle").textContent="Aggiungi su iPhone";
    $("installIntro").textContent="Per eliminare la barra del browser su iPhone, aggiungi Countdown Artyou alla Home e aprilo dalla sua icona.";
    $("installSteps").innerHTML='<div class="step"><b>1.</b> Apri questa pagina in Safari.</div><div class="step"><b>2.</b> Tocca Condividi ⎋.</div><div class="step"><b>3.</b> Scegli Aggiungi alla schermata Home.</div><div class="step"><b>4.</b> Attiva <strong>Apri come app web</strong>, se presente, e tocca <strong>Aggiungi</strong>.</div><div class="step"><b>5.</b> Apri Countdown dalla nuova icona sulla Home: la barra del browser non compare.</div>';
