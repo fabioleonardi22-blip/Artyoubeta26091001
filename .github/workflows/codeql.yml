@@ -1,12 +1,13 @@
 name: CodeQL
 
+# CodeQL è più pesante: niente esecuzione ad ogni push.
+# Viene eseguito sui PR, settimanalmente e a richiesta.
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
   schedule:
     - cron: "25 4 * * 2"
+  workflow_dispatch:
 
 permissions:
   contents: read
