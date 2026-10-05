@@ -28,7 +28,7 @@ body{display:flex;justify-content:center}
 .app{width:100%;max-width:560px;min-height:100vh;padding:calc(16px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:16px;background:linear-gradient(180deg,#0E1419 0,#0E1419 48%,#171F26 100%)}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .logo{width:148px;height:auto}
-.install{border:1px solid #46515A;background:#182027;color:#fff;border-radius:999px;padding:10px 13px;font-size:12px;font-weight:900;cursor:pointer}
+.install{border:0;background:#8B1536;color:#fff;border-radius:999px;padding:10px 18px;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(139,21,54,.28)}
 .hero{padding-top:4px}.hero h1{margin:0;font-size:40px;line-height:.95;letter-spacing:-1.5px}.hero p{margin:8px 0 0;color:#C8D0D5;font-size:14px;line-height:1.4}
 .timer-card{background:#fff;color:var(--ink);border-radius:28px;padding:18px;box-shadow:0 18px 40px rgba(0,0,0,.28)}
 .duration-title{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;font-weight:950;color:#6C747A;margin-bottom:10px}
@@ -62,7 +62,7 @@ body.timer-focus{overflow:hidden}
 <main class="app">
   <div class="top">
     <a href="/"><img class="logo" src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a>
-    <button class="install" id="installBtn">📲 Senza barra · installa</button>
+    <button class="install" id="installBtn">📲 Scarica l’APP</button>
   </div>
 
   <section class="hero">
