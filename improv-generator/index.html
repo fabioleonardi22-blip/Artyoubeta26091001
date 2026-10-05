@@ -360,7 +360,14 @@ window.addEventListener("beforeinstallprompt",function(e){
 
 function openInstallSheet(){
   var steps=$("installSteps");
-  if(isIOS){
+  if(isIOS&&/CriOS/i.test(navigator.userAgent)){
+    $("installTitle").textContent="Aggiungi su iPhone · Chrome";
+    $("installIntro").textContent="Salva il Generatore di Input sulla schermata Home dal menu di Chrome.";
+    steps.innerHTML='<div class="install-step"><b>1.</b> Tocca il menu <strong>⋯</strong> di Chrome.</div>'+
+      '<div class="install-step"><b>2.</b> Tocca <strong>Visualizza altro</strong>.</div>'+
+      '<div class="install-step"><b>3.</b> Scegli <strong>Aggiungi alla schermata Home</strong>.</div>'+
+      '<div class="install-step"><b>4.</b> Tocca <strong>Aggiungi</strong>.</div>';
+  }else if(isIOS){
     $("installTitle").textContent="Aggiungi su iPhone";
     $("installIntro").textContent="Su iPhone l'installazione passa dal menu Condividi di Safari.";
     steps.innerHTML='<div class="install-step"><b>1.</b> Apri questa pagina in <strong>Safari</strong>.</div>'+
