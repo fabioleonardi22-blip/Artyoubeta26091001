@@ -116,7 +116,7 @@ alarmMedia.preload="auto";
 alarmMedia.setAttribute("playsinline","");
 function primeMedia(){
  if(!soundEnabled)return;
- alarmMedia.volume=0;alarmMedia.loop=true;
+ alarmMedia.src="/countdown/silence.wav";alarmMedia.loop=true;
  var attempt=alarmMedia.play();
  if(attempt)attempt.catch(function(){$("clockHint").textContent="Tocca Prova suono per attivare l’audio"});
 }
@@ -146,7 +146,7 @@ function alarm(){
  if(!soundEnabled)return;
  stopAlarm();
  var generation=alarmGeneration;
- alarmMedia.loop=false;alarmMedia.volume=1;alarmMedia.currentTime=0;
+ alarmMedia.src="/countdown/alarm.wav";alarmMedia.loop=false;alarmMedia.currentTime=0;
  var mediaAttempt=alarmMedia.play();
  if(mediaAttempt)mediaAttempt.catch(function(){playSynthAlarm(generation)});
  if(navigator.vibrate)navigator.vibrate([220,100,220,100,320]);
@@ -218,7 +218,7 @@ $("testSoundBtn").onclick=function(){
  soundEnabled=true;$("soundBtn").textContent="🔊 Allarme attivo";
  alarm();
 };
-$("clockValue").addEventListener("click",function(){if(alarmNodes.length||!alarmMedia.paused&&alarmMedia.volume>0)stopAlarm()});
+$("clockValue").addEventListener("click",function(){if(alarmNodes.length||!alarmMedia.paused&&alarmMedia.src.indexOf("/alarm.wav")!==-1)stopAlarm()});
 var lastFocusTap=null;
 document.querySelector(".clock").addEventListener("pointerup",function(e){
  if(!document.body.classList.contains("timer-focus")||e.target.closest("button"))return;
