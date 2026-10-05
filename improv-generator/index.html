@@ -137,10 +137,6 @@ body{display:flex;justify-content:center}
     </div>
     <div style="height:12px"></div>
     <div class="scene-label">Durata scena</div>
-    <div class="controls">
-      <button class="secondary" id="timer30">30 sec</button>
-      <button class="secondary" id="timer60">60 sec</button>
-    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:10px;align-items:end">
       <label style="font-size:11px;font-weight:900;color:#6B737A">Minuti
         <input id="timerMinutes" type="number" min="0" max="60" value="3" inputmode="numeric" style="margin-top:5px">
@@ -249,8 +245,6 @@ function startTimer(seconds){
    }
  },1000);
 }
-$("timer30").onclick=function(){startTimer(30)};
-$("timer60").onclick=function(){startTimer(60)};
 $("timerCustom").onclick=function(){
  var mins=Math.max(0,parseInt($("timerMinutes").value||"0",10)||0);
  var secs=Math.max(0,Math.min(59,parseInt($("timerSeconds").value||"0",10)||0));
