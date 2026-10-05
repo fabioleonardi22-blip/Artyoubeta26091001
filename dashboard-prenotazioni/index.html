@@ -49,6 +49,49 @@ a{text-decoration:none;color:inherit}
   body,.main,.panel{background:#fff!important;box-shadow:none!important;border:0!important}.shell{display:block}.main{padding:0}.tablewrap{display:block!important;overflow:visible}.bookings{min-width:0;font-size:9px}.bookings th,.bookings td{padding:6px 5px;font-size:9px}.no-print{display:none!important}
   body:before{content:"Artyou Roma · Elenco Prenotazioni";display:block;font-size:20px;font-weight:900;margin:0 0 14px}
 }
+
+/* Admin mobile horizontal nav 2026-10-05 */
+@media(max-width:900px){
+  html,body{max-width:100%;overflow-x:hidden}
+  .top-actions .lang{display:none!important}
+  .sidebar{
+    position:sticky!important;
+    top:68px!important;
+    z-index:19!important;
+    width:100%!important;
+    max-width:100vw!important;
+    height:auto!important;
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    gap:6px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:none!important;
+    padding:8px 10px!important;
+    border-right:0!important;
+    border-bottom:1px solid var(--line)!important;
+    background:#F8FAFB!important;
+  }
+  .sidebar::-webkit-scrollbar{display:none!important}
+  .side-title,.side-sep,.side-section-label{display:none!important}
+  .sidebar>.side-group:first-of-type,
+  .sidebar>.side-group:nth-of-type(2){
+    display:flex!important;
+    flex-direction:row!important;
+    flex:0 0 auto!important;
+    min-width:max-content!important;
+    gap:6px!important;
+  }
+  .sidebar>.side-group:nth-of-type(n+3){display:none!important}
+  .side-link{
+    flex:0 0 auto!important;
+    white-space:nowrap!important;
+    padding:10px 12px!important;
+    min-height:42px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -57,7 +100,7 @@ a{text-decoration:none;color:inherit}
   <nav class="topnav">
     <a href="/spettacoli/">Spettacoli</a><a href="/improvvisazione-teatrale/">Corsi</a><a href="/workshow/">WorkshoW</a><a href="/rome-improv-festival/">Festival</a><a href="/chi-siamo/">Chi Siamo</a><a href="/insegnanti/">I docenti</a><a href="/merchandising/">Merchandising</a><a href="/la-finestra-sul-cortile/">Blog</a><a href="/contatti/">Contatti</a>
   </nav>
-  <div class="top-actions"><a class="site-btn" href="/lezione-gratuita/">PROVA GRATUITA</a><span class="lang">🌐 IT⌄</span></div>
+  <div class="top-actions"><a class="site-btn" href="/lezione-gratuita/">PROVA GRATUITA</a></div>
 </header>
 
 <div class="shell">
