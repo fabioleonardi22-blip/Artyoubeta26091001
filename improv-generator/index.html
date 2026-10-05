@@ -139,6 +139,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
     </div>
     <div style="height:12px"></div>
     <div class="scene-label">Durata scena</div>
+    <button class="secondary" id="soundToggle" type="button" aria-pressed="true" style="width:100%;min-height:44px">🔊 Suono finale attivo</button>
     <div style="display:grid;grid-template-columns:1fr auto;gap:12px;margin-top:12px;align-items:end">
       <label style="font-size:14px;font-weight:900;color:#56616A">Minuti
         <input id="timerMinutes" type="number" min="1" max="60" value="3" inputmode="numeric" style="margin-top:7px;height:64px;font-size:30px;font-weight:950;padding:0 16px;border-radius:14px">
@@ -218,11 +219,39 @@ function formatTime(total){
  var m=Math.floor(total/60),sec=total%60;
  return m>0?String(m)+":"+String(sec).padStart(2,"0"):String(sec);
 }
-function playAlarm(){
+var soundEnabled=true,audioContext=null,alarmNodes=[];
+try{soundEnabled=localStorage.getItem("artyou-timer-sound")!=="off"}catch(e){}
+function stopAlarm(){
+ alarmNodes.forEach(function(osc){try{osc.stop()}catch(e){}});
+ alarmNodes=[];
+}
+function prepareAudio(){
+ if(!soundEnabled)return null;
  try{
    var AudioCtx=window.AudioContext||window.webkitAudioContext;
-   if(!AudioCtx)return;
-   var ctx=new AudioCtx();
+   if(!AudioCtx)return null;
+   if(!audioContext||audioContext.state==="closed")audioContext=new AudioCtx();
+   if(audioContext.state==="suspended")audioContext.resume().catch(function(){});
+   return audioContext;
+ }catch(e){return null}
+}
+function updateSoundButton(){
+ $("soundToggle").textContent=soundEnabled?"🔊 Suono finale attivo":"🔇 Suono finale disattivato";
+ $("soundToggle").setAttribute("aria-pressed",String(soundEnabled));
+}
+$("soundToggle").onclick=function(){
+ soundEnabled=!soundEnabled;
+ if(soundEnabled)prepareAudio();else stopAlarm();
+ try{localStorage.setItem("artyou-timer-sound",soundEnabled?"on":"off")}catch(e){}
+ updateSoundButton();
+};
+updateSoundButton();
+function playAlarm(){
+ if(!soundEnabled)return;
+ try{
+   var ctx=prepareAudio();
+   if(!ctx)return;
+   stopAlarm();
    var now=ctx.currentTime;
    [0,0.32,0.64].forEach(function(delay){
      var osc=ctx.createOscillator(),gain=ctx.createGain();
@@ -231,12 +260,15 @@ function playAlarm(){
      gain.gain.exponentialRampToValueAtTime(0.32,now+delay+0.02);
      gain.gain.exponentialRampToValueAtTime(0.0001,now+delay+0.24);
      osc.connect(gain);gain.connect(ctx.destination);
+     alarmNodes.push(osc);
+     osc.onended=function(){osc.disconnect();gain.disconnect();alarmNodes=alarmNodes.filter(function(node){return node!==osc})};
      osc.start(now+delay);osc.stop(now+delay+0.26);
    });
-   setTimeout(function(){try{ctx.close()}catch(e){}},1400);
  }catch(e){}
 }
 function startTimer(seconds){
+ stopAlarm();
+ prepareAudio();
  seconds=Math.max(1,Math.min(3600,Number(seconds)||0));
  if(timerId)clearInterval(timerId);
  var n=seconds;$("timerValue").textContent=formatTime(n);$("timerHint").textContent="Scena in corso";
