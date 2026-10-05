@@ -38,6 +38,17 @@ body{display:flex;justify-content:center}
 .footer{text-align:center;color:#7D8992;font-size:11px;padding-top:2px}
 .install-sheet{position:fixed;inset:0;background:rgba(0,0,0,.58);display:none;align-items:flex-end;justify-content:center;padding:14px;z-index:99}.install-sheet.open{display:flex}.install-card{width:100%;max-width:560px;background:#fff;color:#111820;border-radius:24px 24px 18px 18px;padding:20px}.install-card h3{margin:0 0 8px;font-size:22px}.install-card p{margin:0 0 14px;color:#5E6870;line-height:1.45}.step{background:#F6F3EC;border-radius:14px;padding:12px;margin-top:9px;font-size:14px}.close{width:100%;margin-top:14px;border:0;border-radius:14px;background:#111820;color:#fff;padding:13px;font-weight:900}
 @media(max-width:420px){.hero h1{font-size:35px}.clock-value{font-size:62px}.duration-row{grid-template-columns:1fr}.start{width:100%}}
+
+.focus-logo{display:none}
+body.timer-focus{overflow:hidden}
+.timer-focus .app{position:fixed;inset:0;width:100%;max-width:none;height:100%;min-height:0;padding:0;background:#111820;display:block}
+.timer-focus .top,.timer-focus .hero,.timer-focus .footer,.timer-focus .duration-title,.timer-focus .duration-row,.timer-focus .controls,.timer-focus .status,.timer-focus .clock-label,.timer-focus .clock-hint{display:none}
+.timer-focus .timer-card{position:absolute;inset:0;padding:0;background:#111820;border-radius:0;box-shadow:none}
+.timer-focus .clock{position:absolute;inset:0;margin:0;border-radius:0;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);display:flex;align-items:center;justify-content:center}
+.timer-focus .clock-value{margin:0;font-size:clamp(64px,24vw,40vh);font-size:clamp(64px,24vw,40dvh);letter-spacing:-.04em;white-space:nowrap}
+.timer-focus .focus-logo{display:block;position:fixed;right:calc(16px + env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));z-index:5;border:0;padding:8px;background:transparent;cursor:pointer}
+.focus-logo img{display:block;width:80px;height:auto}
+.focus-logo:focus-visible{outline:2px solid #fff;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -62,6 +73,7 @@ body{display:flex;justify-content:center}
     </div>
 
     <div class="clock">
+      <button class="focus-logo" id="focusExit" type="button" aria-label="Esci da tutto schermo"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" width="80"></button>
       <div class="clock-label" id="clockLabel">Pronti?</div>
       <div class="clock-value" id="clockValue">3:00</div>
       <div class="clock-hint" id="clockHint">Imposta i minuti e premi Avvia</div>
@@ -160,19 +172,30 @@ $("soundBtn").onclick=function(){
  soundEnabled=!soundEnabled;
  $("soundBtn").textContent=soundEnabled?"🔊 Allarme attivo":"🔇 Allarme disattivato";
 };
-$("fullscreenBtn").onclick=function(){
- var el=document.documentElement;
- if(!document.fullscreenElement){
-   if(el.requestFullscreen)el.requestFullscreen().catch(function(){});
-   else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
- }else{
-   if(document.exitFullscreen)document.exitFullscreen();
-   else if(document.webkitExitFullscreen)document.webkitExitFullscreen();
+function fullscreenElement(){return document.fullscreenElement||document.webkitFullscreenElement}
+function exitFocus(){
+ document.body.classList.remove("timer-focus");
+ if(fullscreenElement()){
+   var exit=document.exitFullscreen||document.webkitExitFullscreen;
+   if(exit){try{var result=exit.call(document);if(result&&result.catch)result.catch(function(){})}catch(e){}}
  }
+ $("fullscreenBtn").setAttribute("aria-pressed","false");
+ $("fullscreenBtn").focus();
+}
+$("fullscreenBtn").setAttribute("aria-pressed","false");
+$("fullscreenBtn").onclick=function(){
+ if(document.body.classList.contains("timer-focus")){exitFocus();return}
+ document.body.classList.add("timer-focus");
+ $("fullscreenBtn").setAttribute("aria-pressed","true");
+ $("focusExit").focus();
+ var el=document.documentElement,request=el.requestFullscreen||el.webkitRequestFullscreen;
+ if(request){try{var result=request.call(el);if(result&&result.catch)result.catch(function(){})}catch(e){}}
 };
-document.addEventListener("fullscreenchange",function(){
- $("fullscreenBtn").textContent=document.fullscreenElement?"⤫ Esci da tutto schermo":"⛶ Tutto schermo";
-});
+$("focusExit").onclick=exitFocus;
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.body.classList.contains("timer-focus"))exitFocus()});
+function syncFullscreen(){if(!fullscreenElement()&&document.body.classList.contains("timer-focus"))exitFocus()}
+document.addEventListener("fullscreenchange",syncFullscreen);
+document.addEventListener("webkitfullscreenchange",syncFullscreen);
 $("minutes").addEventListener("change",function(){if(!running)reset()});
 render();
 
