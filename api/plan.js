@@ -244,51 +244,38 @@ async function listSiteEvents(from, to) {
 }
 
 async function migrateLegacyIfNeeded(credential) {
+  // Best-effort migration: a failure in the old Google/Apps Script source
+  // must never prevent the MySQL calendar from loading.
   if (!APPS_SCRIPT_URL) return { migrated:false, reason:"legacy_backend_unavailable" };
-
-  // One-time, idempotent migration. MySQL remains the primary store after this marker is written.
-  await query(
-    "CREATE TABLE IF NOT EXISTS system_migrations (" +
-    "migration_key VARCHAR(190) NOT NULL PRIMARY KEY," +
-    "completed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-    "details JSON NULL" +
-    ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
-  );
-
-  const migrationKey = "plan_legacy_tasks_v2";
-  const done = await query("SELECT migration_key FROM system_migrations WHERE migration_key=? LIMIT 1", [migrationKey]);
-  if (done.length) return { migrated:false, reason:"already_done" };
 
   const legacy = await legacyCall("list", credential, null);
   if (!legacy || !legacy.ok || !Array.isArray(legacy.events)) {
-    throw new Error("migrazione_piano_legacy_non_disponibile");
+    return { migrated:false, reason:"legacy_list_unavailable" };
   }
 
-  // Import only real Piano Operativo tasks. Site events already come from MySQL events/event_dates.
-  // Google-only calendar entries stay an external integration and are not treated as database rows.
   const items = legacy.events.filter(function(e) {
     return e && e.id && e.source !== "site" && e.source !== "google";
   });
 
-  let imported = 0, skipped = 0;
+  let imported = 0, skipped = 0, failed = 0;
   for (const e of items) {
     const legacyId = String(e.id);
-    const existing = await query(
-      "SELECT id FROM operational_tasks WHERE JSON_UNQUOTE(JSON_EXTRACT(metadata,'$.legacyId'))=? LIMIT 1",
-      [legacyId]
-    );
-    if (existing.length) { skipped++; continue; }
-
-    const meta = Object.assign({}, e, { legacyId:legacyId });
-    delete meta.id;
-
-    let ownerId = null;
-    if (/^\d+$/.test(String(e.responsibleContactId || ""))) {
-      const owner = await query("SELECT id FROM users WHERE id=? AND active=1 LIMIT 1", [Number(e.responsibleContactId)]);
-      if (owner.length) ownerId = Number(owner[0].id);
-    }
-
     try {
+      const existing = await query(
+        "SELECT id FROM operational_tasks WHERE JSON_UNQUOTE(JSON_EXTRACT(metadata,'$.legacyId'))=? LIMIT 1",
+        [legacyId]
+      );
+      if (existing.length) { skipped++; continue; }
+
+      const meta = Object.assign({}, e, { legacyId:legacyId });
+      delete meta.id;
+
+      let ownerId = null;
+      if (/^\d+$/.test(String(e.responsibleContactId || ""))) {
+        const owner = await query("SELECT id FROM users WHERE id=? AND active=1 LIMIT 1", [Number(e.responsibleContactId)]);
+        if (owner.length) ownerId = Number(owner[0].id);
+      }
+
       await query(
         "INSERT INTO operational_tasks (event_id,area,title,description,owner_user_id,due_at,status,google_calendar_event_id,metadata) VALUES (NULL,?,?,?,?,?,?,?,?)",
         [
@@ -304,15 +291,12 @@ async function migrateLegacyIfNeeded(credential) {
       );
       imported++;
     } catch (err) {
+      failed++;
       console.error("PLAN_LEGACY_IMPORT_ITEM_ERROR", legacyId, String(err && err.message || err));
     }
   }
 
-  await query(
-    "INSERT INTO system_migrations (migration_key,details) VALUES (?,?)",
-    [migrationKey, JSON.stringify({ imported:imported, skipped:skipped, legacyCount:items.length })]
-  );
-  return { migrated:true, imported:imported, skipped:skipped };
+  return { migrated:imported>0, imported:imported, skipped:skipped, failed:failed };
 }
 
 async function loadTaskById(id) {
@@ -566,12 +550,14 @@ module.exports = async function handler(req, res) {
     if (action === "people") return res.status(200).json({ok:true,people:await listPeople()});
 
     if (action === "list") {
-      await migrateLegacyIfNeeded(credential);
+      let migration = null;
+      try { migration = await migrateLegacyIfNeeded(credential); }
+      catch (migrationErr) { console.error("PLAN_LEGACY_MIGRATION_ERROR", String(migrationErr && migrationErr.message || migrationErr)); }
       const from = String(body.from || params.get("from") || "");
       const to = String(body.to || params.get("to") || "");
       const stored = await listStoredTasks(from,to);
       const site = await listSiteEvents(from,to);
-      return res.status(200).json({ok:true,events:stored.concat(site),storage:"mysql",calendarMirror:!!APPS_SCRIPT_URL});
+      return res.status(200).json({ok:true,events:stored.concat(site),storage:"mysql",calendarMirror:!!APPS_SCRIPT_URL,migration:migration});
     }
 
     if (action === "save") {
