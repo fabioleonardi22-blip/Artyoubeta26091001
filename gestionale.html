@@ -126,7 +126,7 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
       <label>PIN amministratore</label>
       <div class="login"><input id="pin" type="password" autocomplete="current-password" placeholder="PIN"><button class="btn dark" id="loginBtn">Accedi</button><button class="btn soft" id="logoutBtn" style="display:none">Esci</button></div>
     </div>
-    <div class="toolbar"><button class="btn primary" id="newBtn">+ Nuovo evento</button><button class="btn soft" id="refreshBtn">Aggiorna</button></div>
+    <div class="toolbar"><button class="btn primary" id="newBtn">+ Nuovo evento</button><button class="btn soft" id="refreshBtn">Aggiorna</button><button class="btn soft" id="importJuly2027Btn">Importa luglio 2027</button></div>
     <div id="status" class="status info">Configura l'endpoint e inserisci il PIN per iniziare.</div>
     <div class="list" id="eventList"><div class="empty">Nessun evento caricato.</div></div>
   </aside>
@@ -384,6 +384,84 @@ function refresh(){
     setStatus(e.message,"err");
   });
 }
+
+var july2027Seed=[
+  {date:"01/07/2027",teacher:"Zadro",title:"Xanax"},
+  {date:"02/07/2027",teacher:"Parisi",title:"Show don't tell e altri trucchetti"},
+  {date:"06/07/2027",teacher:"Masi",title:"Rime"},
+  {date:"07/07/2027",teacher:"Forbicioni",title:"Dancing in the dark 1"},
+  {date:"08/07/2027",teacher:"Spadoni",title:"Street's games 1"},
+  {date:"08/07/2027",teacher:"Zadro",title:"So quello che pensi"},
+  {date:"09/07/2027",teacher:"Guerrera",title:"Baci e abbracci"},
+  {date:"13/07/2027",teacher:"Spadoni",title:"I primi 60 secondi"},
+  {date:"14/07/2027",teacher:"Zadro",title:"Undici"},
+  {date:"15/07/2027",teacher:"Forbicioni",title:"Lie to me"},
+  {date:"31/07/2027",teacher:"Forbicioni",title:"From text to next"},
+  {date:"20/07/2027",teacher:"Spadoni",title:"Molla la mente"},
+  {date:"21/07/2027",teacher:"Masi",title:"Gioca con l'ovvio"},
+  {date:"22/07/2027",teacher:"Zadro",title:"Thriller"},
+  {date:"27/07/2027",teacher:"Guerrera",title:"Transizioni - a kind of magic"},
+  {date:"29/07/2027",teacher:"Forbicioni",title:"This must to be the place"}
+];
+function july2027Event(x,index){
+  var slug="luglio-2027-"+String(x.date).slice(0,2)+"-"+slugify(x.title);
+  return {
+    id:"",
+    slug:slug,
+    title:x.title,
+    cat:"Improvvisazione",
+    eventType:"Workshop",
+    tipo:"Workshop",
+    ordine:700+index,
+    desc:"Workshop di luglio 2027 · Docente: "+x.teacher+".",
+    venue:"",
+    addr:"",
+    maps:"",
+    price:"",
+    capienza:0,
+    pagaOnline:false,
+    tbd:false,
+    attivo:false,
+    poster:"",
+    dates:[{label:x.date,sold:0}],
+    cast:[{name:x.teacher,slug:""}],
+    yepPricing:null,
+    saggi:null
+  };
+}
+function importJuly2027(){
+  if(!pin()){setStatus("Inserisci prima il PIN amministratore.","err");return}
+  var existing={};(events||[]).forEach(function(e){existing[String(e.slug||"")]=true});
+  var pending=july2027Seed.map(july2027Event).filter(function(e){return !existing[e.slug]});
+  var already=july2027Seed.length-pending.length;
+  if(!pending.length){setStatus("Gli eventi di luglio 2027 risultano già presenti.","ok");return}
+  if(!confirm("Creare "+pending.length+" workshop di luglio 2027 come BOZZE?"+(already?"\\n\\n"+already+" risultano già presenti e non verranno duplicati.":"")+"\\n\\nPrezzo, capienza, sede e locandina resteranno da compilare."))return;
+
+  $("importJuly2027Btn").disabled=true;
+  var created=0,failed=[];
+  var chain=Promise.resolve();
+  pending.forEach(function(ev,i){
+    chain=chain.then(function(){
+      setStatus("Importazione luglio 2027: "+(i+1)+"/"+pending.length+" · "+ev.title,"info");
+      return apiPost({action:"save",event:ev}).then(assert).then(function(){created++}).catch(function(err){failed.push(ev.title+": "+err.message)});
+    });
+  });
+  chain.then(function(){
+    return apiGet("list").then(assert);
+  }).then(function(r){
+    events=r.events||[];renderList();
+    if(failed.length){
+      setStatus("Creati "+created+" eventi. "+failed.length+" non importati.","err");
+      alert("Importazione parziale.\\n\\n"+failed.join("\\n"));
+    }else{
+      setStatus("Creati "+created+" workshop di luglio 2027 come bozze.","ok");
+    }
+  }).catch(function(err){
+    setStatus("Importazione non riuscita: "+err.message,"err");
+  }).finally(function(){
+    $("importJuly2027Btn").disabled=false;
+  });
+}
 function save(){
   var e=collect();if(!e.title){setStatus("Inserisci il titolo.","err");return}if(!e.dates.length){setStatus("Inserisci almeno una data.","err");return}
   if(e.eventType==="SAGGI"&&(!e.saggi.show1.title||!e.saggi.show2.title)){setStatus("Per SAGGI inserisci entrambi i titoli degli spettacoli.","err");return}
@@ -469,7 +547,7 @@ function upload(){
   var reader=new FileReader();setStatus("Caricamento immagine…","info");
   reader.onload=function(){var b64=String(reader.result).split(",")[1]||"";apiPost({action:"uploadimage",name:file.name,mime:file.type,base64:b64}).then(assert).then(function(r){$("poster").value=r.url;updatePoster();setStatus("Immagine caricata.","ok")}).catch(function(e){setStatus(e.message,"err")})};reader.readAsDataURL(file);
 }
-$("loginBtn").onclick=refresh;$("refreshBtn").onclick=refresh;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("deleteBtn").onclick=del;
+$("loginBtn").onclick=refresh;$("refreshBtn").onclick=refresh;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("importJuly2027Btn").onclick=importJuly2027;$("deleteBtn").onclick=del;
 $("logoutBtn").onclick=function(){
   try{sessionStorage.removeItem("artyouGestionalePin")}catch(e){}
   $("pin").value="";
