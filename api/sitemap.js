@@ -19,7 +19,8 @@ const STATIC_URLS = [
   "/la-finestra-sul-cortile/improv-around-the-world-da-chicago-a-londra-e-barcellona/",
   "/la-finestra-sul-cortile/perche-guardare-oltre-il-proprio-palco/",
   "/merchandising/",
-  "/privacy-policy/"
+  "/privacy-policy/",
+  "/improv-generator/"
 ];
 
 function escXml(value) {
