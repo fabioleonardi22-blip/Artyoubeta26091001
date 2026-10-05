@@ -38,6 +38,7 @@ body{display:flex;justify-content:center}
 .gen-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.gen strong{font-size:14px;letter-spacing:.1px}.gen .value{font-size:21px;font-weight:950;line-height:1.08;letter-spacing:-.25px;margin:12px 0}
 .gen-actions{display:block}.gen-roll{width:100%;height:40px;border-radius:12px;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:6px;border:0;background:#13181D;color:#fff;cursor:pointer}.gen-roll:active{transform:scale(.98)}
 .gen-place{background:#DDF2FB;color:#0F4A66}.gen-status{background:#FFEBC8;color:#744500}.gen-emotion{background:#F9DFEC;color:#7C1241}.gen-character{background:#E8F3C9;color:#3D5410}.gen-relation{background:#E8E0FF;color:#4B3181}.gen-objective{background:#DDF4E8;color:#145E42}.gen-genre{background:#FFE2D4;color:#8A3A13}.gen-object{background:#E7EAED;color:#34404A}
+.timer-settings{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:10px;margin-top:12px;align-items:end}
 .controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.secondary{border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px;font-weight:850;color:var(--ink);cursor:pointer}.secondary.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
 .chip{flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:12px;font-weight:700}.seo-nav{display:flex;gap:7px;overflow-x:auto;padding:0 1px 10px;scrollbar-width:none}.seo-nav::-webkit-scrollbar{display:none}.seo-nav .chip{background:#fff;box-shadow:0 2px 7px rgba(20,25,30,.04)}
 .footer{text-align:center;color:#7A8085;font-size:11px;padding:10px 8px 0}.footer a{color:inherit}.install-sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;align-items:flex-end;justify-content:center;padding:14px}.install-sheet.open{display:flex}.install-card{width:100%;max-width:520px;background:#fff;border-radius:24px 24px 18px 18px;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.35)}.install-card h3{margin:0 0 8px;font-size:22px}.install-card p{margin:0 0 14px;color:#5E6870;line-height:1.45}.install-steps{display:flex;flex-direction:column;gap:10px;margin:12px 0 16px}.install-step{background:#F6F3EC;border-radius:14px;padding:12px;font-size:14px;line-height:1.35}.install-step b{display:inline-block;min-width:24px}.install-close{width:100%;border:0;border-radius:14px;background:#13181D;color:#fff;padding:13px;font-weight:900;cursor:pointer}
@@ -139,12 +140,12 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
     </div>
     <div style="height:12px"></div>
     <div class="scene-label">Durata scena</div>
-    <button class="secondary" id="soundToggle" type="button" aria-pressed="true" style="width:100%;min-height:44px">🔊 Suono finale attivo</button>
-    <div style="display:grid;grid-template-columns:1fr auto;gap:12px;margin-top:12px;align-items:end">
+    <div class="timer-settings">
       <label style="font-size:14px;font-weight:900;color:#56616A">Minuti
-        <input id="timerMinutes" type="number" min="1" max="60" value="3" inputmode="numeric" style="margin-top:7px;height:64px;font-size:30px;font-weight:950;padding:0 16px;border-radius:14px">
+        <input id="timerMinutes" type="number" min="1" max="60" value="3" inputmode="numeric" style="display:block;width:100%;min-width:0;margin-top:7px;height:64px;font-size:30px;font-weight:950;padding:0 12px;border-radius:14px">
       </label>
-      <button class="secondary dark" id="timerCustom" style="height:64px;padding:0 24px;font-size:16px;border-radius:14px">Avvia</button>
+      <button class="secondary" id="soundToggle" type="button" aria-pressed="true" aria-label="Suono finale" style="min-width:0;min-height:64px;padding:8px;font-size:12px;line-height:1.35">🔊 Suono attivo</button>
+      <button class="secondary dark" id="timerCustom" style="height:64px;padding:0 16px;font-size:16px;border-radius:14px">Avvia</button>
     </div>
     <div id="timerBox" style="margin-top:12px;background:#13181D;color:#fff;border-radius:16px;padding:16px;text-align:center">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#AEB8BF;font-weight:900">Pronti?</div>
@@ -236,7 +237,7 @@ function prepareAudio(){
  }catch(e){return null}
 }
 function updateSoundButton(){
- $("soundToggle").textContent=soundEnabled?"🔊 Suono finale attivo":"🔇 Suono finale disattivato";
+ $("soundToggle").textContent=soundEnabled?"🔊 Suono attivo":"🔇 Suono disattivato";
  $("soundToggle").setAttribute("aria-pressed",String(soundEnabled));
 }
 $("soundToggle").onclick=function(){
