@@ -24,24 +24,47 @@ async function main() {
     let count = 0;
 
     for (const [slug, ev] of Object.entries(payload.eventi)) {
+      const meta = {
+        migration_source: "google_apps_script",
+        ora: ev.ora || "",
+        ordine: ev.ordine == null ? null : ev.ordine,
+        stato: ev.stato || "",
+        saggi: ev.saggi || null,
+        yepPricing: ev.yepPricing || null
+      };
+
       await conn.execute(`
-        INSERT INTO events (slug,title,category,event_type,description,price,capacity,active,metadata)
-        VALUES (?,?,?,?,?,?,?,1,?)
+        INSERT INTO events (
+          slug,title,category,event_type,description,poster_url,venue,address,
+          price,capacity,active,metadata,source_updated_at
+        )
+        VALUES (?,?,?,?,?,?,?,?,?,?,1,?,UTC_TIMESTAMP())
         ON DUPLICATE KEY UPDATE
           title=VALUES(title),
           category=VALUES(category),
           event_type=VALUES(event_type),
           description=VALUES(description),
+          poster_url=VALUES(poster_url),
+          venue=VALUES(venue),
+          address=VALUES(address),
           price=VALUES(price),
           capacity=VALUES(capacity),
           metadata=VALUES(metadata),
+          source_updated_at=UTC_TIMESTAMP(),
           active=1,
           updated_at=CURRENT_TIMESTAMP
       `, [
         slug,
-        String(ev.titolo || slug),
-        ev.prezzo === "" ? null : Number(ev.prezzo || 0),
-        Number(ev.capienza || 0)
+        String(ev.titolo || ev.title || slug),
+        String(ev.categoria || ev.category || ""),
+        String(ev.tipo || ev.event_type || ""),
+        String(ev.descrizione || ev.description || ev.desc || ""),
+        String(ev.poster || ev.poster_url || ""),
+        String(ev.sede || ev.venue || ev.luogo || ""),
+        String(ev.indirizzo || ev.address || ""),
+        ev.prezzo === "" || ev.prezzo == null ? null : Number(ev.prezzo),
+        Number(ev.capienza || ev.capacity || 0),
+        JSON.stringify(meta)
       ]);
 
       const [[row]] = await conn.execute("SELECT id FROM events WHERE slug=?", [slug]);
