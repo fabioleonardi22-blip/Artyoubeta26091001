@@ -1,0 +1,11 @@
+{
+  "name":"Countdown Artyou",
+  "short_name":"Countdown",
+  "description":"Timer Artyou per improvvisazione teatrale con allarme finale.",
+  "start_url":"/countdown/",
+  "scope":"/countdown/",
+  "display":"standalone",
+  "background_color":"#13181D",
+  "theme_color":"#13181D",
+  "icons":[{"src":"/img/favicon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"}]
+}
