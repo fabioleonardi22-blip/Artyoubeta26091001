@@ -1,5 +1,5 @@
 {
-  "name":"Artyou Generatore Improv",
+  "name":"Generatore di Input",
   "short_name":"Improv",
   "description":"Generatore di luoghi, status, emozioni e personaggi per improvvisazione teatrale.",
   "start_url":"/improv-generator/",
