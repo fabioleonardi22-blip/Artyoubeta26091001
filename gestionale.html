@@ -15,7 +15,7 @@
 .topnav-admin{display:flex;align-items:center;gap:24px;white-space:nowrap;flex:1}.topnav-admin a{font-weight:700;font-size:14px}.top-actions-admin{display:flex;align-items:center;gap:10px}.site-btn-admin{background:#25D366;color:#071B11;border-radius:999px;padding:10px 20px;font-weight:900;font-size:13px}.lang-admin{border:1px solid #4B5661;border-radius:999px;padding:8px 11px;font-size:13px}
 .shell-admin{display:grid;grid-template-columns:235px minmax(0,1fr);min-height:calc(100vh - 78px)}
 .navrail{background:#F8FAFB;border-right:1px solid var(--line);padding:18px 10px 28px;position:sticky;top:78px;height:calc(100vh - 78px);overflow:auto}
-.nav-title{display:flex;align-items:center;gap:10px;padding:12px 16px 16px;font-weight:800;color:#29333C}.nav-group{display:flex;flex-direction:column;gap:5px}.nav-link{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:8px;color:#26313A;font-size:15px}.nav-link:hover{background:#EEF3F6}.nav-link.active{background:linear-gradient(90deg,#0F7BDC,#1696E4);color:#fff;font-weight:800}.nav-icon{width:20px;text-align:center;font-size:18px}.nav-sep{height:1px;background:var(--line);margin:14px 6px}
+.nav-title{display:flex;align-items:center;gap:10px;padding:12px 16px 16px;font-weight:800;color:#29333C}.nav-group{display:flex;flex-direction:column;gap:5px}.nav-link{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:8px;color:#26313A;font-size:15px}.nav-link:hover{background:#EEF3F6}.nav-link.active{background:linear-gradient(90deg,#0F7BDC,#1696E4);color:#fff;font-weight:800}.nav-icon{width:20px;text-align:center;font-size:18px}.nav-sep{height:1px;background:var(--line);margin:14px 6px}.nav-section-label{padding:2px 16px 8px;color:#7A8791;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
 .workspace{padding:26px;min-width:0}.app{max-width:1500px;margin:0 auto;display:grid;grid-template-columns:310px minmax(0,1fr);gap:18px}
 .panel{background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow)}
 .sidebar{padding:16px;height:calc(100vh - 130px);position:sticky;top:104px;display:flex;flex-direction:column;gap:13px}.sidebar:before{content:"Eventi";font-size:22px;font-weight:900;margin-bottom:2px}
@@ -45,19 +45,27 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
 <div class="shell-admin">
   <aside class="navrail">
     <div class="nav-title"><span class="nav-icon">▣</span>Gestionale</div>
+
     <div class="nav-group">
       <a class="nav-link" href="/dashboard-prenotazioni/"><span class="nav-icon">👥</span>Prenotazioni</a>
       <a class="nav-link active" href="/gestionale.html"><span class="nav-icon">▦</span>Eventi</a>
+      <a class="nav-link" href="/calendario-docenti/"><span class="nav-icon">▥</span>Piano Operativo</a>
+      <a class="nav-link" href="/responsabili.html"><span class="nav-icon">◎</span>Anagrafica</a>
+    </div>
+
+    <div class="nav-sep"></div>
+    <div class="nav-group">
+      <a class="nav-link" href="/scanner.html"><span class="nav-icon">⌗</span>Scanner QR</a>
+    </div>
+
+    <div class="nav-sep"></div>
+    <div class="nav-section-label">Link al sito</div>
+    <div class="nav-group">
       <a class="nav-link" href="/spettacoli/"><span class="nav-icon">🎭</span>Spettacoli</a>
       <a class="nav-link" href="/workshow/"><span class="nav-icon">✎</span>WorkshoW</a>
       <a class="nav-link" href="/rome-improv-festival/"><span class="nav-icon">✹</span>RIF</a>
       <a class="nav-link" href="/yep/"><span class="nav-icon">▧</span>YEP</a>
       <a class="nav-link" href="/un-vortice-di-emozioni/"><span class="nav-icon">◉</span>Vortice</a>
-    </div>
-    <div class="nav-sep"></div>
-    <div class="nav-group">
-      <a class="nav-link" href="/scanner.html"><span class="nav-icon">⌗</span>Scanner QR</a>
-      <a class="nav-link" href="/calendario-docenti/"><span class="nav-icon">▥</span>Piano Operativo</a>
       <a class="nav-link" href="/insegnanti/"><span class="nav-icon">●</span>Docenti</a>
     </div>
   </aside>
