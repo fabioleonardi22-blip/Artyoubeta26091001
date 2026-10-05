@@ -1105,6 +1105,15 @@ a{color:#1A6E99}a:hover{color:#12506F}
       display:inline-flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 8px 20px rgba(240,144,0,.24);white-space:nowrap;
     }
     .artyou-exercise-search .aes-search-form button:hover{transform:translateY(-1px)}
+    .artyou-exercise-search .aes-dual-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .artyou-exercise-search .aes-timer-btn{
+      display:inline-flex;align-items:center;gap:8px;justify-content:center;
+      min-height:52px;padding:0 22px;border-radius:999px;
+      background:#7D1631;color:#fff;text-decoration:none;
+      font:800 15px 'Instrument Sans',sans-serif;
+      box-shadow:0 8px 20px rgba(125,22,49,.18);white-space:nowrap;
+    }
+    .artyou-exercise-search .aes-timer-btn:hover{transform:translateY(-1px)}
     .artyou-exercise-search .aes-note{margin-top:8px;font-size:11px;color:#8B8F92}
     @media(max-width:900px){
       .artyou-exercise-search{padding:24px 20px 30px!important}
@@ -1120,7 +1129,9 @@ a{color:#1A6E99}a:hover{color:#12506F}
     @media(max-width:560px){
       .artyou-exercise-search .aes-search-form{flex-direction:column;align-items:stretch}
       .artyou-exercise-search .aes-search-form button{justify-content:center;width:100%}
-      .artyou-exercise-search .aes-generator-btn{width:100%}
+      .artyou-exercise-search .aes-dual-actions{flex-direction:column;align-items:stretch}
+      .artyou-exercise-search .aes-generator-btn,
+      .artyou-exercise-search .aes-timer-btn{width:100%}
     }
   </style>
   <div class="aes-box aes-split">
@@ -1144,10 +1155,16 @@ a{color:#1A6E99}a:hover{color:#12506F}
       <p class="aes-kicker">Generatore Artyou</p>
       <h2>Usa e scarica il nostro Generatore di Input</h2>
       <p class="aes-sub">Crea al volo luoghi, status, emozioni, personaggi, relazioni, obiettivi, generi e oggetti per le tue scene.</p>
-      <a class="aes-generator-btn" href="/improv-generator/">
-        Apri il Generatore
-        <span aria-hidden="true">→</span>
-      </a>
+      <div class="aes-dual-actions">
+        <a class="aes-generator-btn" href="/improv-generator/">
+          Scarica il Generatore
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class="aes-timer-btn" href="/countdown/">
+          Timer per gli spettacoli
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
       <div class="aes-note" style="text-transform:uppercase;font-weight:700;letter-spacing:.04em">Installabile per iPhone e Android</div>
     </div>
   </div>
