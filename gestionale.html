@@ -340,6 +340,39 @@ function toggleSaggiFields(){var on=$("eventType")&&$("eventType").value==="SAGG
 function apiGet(action){if(!endpoint) return Promise.reject(new Error("Endpoint Gestionale non configurato"));return fetch(endpoint+"?action="+encodeURIComponent(action)+"&pin="+encodeURIComponent(pin())+"&_="+Date.now()).then(r=>r.json())}
 function apiPost(body){if(!endpoint) return Promise.reject(new Error("Endpoint Gestionale non configurato"));body.pin=pin();return fetch(endpoint,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)}).then(r=>r.json())}
 function assert(res){if(!res||!res.ok)throw new Error((res&&res.errore)||"Operazione non riuscita");return res}
+function mysqlEventForEditor(slug){
+  if(!slug)return Promise.resolve(null);
+  return fetch("/api/mysql-events?evento="+encodeURIComponent(slug)+"&_="+Date.now())
+    .then(function(r){return r.json()})
+    .then(function(x){
+      if(!x||!x.ok||!x.evento)return null;
+      var e=x.evento;
+      return {
+        id:"",
+        slug:e.slug||slug,
+        title:e.titolo||"",
+        cat:e.categoria||"Improvvisazione",
+        eventType:e.tipo||"Spettacolo",
+        tipo:e.tipo||"Spettacolo",
+        ordine:e.ordine||100,
+        desc:e.descrizione||"",
+        venue:e.luogo||"",
+        addr:e.indirizzo||"",
+        maps:e.maps||"",
+        price:e.prezzo==null?"":Number(e.prezzo),
+        capienza:Number(e.capienza||0),
+        pagaOnline:!!e.pagaOnline,
+        tbd:!!e.tbd,
+        attivo:e.attivo!==false,
+        poster:e.poster||"",
+        dates:Array.isArray(e.dates)&&e.dates.length?e.dates:[{label:e.data||"",sold:0}],
+        cast:Array.isArray(e.cast)?e.cast:[],
+        yepPricing:e.yepPricing||null,
+        saggi:e.saggi||null,
+        _mysqlOnly:true
+      };
+    });
+}
 
 function dateRow(v){
   var row=document.createElement("div");row.className="repeat-row";
@@ -428,8 +461,20 @@ function refresh(){
     try{editKey=new URLSearchParams(location.search).get("edit")||""}catch(_){}
     if(editKey){
       var target=events.find(function(e){return String(e.slug||"")===editKey||String(e.id||"")===editKey});
-      if(target){loadForm(target);setStatus("Evento aperto in modifica: "+(target.title||target.slug)+".","ok");}
-      else setStatus("Gestionale collegato. Evento richiesto non trovato; "+events.length+" eventi disponibili.","info");
+      if(target){
+        loadForm(target);
+        setStatus("Evento aperto in modifica: "+(target.title||target.slug)+".","ok");
+      }else{
+        setStatus("Apro l'evento dal database MySQL…","info");
+        mysqlEventForEditor(editKey).then(function(mysqlEvent){
+          if(!mysqlEvent)throw new Error("evento_non_trovato");
+          loadForm(mysqlEvent);
+          $("formTitle").textContent="Modifica evento · "+(mysqlEvent.title||mysqlEvent.slug);
+          setStatus("Evento aperto dal database. Le modifiche verranno salvate sullo stesso evento.","ok");
+        }).catch(function(){
+          setStatus("Evento richiesto non trovato nel Gestionale né in MySQL.","err");
+        });
+      }
     }else{
       setStatus("Gestionale collegato. "+events.length+" eventi trovati.","ok");
     }
@@ -557,7 +602,14 @@ function save(){
   var e=collect();if(!e.title){setStatus("Inserisci il titolo.","err");return}if(!e.dates.length){setStatus("Inserisci almeno una data.","err");return}
   if(e.eventType==="SAGGI"&&(!e.saggi.show1.title||!e.saggi.show2.title)){setStatus("Per SAGGI inserisci entrambi i titoli degli spettacoli.","err");return}
   setStatus("Salvataggio in corso…","info");
-  apiPost({action:"save",event:e}).then(assert).then(function(r){currentId=r.event.id;setStatus("Evento salvato e sincronizzato con le prenotazioni.","ok");return apiGet("list")}).then(assert).then(function(r){events=r.events||[];var cur=events.find(x=>x.id===currentId);if(cur)loadForm(cur);else renderList()}).catch(function(e){setStatus(e.message,"err")});
+  apiPost({action:"save",event:e}).then(assert).then(function(r){
+    currentId=r.event.id;
+    try{
+      var u=new URL(location.href);u.searchParams.set("edit",r.event.slug||e.slug||"");history.replaceState(null,"",u.toString());
+    }catch(_){}
+    setStatus("Evento aggiornato e sincronizzato con le prenotazioni.","ok");
+    return apiGet("list")
+  }).then(assert).then(function(r){events=r.events||[];var cur=events.find(x=>x.id===currentId);if(cur)loadForm(cur);else renderList()}).catch(function(e){setStatus(e.message,"err")});
 }
 function del(){
   if(!currentId)return;if(!confirm("Eliminare questo evento? Verrà disattivato anche nel foglio prenotazioni."))return;
