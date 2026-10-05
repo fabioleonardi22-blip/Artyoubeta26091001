@@ -57,7 +57,7 @@ module.exports=async function handler(req,res){
     html=html.replace(/<title>[\s\S]*?<\/title>/i,"<title>"+esc(seo.title)+"</title>");
     html=html.replace(/<meta name="description"[^>]*>/i,'<meta name="description" content="'+esc(seo.description)+'">');
     html=html.replace(/<link rel="canonical"[^>]*>/i,'<link rel="canonical" href="'+canonical+'">');
-    html=html.replace(/<h1>Generatore Improv<\/h1>/i,"<h1>"+esc(seo.h1)+"</h1>");
+    html=html.replace(/<h1>Generatore di Input<\/h1>/i,"<h1>Generatore di Input</h1>");
     html=html.replace("</head>",
       '<meta property="og:title" content="'+esc(seo.title)+'">'+
       '<meta property="og:description" content="'+esc(seo.description)+'">'+
