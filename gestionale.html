@@ -331,8 +331,7 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
 "use strict";
 var endpoint=window.ARTYOU_EVENTS_ENDPOINT||"";
 var events=[],currentId="";
-var returnTo="";
-try{returnTo=new URLSearchParams(location.search).get("return")||""}catch(_){}
+var returnTo="/calendario-docenti/";
 
 
 function $(id){return document.getElementById(id)}
@@ -611,23 +610,8 @@ function save(){
       var u=new URL(location.href);u.searchParams.set("edit",r.event.slug||e.slug||"");if(returnTo)u.searchParams.set("return",returnTo);history.replaceState(null,"",u.toString());
     }catch(_){}
     setStatus("Evento aggiornato e sincronizzato con le prenotazioni.","ok");
-    if(returnTo){
-      location.href=returnTo;
-      return new Promise(function(){});
-    }
-    return apiGet("list")
-  }).then(assert).then(function(r){
-    events=r.events||[];
-    try{
-      var u=new URL(location.href);
-      u.searchParams.delete("edit");
-      u.searchParams.delete("return");
-      history.replaceState(null,"",u.toString());
-    }catch(_){}
-    clearForm();
-    renderList();
-    setStatus("Evento salvato. Sei tornato all'elenco generale degli eventi.","ok");
-    var list=$("eventList");if(list)list.scrollTop=0;
+    location.href="/calendario-docenti/";
+    return new Promise(function(){});
   }).catch(function(e){setStatus(e.message,"err")});
 }
 function del(){
