@@ -67,6 +67,16 @@ body{display:flex;justify-content:center}
   </section>
 
   <div class="section-title"><h2>Generatori singoli</h2><span>Tocca per cambiare</span></div>
+  <nav aria-label="Generatori di improvvisazione" style="display:flex;gap:7px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none">
+    <a class="chip" href="/improv-generator/luoghi/">Luoghi</a>
+    <a class="chip" href="/improv-generator/status/">Status</a>
+    <a class="chip" href="/improv-generator/emozioni/">Emozioni</a>
+    <a class="chip" href="/improv-generator/personaggi/">Personaggi</a>
+    <a class="chip" href="/improv-generator/relazioni/">Relazioni</a>
+    <a class="chip" href="/improv-generator/obiettivi/">Obiettivi</a>
+    <a class="chip" href="/improv-generator/generi/">Generi</a>
+    <a class="chip" href="/improv-generator/oggetti/">Oggetti</a>
+  </nav>
   <section class="generators">
     <button class="gen gen-place" data-kind="place"><strong>📍 Luogo</strong><span class="value" id="placeValue">Stazione</span><span class="tap">Genera</span></button>
     <button class="gen gen-status" data-kind="status"><strong>👑 Status</strong><span class="value" id="statusValue">Molto alto</span><span class="tap">Genera</span></button>
@@ -188,6 +198,20 @@ $("copyScene").onclick=function(){
  var t="Luogo: "+current.place+"\nStatus: "+current.status+"\nEmozione: "+current.emotion+"\nPersonaggio: "+current.character+"\nRelazione: "+current.relation+"\nObiettivo: "+current.objective+"\nGenere: "+current.genre+"\nOggetto: "+current.object;
  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){$("copyScene").textContent="Copiata ✓";setTimeout(function(){$("copyScene").textContent="Copia scena"},1200)});
 };
+var PATH_FOCUS={
+  "luoghi":"place","status":"status","emozioni":"emotion","personaggi":"character",
+  "relazioni":"relation","obiettivi":"objective","generi":"genre","oggetti":"object"
+};
+var seg=location.pathname.split("/").filter(Boolean).pop()||"";
+var focusKind=PATH_FOCUS[seg]||"";
+if(focusKind){
+  var focusBtn=document.querySelector('[data-kind="'+focusKind+'"]');
+  if(focusBtn){
+    focusBtn.style.outline="3px solid #13181D";
+    focusBtn.style.outlineOffset="2px";
+    setTimeout(function(){focusBtn.scrollIntoView({behavior:"smooth",block:"center"})},250);
+  }
+}
 try{history=JSON.parse(localStorage.getItem("artyou_improv_history")||"[]")}catch(e){history=[]}
 if(history.length){$("historyCount").textContent=history.length;$("history").innerHTML=history.map(function(x){return'<span class="chip">'+x.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</span>'}).join("")}
 all();
