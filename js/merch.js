@@ -8,7 +8,7 @@
    gallery:["/img/merch/tee-actor-retro.webp"]: diventano miniature nella
    pagina prodotto. Per legare una foto extra a un colore:
    gallery:[{src:"/img/merch/foto.webp",color:"Bordeaux"}]. */
-const WHATSAPP="393271881956",PAYPAL_EMAIL="info@artyouroma.it";
+const WHATSAPP="393397578967",PAYPAL_EMAIL="info@artyouroma.it";
 const CATS=[
   {id:"all",label:"Tutti"},
   {id:"tshirt",label:"T-shirt"},
