@@ -1,0 +1,13 @@
+{
+  "name":"Artyou Generatore Improv",
+  "short_name":"Improv",
+  "description":"Generatore di luoghi, status, emozioni e personaggi per improvvisazione teatrale.",
+  "start_url":"/improv-generator/",
+  "scope":"/improv-generator/",
+  "display":"standalone",
+  "background_color":"#13181D",
+  "theme_color":"#13181D",
+  "icons":[
+    {"src":"/img/favicon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"}
+  ]
+}
