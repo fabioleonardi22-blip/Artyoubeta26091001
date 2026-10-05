@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#13181D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Artyou Generator">
+<meta name="robots" content="index,follow">
+<title>Generatore Improv | Artyou Roma</title>
+<meta name="description" content="Generatore casuale per improvvisazione teatrale: luoghi, status, emozioni e personaggi. Crea spunti per scene e allenamenti con Artyou Roma.">
+<link rel="canonical" href="https://artyouroma.it/improv-generator/">
+<link rel="manifest" href="/improv-generator/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/img/favicon-192.png">
+<link rel="icon" href="/favicon.ico">
+<style>
+:root{--ink:#13181D;--paper:#F6F3EC;--white:#fff;--orange:#F09000;--blue:#2CA8E0;--pink:#E41870;--green:#28B4A8;--lime:#94C01C;--line:#DDD6CA;--muted:#6B737A}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--ink);font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+body{display:flex;justify-content:center}
+.app{width:100%;max-width:520px;min-height:100vh;background:linear-gradient(180deg,#11171C 0,#11171C 190px,var(--paper) 190px,var(--paper) 100%);padding:env(safe-area-inset-top) 14px calc(24px + env(safe-area-inset-bottom))}
+.top{height:176px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:18px 4px 16px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand img{width:132px}.install{display:none;border:1px solid #53606A;background:#192127;color:#fff;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800}
+.top h1{margin:0;font-size:34px;line-height:.98;letter-spacing:-1px}.top p{margin:7px 0 0;color:#C4CCD2;font-size:14px;line-height:1.35}
+.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 12px 28px rgba(10,15,20,.12);margin-bottom:14px}
+.scene-card{padding:20px;background:#fff}
+.scene-label{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;font-weight:900;color:#7D858B;margin-bottom:12px}
+.scene-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scene-item{border-radius:16px;padding:14px;min-height:92px;display:flex;flex-direction:column;justify-content:space-between}
+.scene-item small{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;opacity:.7}.scene-item b{font-size:19px;line-height:1.05}
+.place{background:#E7F5FB;color:#0F4A66}.status{background:#FFF0D9;color:#744500}.emotion{background:#FCE9F3;color:#7C1241}.character{background:#EEF6D9;color:#3D5410}
+.main-action{width:100%;border:0;border-radius:18px;background:var(--orange);color:#211600;font-size:18px;font-weight:950;padding:17px 18px;box-shadow:0 8px 18px rgba(240,144,0,.24);cursor:pointer;margin-top:14px}
+.main-action:active{transform:scale(.99)}
+.section-title{display:flex;justify-content:space-between;align-items:end;margin:4px 4px 10px}.section-title h2{margin:0;font-size:19px}.section-title span{font-size:12px;color:var(--muted)}
+.generators{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gen{border:0;border-radius:19px;padding:16px;text-align:left;min-height:122px;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between}
+.gen strong{font-size:15px}.gen .value{font-size:18px;font-weight:950;line-height:1.08}.gen .tap{font-size:11px;font-weight:800;opacity:.65}
+.gen-place{background:#DDF2FB;color:#0F4A66}.gen-status{background:#FFEBC8;color:#744500}.gen-emotion{background:#F9DFEC;color:#7C1241}.gen-character{background:#E8F3C9;color:#3D5410}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.secondary{border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px;font-weight:850;color:var(--ink);cursor:pointer}.secondary.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.history{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.history::-webkit-scrollbar{display:none}.chip{flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:12px}
+.footer{text-align:center;color:#7A8085;font-size:11px;padding:10px 8px 0}.footer a{color:inherit}
+.flash{animation:flash .22s ease}@keyframes flash{0%{transform:scale(.985);opacity:.72}100%{transform:scale(1);opacity:1}}
+@media(min-width:480px){.app{padding-left:20px;padding-right:20px}}
+</style>
+</head>
+<body>
+<main class="app">
+  <section class="top">
+    <div class="brand"><a href="/"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a><button id="installBtn" class="install">Installa app</button></div>
+    <div><h1>Generatore Improv</h1><p>Uno spunto al volo per iniziare una scena. Tocca una categoria o genera tutto insieme.</p></div>
+  </section>
+
+  <section class="card scene-card" id="sceneCard">
+    <div class="scene-label">La tua scena</div>
+    <div class="scene-grid">
+      <div class="scene-item place"><small>Luogo</small><b id="scenePlace">Stazione</b></div>
+      <div class="scene-item status"><small>Status</small><b id="sceneStatus">Molto alto</b></div>
+      <div class="scene-item emotion"><small>Emozione</small><b id="sceneEmotion">Gelosia</b></div>
+      <div class="scene-item character"><small>Personaggio</small><b id="sceneCharacter">Dentista</b></div>
+    </div>
+    <button class="main-action" id="generateAll">🎲 Genera una scena</button>
+  </section>
+
+  <div class="section-title"><h2>Generatori singoli</h2><span>Tocca per cambiare</span></div>
+  <section class="generators">
+    <button class="gen gen-place" data-kind="place"><strong>📍 Luogo</strong><span class="value" id="placeValue">Stazione</span><span class="tap">Genera</span></button>
+    <button class="gen gen-status" data-kind="status"><strong>👑 Status</strong><span class="value" id="statusValue">Molto alto</span><span class="tap">Genera</span></button>
+    <button class="gen gen-emotion" data-kind="emotion"><strong>❤️ Emozione</strong><span class="value" id="emotionValue">Gelosia</span><span class="tap">Genera</span></button>
+    <button class="gen gen-character" data-kind="character"><strong>🎭 Personaggio</strong><span class="value" id="characterValue">Dentista</span><span class="tap">Genera</span></button>
+  </section>
+
+  <section class="card" style="margin-top:14px">
+    <div class="controls">
+      <button class="secondary dark" id="copyScene">Copia scena</button>
+      <button class="secondary" id="resetScene">Nuova partenza</button>
+    </div>
+  </section>
+
+  <div class="section-title"><h2>Ultimi spunti</h2><span id="historyCount">0</span></div>
+  <div class="history" id="history"><span class="chip">Ancora nessuno</span></div>
+
+  <div class="footer">Artyou Roma · strumento per allenamenti, lezioni e jam di improvvisazione</div>
+</main>
+<script>
+(function(){
+"use strict";
+var DATA={
+place:[
+"Stazione ferroviaria","Pronto soccorso","Ascensore bloccato","Matrimonio","Funerale","Supermercato","Aeroporto","Spiaggia deserta","Ristorante stellato","Autogrill","Museo","Sala d'attesa","Palestra","Ufficio postale","Caserma","Tribunale","Nave da crociera","Campeggio","Biblioteca","Scuola elementare","Condominio","Parrucchiere","Studio dentistico","Teatro vuoto","Backstage","Metropolitana","Zoo","Acquario","Hotel di lusso","Motel","Castello","Bunker","Stazione spaziale","Luna park","Circo","Mercato rionale","Chiesa","Monastero","Discoteca","Bar di paese","Campo da calcio","Spogliatoio","Cimitero","Centro commerciale","Sartoria","Officina","Lavanderia automatica","Negozio di animali","Sala prove","Rifugio di montagna","Faro","Isola deserta","Sottomarino","Treno notturno","Taxi","Cucina di un ristorante","Questura","Ambasciata","Centro benessere","Casa di riposo"
+],
+status:[
+"Status altissimo","Status alto","Status medio","Status basso","Status bassissimo","Capo assoluto","Nuovo arrivato","Persona indispensabile","Persona ignorata","Celebrità","Autorità temuta","Autorità rispettata","Leader carismatico","Falso leader","Servitore devoto","Rivale potente","Allievo insicuro","Esperto riconosciuto","Impostore","Ospite d'onore","Intruso","Cliente importantissimo","Dipendente appena assunto","Erede","Favorito del capo","Capro espiatorio","Persona con un segreto","Persona che tutti vogliono impressionare","Persona che nessuno ascolta","Persona che sta per perdere il potere"
+],
+emotion:[
+"Gioia","Paura","Rabbia","Tristezza","Gelosia","Vergogna","Orgoglio","Euforia","Ansia","Sorpresa","Disgusto","Tenerezza","Nostalgia","Invidia","Senso di colpa","Imbarazzo","Entusiasmo","Sospetto","Sollievo","Frustrazione","Meraviglia","Delusione","Speranza","Panico","Serenità","Ossessione","Noia","Confusione","Ammirazione","Risentimento","Gratitudine","Impazienza","Desiderio","Solitudine","Determinazione","Timore reverenziale","Soddisfazione","Malinconia","Curiosità","Diffidenza"
+],
+character:[
+"Dentista","Astronauta","Sindaco","Insegnante","Detective","Chef","Parrucchiere","Notaio","Influencer","Allenatore","Medico","Infermiere","Avvocato","Giudice","Tassista","Portiere di condominio","Bagnino","Vigile del fuoco","Poliziotto","Bibliotecario","Archeologo","Fioraio","Veterinario","Fotografo","Regista","Attore famoso","Musicista","Prete","Monaco","Maggiordomo","Principessa","Re","Guardia del corpo","Pescatore","Contadino","Pilota","Hostess","Controllore","Meccanico","Sarto","Becchino","Wedding planner","Astrologo","Mental coach","Personal trainer","Baby sitter","Investigatore privato","Giornalista","Critico gastronomico","Politico in campagna elettorale","Ex campione","Inventore","Truffatore","Agente immobiliare","Direttore d'orchestra","Custode notturno","Clown","Mago","Professore universitario","Turista perso"
+]
+};
+var current={place:"",status:"",emotion:"",character:""},history=[];
+function $(id){return document.getElementById(id)}
+function random(kind){var a=DATA[kind],prev=current[kind],v=prev;if(a.length<2)return a[0];while(v===prev)v=a[Math.floor(Math.random()*a.length)];current[kind]=v;return v}
+function flash(el){el.classList.remove("flash");void el.offsetWidth;el.classList.add("flash")}
+function sync(kind){
+ var cap=kind.charAt(0).toUpperCase()+kind.slice(1);
+ $(kind+"Value").textContent=current[kind];
+ $("scene"+cap).textContent=current[kind];
+ flash(document.querySelector('[data-kind="'+kind+'"]'));
+}
+function one(kind){random(kind);sync(kind)}
+function addHistory(){
+ var text=current.place+" · "+current.status+" · "+current.emotion+" · "+current.character;
+ history.unshift(text);history=history.slice(0,8);
+ $("historyCount").textContent=history.length;
+ $("history").innerHTML=history.map(function(x){return'<span class="chip">'+x.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</span>'}).join("");
+ try{localStorage.setItem("artyou_improv_history",JSON.stringify(history))}catch(e){}
+}
+function all(){
+ ["place","status","emotion","character"].forEach(function(k){random(k);sync(k)});
+ flash($("sceneCard"));addHistory();
+ if(navigator.vibrate)navigator.vibrate(20)
+}
+function reset(){history=[];try{localStorage.removeItem("artyou_improv_history")}catch(e){};$("historyCount").textContent="0";$("history").innerHTML='<span class="chip">Ancora nessuno</span>';all()}
+document.querySelectorAll(".gen").forEach(function(b){b.onclick=function(){one(b.getAttribute("data-kind"))}});
+$("generateAll").onclick=all;
+$("resetScene").onclick=reset;
+$("copyScene").onclick=function(){
+ var t="Luogo: "+current.place+"\nStatus: "+current.status+"\nEmozione: "+current.emotion+"\nPersonaggio: "+current.character;
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){$("copyScene").textContent="Copiata ✓";setTimeout(function(){$("copyScene").textContent="Copia scena"},1200)});
+};
+try{history=JSON.parse(localStorage.getItem("artyou_improv_history")||"[]")}catch(e){history=[]}
+if(history.length){$("historyCount").textContent=history.length;$("history").innerHTML=history.map(function(x){return'<span class="chip">'+x.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</span>'}).join("")}
+all();
+if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("/improv-generator/sw.js").catch(function(){})});
+var deferredPrompt=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;$("installBtn").style.display="inline-block"});
+$("installBtn").onclick=function(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.finally(function(){deferredPrompt=null;$("installBtn").style.display="none"})};
+})();
+</script>
+</body>
+</html>
