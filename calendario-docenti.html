@@ -732,8 +732,9 @@ function renderBoard(){
       card.onclick=function(){
         if(e.source==="site"){
           var key=String(e.slug||e.siteEventId||"").trim();
-          if(key) location.href="/gestionale.html?edit="+encodeURIComponent(key);
-          else location.href="/gestionale.html";
+          var back="/calendario-docenti/?view=board";
+          if(key) location.href="/gestionale.html?edit="+encodeURIComponent(key)+"&return="+encodeURIComponent(back);
+          else location.href="/gestionale.html?return="+encodeURIComponent(back);
           return;
         }
         openModal(e);
