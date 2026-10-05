@@ -8,154 +8,191 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <script src="/js/artyou-booking-config.js"></script>
 <style>
-:root{--ink:#13181D;--paper:#F6F3EC;--line:#DED7CA;--orange:#F09000;--green:#28B4A8;--red:#C43A4B;--muted:#66717A}
-*{box-sizing:border-box}body{margin:0;background:#ECE7DE;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
-header{background:var(--ink);color:#fff;padding:16px 22px;display:flex;justify-content:space-between;gap:16px;align-items:center;position:sticky;top:0}
-header strong{font-size:20px}header small{display:block;color:#BFC8CF;margin-top:3px}header a{color:#fff;text-decoration:none;font-weight:800}
-.wrap{max-width:1400px;margin:0 auto;padding:22px}.topbar{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
-h1{margin:0 0 5px;font-size:30px}.sub{margin:0;color:var(--muted)}button,.pill{border:0;border-radius:11px;padding:10px 14px;font-weight:800}
-button{cursor:pointer;background:var(--ink);color:#fff}.pill{background:#fff;border:1px solid var(--line);color:var(--muted)}
-.actions{display:flex;gap:8px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
-.stat,.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 24px rgba(20,18,15,.05)}
-.stat{padding:18px}.stat span{font-size:12px;text-transform:uppercase;color:var(--muted);font-weight:800}.stat b{display:block;font-size:32px;margin-top:6px}
-.panel{overflow:hidden}.filters{display:flex;gap:8px;flex-wrap:wrap;padding:14px;border-bottom:1px solid var(--line)}.filter{background:var(--paper);color:var(--ink);border:1px solid var(--line)}.filter.active{background:var(--orange);border-color:var(--orange)}
-.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:860px}th,td{padding:14px 16px;text-align:left;border-bottom:1px solid #EEE9E1}
-th{font-size:12px;text-transform:uppercase;color:var(--muted);background:#FBFAF7}td.num{text-align:right}.event-title{font-weight:900}.date{font-size:13px;color:var(--muted);margin-top:3px}
-.bar{height:9px;background:#ECE7DE;border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:var(--green)}
-.badge{display:inline-block;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:900}.ok{background:#E7F7F2;color:#12634E}.warn{background:#FFF3D8;color:#855A00}.full{background:#FCE8EC;color:#8A2438}
-.empty,.error{padding:26px;text-align:center;color:var(--muted)}.error{color:#8A2438}.mobile-card{display:none}
-@media(max-width:760px){.wrap{padding:12px}.topbar{flex-direction:column}.stats{grid-template-columns:repeat(2,1fr)}.tablewrap{display:none}.mobile-card{display:block;padding:12px}.card{border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:10px}.card-head{display:flex;justify-content:space-between;gap:10px}.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.mini{background:var(--paper);border-radius:10px;padding:9px;text-align:center}.mini b{display:block;font-size:20px}.mini span{font-size:10px;color:var(--muted);text-transform:uppercase}}
+:root{
+  --ink:#13181D;--ink2:#1D252D;--paper:#F5F7F9;--white:#fff;--line:#DCE3E8;--line2:#E8EDF1;
+  --blue:#0B74E5;--blue2:#E8F3FF;--green:#0FAF62;--green2:#E7F8EF;--red:#E34456;--red2:#FDECEF;
+  --amber:#F0A116;--amber2:#FFF4D8;--muted:#6B7580;--shadow:0 8px 24px rgba(16,24,32,.07)
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:var(--ink)}
+button,input,select{font:inherit}
+a{text-decoration:none;color:inherit}
+.topbar{height:78px;background:var(--ink);color:#fff;display:flex;align-items:center;gap:34px;padding:0 28px 0 34px;border-bottom:4px solid #9B1237;position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:12px;min-width:170px}.brand img{width:150px;height:auto;display:block}
+.topnav{display:flex;align-items:center;gap:24px;white-space:nowrap;flex:1}.topnav a{font-weight:700;font-size:14px}
+.top-actions{display:flex;align-items:center;gap:10px}.site-btn{background:#25D366;color:#071B11;border-radius:999px;padding:10px 20px;font-weight:900;font-size:13px}.lang{border:1px solid #4B5661;border-radius:999px;padding:8px 11px;font-size:13px}
+.shell{display:grid;grid-template-columns:235px minmax(0,1fr);min-height:calc(100vh - 78px)}
+.sidebar{background:#F8FAFB;border-right:1px solid var(--line);padding:18px 10px 28px;position:sticky;top:78px;height:calc(100vh - 78px);overflow:auto}
+.side-title{display:flex;align-items:center;gap:10px;padding:12px 16px 16px;font-weight:800;color:#29333C}
+.side-group{display:flex;flex-direction:column;gap:5px}.side-link{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:8px;color:#26313A;font-size:15px}.side-link:hover{background:#EEF3F6}.side-link.active{background:linear-gradient(90deg,#0F7BDC,#1696E4);color:#fff;font-weight:800}.side-icon{width:20px;text-align:center;font-size:18px}
+.side-sep{height:1px;background:var(--line);margin:14px 6px}
+.main{padding:30px 28px 40px;min-width:0}
+.heading{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:22px}
+.heading h1{font-size:38px;line-height:1;margin:0 0 8px}.heading p{margin:0;color:var(--muted);font-size:16px}
+.export-actions{display:flex;gap:14px;flex-wrap:wrap}.big-action{min-width:200px;border:0;border-radius:5px;color:#fff;padding:12px 20px;display:flex;align-items:center;gap:12px;justify-content:center;cursor:pointer;font-weight:900;box-shadow:0 3px 8px rgba(0,0,0,.08)}.big-action small{display:block;font-size:11px;font-weight:600;opacity:.92;margin-top:2px}.big-action .ico{font-size:26px}.excel{background:#0A8C4A}.print{background:#1168D5}
+.filters-panel{background:#fff;border:1px solid var(--line);border-radius:5px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(25,35,45,.03)}
+.filter-grid{display:grid;grid-template-columns:1.25fr 1fr 1.25fr 1.15fr .9fr .9fr;gap:16px}
+.flabel{font-size:12px;font-weight:800;margin:0 0 7px;display:block}.control{width:100%;height:38px;border:1px solid #CCD5DC;border-radius:5px;background:#fff;padding:0 11px;color:#2E3942}
+.search-row{display:flex;align-items:center;gap:12px;margin-top:14px}.search-wrap{position:relative;flex:0 1 455px}.search-wrap span{position:absolute;left:13px;top:9px;color:#65727C}.search{padding-left:38px}.push{flex:1}.btn{height:38px;border:0;border-radius:5px;padding:0 18px;font-weight:800;cursor:pointer}.btn-soft{background:#EDF1F4;color:#59636B}.btn-primary{background:#126BDD;color:#fff}
+.panel{background:#fff;border:1px solid var(--line);border-radius:5px;overflow:hidden;box-shadow:0 2px 8px rgba(25,35,45,.03)}
+.tablewrap{overflow:auto}.bookings{width:100%;border-collapse:collapse;min-width:1040px}.bookings th{background:#DFF0FF;color:#17242E;text-align:left;font-size:12px;padding:12px 11px;border-right:1px solid #fff}.bookings td{font-size:12px;padding:11px;border-bottom:1px solid var(--line2);border-right:1px solid var(--line2);white-space:nowrap}.bookings tbody tr:hover{background:#FBFDFF}.center{text-align:center}.muted{color:var(--muted)}
+.badge{display:inline-block;border-radius:7px;padding:6px 12px;font-size:11px;font-weight:900}.ok{background:#14BD64;color:#fff}.warn{background:#F5AA26;color:#33230A}.info{background:#1C9BE3;color:#fff}.full{background:#E54859;color:#fff}
+.action-set{display:flex;gap:7px}.icon-btn{width:32px;height:32px;border:1px solid #D9E0E5;background:#F8FAFB;border-radius:6px;cursor:pointer}.icon-btn.edit{background:#E5F3FF;border-color:#C4E3FF}.icon-btn.del{background:#FFF0F1;border-color:#FFD1D6}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 14px}.stat{background:#fff;border:1px solid var(--line);border-radius:6px;padding:12px 14px}.stat span{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:800}.stat b{font-size:24px;display:block;margin-top:4px}
+.empty,.error{padding:30px;text-align:center;color:var(--muted)}.error{color:#9B2139}
+.mobile-cards{display:none}
+@media(max-width:1180px){.topnav{gap:14px}.topnav a{font-size:12px}.filter-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.topnav{display:none}.shell{grid-template-columns:1fr}.sidebar{position:static;height:auto;display:flex;gap:6px;overflow:auto;padding:10px}.side-title,.side-sep{display:none}.side-group{display:flex;flex-direction:row;min-width:max-content}.side-link{padding:10px 12px}.main{padding:18px 12px}.heading{flex-direction:column}.filter-grid{grid-template-columns:1fr 1fr}.export-actions{width:100%}.big-action{flex:1;min-width:0}}
+@media(max-width:680px){.topbar{padding:0 14px;height:68px}.brand img{width:128px}.top-actions .site-btn{display:none}.shell{min-height:calc(100vh - 68px)}.sidebar{top:68px}.main{padding:14px 10px}.heading h1{font-size:30px}.filter-grid{grid-template-columns:1fr}.search-row{flex-wrap:wrap}.search-wrap{flex-basis:100%}.push{display:none}.tablewrap{display:none}.mobile-cards{display:block;padding:10px}.mcard{border:1px solid var(--line);border-radius:10px;padding:13px;margin-bottom:10px}.mhead{display:flex;justify-content:space-between;gap:12px}.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.mini{background:#F6F8FA;border-radius:8px;padding:8px;text-align:center}.mini b{display:block;font-size:18px}.mini span{font-size:10px;color:var(--muted)}.summary{grid-template-columns:1fr 1fr}}
+@media print{
+  .topbar,.sidebar,.heading,.filters-panel,.summary{display:none!important}
+  body,.main,.panel{background:#fff!important;box-shadow:none!important;border:0!important}.shell{display:block}.main{padding:0}.tablewrap{display:block!important;overflow:visible}.bookings{min-width:0;font-size:9px}.bookings th,.bookings td{padding:6px 5px;font-size:9px}.no-print{display:none!important}
+  body:before{content:"Artyou Roma · Elenco Prenotazioni";display:block;font-size:20px;font-weight:900;margin:0 0 14px}
+}
 </style>
 </head>
 <body>
-<header><div><strong>ARTYOU · Prenotazioni Live</strong><small>Dashboard riservata · sola lettura</small></div><a href="/gestionale.html">Gestionale →</a></header>
-<main class="wrap">
-<div class="topbar"><div><h1>Stato prenotazioni</h1><p class="sub">Aggiornamento automatico ogni 10 secondi.</p></div><div class="actions"><span class="pill" id="updated">Mai aggiornato</span><button id="refresh">Aggiorna ora</button></div></div>
-<section class="stats">
-<div class="stat"><span>Posti prenotati</span><b id="sBooked">—</b></div>
-<div class="stat"><span>Posti disponibili</span><b id="sFree">—</b></div>
-<div class="stat"><span>Eventi attivi</span><b id="sEvents">—</b></div>
-<div class="stat"><span>Sold out</span><b id="sSold">—</b></div>
-</section>
-<section class="panel">
-<div class="filters" id="filters"><button class="filter active">Tutti</button></div>
-<div class="tablewrap"><table><thead><tr><th>Evento</th><th>Capienza</th><th>Prenotati</th><th>Disponibili</th><th>Riempimento</th><th>Stato</th></tr></thead><tbody id="rows"><tr><td colspan="6" class="empty">Caricamento…</td></tr></tbody></table></div>
-<div class="mobile-card" id="cards"></div>
-</section>
-</main>
+<header class="topbar">
+  <a class="brand" href="/"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a>
+  <nav class="topnav">
+    <a href="/spettacoli/">Spettacoli</a><a href="/improvvisazione-teatrale/">Corsi</a><a href="/workshow/">WorkshoW</a><a href="/rome-improv-festival/">Festival</a><a href="/chi-siamo/">Chi Siamo</a><a href="/insegnanti/">I docenti</a><a href="/merchandising/">Merchandising</a><a href="/la-finestra-sul-cortile/">Blog</a><a href="/contatti/">Contatti</a>
+  </nav>
+  <div class="top-actions"><a class="site-btn" href="/lezione-gratuita/">PROVA GRATUITA</a><span class="lang">🌐 IT⌄</span></div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="side-title"><span class="side-icon">▣</span>Gestionale</div>
+    <div class="side-group">
+      <a class="side-link active" href="/dashboard-prenotazioni/"><span class="side-icon">👥</span>Prenotazioni</a>
+      <a class="side-link" href="/gestionale.html"><span class="side-icon">▦</span>Eventi</a>
+      <a class="side-link" href="/spettacoli/"><span class="side-icon">🎭</span>Spettacoli</a>
+      <a class="side-link" href="/workshow/"><span class="side-icon">✎</span>WorkshoW</a>
+      <a class="side-link" href="/rome-improv-festival/"><span class="side-icon">✹</span>RIF</a>
+      <a class="side-link" href="/yep/"><span class="side-icon">▧</span>YEP</a>
+      <a class="side-link" href="/un-vortice-di-emozioni/"><span class="side-icon">◉</span>Vortice</a>
+    </div>
+    <div class="side-sep"></div>
+    <div class="side-group">
+      <a class="side-link" href="/scanner.html"><span class="side-icon">⌗</span>Scanner QR</a>
+      <a class="side-link" href="/calendario-docenti/"><span class="side-icon">▥</span>Piano Operativo</a>
+      <a class="side-link" href="/insegnanti/"><span class="side-icon">●</span>Docenti</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="heading">
+      <div><h1>Prenotazioni</h1><p>Visualizza, filtra ed esporta le prenotazioni e lo stato degli eventi.</p></div>
+      <div class="export-actions">
+        <button class="big-action excel" id="exportBtn"><span class="ico">▣</span><span>Esporta Excel<small>Scarica il file .xls</small></span></button>
+        <button class="big-action print" id="printBtn"><span class="ico">▤</span><span>Stampa<small>Versione stampabile</small></span></button>
+      </div>
+    </div>
+
+    <section class="summary">
+      <div class="stat"><span>Posti prenotati</span><b id="sBooked">—</b></div>
+      <div class="stat"><span>Posti disponibili</span><b id="sFree">—</b></div>
+      <div class="stat"><span>Eventi attivi</span><b id="sEvents">—</b></div>
+      <div class="stat"><span>Sold out</span><b id="sSold">—</b></div>
+    </section>
+
+    <section class="filters-panel">
+      <div class="filter-grid">
+        <div><label class="flabel">Evento</label><select class="control" id="eventFilter"><option value="all">Tutti gli eventi</option></select></div>
+        <div><label class="flabel">Tipo</label><select class="control" id="typeFilter"><option value="all">Tutti</option><option>Spettacoli</option><option>WorkshoW</option><option>Workshop</option><option>Festival</option><option>YEP</option></select></div>
+        <div><label class="flabel">Stato</label><select class="control" id="statusFilter"><option value="all">Tutti</option><option value="Aperto">Aperto</option><option value="Quasi pieno">Quasi pieno</option><option value="Sold out">Sold out</option></select></div>
+        <div><label class="flabel">Aggiornamento</label><input class="control" id="updated" value="Mai aggiornato" readonly></div>
+        <div><label class="flabel">Dal</label><input class="control" type="date" id="fromDate"></div>
+        <div><label class="flabel">Al</label><input class="control" type="date" id="toDate"></div>
+      </div>
+      <div class="search-row">
+        <div class="search-wrap"><span>⌕</span><input class="control search" id="search" placeholder="Cerca evento, categoria, data..."></div>
+        <div class="push"></div>
+        <button class="btn btn-soft" id="clearFilters">↶ Pulisci filtri</button>
+        <button class="btn btn-primary" id="refresh">Aggiorna</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="tablewrap">
+        <table class="bookings">
+          <thead><tr><th>Data</th><th>Evento</th><th>Tipo</th><th>Capienza</th><th>Prenotati</th><th>Disponibili</th><th>Riempimento</th><th>Stato</th><th class="no-print">Azioni</th></tr></thead>
+          <tbody id="rows"><tr><td colspan="9" class="empty">Caricamento…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="mobile-cards" id="cards"></div>
+    </section>
+  </main>
+</div>
+
 <script>
 (function(){
 "use strict";
 var endpoint=window.ARTYOU_BOOKING_ENDPOINT||"/api/artyou";
-var data=[],activeFilter="all";
+var data=[],filtered=[];
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function getJSON(url){return fetch(url,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})}
 function statusFor(free,cap){if(free<=0)return{label:"Sold out",cls:"full"};if(cap>0&&free/cap<=.2)return{label:"Quasi pieno",cls:"warn"};return{label:"Aperto",cls:"ok"}}
 var WORKSHOW_CATALOG=[
-  {ids:["tra-fiaba-horror-un-confine-sottile-con-niko-di-felice"],words:["tra fiaba","horror","niko di felice"]},
-  {ids:["from-text-to-next-con-federica-forbicioni","from-text-to-next"],words:["from text to next","federica forbicioni"]},
-  {ids:["thriller-con-cinzia-zadro","thriller"],words:["thriller","cinzia zadro"]},
-  {ids:["laboratorio-avanzati-con-antonio-vulpio","laboratorio-avanzati"],words:["laboratorio avanzati","antonio vulpio","vulpio"]},
-  {ids:["human-comedy-con-fabio-mangolini","human-comedy"],words:["human comedy","fabio mangolini","maschera"]},
-  {ids:["improv-di-una-notte-di-mezza-primavera-con-pierpaolo-buzza","improv-di-una-notte-di-mezza-primavera"],words:["mezza primavera","shakespeare","pierpaolo buzza"]}
+ {ids:["tra-fiaba-horror-un-confine-sottile-con-niko-di-felice"],words:["tra fiaba","horror","niko di felice"]},
+ {ids:["from-text-to-next-con-federica-forbicioni","from-text-to-next"],words:["from text to next","federica forbicioni"]},
+ {ids:["thriller-con-cinzia-zadro","thriller"],words:["thriller","cinzia zadro"]},
+ {ids:["laboratorio-avanzati-con-antonio-vulpio","laboratorio-avanzati"],words:["laboratorio avanzati","antonio vulpio","vulpio"]},
+ {ids:["human-comedy-con-fabio-mangolini","human-comedy"],words:["human comedy","fabio mangolini","maschera"]},
+ {ids:["improv-di-una-notte-di-mezza-primavera-con-pierpaolo-buzza","improv-di-una-notte-di-mezza-primavera"],words:["mezza primavera","shakespeare","pierpaolo buzza"]}
 ];
-function isWorkshow(title,id){
-  var iid=String(id||"").toLowerCase();
-  var hay=(String(id||"")+" "+String(title||"")).toLowerCase();
-  if(hay.indexOf("workshow")>=0)return true;
-  for(var i=0;i<WORKSHOW_CATALOG.length;i++){
-    var w=WORKSHOW_CATALOG[i];
-    if(w.ids.indexOf(iid)>=0)return true;
-    for(var j=0;j<w.words.length;j++) if(hay.indexOf(w.words[j])>=0)return true;
-  }
-  return false;
-}
-function categoryOf(title,id,tipo){
-  var t=(String(id||"")+" "+String(title||"")).toLowerCase();
-  var backendType=String(tipo||"").trim().toLowerCase();
-  if(isWorkshow(title,id)||backendType==="workshow")return"WorkshoW";
-  if(t.indexOf("yep")>=0)return"YEP";
-  if(t.indexOf("festival")>=0||t.indexOf("rif")>=0)return"Festival";
-  if(backendType==="saggi")return"Spettacoli";
-  if(backendType==="spettacolo"||backendType==="spettacoli")return"Spettacoli";
-  if(backendType==="workshop")return"Workshop";
-  return"Spettacoli"
-}
-function renderFilters(){
-  var defs=[
-    {id:"all",label:"Tutti"},
-    {id:"YEP",label:"YEP"},
-    {id:"Spettacoli",label:"Spettacoli"},
-    {id:"Festival",label:"Festival"},
-    {id:"shortyou",label:"Shortyou"},
-    {id:"vortice",label:"Un vortice di Emozioni"},
-    {id:"WorkshoW",label:"WorkshoW"}
-  ];
-  $("filters").innerHTML="";
-  defs.forEach(function(d){
-    var b=document.createElement("button");
-    b.className="filter"+(activeFilter===d.id?" active":"");
-    b.textContent=d.label;
-    b.onclick=function(){activeFilter=d.id;render()};
-    $("filters").appendChild(b);
-  });
-}
-function matchesFilter(x){
-  if(activeFilter==="all")return true;
-  var hay=(x.id+" "+x.title).toLowerCase();
-  if(activeFilter==="shortyou")return hay.indexOf("shortyou")>=0;
-  if(activeFilter==="vortice")return hay.indexOf("un vortice")>=0||hay.indexOf("vortice")>=0;
-  if(activeFilter==="WorkshoW")return isWorkshow(x.title,x.id);
-  return x.category===activeFilter;
+function isWorkshow(title,id){var iid=String(id||"").toLowerCase(),hay=(String(id||"")+" "+String(title||"")).toLowerCase();if(hay.indexOf("workshow")>=0)return true;for(var i=0;i<WORKSHOW_CATALOG.length;i++){var w=WORKSHOW_CATALOG[i];if(w.ids.indexOf(iid)>=0)return true;for(var j=0;j<w.words.length;j++)if(hay.indexOf(w.words[j])>=0)return true}return false}
+function categoryOf(title,id,tipo){var t=(String(id||"")+" "+String(title||"")).toLowerCase(),bt=String(tipo||"").trim().toLowerCase();if(isWorkshow(title,id)||bt==="workshow")return"WorkshoW";if(t.indexOf("yep")>=0)return"YEP";if(t.indexOf("festival")>=0||t.indexOf("rif")>=0)return"Festival";if(bt==="workshop")return"Workshop";return"Spettacoli"}
+function normDate(v){var s=String(v||"").trim();if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;var m=s.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);if(m)return m[3]+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[1]).padStart(2,"0");return""}
+function populateEvents(){var sel=$("eventFilter"),keep=sel.value;sel.innerHTML='<option value="all">Tutti gli eventi</option>';data.forEach(function(x){var o=document.createElement("option");o.value=x.id;o.textContent=x.title;sel.appendChild(o)});if([].slice.call(sel.options).some(function(o){return o.value===keep}))sel.value=keep}
+function applyFilters(){
+ var event=$("eventFilter").value,type=$("typeFilter").value,status=$("statusFilter").value,q=$("search").value.trim().toLowerCase(),from=$("fromDate").value,to=$("toDate").value;
+ filtered=data.filter(function(x){
+   var st=statusFor(x.free,x.cap).label,d=x.sortDate||normDate(x.date);
+   if(event!=="all"&&x.id!==event)return false;
+   if(type!=="all"&&x.category!==type)return false;
+   if(status!=="all"&&st!==status)return false;
+   if(q&&(x.title+" "+x.category+" "+x.date).toLowerCase().indexOf(q)<0)return false;
+   if(from&&d&&d<from)return false;if(to&&d&&d>to)return false;
+   return true;
+ });
+ render();
 }
 function render(){
- renderFilters();var list=data.filter(matchesFilter);
  var tb=$("rows"),cards=$("cards");tb.innerHTML="";cards.innerHTML="";
- if(!list.length){tb.innerHTML='<tr><td colspan="6" class="empty">Nessun evento attivo.</td></tr>';cards.innerHTML='<div class="empty">Nessun evento attivo.</div>';return}
- list.forEach(function(x){
-   var pct=x.cap>0?Math.round((x.booked/x.cap)*100):0,st=statusFor(x.free,x.cap);
-   var tr=document.createElement("tr");
-   tr.innerHTML='<td><div class="event-title">'+esc(x.title)+'</div><div class="date">'+esc(x.date)+'</div></td><td class="num">'+x.cap+'</td><td class="num"><b>'+x.booked+'</b></td><td class="num">'+x.free+'</td><td><div class="bar"><i style="width:'+Math.min(100,pct)+'%"></i></div><div class="date">'+pct+'%</div></td><td><span class="badge '+st.cls+'">'+st.label+'</span></td>';
+ if(!filtered.length){tb.innerHTML='<tr><td colspan="9" class="empty">Nessun evento corrisponde ai filtri.</td></tr>';cards.innerHTML='<div class="empty">Nessun evento corrisponde ai filtri.</div>';return}
+ filtered.forEach(function(x){
+   var pct=x.cap>0?Math.round((x.booked/x.cap)*100):0,st=statusFor(x.free,x.cap),tr=document.createElement("tr");
+   tr.innerHTML='<td>'+esc(x.date||"—")+'</td><td><b>'+esc(x.title)+'</b></td><td>'+esc(x.category)+'</td><td class="center">'+x.cap+'</td><td class="center"><b>'+x.booked+'</b></td><td class="center">'+x.free+'</td><td>'+pct+'%</td><td><span class="badge '+st.cls+'">'+st.label+'</span></td><td class="no-print"><div class="action-set"><button class="icon-btn" title="Apri">◉</button><a class="icon-btn edit" title="Modifica" href="/gestionale.html" style="display:grid;place-items:center">✎</a></div></td>';
    tb.appendChild(tr);
-   var c=document.createElement("div");c.className="card";
-   c.innerHTML='<div class="card-head"><div><div class="event-title">'+esc(x.title)+'</div><div class="date">'+esc(x.date)+'</div></div><span class="badge '+st.cls+'">'+st.label+'</span></div><div class="card-grid"><div class="mini"><b>'+x.booked+'</b><span>Prenotati</span></div><div class="mini"><b>'+x.free+'</b><span>Liberi</span></div><div class="mini"><b>'+x.cap+'</b><span>Capienza</span></div></div>';
-   cards.appendChild(c);
+   var c=document.createElement("div");c.className="mcard";c.innerHTML='<div class="mhead"><div><b>'+esc(x.title)+'</b><div class="muted">'+esc(x.date)+'</div></div><span class="badge '+st.cls+'">'+st.label+'</span></div><div class="mgrid"><div class="mini"><b>'+x.booked+'</b><span>Prenotati</span></div><div class="mini"><b>'+x.free+'</b><span>Liberi</span></div><div class="mini"><b>'+x.cap+'</b><span>Capienza</span></div></div>';cards.appendChild(c)
  });
 }
+function updateStats(){
+ var booked=data.reduce(function(s,x){return s+x.booked},0),available=data.reduce(function(s,x){return s+x.free},0),sold=data.filter(function(x){return x.free<=0}).length;
+ $("sBooked").textContent=booked;$("sFree").textContent=available;$("sEvents").textContent=data.length;$("sSold").textContent=sold
+}
 function refresh(){
+ $("rows").innerHTML='<tr><td colspan="9" class="empty">Caricamento…</td></tr>';
  Promise.all([getJSON(endpoint+"?eventi=1&_="+Date.now()),getJSON(endpoint+"?disponibilita=1&_="+Date.now())]).then(function(r){
    if(!r[0].ok||!r[1].ok)throw new Error((r[0].errore||r[1].errore||"Errore dati"));
    var events=r[0].eventi||{},free=r[1].disponibilita||{};
-   data=Object.keys(events).map(function(id){
-     var e=events[id]||{},
-         cap=Math.max(0,parseInt(e.capienza||0,10)||0),
-         f=Math.max(0,parseInt(free[id]||0,10)||0),
-         sortDate=String(e.dataInput||""),
-         sortTime=String(e.oraInput||"");
-     return{
-       id:id,
-       title:e.titolo||id,
-       date:e.data||"",
-       cap:cap,
-       free:f,
-       booked:Math.max(0,cap-f),
-       category:categoryOf(e.titolo||id,id,e.tipo),
-       sortDate:sortDate,
-       sortTime:sortTime
-     };
-   }).sort(function(a,b){
-     var da=a.sortDate||"9999-12-31",db=b.sortDate||"9999-12-31";
-     if(da!==db)return da.localeCompare(db);
-     return (a.sortTime||"").localeCompare(b.sortTime||"");
-   });
-   var booked=data.reduce(function(s,x){return s+x.booked},0),available=data.reduce(function(s,x){return s+x.free},0),sold=data.filter(function(x){return x.free<=0}).length;
-   $("sBooked").textContent=booked;$("sFree").textContent=available;$("sEvents").textContent=data.length;$("sSold").textContent=sold;
-   $("updated").textContent="Aggiornato "+new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
-   render();
- }).catch(function(err){$("rows").innerHTML='<tr><td colspan="6" class="error">Impossibile caricare i dati: '+esc(err.message)+'</td></tr>';$("cards").innerHTML='<div class="error">Impossibile caricare i dati.</div>'});
+   data=Object.keys(events).map(function(id){var e=events[id]||{},cap=Math.max(0,parseInt(e.capienza||0,10)||0),f=Math.max(0,parseInt(free[id]||0,10)||0),sortDate=String(e.dataInput||normDate(e.data)||""),sortTime=String(e.oraInput||e.ora||"");return{id:id,title:e.titolo||id,date:e.data||"",cap:cap,free:f,booked:Math.max(0,cap-f),category:categoryOf(e.titolo||id,id,e.tipo),sortDate:sortDate,sortTime:sortTime}}).sort(function(a,b){var da=a.sortDate||"9999-12-31",db=b.sortDate||"9999-12-31";if(da!==db)return da.localeCompare(db);return(a.sortTime||"").localeCompare(b.sortTime||"")});
+   updateStats();populateEvents();$("updated").value="Aggiornato "+new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit",second:"2-digit"});applyFilters()
+ }).catch(function(err){$("rows").innerHTML='<tr><td colspan="9" class="error">Impossibile caricare i dati: '+esc(err.message)+'</td></tr>'})
 }
-$("refresh").onclick=refresh;refresh();setInterval(refresh,10000);
+function xlsEsc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function exportExcel(){
+ var rows=[["Data","Evento","Tipo","Capienza","Prenotati","Disponibili","Riempimento","Stato"]];
+ filtered.forEach(function(x){var pct=x.cap>0?Math.round(x.booked/x.cap*100):0,st=statusFor(x.free,x.cap).label;rows.push([x.date,x.title,x.category,x.cap,x.booked,x.free,pct+"%",st])});
+ var xml='<?xml version="1.0"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Prenotazioni"><Table>'+rows.map(function(r){return"<Row>"+r.map(function(v){return'<Cell><Data ss:Type="String">'+xlsEsc(v)+'</Data></Cell>'}).join("")+"</Row>"}).join("")+'</Table></Worksheet></Workbook>';
+ var blob=new Blob([xml],{type:"application/vnd.ms-excel;charset=utf-8"}),a=document.createElement("a"),d=new Date().toISOString().slice(0,10);a.href=URL.createObjectURL(blob);a.download="Prenotazioni_ArtyouRoma_"+d+".xls";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},100)
+}
+$("refresh").onclick=refresh;$("printBtn").onclick=function(){window.print()};$("exportBtn").onclick=exportExcel;
+["eventFilter","typeFilter","statusFilter","fromDate","toDate"].forEach(function(id){$(id).addEventListener("change",applyFilters)});$("search").addEventListener("input",applyFilters);
+$("clearFilters").onclick=function(){$("eventFilter").value="all";$("typeFilter").value="all";$("statusFilter").value="all";$("fromDate").value="";$("toDate").value="";$("search").value="";applyFilters()};
+refresh();setInterval(refresh,10000);
 })();
 </script>
 </body>
