@@ -42,7 +42,17 @@ module.exports = async function handler(req, res) {
     const identity = await verifyGoogleIdToken(credential);
 
     const url = APPS_SCRIPT_URL + "?action=po_session&token=" + encodeURIComponent(credential) + "&_=" + Date.now();
-    const upstream = await fetch(url, { method:"GET", redirect:"follow" });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 14000);
+    let upstream;
+    try {
+      upstream = await fetch(url, { method:"GET", redirect:"follow", signal:controller.signal });
+    } catch (e) {
+      if (e && e.name === "AbortError") return res.status(504).json({ ok:false, errore:"backend_timeout" });
+      throw e;
+    } finally {
+      clearTimeout(timer);
+    }
     const text = await upstream.text();
     let session;
     try { session = JSON.parse(text); } catch (_) { throw new Error("backend_response_invalid"); }
