@@ -283,6 +283,50 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
 .err{color:var(--wine);font-weight:700;min-height:1.4em;margin:8px 0 0}
 .done h3{font-size:32px;margin-bottom:10px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Calendario + FAQ a card */
+.calendar-faq-sec{background:var(--cream);padding:56px 0 72px}
+.calendar-card{
+  width:min(560px,100%);background:#fff;border:1px solid #DDD4C6;border-radius:18px;
+  padding:18px;margin-bottom:38px
+}
+.calendar-copy h3{font-size:22px;letter-spacing:-.4px;margin-bottom:2px}
+.calendar-copy p{font-size:13px;color:var(--text-2);margin:0 0 14px}
+.calendar-actions{display:grid;grid-template-columns:1.1fr 1.1fr 1.1fr;gap:8px}
+.calendar-btn{
+  min-height:40px;border-radius:999px;border:1px solid #D7CCBD;background:#fff;color:#111;
+  display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+  font:800 12px/1 var(--body);padding:0 14px;text-align:center;white-space:nowrap
+}
+.calendar-btn:hover{background:#F8F5EF;color:#111}
+.calendar-btn-primary{background:#164F86;border-color:#164F86;color:#fff}
+.calendar-btn-primary:hover{background:#103F6C;color:#fff}
+.faq-cards-block>.kicker{margin-bottom:8px}
+.faq-cards-block>h2{font-size:clamp(34px,4vw,48px);margin-bottom:28px}
+.faq-card-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.faq-card{
+  background:#fff;border:1px solid #E4DED2;border-radius:16px;padding:20px 22px 24px;
+  min-height:255px;text-align:left
+}
+.faq-num{
+  display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;
+  margin-bottom:12px;font:800 13px/1 var(--body)
+}
+.faq-num-1{background:#E6F3FA;color:#0B6F94}
+.faq-num-2{background:#FFF1D8;color:#A85F00}
+.faq-num-3{background:#F4E8F3;color:#7A176B}
+.faq-num-4{background:#E4F5F2;color:#16766D}
+.faq-card h3{font-size:20px;line-height:1.12;margin-bottom:10px}
+.faq-card p{margin:0;font-size:15px;line-height:1.55;color:var(--text-2)}
+@media(max-width:1000px){.faq-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){
+  .calendar-faq-sec{padding:36px 0 52px}
+  .calendar-card{width:100%;padding:16px}
+  .calendar-actions{grid-template-columns:1fr}
+  .calendar-btn{width:100%}
+  .faq-card-grid{grid-template-columns:1fr;gap:12px}
+  .faq-card{min-height:0}
+}
 </style>
 <script src="/js/artyou-language.js" defer></script>
 <style id="rif-language-slot-style">
@@ -495,18 +539,46 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
     </div>
   </section>
 
-  <section id="faq" class="faq-sec">
+
+  <section id="calendar-faq" class="calendar-faq-sec">
     <div class="wrap">
-      <div class="sec-head">
-        <div><p class="kicker" data-i18n="k.q">FAQ</p><h2 data-i18n="q.h">Questions</h2></div><span></span></div>
-      <div class="faq">
-        <details><summary data-i18n="q1">Do I need to speak Italian?</summary><p data-i18n="a1">No. All workshops are taught in English. Our team speaks English and Italian, so you can ask anything in either.</p></details>
-        <details><summary data-i18n="q2">What level do I need?</summary><p data-i18n="a2">Each workshop shows its level. All levels means some improv experience; Intermediate means about 6 months performing; Advanced means a year or more on stage.</p></details>
-        <details><summary data-i18n="q3">How do I pay?</summary><p data-i18n="a3">Book here to hold your place. You’ll receive a confirmation email with payment instructions.</p></details>
-        <details><summary data-i18n="q4">What if I can’t come?</summary><p data-i18n="a4">Write to info@artyouroma.it as soon as you know. The cancellation terms are in your confirmation email.</p></details>
-        <details><summary data-i18n="q5">Can I book for my school or group?</summary><p data-i18n="a5">Yes. Add your school or group in the booking form. For five or more people, write to us first so we can keep you together.</p></details>
-        <details><summary data-i18n="q6">Can I come just for the show?</summary><p data-i18n="a6">Yes. ALL IN tickets are sold separately for Saturday night.</p></details>
-        <details><summary data-i18n="q7">Can I join from outside Rome?</summary><p data-i18n="a7">Yes. The festival is designed as a meeting point between the Rome scene and improvisers and teachers from other cities and countries.</p></details>
+      <div class="calendar-card">
+        <div class="calendar-copy">
+          <h3>Aggiungi al calendario</h3>
+          <p>12–13–14 marzo 2027 · Roma · Salva l’evento e ricevi un promemoria.</p>
+        </div>
+        <div class="calendar-actions">
+          <a class="calendar-btn calendar-btn-primary calendar-ics" href="#" download="roma-improv-festival-2027.ics">APPLE / CALENDARIO</a>
+          <a class="calendar-btn" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Roma%20Improv%20Festival&dates=20270312%2F20270315&details=Roma%20Improv%20Festival%202027%20%E2%80%93%20workshop%20e%20spettacoli%20di%20improvvisazione%20teatrale%20a%20Roma.&location=Via%20La%20Spezia%2073%2C%20Roma&ctz=Europe%2FRome" target="_blank" rel="noopener">GOOGLE CALENDAR</a>
+          <a class="calendar-btn calendar-ics" href="#" download="roma-improv-festival-2027.ics">SCARICA .ICS</a>
+        </div>
+      </div>
+
+      <div id="faq" class="faq-cards-block">
+        <p class="kicker">FAQ</p>
+        <h2>Partecipare al Roma Improv Festival</h2>
+        <div class="faq-card-grid">
+          <article class="faq-card">
+            <span class="faq-num faq-num-1">01</span>
+            <h3>Serve esperienza?</h3>
+            <p>Il festival è pensato per improvvisatori e improvvisatrici di ogni scuola dal secondo anno di formazione. Ogni workshop indica inoltre il livello richiesto e le competenze consigliate.</p>
+          </article>
+          <article class="faq-card">
+            <span class="faq-num faq-num-2">02</span>
+            <h3>Il festival è in inglese?</h3>
+            <p>Sì. I workshop e gli spettacoli internazionali sono pensati per improvvisatori provenienti da Paesi diversi e si svolgono in inglese.</p>
+          </article>
+          <article class="faq-card">
+            <span class="faq-num faq-num-3">03</span>
+            <h3>Posso vedere solo gli spettacoli?</h3>
+            <p>Sì. ALL IN è prenotabile anche separatamente per il sabato sera, senza acquistare un workshop.</p>
+          </article>
+          <article class="faq-card">
+            <span class="faq-num faq-num-4">04</span>
+            <h3>Posso partecipare da fuori Roma?</h3>
+            <p>Sì. Il Roma Improv Festival nasce come punto d’incontro tra la scena romana e improvvisatori e docenti provenienti da altre città e Paesi.</p>
+          </article>
+        </div>
       </div>
     </div>
   </section>
@@ -953,7 +1025,7 @@ $("#bookForm").addEventListener("submit", async e => {
   const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Artyou Roma//RIF 2027//EN","BEGIN:VEVENT","UID:rif2027@artyouroma.it",
     "DTSTAMP:20261006T000000Z","DTSTART;VALUE=DATE:20270312","DTEND;VALUE=DATE:20270315","SUMMARY:Roma Improv Festival 2027",
     "LOCATION:Artyou Roma\\, Rome\\, Italy","URL:" + location.href.split("#")[0],"END:VEVENT","END:VCALENDAR"].join("\r\n");
-  $("#ics").href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+  const icsHref = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);\n  const heroIcs = $("#ics"); if (heroIcs) heroIcs.href = icsHref;\n  $(".calendar-ics").forEach(a => a.href = icsHref);
 })();
 
 /* Barra mobile: compare dopo l'hero */
