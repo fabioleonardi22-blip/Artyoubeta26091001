@@ -2,13 +2,49 @@
 (function(){
 "use strict";
 var CAT={"Improv around the world":"world","Festival Radar":"radar","Impro People":"people","Dentro l'improv":"inside"};
-var FALLBACK_IMG={
-  world:"https://images.unsplash.com/photo-1581611055683-d7b2b2f92077?auto=format&fit=crop&w=1600&q=82",
-  radar:"https://images.unsplash.com/photo-1629276300845-fcae346b4c6d?auto=format&fit=crop&w=1600&q=82",
-  people:"https://images.unsplash.com/photo-1581611055683-d7b2b2f92077?auto=format&fit=crop&w=1600&q=82",
-  inside:"https://images.unsplash.com/photo-1629276300845-fcae346b4c6d?auto=format&fit=crop&w=1600&q=82"
-};
-function imageFor(a,thumb){var k=CAT[a.category]||"world";return (thumb&&a.imageThumb)||a.image||FALLBACK_IMG[k]||FALLBACK_IMG.world;}
+var FALLBACK_POOL=[
+  "/img/rome-improv-festival.jpg",
+  "/img/shortyou-4-ottobre.jpg",
+  "/img/amatori-il-gioco-della-scena.jpg",
+  "/img/teatro-prova-gratuita.jpg",
+  "/img/hero-3.jpg",
+  "https://images.unsplash.com/photo-1581611055683-d7b2b2f92077?auto=format&fit=crop&w=1600&q=82",
+  "https://images.unsplash.com/photo-1629276300845-fcae346b4c6d?auto=format&fit=crop&w=1600&q=82"
+];
+function baseImageUrl(u){return String(u||"").split("?")[0]}
+function fallbackFor(a,index,thumb){
+  var seed=0,s=String((a&&a.slug)||"article");
+  for(var i=0;i<s.length;i++)seed=(seed*31+s.charCodeAt(i))>>>0;
+  var src=FALLBACK_POOL[(seed+(index||0))%FALLBACK_POOL.length]||FALLBACK_POOL[0];
+  if(thumb&&/^https:\/\/images\.unsplash\.com\//.test(src))return src.replace(/w=1600/,"w=700").replace(/q=82/,"q=78");
+  return src;
+}
+function normalizeImages(list){
+  var used={};
+  return (list||[]).map(function(a,index){
+    var x=Object.assign({},a);
+    var main=x.image||"";
+    var key=baseImageUrl(main);
+    if(!main||used[key]){
+      main=fallbackFor(x,index,false);
+      key=baseImageUrl(main);
+      var guard=0;
+      while(used[key]&&guard<FALLBACK_POOL.length){
+        main=FALLBACK_POOL[(index+guard+1)%FALLBACK_POOL.length];
+        key=baseImageUrl(main);guard++;
+      }
+      x.image=main;
+    }
+    used[key]=true;
+    if(!x.imageThumb){
+      x.imageThumb=/^https:\/\/images\.unsplash\.com\//.test(x.image)
+        ? x.image.replace(/w=1600/,"w=700").replace(/q=82/,"q=78")
+        : x.image;
+    }
+    return x;
+  });
+}
+function imageFor(a,thumb){return (thumb&&a.imageThumb)||a.image||fallbackFor(a,0,thumb);}
 var MESI=["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]})}
 function data(iso){var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso||"");return m?Number(m[3])+" "+MESI[Number(m[2])-1]+" "+m[1]:esc(iso)}
@@ -20,7 +56,7 @@ function card(a){
     '<h3>'+esc(a.title)+'</h3><p>'+esc(a.excerpt)+'</p><span class="read">Leggi l’articolo <span aria-hidden="true">→</span></span></a></article>';
 }
 function load(){return fetch("/blog/articles.json",{cache:"no-store"}).then(function(r){return r.json()}).then(function(d){
-  d.articles=(d.articles||[]).slice().sort(function(a,b){return String(b.date).localeCompare(String(a.date))});return d})}
+  d.articles=normalizeImages((d.articles||[]).slice().sort(function(a,b){return String(b.date).localeCompare(String(a.date))}));return d})}
 function festivalRadarItem(x){
   return '<a class="radar-item" href="'+esc(x.url||"https://improvfestivals.org/")+'" target="_blank" rel="noopener noreferrer">'+
     '<span class="radar-date">'+esc(x.date||"")+'</span>'+
