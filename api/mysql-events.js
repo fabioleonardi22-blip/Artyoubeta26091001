@@ -147,7 +147,7 @@ module.exports = async function handler(req, res) {
     }
 
     const rows = await query(
-      `SELECT e.slug,e.title,e.category,e.event_type,e.description,e.price,e.capacity,e.active,e.metadata,
+      `SELECT e.id,e.slug,e.title,e.category,e.event_type,e.description,e.poster_url,e.venue,e.address,e.maps_query,e.price,e.capacity,e.active,e.metadata,
                 (SELECT ed.date_label FROM event_dates ed WHERE ed.event_id=e.id AND ed.active=1 ORDER BY ed.starts_at,ed.id LIMIT 1) AS date_label,
               COALESCE(SUM(CASE WHEN ${activeBookingWhere()} THEN b.seats ELSE 0 END),0) AS prenotati
        FROM events e
@@ -173,11 +173,16 @@ module.exports = async function handler(req, res) {
       try { meta = typeof r.metadata === "string" ? JSON.parse(r.metadata || "{}") : (r.metadata || {}); } catch (_) {}
       meta = await ensureRifConfig(r, meta);
       eventi[r.slug] = {
+        id:String(r.id),
         slug:r.slug,
         titolo:r.title,
         categoria:r.category || "",
         tipo:r.event_type || "",
         descrizione:r.description || "",
+        poster:r.poster_url || "",
+        luogo:r.venue || "",
+        indirizzo:r.address || "",
+        maps:r.maps_query || "",
         data:r.date_label || "",
         ora:meta.ora || "",
         ordine:meta.ordine == null ? null : Number(meta.ordine),
