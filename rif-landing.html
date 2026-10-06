@@ -64,38 +64,10 @@ p{margin:0 0 1em}
 .btn-ink:hover{background:#000;color:var(--cream)}
 .btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
 
-/* Header principale (identico al sito) */
-.top{background:var(--ink);position:relative;z-index:70}
-.top .wrap{display:flex;align-items:center;gap:20px;min-height:96px}
-.logo{display:flex;align-items:center;text-decoration:none;color:var(--cream);flex:none}
-.logo img{height:56px;width:auto}
-.logo .wm{font:800 24px/1 var(--display);letter-spacing:-.5px;display:none}
-.logo.noimg .wm{display:block}
-.mainnav{display:flex;gap:26px;align-items:center;margin-left:auto}
-.mainnav a{color:#E6EBEE;text-decoration:none;font-size:16px;font-weight:500;white-space:nowrap}
-.mainnav a:hover,.mainnav a[aria-current="page"]{color:var(--orange)}
-.mainnav a[aria-current="page"]{font-weight:700}
-.trial{background:#25D366;color:#0B2E1A!important;border:2px solid #79FF9C;box-shadow:0 0 0 2px rgba(121,255,156,.14),0 6px 18px rgba(37,211,102,.22);padding:12px 20px;border-radius:999px;font-weight:700;text-decoration:none;font-size:15px;white-space:nowrap;flex:none}
-.trial .short{display:none}
-.trial-in-menu{display:none}
-.burger{display:none;width:48px;height:48px;border-radius:24px;border:0;background:#2A333B;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:none}
-.burger span{display:block;width:20px;height:2px;border-radius:2px;background:var(--cream);transition:transform .2s ease,opacity .2s ease}
-.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
-.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.stripe{height:6px;background:var(--burgundy)}
-@media (max-width:1240px){
-  .mainnav{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;background:var(--ink);padding:8px clamp(20px,5vw,64px) 24px;border-top:1px solid #2A333B;box-shadow:0 20px 40px rgba(0,0,0,.35)}
-  .mainnav.open{display:flex}
-  .mainnav a{padding:14px 0;border-bottom:1px solid #222A31;font-size:18px}
-  .mainnav .trial-in-menu{display:block;text-align:center;margin-top:16px;border-bottom:2px solid #79FF9C;font-weight:700}
-  .burger{display:flex}
-  .trial-head{margin-left:auto}
-}
-@media (max-width:560px){.trial .long{display:none}.trial .short{display:inline}.trial-head{padding:10px 14px;font-size:14px}.logo img{height:44px}.top .wrap{min-height:76px;gap:12px}}
+.trial-head{padding:10px 14px;font-size:14px}.logo img{height:44px}.top .wrap{min-height:76px;gap:12px}}
 
 /* Barra festival (sticky) */
-.subbar{position:sticky;top:0;z-index:60;background:var(--white);border-bottom:1px solid var(--line);box-shadow:0 6px 18px rgba(19,24,29,.06)}
+.subbar{position:sticky;top:0;z-index:70;background:var(--white);border-bottom:1px solid var(--line);box-shadow:0 6px 18px rgba(19,24,29,.06)}
 .subbar .wrap{display:flex;align-items:center;gap:20px;min-height:64px}
 .fest-name{font:800 19px/1 var(--display);letter-spacing:-.4px;color:var(--ink);text-decoration:none;white-space:nowrap}
 .fest-name span{color:var(--orange-dark)}
@@ -324,28 +296,6 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
 </head>
 <body>
 
-<header class="top">
-  <div class="wrap">
-    <a class="logo" href="/" aria-label="Artyou Roma – Home">
-      <img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" onerror="this.parentNode.classList.add('noimg');this.remove()">
-      <span class="wm">Artyou Roma</span>
-    </a>
-    <nav class="mainnav" id="mainnav" aria-label="Artyou Roma">
-      <a href="/#spettacoli" data-i18n="m.shows">Spettacoli</a>
-      <a href="/improvvisazione-teatrale/" data-i18n="m.courses">Corsi</a>
-      <a href="/workshow/">WorkshoW</a>
-      <a href="/rome-improv-festival/" aria-current="page">Festival</a>
-      <a href="/chi-siamo/" data-i18n="m.about">Chi Siamo</a>
-      <a href="/merchandising/">Merchandising</a>
-      <a href="/la-finestra-sul-cortile/">Blog</a>
-      <a href="#contatti" data-i18n="m.contact">Contatti</a>
-      <a class="trial trial-in-menu" href="/lezione-gratuita/" data-i18n="m.trial">Lezione di Prova Gratuita</a>
-    </nav>
-    <a class="trial trial-head" href="/lezione-gratuita/"><span class="long" data-i18n="m.trial">Lezione di Prova Gratuita</span><span class="short" data-i18n="m.trialS">Prova Gratuita</span></a>
-    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mainnav" aria-label="Menu"><span></span><span></span><span></span></button>
-  </div>
-</header>
-<div class="stripe" aria-hidden="true"></div>
 <div class="subbar">
   <div class="wrap">
     <a class="fest-name" href="#top">Roma Improv Festival <span>2027</span></a>
@@ -998,6 +948,7 @@ $("#bookForm").addEventListener("submit", async e => {
 /* Menu mobile */
 (function () {
   const btn = $("#burger"), nav = $("#mainnav");
+  if (!btn || !nav) return;
   const set = open => { nav.classList.toggle("open", open); btn.setAttribute("aria-expanded", String(open)); };
   btn.addEventListener("click", () => set(!nav.classList.contains("open")));
   nav.addEventListener("click", e => { if (e.target.closest("a")) set(false); });
