@@ -545,7 +545,7 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
       <div class="calendar-card">
         <div class="calendar-copy">
           <h3>Aggiungi al calendario</h3>
-          <p>12–13–14 marzo 2027 · Roma · Salva l’evento e ricevi un promemoria.</p>
+          <p>Caricamento dati dal gestionale…</p>
         </div>
         <div class="calendar-actions">
           <a class="calendar-btn calendar-btn-primary calendar-ics" href="#" download="roma-improv-festival-2027.ics">APPLE / CALENDARIO</a>
@@ -557,28 +557,7 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
       <div id="faq" class="faq-cards-block">
         <p class="kicker">FAQ</p>
         <h2>Partecipare al Roma Improv Festival</h2>
-        <div class="faq-card-grid">
-          <article class="faq-card">
-            <span class="faq-num faq-num-1">01</span>
-            <h3>Serve esperienza?</h3>
-            <p>Il festival è pensato per improvvisatori e improvvisatrici di ogni scuola dal secondo anno di formazione. Ogni workshop indica inoltre il livello richiesto e le competenze consigliate.</p>
-          </article>
-          <article class="faq-card">
-            <span class="faq-num faq-num-2">02</span>
-            <h3>Il festival è in inglese?</h3>
-            <p>Sì. I workshop e gli spettacoli internazionali sono pensati per improvvisatori provenienti da Paesi diversi e si svolgono in inglese.</p>
-          </article>
-          <article class="faq-card">
-            <span class="faq-num faq-num-3">03</span>
-            <h3>Posso vedere solo gli spettacoli?</h3>
-            <p>Sì. ALL IN è prenotabile anche separatamente per il sabato sera, senza acquistare un workshop.</p>
-          </article>
-          <article class="faq-card">
-            <span class="faq-num faq-num-4">04</span>
-            <h3>Posso partecipare da fuori Roma?</h3>
-            <p>Sì. Il Roma Improv Festival nasce come punto d’incontro tra la scena romana e improvvisatori e docenti provenienti da altre città e Paesi.</p>
-          </article>
-        </div>
+        <div class="faq-card-grid"><article class="faq-card"><span class="faq-num faq-num-1">…</span><h3>Caricamento FAQ</h3><p>Dati in arrivo dal gestionale.</p></article></div>
       </div>
     </div>
   </section>
@@ -670,7 +649,7 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
    Se null: posti dimostrativi e invio via email (mailto).
    ========================================================= */
 const CONFIG = {
-  availabilityUrl: null,
+  availabilityUrl: "/api/mysql-events",
   bookingUrl: null,
   contactEmail: "info@artyouroma.it",
   venue: { name: "Artyou Roma", address: "Via La Spezia 73, Roma" }
@@ -685,7 +664,7 @@ const TEACHERS = [
 ];
 
 /* Workshop: level = all | int | adv. capacity = posti totali */
-const WORKSHOPS = [
+let WORKSHOPS = [
   { id: "fri-a", day: "fri", time: "15:00–21:00", hours: 6, teacher: 0, level: "all", capacity: 16, left: 9,
     title: { en: "Friday, track A", it: "Venerdì, track A" }, desc: { en: "Workshop title and description coming soon.", it: "Titolo e descrizione in arrivo." } },
   { id: "fri-b", day: "fri", time: "15:00–21:00", hours: 6, teacher: 1, level: "int", capacity: 16, left: 4,
@@ -698,7 +677,7 @@ const WORKSHOPS = [
     title: { en: "Impro Lab", it: "Impro Lab" }, desc: { en: "Four short sessions, one with each teacher. The best way to taste every style of the festival.", it: "Quattro sessioni brevi, una con ogni docente. Il modo migliore per assaggiare tutti gli stili del festival." } }
 ];
 
-const PASSES = { single: 95, double: 165, full: 200, special: 40, show: 15 };
+let PASSES = { single: 95, double: 165, full: 200, special: 40, show: 15 };
 
 const I18N = {
   en: {
@@ -897,14 +876,132 @@ function renderWorkshops() {
 }
 
 /* --- Disponibilità dal gestionale --- */
+function isRifEvent(id, x) {
+  const s = (String(id||"")+" "+String((x&&(x.titolo||x.descrizione||x.tipo||x.categoria))||"")).toLowerCase();
+  return /rif|roma improv festival|rome improv festival/.test(s);
+}
+function isRifMaster(id, x) {
+  const s = (String(id||"")+" "+String((x&&(x.titolo||""))||"")).toLowerCase();
+  return /(roma|rome)[-_ ]improv[-_ ]festival/.test(s) && !/workshop|spettacolo|show|all[-_ ]in/.test(s);
+}
+function isWorkshopEvent(id, x) {
+  const s = (String(id||"")+" "+String((x&&(x.titolo||x.tipo||x.categoria))||"")).toLowerCase();
+  return /workshop|laboratorio|corso/.test(s);
+}
+function parseDay(x, index) {
+  const s = (String(x.data||"")+" "+String(x.titolo||"")+" "+String(x.descrizione||"")).toLowerCase();
+  if (/domenica|sun|14\/?03/.test(s)) return "sun";
+  if (/sabato|sat|13\/?03/.test(s)) return "sat";
+  if (/venerd|fri|12\/?03/.test(s)) return "fri";
+  return index < 2 ? "fri" : "sat";
+}
+function renderRifConfig(master) {
+  if (!master || !master.rif) return;
+  const cfg = master.rif;
+
+  if (master.luogo || master.indirizzo) {
+    CONFIG.venue.name = master.luogo || "Artyou Roma";
+    CONFIG.venue.address = master.indirizzo || CONFIG.venue.address;
+    const venue = $("#venueText");
+    if (venue) venue.textContent = [CONFIG.venue.name, CONFIG.venue.address].filter(Boolean).join(", ");
+  }
+
+  if (Array.isArray(cfg.pricing)) {
+    const priceMap = {};
+    cfg.pricing.forEach(p => { if (p && p.key && Number.isFinite(Number(p.price))) priceMap[p.key] = Number(p.price); });
+    PASSES = Object.assign({}, PASSES, priceMap);
+    const passes = $("#passes .passes");
+    if (passes) {
+      const ordered = ["double","single","full","special","show","shirt"];
+      passes.innerHTML = ordered.map(key => {
+        const p = cfg.pricing.find(x => x && x.key === key);
+        if (!p) return "";
+        const isFull = key === "full";
+        const button = key === "shirt" ? "" : '<button class="btn '+(isFull?'btn-primary':'btn-ghost')+'" type="button" data-book="'+esc(key)+'">'+esc(key==="double"?"Scegli due workshop":key==="single"?"Scegli un workshop":key==="special"?"Prenota il Workshop Special":key==="show"?"Prenota lo spettacolo":"Prenota il Full Festival")+'</button>';
+        return '<article class="pass '+(isFull?'best':'')+'">'+
+          (isFull?'<span class="save">FULL FESTIVAL</span>':'')+
+          '<h3>'+esc(p.label||key)+'</h3>'+
+          '<div class="price">€'+esc(p.price)+'</div>'+
+          '<ul><li>'+esc(p.note||"")+'</li><li>'+esc(p.included||"")+'</li></ul>'+
+          button+'</article>';
+      }).join("");
+    }
+  }
+
+  if (cfg.calendar) {
+    const cal = cfg.calendar;
+    const label = cal.label || "";
+    const loc = cal.location || [master.luogo, master.indirizzo].filter(Boolean).join(", ");
+    const cc = $(".calendar-card");
+    if (cc) {
+      const copy = cc.querySelector(".calendar-copy p");
+      if (copy) copy.textContent = [label, loc, "Salva l’evento e ricevi un promemoria."].filter(Boolean).join(" · ");
+      const g = cc.querySelector('a[href*="calendar.google.com"]');
+      if (g) {
+        const start = String(cal.start||"").replaceAll("-","");
+        const end = String(cal.end||"").replaceAll("-","");
+        g.href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(master.titolo||"Roma Improv Festival")+
+          "&dates="+encodeURIComponent(start+"/"+end)+
+          "&details="+encodeURIComponent(cal.description||master.descrizione||"")+
+          "&location="+encodeURIComponent(loc)+"&ctz=Europe/Rome";
+      }
+    }
+  }
+
+  if (Array.isArray(cfg.faq)) {
+    const grid = $(".faq-card-grid");
+    if (grid) {
+      grid.innerHTML = cfg.faq.map((item,i) =>
+        '<article class="faq-card"><span class="faq-num faq-num-'+((i%4)+1)+'">'+esc(item.n||String(i+1).padStart(2,"0"))+'</span>'+
+        '<h3>'+esc(item.q||"")+'</h3><p>'+esc(item.a||"")+'</p></article>'
+      ).join("");
+    }
+  }
+
+  renderBooking(false);
+}
 async function loadAvailability() {
   if (!CONFIG.availabilityUrl) return;
   $("#wsStatus").textContent = t("w.loading");
   try {
-    const r = await fetch(CONFIG.availabilityUrl, { headers: { Accept: "application/json" } });
-    if (!r.ok) throw new Error(r.status);
-    const data = await r.json();
-    data.forEach(d => { const w = WORKSHOPS.find(x => x.id === d.id); if (w && typeof d.left === "number") w.left = d.left; });
+    const stamp = Date.now();
+    const [er, ar] = await Promise.all([
+      fetch(CONFIG.availabilityUrl+"?ts="+stamp, {cache:"no-store", headers:{Accept:"application/json"}}),
+      fetch(CONFIG.availabilityUrl+"?disponibilita=1&ts="+stamp, {cache:"no-store", headers:{Accept:"application/json"}})
+    ]);
+    if (!er.ok || !ar.ok) throw new Error("mysql_http");
+    const [evPayload, avPayload] = await Promise.all([er.json(), ar.json()]);
+    const eventMap = evPayload.eventi || {};
+    const capMap = avPayload.disponibilita || {};
+    const entries = Object.entries(eventMap);
+
+    const masterEntry = entries.find(([id,x]) => isRifMaster(id,x));
+    if (masterEntry) renderRifConfig(masterEntry[1]);
+
+    const realWs = entries
+      .filter(([id,x]) => isRifEvent(id,x) && isWorkshopEvent(id,x))
+      .sort((a,b) => Number(a[1].ordine??999)-Number(b[1].ordine??999));
+
+    if (realWs.length) {
+      const base = WORKSHOPS.slice();
+      WORKSHOPS = realWs.slice(0,5).map(([id,x],i) => {
+        const fallback = base[i] || base[base.length-1] || {};
+        const day = parseDay(x,i);
+        const isSpecial = day === "sun" || /special|lab/i.test(String(x.titolo||""));
+        return Object.assign({}, fallback, {
+          id,
+          day,
+          special:isSpecial,
+          title:{en:x.titolo||id,it:x.titolo||id},
+          desc:{en:x.descrizione||"",it:x.descrizione||""},
+          capacity:Number(x.capienza||fallback.capacity||0),
+          left:Object.prototype.hasOwnProperty.call(capMap,id)?Number(capMap[id]):Number(x.liberi||0)
+        });
+      });
+    } else {
+      WORKSHOPS.forEach(w => { if (Object.prototype.hasOwnProperty.call(capMap,w.id)) w.left = Number(capMap[w.id]); });
+    }
+
     liveData = true;
   } catch (e) { console.warn("Availability unavailable", e); }
   renderWorkshops(); renderBooking(false);
