@@ -357,6 +357,18 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
   .fest-name{font-size:16px}
 }
 </style>
+<style id="rif-teachers-force-visible">
+#teachers .teachers{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important}
+#teachers .teacher{display:flex!important;flex-direction:column!important;min-height:330px!important;visibility:visible!important;opacity:1!important}
+#teachers .teacher .photo{min-height:190px!important}
+@media(max-width:1000px){#teachers .teachers{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:620px){#teachers .teachers{grid-template-columns:1fr!important}#teachers .teacher{min-height:0!important}}
+</style>
+<style id="rif-program-priority">
+.rif-program-first{padding-top:54px!important;padding-bottom:58px!important}
+.rif-program-first .sec-head{margin-bottom:24px!important}
+.rif-program-first .days{margin-top:0!important}
+</style>
 </head>
 <body>
 
@@ -406,6 +418,30 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
       </aside>
     </div>
   </section>
+  <section id="schedule" class="on-dark rif-program-first">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker" data-i18n="k.s">Programme</p><h2 data-i18n="s.h">The weekend at a glance</h2></div>
+        <p class="lead" data-i18n="s.lead">Training in the day, community and a show at night. All times are Rome time (CET).</p>
+      </div>
+      <div class="days">
+        <div class="day">
+          <h3 data-i18n="day.friL">Friday 12 March</h3>
+          <div class="slot"><span class="t">15:00–21:00</span><div><b data-i18n="s.ws">Workshops, track A or B</b><small data-i18n="s.6h">6 hours, small groups</small></div></div>
+        </div>
+        <div class="day">
+          <h3 data-i18n="day.satL">Saturday 13 March</h3>
+          <div class="slot"><span class="t">13:30–19:30</span><div><b data-i18n="s.ws">Workshops, track A or B</b><small data-i18n="s.6h">6 hours, small groups</small></div></div>
+          <div class="slot show"><span class="t">22:00</span><div><b>ALL IN</b><small data-i18n="s.show">The festival’s live improv show</small></div></div>
+        </div>
+        <div class="day">
+          <h3 data-i18n="day.sunL">Sunday 14 March</h3>
+          <div class="slot"><span class="t">10:00–13:00</span><div><b>Impro Lab</b><small data-i18n="s.lab">4 teachers, 45 minutes each</small></div></div>
+          <div class="slot"><span class="t" data-i18n="s.from13">From 13:00</span><div><b data-i18n="s.close">Closing</b><small data-i18n="s.closeD">Goodbyes and the group photo</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
   <section id="about-rif" style="padding-top:72px;padding-bottom:72px">
     <div class="wrap">
       <div class="sec-head" style="margin-bottom:0">
@@ -425,7 +461,12 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
         <div><p class="kicker" data-i18n="k.t">Line-up 2027</p><h2 data-i18n="t.h">Meet your teachers</h2></div>
         <p class="lead" data-i18n="t.lead">Four teachers from four countries. Each one leads a 6-hour workshop and joins the Sunday Impro Lab.</p>
       </div>
-      <div class="teachers" id="teacherGrid"></div>
+      <div class="teachers" id="teacherGrid">
+        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 01</h3><p>Nome, Paese e workshop in arrivo dal gestionale.</p></div></article>
+        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 02</h3><p>Nome, Paese e workshop in arrivo dal gestionale.</p></div></article>
+        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 03</h3><p>Nome, Paese e workshop in arrivo dal gestionale.</p></div></article>
+        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 04</h3><p>Nome, Paese e workshop in arrivo dal gestionale.</p></div></article>
+      </div>
     </div>
   </section>
 
@@ -451,30 +492,6 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
     </div>
   </section>
 
-  <section id="schedule" class="on-dark">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="kicker" data-i18n="k.s">Programme</p><h2 data-i18n="s.h">The weekend at a glance</h2></div>
-        <p class="lead" data-i18n="s.lead">Training in the day, community and a show at night. All times are Rome time (CET).</p>
-      </div>
-      <div class="days">
-        <div class="day">
-          <h3 data-i18n="day.friL">Friday 12 March</h3>
-          <div class="slot"><span class="t">15:00–21:00</span><div><b data-i18n="s.ws">Workshops, track A or B</b><small data-i18n="s.6h">6 hours, small groups</small></div></div>
-        </div>
-        <div class="day">
-          <h3 data-i18n="day.satL">Saturday 13 March</h3>
-          <div class="slot"><span class="t">13:30–19:30</span><div><b data-i18n="s.ws">Workshops, track A or B</b><small data-i18n="s.6h">6 hours, small groups</small></div></div>
-          <div class="slot show"><span class="t">22:00</span><div><b>ALL IN</b><small data-i18n="s.show">The festival’s live improv show</small></div></div>
-        </div>
-        <div class="day">
-          <h3 data-i18n="day.sunL">Sunday 14 March</h3>
-          <div class="slot"><span class="t">10:00–13:00</span><div><b>Impro Lab</b><small data-i18n="s.lab">4 teachers, 45 minutes each</small></div></div>
-          <div class="slot"><span class="t" data-i18n="s.from13">From 13:00</span><div><b data-i18n="s.close">Closing</b><small data-i18n="s.closeD">Goodbyes and the group photo</small></div></div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section id="passes">
     <div class="wrap">
