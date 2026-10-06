@@ -389,7 +389,13 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <span class="am-fs-body am-wrap-text" style="font-weight: 700; font-size: 15px; white-space: nowrap;">Apri in Google Maps ↗</span>
 </a>
 </div>
-<div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 22px; box-shadow: 0 20px 50px rgba(19,24,29,0.08);">
+<div style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:24px;padding:32px;display:{{pastDisplay}};flex-direction:column;gap:14px;box-shadow:0 20px 50px rgba(19,24,29,0.08);">
+<span style="font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#6B747B;">Archivio spettacoli</span>
+<h2 class="am-fs-l" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:32px;">Spettacolo concluso</h2>
+<p style="margin:0;font-size:16px;line-height:1.55;color:#555D64;">Questo appuntamento è terminato. La scheda resta online come archivio della stagione Artyou.</p>
+<a href="/spettacoli/" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:999px;background:#13181D;color:#FFFFFF;text-decoration:none;font-weight:800;font-size:14px;">Vedi i prossimi spettacoli →</a>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 24px; padding: 32px; display: {{bookingDisplay}}; flex-direction: column; gap: 22px; box-shadow: 0 20px 50px rgba(19,24,29,0.08);">
 <sc-if value="{{notConfirmed}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">{{cardTitle}}</h2>
@@ -516,6 +522,28 @@ class Component extends DCLogic {
     var META = {"Improvvisazione": ["#1A6E99", "#2CA8E0", "#0F4A66"], "Teatro": ["#941880", "#941880", "#4A1040"], "Stand-up": ["#C0145C", "#E41870", "#5A0F30"], "ImproEnglish": ["#127A70", "#28B4A8", "#0E4A45"]};
     var slug = this.hash();
     var cur = SHOWS.filter(function (x) { return x.slug === slug; })[0] || SHOWS[0];
+    function eventEndTime(ev) {
+      if (!ev || ev.tbd) return Infinity;
+      var values = [], items = Array.isArray(ev.dates) ? ev.dates : [];
+      items.forEach(function (d) {
+        var raw = d && (d.end || d.ends_at || d.endDate || d.start || d.starts_at || d.startDate || d.datetime || d.date);
+        if (raw) {
+          var parsed = new Date(raw);
+          if (!isNaN(parsed.getTime())) values.push(parsed.getTime());
+        }
+      });
+      var labels = items.map(function (d) { return d && d.label || ""; }).join(" · ");
+      var months = {gennaio:0,febbraio:1,marzo:2,aprile:3,maggio:4,giugno:5,luglio:6,agosto:7,settembre:8,ottobre:9,novembre:10,dicembre:11};
+      var now = new Date(), re = /(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)(?:\s+(20\d{2}))?/gi, m;
+      while ((m = re.exec(labels))) {
+        var mon = months[m[2].toLowerCase()];
+        var year = m[3] ? Number(m[3]) : now.getFullYear();
+        if (!m[3] && mon < now.getMonth() - 6) year += 1;
+        values.push(new Date(year, mon, Number(m[1]), 23, 59, 59, 999).getTime());
+      }
+      return values.length ? Math.max.apply(Math, values) : Infinity;
+    }
+    var pastEvent = eventEndTime(cur) < Date.now();
     try {
       var isPlaceholder = !cur || /^\s*\[/.test(String(cur.title||""));
       var canonical = "https://artyouroma.it/spettacoli/" + encodeURIComponent(cur.slug||slug||"") + "/";
@@ -550,6 +578,7 @@ class Component extends DCLogic {
       prezzoNum: typeof cur.price === "number" ? cur.price : "", pagaOnlineFlag: payOnline };
     return {
       accent: this.props.accent ?? "#F09000", s: s, dates: dates, cast: cur.cast || [], hasCast: !!(cur.cast && cur.cast.length),
+      bookingDisplay: pastEvent ? "none" : "flex", pastDisplay: pastEvent ? "flex" : "none",
       cardTitle: cur.tbd ? "Avvisami quando esce la data" : "Prenota il tuo posto",
       dateLabelTitle: cur.tbd ? "Data" : "Scegli la data",
       notTbd: !cur.tbd, seats: seats, seatsLabel: seatsLabel,
