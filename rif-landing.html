@@ -1,131 +1,978 @@
-<!doctype html>
-<html lang="it">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Roma Improv Festival 2027 · 12–14 marzo · Roma</title>
-<meta name="description" content="Roma Improv Festival 2027: tre giorni di workshop, docenti internazionali e spettacoli di improvvisazione teatrale a Roma.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roma Improv Festival 2027 · 12–14 March · Rome</title>
+<meta name="description" content="Roma Improv Festival 2027: three days of improv workshops in English with international teachers, a live show and a community night in Rome, 12–14 March.">
+<!-- Beta: togliere noindex al lancio -->
 <meta name="robots" content="noindex,follow">
-<link rel="icon" href="/favicon.ico">
+<meta property="og:title" content="Roma Improv Festival 2027">
+<meta property="og:description" content="Three days in Rome. Zero scripts. Workshops in English with international teachers, 12–14 March 2027.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#13181D">
+<link rel="icon" type="image/png" href="/img/favicon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#11151a;--paper:#f6f1e7;--orange:#ff8a00;--lime:#d9ff4f;--blue:#42b9e8;--muted:#66717b;--line:rgba(17,21,26,.14)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit}.wrap{width:min(1180px,calc(100% - 40px));margin:auto}
-.top{position:sticky;top:0;z-index:50;background:rgba(17,21,26,.94);backdrop-filter:blur(14px);color:white;border-bottom:1px solid rgba(255,255,255,.12)}
-.topin{height:72px;display:flex;align-items:center;gap:28px}.brand{font-weight:950;letter-spacing:-1px;font-size:22px;text-decoration:none}.brand b{color:var(--orange)}.nav{display:flex;gap:24px;margin-left:auto;align-items:center}.nav a{text-decoration:none;font-size:14px;font-weight:800}.cta{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:999px;padding:13px 20px;font-weight:900;text-decoration:none;cursor:pointer;background:var(--orange);color:#171006}
-.hero{background:#11151a;color:white;min-height:720px;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(17,21,26,.98) 0%,rgba(17,21,26,.83) 48%,rgba(17,21,26,.28) 100%),url('/img/rome-improv-festival.jpg') center/cover no-repeat}.hero:after{content:"RIF";position:absolute;right:-28px;bottom:-110px;font-size:430px;line-height:.8;font-weight:1000;letter-spacing:-35px;color:rgba(255,255,255,.035)}.hero .wrap{position:relative;z-index:1;padding:94px 0 78px}.eyebrow{text-transform:uppercase;letter-spacing:2.2px;font-size:13px;font-weight:900;color:var(--lime)}h1{font-size:clamp(58px,9vw,118px);line-height:.83;letter-spacing:-6px;margin:18px 0 26px;max-width:900px}h1 span{color:var(--orange)}.lead{max-width:650px;font-size:20px;line-height:1.6;color:#d7dde1}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.ghost{display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:13px 20px;font-weight:850;text-decoration:none;color:white}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:72px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.16);border-radius:20px;overflow:hidden}.stat{padding:24px;background:rgba(17,21,26,.72)}.stat strong{display:block;font-size:30px;letter-spacing:-1px}.stat span{font-size:13px;color:#bbc4cb}
-section{padding:92px 0}.sec-head{display:flex;justify-content:space-between;gap:40px;align-items:end;margin-bottom:34px}.kicker{text-transform:uppercase;letter-spacing:1.8px;font-size:12px;font-weight:950;color:#b25400}.sec-head h2{font-size:clamp(42px,6vw,76px);letter-spacing:-3.5px;line-height:.92;margin:8px 0 0}.sec-head p{max-width:470px;color:var(--muted);line-height:1.6}
-.dark{background:#11151a;color:white}.dark .kicker{color:var(--lime)}.dark .sec-head p{color:#aeb9c1}
-.teacher-grid,.work-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.teacher,.work{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:white}.teacher-photo{aspect-ratio:4/5;background:linear-gradient(145deg,#18232b,#313f48);display:flex;align-items:flex-end;padding:18px;color:#c6cdd2;font-size:13px}.teacher-body,.work-body{padding:20px}.teacher h3,.work h3{margin:0 0 6px;font-size:22px}.teacher p,.work p{margin:0;color:var(--muted);line-height:1.5;font-size:14px}.teacher .country{display:inline-block;margin-top:12px;padding:6px 9px;border-radius:999px;background:#eef1f2;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.7px}
-.work-grid{grid-template-columns:repeat(2,1fr)}.work{position:relative}.work:before{content:"";display:block;height:9px;background:var(--orange)}.work:nth-child(2):before{background:var(--blue)}.work:nth-child(3):before{background:#a874d2}.work:nth-child(4):before{background:#37b89c}.work-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.badge{font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:1px}.spots{font-size:12px;font-weight:850;color:#8c2d23}.work h3{font-size:30px;letter-spacing:-1px;margin:12px 0 8px}.work .meta{margin:14px 0;color:#3d4850;font-weight:700}.work button{margin-top:18px;width:100%}.program{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.day{border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:26px;background:#171d23}.day .num{font-size:11px;font-weight:950;color:var(--lime);letter-spacing:1.6px}.day h3{font-size:28px;margin:8px 0 20px}.event{padding:14px 0;border-top:1px solid rgba(255,255,255,.12)}.event time{display:block;color:var(--orange);font-weight:900;font-size:13px}.event strong{display:block;margin-top:4px}.event span{display:block;color:#9eabb3;font-size:13px;margin-top:2px}
-.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.price{background:white;border:1px solid var(--line);border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:14px}.price.featured{background:var(--ink);color:white;transform:translateY(-8px)}.price small{font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#8b959d}.price.featured small{color:var(--lime)}.price h3{margin:0;font-size:24px}.price .amount{font-size:48px;font-weight:950;letter-spacing:-2px}.price p{margin:0;color:var(--muted);line-height:1.5}.price.featured p{color:#aeb8c0}.price .cta{margin-top:auto}
-.live{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:850;color:#4f5a61}.dot{width:8px;height:8px;border-radius:50%;background:#22bb66;box-shadow:0 0 0 5px rgba(34,187,102,.12)}
-.register{background:var(--orange);padding:70px 0}.register .box{display:grid;grid-template-columns:1.2fr .8fr;gap:50px;align-items:center}.register h2{font-size:clamp(48px,7vw,92px);line-height:.9;letter-spacing:-4px;margin:0}.register p{font-size:18px;line-height:1.6}.register .cta{background:#11151a;color:white;padding:16px 24px}
-footer{background:#0c1014;color:#98a4ac;padding:30px 0;font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.modal{position:fixed;inset:0;z-index:100;background:rgba(4,7,9,.76);display:none;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.panel{width:min(650px,100%);max-height:90dvh;overflow:auto;background:white;border-radius:24px;padding:28px;box-shadow:0 30px 90px rgba(0,0,0,.4)}.panel h3{font-size:34px;margin:0 0 8px}.panel .sub{color:var(--muted);margin:0 0 24px}.close{float:right;border:0;background:#eef0f2;border-radius:999px;width:40px;height:40px;font-size:20px;cursor:pointer}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.7px}.field input,.field select{height:50px;border:1px solid #ccd1d4;border-radius:12px;padding:0 14px;font:inherit}.panel .submit{width:100%;margin-top:16px}.msg{margin-top:12px;font-size:14px;font-weight:750}.mobilebar{display:none}
-@media(max-width:900px){.nav a:not(.cta){display:none}.hero{min-height:auto}.hero .wrap{padding:70px 0 60px}h1{letter-spacing:-3px}.stats{grid-template-columns:1fr 1fr}.teacher-grid{grid-template-columns:1fr 1fr}.work-grid,.program,.price-grid,.register .box{grid-template-columns:1fr}.price.featured{transform:none}.sec-head{display:block}.sec-head p{margin-top:20px}.mobilebar{display:flex;position:fixed;left:14px;right:14px;bottom:14px;z-index:45}.mobilebar .cta{width:100%;box-shadow:0 14px 40px rgba(0,0,0,.3)}body{padding-bottom:76px}}
-@media(max-width:560px){.wrap{width:min(100% - 28px,1180px)}.topin{height:62px}.brand{font-size:18px}.top .cta{padding:10px 14px;font-size:13px}.hero .wrap{padding-top:56px}.lead{font-size:17px}.stats{grid-template-columns:1fr 1fr}.stat{padding:18px}.teacher-grid{grid-template-columns:1fr}.work-grid{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}section{padding:70px 0}}
+:root{
+  --ink:#13181D; --ink-2:#1E252C; --ink-3:#0D1115;
+  --cream:#F6F3EC; --white:#FFFFFF; --peach:#FDF1DE; --mint:#E2F4F2;
+  --orange:#F09000; --orange-dark:#C46A00; --on-orange:#1C1606;
+  --blue:#1A6E99; --sky:#2CA8E0; --teal:#28B4A8; --burgundy:#7A1631; --wine:#B32645;
+  --text-2:#3F474E; --text-3:#555D64; --on-dark-2:#C4CCD2;
+  --line:#E4DED2; --line-warm:#EADFCB;
+  --display:"Bricolage Grotesque",Georgia,sans-serif;
+  --body:"Instrument Sans","Helvetica Neue",Helvetica,sans-serif;
+  --wrap:1200px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(120px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--cream);color:var(--ink);font:400 17px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--blue)} a:hover{color:#12506F}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(20px,5vw,64px)}
+h1,h2,h3{font-family:var(--display);font-weight:800;margin:0;color:inherit}
+h2{font-size:clamp(36px,5vw,56px);line-height:1;letter-spacing:-1.5px}
+h3{font-size:24px;line-height:1.1;letter-spacing:-.5px}
+p{margin:0 0 1em}
+.kicker{margin:0 0 12px;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue)}
+.on-dark .kicker{color:var(--orange)}
+.lead{font-size:19px;line-height:1.55;color:var(--text-2);max-width:60ch}
+.on-dark .lead{color:var(--on-dark-2)}
+
+/* Bottoni (stile sito) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 24px;border-radius:999px;border:2px solid transparent;font:700 16px/1 var(--body);text-decoration:none;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--orange);color:var(--on-orange);box-shadow:0 8px 24px rgba(240,144,0,.35)}
+.btn-primary:hover{background:#FFA21A;color:var(--on-orange)}
+.btn-light{background:var(--cream);color:var(--ink)}
+.btn-light:hover{background:#fff;color:var(--ink)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn-ghost:hover{background:rgba(19,24,29,.06);color:var(--ink)}
+.btn-outline-dark{background:transparent;color:var(--cream);border-color:#5A646C}
+.btn-outline-dark:hover{border-color:var(--cream);color:var(--cream)}
+.btn-ink{background:var(--ink);color:var(--cream)}
+.btn-ink:hover{background:#000;color:var(--cream)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+
+/* Header principale (identico al sito) */
+.top{background:var(--ink);position:relative;z-index:70}
+.top .wrap{display:flex;align-items:center;gap:20px;min-height:96px}
+.logo{display:flex;align-items:center;text-decoration:none;color:var(--cream);flex:none}
+.logo img{height:56px;width:auto}
+.logo .wm{font:800 24px/1 var(--display);letter-spacing:-.5px;display:none}
+.logo.noimg .wm{display:block}
+.mainnav{display:flex;gap:26px;align-items:center;margin-left:auto}
+.mainnav a{color:#E6EBEE;text-decoration:none;font-size:16px;font-weight:500;white-space:nowrap}
+.mainnav a:hover,.mainnav a[aria-current="page"]{color:var(--orange)}
+.mainnav a[aria-current="page"]{font-weight:700}
+.trial{background:#25D366;color:#0B2E1A!important;border:2px solid #79FF9C;box-shadow:0 0 0 2px rgba(121,255,156,.14),0 6px 18px rgba(37,211,102,.22);padding:12px 20px;border-radius:999px;font-weight:700;text-decoration:none;font-size:15px;white-space:nowrap;flex:none}
+.trial .short{display:none}
+.trial-in-menu{display:none}
+.burger{display:none;width:48px;height:48px;border-radius:24px;border:0;background:#2A333B;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:none}
+.burger span{display:block;width:20px;height:2px;border-radius:2px;background:var(--cream);transition:transform .2s ease,opacity .2s ease}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.stripe{height:6px;background:var(--burgundy)}
+@media (max-width:1240px){
+  .mainnav{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;background:var(--ink);padding:8px clamp(20px,5vw,64px) 24px;border-top:1px solid #2A333B;box-shadow:0 20px 40px rgba(0,0,0,.35)}
+  .mainnav.open{display:flex}
+  .mainnav a{padding:14px 0;border-bottom:1px solid #222A31;font-size:18px}
+  .mainnav .trial-in-menu{display:block;text-align:center;margin-top:16px;border-bottom:2px solid #79FF9C;font-weight:700}
+  .burger{display:flex}
+  .trial-head{margin-left:auto}
+}
+@media (max-width:560px){.trial .long{display:none}.trial .short{display:inline}.trial-head{padding:10px 14px;font-size:14px}.logo img{height:44px}.top .wrap{min-height:76px;gap:12px}}
+
+/* Barra festival (sticky) */
+.subbar{position:sticky;top:0;z-index:60;background:var(--white);border-bottom:1px solid var(--line);box-shadow:0 6px 18px rgba(19,24,29,.06)}
+.subbar .wrap{display:flex;align-items:center;gap:20px;min-height:64px}
+.fest-name{font:800 19px/1 var(--display);letter-spacing:-.4px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.fest-name span{color:var(--orange-dark)}
+.festnav{display:flex;gap:4px;margin-left:auto}
+.festnav a{color:var(--text-2);text-decoration:none;font-weight:600;font-size:15px;padding:8px 12px;border-radius:999px;white-space:nowrap}
+.festnav a:hover{background:var(--cream);color:var(--ink)}
+.lang{display:flex;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;flex:none}
+.lang button{border:0;background:transparent;font:700 14px/1 var(--body);padding:9px 13px;cursor:pointer;color:var(--text-2)}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+.subbar .btn{min-height:42px;padding:0 20px;font-size:15px;box-shadow:0 6px 16px rgba(240,144,0,.3)}
+@media (max-width:1000px){
+  .subbar .wrap{flex-wrap:wrap;gap:8px 12px;padding-top:10px;padding-bottom:0;min-height:0}
+  .lang{margin-left:auto}
+  .festnav{order:5;width:calc(100% + 2*clamp(20px,5vw,64px));margin:0 calc(-1*clamp(20px,5vw,64px));padding:6px clamp(20px,5vw,64px) 10px;overflow-x:auto;scrollbar-width:none}
+  .festnav::-webkit-scrollbar{display:none}
+  .festnav a{background:var(--cream)}
+}
+@media (max-width:420px){.subbar .btn{display:none}}
+
+/* Hero */
+.hero{position:relative;background:var(--ink-3) var(--hero-img,none) center/cover no-repeat;color:var(--cream);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(13,17,21,.92) 0%,rgba(13,17,21,.7) 55%,rgba(13,17,21,.35) 100%)}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(28px,4vw,56px);align-items:end;padding-top:clamp(40px,5vw,72px);padding-bottom:clamp(48px,6vw,88px)}
+.hero h1{font-size:clamp(46px,7vw,84px);line-height:.98;letter-spacing:-2px;margin-bottom:22px}
+.hero h1 .line{display:block}
+.hero h1 .line + .line{color:var(--orange)}
+.hero .lead{color:var(--on-dark-2);font-size:clamp(17px,1.6vw,19px);margin-bottom:28px}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px}
+@media (prefers-reduced-motion:no-preference){
+  .hero h1 .line{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+  .hero h1 .line + .line{animation-delay:.3s}
+  @keyframes rise{from{opacity:0;transform:translateY(.3em)}to{opacity:1;transform:none}}
+}
+.glance{background:rgba(13,17,21,.86);border:1px solid #2A333B;border-radius:24px;padding:28px;backdrop-filter:blur(6px)}
+.glance-date{font:800 clamp(30px,3.4vw,40px)/1 var(--display);letter-spacing:-1px;color:var(--cream)}
+.glance-place{color:var(--on-dark-2);font-weight:600;margin:8px 0 18px}
+.glance ul{list-style:none;margin:0;padding:0}
+.glance li{display:grid;grid-template-columns:14px 1fr;gap:12px;padding:12px 0;border-top:1px solid #2A333B}
+.glance li::before{content:"";width:10px;height:10px;border-radius:5px;background:var(--orange);margin-top:7px}
+.glance li:nth-child(2)::before{background:var(--sky)}
+.glance li:nth-child(3)::before{background:var(--wine)}
+.glance b{display:block;color:var(--cream)}
+.glance small{color:#9AA5AE;font-size:14px}
+.glance-foot{padding-top:14px;border-top:1px solid #2A333B}
+.glance-foot a{color:var(--orange);font-weight:700}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}.glance{max-width:560px}}
+
+/* Sezioni */
+section{padding:clamp(72px,9vw,112px) 0}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:24px 48px;align-items:end;margin-bottom:44px}
+.sec-head .lead{margin:0}
+@media (max-width:800px){.sec-head{grid-template-columns:1fr}}
+.on-dark{background:var(--ink);color:var(--cream)}
+
+/* Docenti */
+.teachers{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+@media (max-width:1000px){.teachers{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.teachers{grid-template-columns:1fr}}
+.teacher{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:0 14px 32px rgba(19,24,29,.08)}
+.teacher .photo{aspect-ratio:4/5;background:linear-gradient(160deg,#1E252C,#13181D);display:grid;place-items:center;position:relative}
+.teacher .photo img{width:100%;height:100%;object-fit:cover}
+.teacher .photo .mono{font:800 72px/1 var(--display);color:#3A444D}
+.teacher .flag{position:absolute;left:12px;bottom:12px;background:var(--cream);color:var(--ink);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px}
+.teacher .tb{padding:18px 20px 22px}
+.teacher h3{font-size:24px}
+.teacher p{color:var(--text-3);font-size:15px;line-height:1.5;margin:8px 0 0}
+.teacher .tbc{color:var(--text-3)}
+
+/* Workshop */
+.ws-section{background:var(--white)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.chip{border:2px solid var(--line);background:var(--white);border-radius:999px;padding:0 18px;min-height:44px;font:700 15px/1 var(--body);cursor:pointer;color:var(--ink)}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+.levels-key{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:15px;color:var(--text-3);margin:0 0 32px}
+.levels-key b{color:var(--ink)}
+.ws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+.ws{background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:12px}
+.ws::before{content:"";width:56px;height:6px;border-radius:3px;background:var(--sky)}
+.ws.special{background:var(--peach);border-color:var(--line-warm)}
+.ws.special::before{background:var(--orange)}
+.ws-when{display:flex;justify-content:space-between;gap:12px;font-weight:700;color:var(--text-2);font-size:15px}
+.ws-when .time{color:var(--ink)}
+.ws h3{font-size:28px}
+.ws .by{font-weight:600;color:var(--text-2)}
+.ws .desc{color:var(--text-3);font-size:15px;line-height:1.5;margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{border-radius:999px;padding:5px 11px;font-size:13px;font-weight:700;background:var(--white);border:1px solid var(--line)}
+.tag.lv-all{background:var(--mint);border-color:#BFE6E2;color:#0E5A53}
+.tag.lv-int{background:#DFF1FA;border-color:#B5DDF0;color:var(--blue)}
+.tag.lv-adv{background:var(--burgundy);border-color:var(--burgundy);color:#fff}
+.seats{margin-top:auto}
+.seats-bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:6px}
+.seats-bar i{display:block;height:100%;background:var(--teal)}
+.seats.low .seats-bar i{background:var(--wine)}
+.seats-txt{font-size:14px;font-weight:700;color:var(--text-2)}
+.seats.low .seats-txt{color:var(--wine)}
+.ws .btn{width:100%}
+.ws-status{color:var(--text-3);font-size:14px;margin-top:18px}
+
+/* Programma */
+.days{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.day{background:var(--ink-2);border-radius:20px;padding:24px}
+.day h3{font-size:28px;color:var(--orange);margin-bottom:10px}
+.slot{display:grid;grid-template-columns:116px 1fr;gap:12px;padding:14px 0;border-top:1px solid #2A333B}
+.slot .t{font:800 18px/1.3 var(--display);color:var(--cream)}
+.slot b{display:block;color:var(--cream)}
+.slot small{color:#9AA5AE;font-size:14px}
+.slot.show b{color:var(--orange)}
+@media (max-width:900px){.days{grid-template-columns:1fr}}
+
+/* Pass */
+.passes{display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:24px;align-items:stretch}
+@media (max-width:900px){.passes{grid-template-columns:1fr}}
+.pass{background:var(--white);border-radius:24px;padding:28px;display:flex;flex-direction:column;gap:10px;box-shadow:0 14px 32px rgba(19,24,29,.08);position:relative}
+.pass.best{background:var(--ink);color:var(--cream);box-shadow:0 18px 40px rgba(19,24,29,.28)}
+.pass .save{position:absolute;top:-14px;right:22px;background:var(--orange);color:var(--on-orange);border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px}
+.price{font:800 60px/1 var(--display);letter-spacing:-2px}
+.pass.best .price{color:var(--orange)}
+.price small{font:700 15px var(--body);letter-spacing:0;color:var(--text-3);margin-left:6px}
+.pass.best .price small{color:var(--on-dark-2)}
+.pass ul{margin:6px 0 18px;padding-left:1.1em}
+.pass li{margin:.3em 0}
+.pass.best li{color:#E6EBEE}
+.pass li.no{color:var(--text-3);list-style:"– "}
+.pass .btn{margin-top:auto}
+.watch{margin-top:28px;color:var(--text-3)}
+
+/* Roma */
+.rome-sec{background:var(--mint)}
+.rome-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+@media (max-width:1000px){.rome-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.rome-grid{grid-template-columns:1fr}}
+.rome-item{background:var(--white);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.rome-item::before{content:"";width:56px;height:6px;border-radius:3px;background:var(--teal)}
+.rome-item:nth-child(2)::before{background:var(--sky)}
+.rome-item:nth-child(3)::before{background:var(--orange)}
+.rome-item:nth-child(4)::before{background:var(--wine)}
+.rome-item p{color:var(--text-2);font-size:15px;line-height:1.55;margin:0}
+
+/* FAQ */
+.faq-sec{background:var(--white)}
+.faq{max-width:840px}
+.faq details{background:var(--cream);border-radius:18px;margin-bottom:12px;padding:0 24px}
+.faq summary{cursor:pointer;list-style:none;padding:20px 40px 20px 0;font-weight:700;font-size:18px;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:0;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:15px;background:var(--orange);color:var(--on-orange);display:grid;place-items:center;font:800 20px/1 var(--body)}
+.faq details[open] summary::after{content:"–"}
+.faq details p{color:var(--text-2);margin:0;padding-bottom:20px;max-width:65ch}
+
+/* CTA finale (promo bordeaux del sito) */
+.final{padding:clamp(56px,7vw,88px) 0}
+.final-box{background:linear-gradient(135deg,var(--wine) 0%,#8F1D36 100%);color:#fff;border:1px solid #76162C;border-radius:24px;padding:clamp(32px,5vw,56px);display:flex;align-items:center;justify-content:space-between;gap:32px;box-shadow:0 10px 28px rgba(143,29,54,.26)}
+.final h2{font-size:clamp(36px,5vw,56px);margin-bottom:10px}
+.final p{margin:0;max-width:52ch;font-size:18px;color:#FFF4F6}
+@media (max-width:800px){.final-box{flex-direction:column;align-items:flex-start}}
+
+/* Footer (come il sito) */
+footer{background:var(--ink-3);color:#D5DCE1;padding:64px 0 calc(40px + 76px);font-size:15px}
+.fgrid-foot{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+@media (max-width:800px){.fgrid-foot{grid-template-columns:1fr 1fr}}
+footer .col{display:flex;flex-direction:column;gap:10px}
+footer .col > span:first-child{font-weight:700;color:var(--cream)}
+footer a{color:#D5DCE1}
+footer .legal{border-top:1px solid #262E35;margin-top:40px;padding-top:24px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-size:14px;color:#9AA5AE}
+footer .legal a{color:#9AA5AE}
+@media (min-width:761px){footer{padding-bottom:40px}}
+
+/* WhatsApp flottante */
+.wa{position:fixed;right:24px;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:55;width:60px;height:60px;border-radius:30px;background:#25D366;color:#0B2E1A;display:grid;place-items:center;box-shadow:0 10px 24px rgba(37,211,102,.28)}
+.wa svg{width:30px;height:30px}
+@media (max-width:760px){.wa{bottom:calc(88px + env(safe-area-inset-bottom,0px));right:16px;width:54px;height:54px}}
+
+/* Barra mobile */
+.mbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--ink);color:var(--cream);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:none;align-items:center;gap:12px;transform:translateY(110%);transition:transform .25s ease;box-shadow:0 -8px 24px rgba(0,0,0,.2)}
+.mbar.show{transform:none}
+.mbar div{flex:1;line-height:1.25;font-size:14px;color:var(--on-dark-2)}
+.mbar b{display:block;font-size:16px;color:var(--cream)}
+.mbar .btn{min-height:46px}
+@media (max-width:760px){.mbar{display:flex}}
+
+/* Modulo */
+dialog{border:0;border-radius:24px;padding:0;width:min(640px,calc(100vw - 24px));max-height:calc(100dvh - 24px);background:var(--white);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(13,17,21,.6)}
+.dlg-head{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;background:var(--ink);color:var(--cream);position:sticky;top:0;z-index:1}
+.dlg-head h2{font-size:30px;letter-spacing:-.8px}
+.x{border:0;background:#2A333B;color:var(--cream);width:42px;height:42px;border-radius:21px;font-size:18px;cursor:pointer}
+.dlg-body{padding:24px;overflow:auto}
+fieldset{border:0;padding:0;margin:0 0 24px}
+legend{font:800 22px/1 var(--display);margin-bottom:14px;padding:0}
+.opt{display:flex;gap:12px;align-items:flex-start;border:2px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:8px;cursor:pointer;background:var(--white)}
+.opt:hover{border-color:#C9C1B1}
+.opt:has(input:checked){border-color:var(--orange);background:var(--peach)}
+.opt:has(input:disabled){opacity:.5;cursor:not-allowed}
+.opt input{margin-top:4px;accent-color:var(--orange-dark);width:18px;height:18px;flex:none}
+.opt .o-main{flex:1}
+.opt .o-main b{display:block}
+.opt .o-main small{color:var(--text-3);font-size:14px}
+.opt .o-price{font:800 22px/1 var(--display)}
+.sub-legend{font-weight:700;margin:16px 0 8px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fgrid .full{grid-column:1/-1}
+@media (max-width:520px){.fgrid{grid-template-columns:1fr}}
+label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:15px}
+label.f span.opt-l{font-weight:400;color:var(--text-3)}
+input[type=text],input[type=email],input[type=tel],select{font:400 16px var(--body);padding:12px 14px;border:1.5px solid #C9C1B1;border-radius:12px;background:var(--white);color:var(--ink);min-height:50px;width:100%}
+input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 0 3px rgba(240,144,0,.25)}
+[aria-invalid="true"]{border-color:var(--wine)!important}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:15px;margin:16px 0}
+.consent input{width:20px;height:20px;accent-color:var(--orange-dark);flex:none;margin-top:2px}
+.summary{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid var(--line);padding-top:18px;margin-top:8px}
+.summary .tot{font:800 36px/1 var(--display);letter-spacing:-1px}
+.summary small{display:block;color:var(--text-3);font-size:14px}
+.err{color:var(--wine);font-weight:700;min-height:1.4em;margin:8px 0 0}
+.done h3{font-size:32px;margin-bottom:10px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap topin"><a class="brand" href="#top">ROMA <b>IMPROV</b> FESTIVAL</a><nav class="nav"><a href="#docenti">Docenti</a><a href="#workshop">Workshop</a><a href="#programma">Programma</a><a class="cta" href="#iscrizioni">Iscriviti</a></nav></div></header>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="Artyou Roma – Home">
+      <img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" onerror="this.parentNode.classList.add('noimg');this.remove()">
+      <span class="wm">Artyou Roma</span>
+    </a>
+    <nav class="mainnav" id="mainnav" aria-label="Artyou Roma">
+      <a href="/#spettacoli" data-i18n="m.shows">Spettacoli</a>
+      <a href="/improvvisazione-teatrale/" data-i18n="m.courses">Corsi</a>
+      <a href="/workshow/">WorkshoW</a>
+      <a href="/rome-improv-festival/" aria-current="page">Festival</a>
+      <a href="/chi-siamo/" data-i18n="m.about">Chi Siamo</a>
+      <a href="/merchandising/">Merchandising</a>
+      <a href="/la-finestra-sul-cortile/">Blog</a>
+      <a href="#contatti" data-i18n="m.contact">Contatti</a>
+      <a class="trial trial-in-menu" href="/lezione-gratuita/" data-i18n="m.trial">Lezione di Prova Gratuita</a>
+    </nav>
+    <a class="trial trial-head" href="/lezione-gratuita/"><span class="long" data-i18n="m.trial">Lezione di Prova Gratuita</span><span class="short" data-i18n="m.trialS">Prova Gratuita</span></a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mainnav" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<div class="stripe" aria-hidden="true"></div>
+<div class="subbar">
+  <div class="wrap">
+    <a class="fest-name" href="#top">Roma Improv Festival <span>2027</span></a>
+    <nav class="festnav" aria-label="Festival">
+      <a href="#teachers" data-i18n="nav.teachers">Teachers</a>
+      <a href="#workshops" data-i18n="nav.workshops">Workshops</a>
+      <a href="#schedule" data-i18n="nav.schedule">Schedule</a>
+      <a href="#passes" data-i18n="nav.passes">Passes</a>
+      <a href="#rome" data-i18n="nav.rome">Rome</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="it" aria-pressed="false">IT</button>
+    </div>
+    <button class="btn btn-primary" type="button" data-book="full" data-i18n="cta.bookShort">Book</button>
+  </div>
+</div>
+
 <main id="top">
-<section class="hero"><div class="wrap">
-<div class="eyebrow">12 · 13 · 14 marzo 2027 · Roma</div>
-<h1>3 giorni.<br><span>0 copioni.</span></h1>
-<p class="lead">Workshop intensivi, docenti internazionali e spettacoli dal vivo. Un festival pensato per chi vuole studiare, incontrarsi e salire sul palco.</p>
-<div class="actions"><a class="cta" href="#workshop">Scopri i workshop</a><a class="ghost" href="#programma">Vedi il programma</a></div>
-<div class="stats"><div class="stat"><strong>3</strong><span>giorni a Roma</span></div><div class="stat"><strong>4</strong><span>workshop</span></div><div class="stat"><strong>15h+</strong><span>di formazione</span></div><div class="stat"><strong>EN</strong><span>festival internazionale</span></div></div>
-</div></section>
+  <section class="hero" style="--hero-img:url('/img/home-carousel-01.jpg')">
+    <div class="wrap">
+      <div>
+        <p class="kicker" style="color:var(--orange)" data-i18n="k.hero">International improv festival</p>
+        <h1><span class="line" data-i18n="hero.l1">Three days in Rome.</span><span class="line" data-i18n="hero.l2">Zero scripts.</span></h1>
+        <p class="lead" data-i18n="hero.lead">Intensive workshops with international teachers, taught in English. Train by day, play the show at night, and leave with new friends from across Europe.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary" type="button" data-book="full" data-i18n="cta.book">Book your pass</button>
+          <a class="btn btn-light" href="#workshops" data-i18n="cta.see">See the workshops</a>
+        </div>
+      </div>
+      <aside class="glance" aria-label="Festival at a glance">
+        <div class="glance-date" data-i18n="stub.date">12–14 March 2027</div>
+        <div class="glance-place" data-i18n="stub.place">Rome, Italy. Hosted by Artyou Roma</div>
+        <ul>
+          <li><div><b data-i18n="stub.f1">Taught in English</b><small data-i18n="stub.f1s">Our team on site speaks English and Italian</small></div></li>
+          <li><div><b data-i18n="stub.f2">15 hours of training</b><small data-i18n="stub.f2s">With a Full Festival pass: 2 workshops + Impro Lab</small></div></li>
+          <li><div><b data-i18n="stub.f3">Saturday night show</b><small data-i18n="stub.f3s">ALL IN, included with every workshop pass</small></div></li>
+        </ul>
+        <div class="glance-foot"><a id="ics" href="#" download="roma-improv-festival-2027.ics" data-i18n="stub.cal">Add the dates to your calendar</a></div>
+      </aside>
+    </div>
+  </section>
 
-<section id="docenti"><div class="wrap">
-<div class="sec-head"><div><div class="kicker">International teachers</div><h2>Docenti da incontrare,<br>non solo da seguire.</h2></div><p>La landing è predisposta per quattro profili completi con foto, paese, bio breve e workshop associato. I dati definitivi possono essere inseriti senza cambiare struttura.</p></div>
-<div class="teacher-grid">
-<article class="teacher"><div class="teacher-photo">Foto docente</div><div class="teacher-body"><h3>Teacher 01</h3><p>Bio breve, approccio e ricerca artistica.</p><span class="country">Country</span></div></article>
-<article class="teacher"><div class="teacher-photo">Foto docente</div><div class="teacher-body"><h3>Teacher 02</h3><p>Bio breve, approccio e ricerca artistica.</p><span class="country">Country</span></div></article>
-<article class="teacher"><div class="teacher-photo">Foto docente</div><div class="teacher-body"><h3>Teacher 03</h3><p>Bio breve, approccio e ricerca artistica.</p><span class="country">Country</span></div></article>
-<article class="teacher"><div class="teacher-photo">Foto docente</div><div class="teacher-body"><h3>Teacher 04</h3><p>Bio breve, approccio e ricerca artistica.</p><span class="country">Country</span></div></article>
-</div>
-</div></section>
+  <section id="teachers">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker" data-i18n="k.t">Line-up 2027</p><h2 data-i18n="t.h">Meet your teachers</h2></div>
+        <p class="lead" data-i18n="t.lead">Four teachers from four countries. Each one leads a 6-hour workshop and joins the Sunday Impro Lab.</p>
+      </div>
+      <div class="teachers" id="teacherGrid"></div>
+    </div>
+  </section>
 
-<section id="workshop" class="dark"><div class="wrap">
-<div class="sec-head"><div><div class="kicker">Learn · play · perform</div><h2>I workshop.</h2></div><p>Le disponibilità arrivano in tempo reale dal gestionale MySQL Artyou. Titolo, data, orario e posti liberi vengono aggiornati automaticamente.</p></div>
-<div class="work-grid" id="workshops"><div class="work"><div class="work-body"><div class="live"><span class="dot"></span>Caricamento workshop dal gestionale…</div></div></div></div>
-</div></section>
+  <section id="workshops" class="ws-section">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker" data-i18n="k.w">Learn and play</p><h2 data-i18n="w.h">Workshops</h2></div>
+        <p class="lead" data-i18n="w.lead">Pick one track on Friday and one on Saturday. Every workshop shows its level, so you know who you’ll be playing with.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Filter by day">
+        <button class="chip" type="button" data-filter="all" aria-pressed="true" data-i18n="f.all">All days</button>
+        <button class="chip" type="button" data-filter="fri" aria-pressed="false" data-i18n="day.fri">Friday 12</button>
+        <button class="chip" type="button" data-filter="sat" aria-pressed="false" data-i18n="day.sat">Saturday 13</button>
+        <button class="chip" type="button" data-filter="sun" aria-pressed="false" data-i18n="day.sun">Sunday 14</button>
+      </div>
+      <p class="levels-key">
+        <span><b data-i18n="lv.all">All levels</b>: <span data-i18n="lv.all.d">some improv experience</span></span>
+        <span><b data-i18n="lv.int">Intermediate</b>: <span data-i18n="lv.int.d">6+ months on stage</span></span>
+        <span><b data-i18n="lv.adv">Advanced</b>: <span data-i18n="lv.adv.d">1+ year on stage</span></span>
+      </p>
+      <div class="ws-grid" id="wsGrid" aria-live="polite"></div>
+      <p class="ws-status" id="wsStatus"></p>
+    </div>
+  </section>
 
-<section id="programma" class="dark"><div class="wrap">
-<div class="sec-head"><div><div class="kicker">Festival schedule</div><h2>Tre giorni,<br>un unico flusso.</h2></div><p>Una lettura immediata del weekend, come nei principali festival internazionali: formazione di giorno, community e spettacolo la sera.</p></div>
-<div class="program">
-<article class="day"><span class="num">DAY 01</span><h3>Venerdì 12 marzo</h3><div class="event"><time>15:00 — 21:00</time><strong>Workshop 1</strong><span>6 ore intensive</span></div></article>
-<article class="day"><span class="num">DAY 02</span><h3>Sabato 13 marzo</h3><div class="event"><time>13:30 — 19:30</time><strong>Workshop 2</strong><span>6 ore intensive</span></div><div class="event"><time>22:00</time><strong>ALL IN</strong><span>Live improv show</span></div></article>
-<article class="day"><span class="num">DAY 03</span><h3>Domenica 14 marzo</h3><div class="event"><time>10:00 — 13:00</time><strong>Workshop Special</strong><span>3 ore</span></div><div class="event"><time>dalle 13:00</time><strong>Community closing</strong><span>saluti e foto finale</span></div></article>
-</div>
-</div></section>
+  <section id="schedule" class="on-dark">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker" data-i18n="k.s">Programme</p><h2 data-i18n="s.h">The weekend at a glance</h2></div>
+        <p class="lead" data-i18n="s.lead">Training in the day, community and a show at night. All times are Rome time (CET).</p>
+      </div>
+      <div class="days">
+        <div class="day">
+          <h3 data-i18n="day.friL">Friday 12 March</h3>
+          <div class="slot"><span class="t">15:00–21:00</span><div><b data-i18n="s.ws">Workshops, track A or B</b><small data-i18n="s.6h">6 hours, small groups</small></div></div>
+        </div>
+        <div class="day">
+          <h3 data-i18n="day.satL">Saturday 13 March</h3>
+          <div class="slot"><span class="t">13:30–19:30</span><div><b data-i18n="s.ws">Workshops, track A or B</b><small data-i18n="s.6h">6 hours, small groups</small></div></div>
+          <div class="slot show"><span class="t">22:00</span><div><b>ALL IN</b><small data-i18n="s.show">The festival’s live improv show</small></div></div>
+        </div>
+        <div class="day">
+          <h3 data-i18n="day.sunL">Sunday 14 March</h3>
+          <div class="slot"><span class="t">10:00–13:00</span><div><b>Impro Lab</b><small data-i18n="s.lab">4 teachers, 45 minutes each</small></div></div>
+          <div class="slot"><span class="t" data-i18n="s.from13">From 13:00</span><div><b data-i18n="s.close">Closing</b><small data-i18n="s.closeD">Goodbyes and the group photo</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<section><div class="wrap">
-<div class="sec-head"><div><div class="kicker">Pass & tickets</div><h2>Scegli quanto<br>festival vuoi.</h2></div><p>Prezzi chiari, CTA unica, nessun passaggio inutile. L'iscrizione apre il modulo già impostato sul workshop selezionato.</p></div>
-<div class="price-grid">
-<article class="price"><small>Workshop</small><h3>1 workshop · 6H</h3><div class="amount">€95</div><p>Un workshop da 6 ore. Spettacolo e T-Shirt inclusi.</p><button class="cta book" data-event="">Scegli workshop</button></article>
-<article class="price featured"><small>Best value</small><h3>Full Festival</h3><div class="amount">€200</div><p>2 workshop da 6 ore + workshop special + eventi e gadget inclusi.</p><button class="cta book" data-event="">Prenota il Full Festival</button></article>
-<article class="price"><small>Workshop Special</small><h3>1 workshop · 3H</h3><div class="amount">€40</div><p>Workshop speciale della domenica. Spettacolo e T-Shirt non inclusi.</p><button class="cta book" data-event="">Scegli workshop</button></article>
-</div>
-</div></section>
+  <section id="passes">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker" data-i18n="k.p">Booking</p><h2 data-i18n="p.h">Choose your pass</h2></div>
+        <p class="lead" data-i18n="p.lead">Prices in euro. Your place is held as soon as you book; payment details arrive by email.</p>
+      </div>
+      <div class="passes">
+        <article class="pass">
+          <h3 data-i18n="p.single">One workshop</h3>
+          <div class="price">€95 <small data-i18n="p.6h">6 hours</small></div>
+          <ul>
+            <li data-i18n="p.i1">One 6-hour workshop, Friday or Saturday</li>
+            <li data-i18n="p.i2">Ticket for the Saturday show</li>
+            <li data-i18n="p.i3">Festival T-shirt</li>
+          </ul>
+          <button class="btn btn-ghost" type="button" data-book="single" data-i18n="p.cta1">Choose a workshop</button>
+        </article>
+        <article class="pass best">
+          <span class="save" data-i18n="p.save">Save €30</span>
+          <h3>Full Festival</h3>
+          <div class="price">€200 <small data-i18n="p.15h">15 hours</small></div>
+          <ul>
+            <li data-i18n="p.f1">Friday and Saturday workshops (12 hours)</li>
+            <li data-i18n="p.f2">Sunday Impro Lab with all 4 teachers</li>
+            <li data-i18n="p.f3">Saturday show, T-shirt and festival gifts</li>
+          </ul>
+          <button class="btn btn-primary" type="button" data-book="full" data-i18n="p.cta2">Book the Full Festival</button>
+        </article>
+        <article class="pass">
+          <h3>Impro Lab</h3>
+          <div class="price">€40 <small data-i18n="p.3h">3 hours</small></div>
+          <ul>
+            <li data-i18n="p.l1">Sunday morning, 4 teachers back to back</li>
+            <li class="no" data-i18n="p.l2">Show and T-shirt not included</li>
+          </ul>
+          <button class="btn btn-ghost" type="button" data-book="special" data-i18n="p.cta3">Book the Impro Lab</button>
+        </article>
+      </div>
+      <p class="watch" data-i18n="p.watch">Just want to watch? Tickets for the Saturday show will be sold separately.</p>
+    </div>
+  </section>
 
-<section id="iscrizioni" class="register"><div class="wrap box"><div><h2>Ci vediamo<br>a Roma?</h2></div><div><p>Apri l'iscrizione, scegli il workshop e completa i dati. La disponibilità viene verificata sul gestionale Artyou e la prenotazione confermata viene registrata anche nel database MySQL.</p><button class="cta book" data-event="">Apri le iscrizioni</button></div></div></section>
+  <section id="rome" class="rome-sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker" data-i18n="k.r">Travel info</p><h2 data-i18n="r.h">Coming to Rome</h2></div>
+        <p class="lead" data-i18n="r.lead">Everything you need to plan the trip, in one place.</p>
+      </div>
+      <div class="rome-grid">
+        <div class="rome-item"><h3 data-i18n="r.venue">The venue</h3><p id="venueText"></p></div>
+        <div class="rome-item"><h3 data-i18n="r.air">From the airport</h3><p data-i18n="r.airD">Fiumicino (FCO): Leonardo Express train to Roma Termini, about 30 minutes. Ciampino (CIA): shuttle bus to Termini, about 40 minutes.</p></div>
+        <div class="rome-item"><h3 data-i18n="r.stay">Where to stay</h3><p data-i18n="r.stayD">Look for a place near a metro stop. Write to us and we’ll suggest areas that work well for the venue.</p></div>
+        <div class="rome-item"><h3 data-i18n="r.wx">Rome in March</h3><p data-i18n="r.wxD">Mild days, roughly 8–17 °C. Bring layers and clothes you can move in.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="faq-sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker" data-i18n="k.q">FAQ</p><h2 data-i18n="q.h">Questions</h2></div><span></span></div>
+      <div class="faq">
+        <details><summary data-i18n="q1">Do I need to speak Italian?</summary><p data-i18n="a1">No. All workshops are taught in English. Our team speaks English and Italian, so you can ask anything in either.</p></details>
+        <details><summary data-i18n="q2">What level do I need?</summary><p data-i18n="a2">Each workshop shows its level. All levels means some improv experience; Intermediate means about 6 months performing; Advanced means a year or more on stage.</p></details>
+        <details><summary data-i18n="q3">How do I pay?</summary><p data-i18n="a3">Book here to hold your place. You’ll receive a confirmation email with payment instructions.</p></details>
+        <details><summary data-i18n="q4">What if I can’t come?</summary><p data-i18n="a4">Write to info@artyouroma.it as soon as you know. The cancellation terms are in your confirmation email.</p></details>
+        <details><summary data-i18n="q5">Can I book for my school or group?</summary><p data-i18n="a5">Yes. Add your school or group in the booking form. For five or more people, write to us first so we can keep you together.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <div class="final-box">
+        <div><h2 data-i18n="c.h">See you in Rome?</h2><p data-i18n="c.p">Places are limited on purpose: small groups mean more time on stage for everyone.</p></div>
+        <button class="btn btn-light" type="button" data-book="full" data-i18n="cta.book">Book your pass</button>
+      </div>
+    </div>
+  </section>
 </main>
-<footer><div class="wrap foot"><span>Roma Improv Festival · 12–14 marzo 2027 · Roma</span><span>Organizzato da Artyou Roma · info@artyouroma.it</span></div></footer>
-<div class="mobilebar"><a class="cta" href="#iscrizioni">Iscriviti al RIF 2027</a></div>
 
-<div class="modal" id="bookingModal" aria-hidden="true"><div class="panel"><button class="close" type="button" aria-label="Chiudi">×</button><h3>Iscrizione RIF</h3><p class="sub">I posti vengono verificati in tempo reale.</p><form id="bookingForm">
-<div class="fields">
-<div class="field full"><label>Workshop / evento</label><select id="evento" required></select></div>
-<div class="field"><label>Nome</label><input id="nome" required autocomplete="given-name"></div>
-<div class="field"><label>Cognome</label><input id="cognome" required autocomplete="family-name"></div>
-<div class="field"><label>Email</label><input id="email" type="email" required autocomplete="email"></div>
-<div class="field"><label>Telefono</label><input id="telefono" required autocomplete="tel"></div>
-<div class="field full"><label>Scuola / gruppo (facoltativo)</label><input id="scuola"></div>
-<div class="field full"><label><input id="privacy" type="checkbox" required style="height:auto"> Accetto il trattamento dei dati per la gestione della prenotazione.</label></div>
+<footer id="contatti">
+  <div class="wrap">
+    <div class="fgrid-foot">
+      <div class="col"><span>Artyou Roma</span><span data-i18n="ft.about">Social promotion association. Improv, theatre and stand-up comedy in Rome.</span></div>
+      <div class="col"><span data-i18n="ft.contact">Contact</span><a href="mailto:info@artyouroma.it">info@artyouroma.it</a><a href="https://wa.me/393271881956" target="_blank" rel="noopener">WhatsApp +39 327 188 1956</a></div>
+      <div class="col"><span data-i18n="ft.explore">Explore</span><a href="/" data-i18n="ft.home">Artyou Roma home</a><a href="/improvvisazione-teatrale/" data-i18n="ft.courses">Courses in Rome</a><a href="/la-finestra-sul-cortile/">Blog</a></div>
+      <div class="col"><span data-i18n="ft.follow">Follow us</span><a href="https://www.instagram.com/artyouroma/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/artyouroma/" target="_blank" rel="noopener">Facebook</a></div>
+    </div>
+    <div class="legal"><span>© 2026 Artyou Roma</span><span data-i18n="foot">Roma Improv Festival 2027 is organised by Artyou Roma.</span><a href="/privacy-policy/">Privacy Policy</a></div>
+  </div>
+</footer>
+
+<a class="wa" href="https://wa.me/393271881956" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg></a>
+
+<div class="mbar" id="mbar" aria-hidden="true">
+  <div><b>Full Festival €200</b><span data-i18n="stub.date">12–14 March 2027</span></div>
+  <button class="btn btn-primary" type="button" data-book="full" data-i18n="cta.bookShort" tabindex="-1">Book</button>
 </div>
-<button class="cta submit" type="submit">Conferma iscrizione</button><div class="msg" id="msg"></div>
-</form></div></div>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg-head">
+    <h2 id="dlgTitle" data-i18n="b.h">Book your place</h2>
+    <button class="x" type="button" id="dlgClose" aria-label="Close">✕</button>
+  </div>
+  <div class="dlg-body">
+    <form id="bookForm" novalidate>
+      <fieldset>
+        <legend data-i18n="b.s1">1. Pass</legend>
+        <div id="passOpts"></div>
+      </fieldset>
+      <fieldset id="wsFieldset">
+        <legend data-i18n="b.s2">2. Workshops</legend>
+        <div id="wsOpts"></div>
+      </fieldset>
+      <fieldset>
+        <legend data-i18n="b.s3">3. Your details</legend>
+        <div class="fgrid">
+          <label class="f"><span data-i18n="b.first">First name</span><input type="text" name="first" autocomplete="given-name" required></label>
+          <label class="f"><span data-i18n="b.last">Last name</span><input type="text" name="last" autocomplete="family-name" required></label>
+          <label class="f"><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
+          <label class="f"><span data-i18n="b.phone">Phone, with country code</span><input type="tel" name="phone" autocomplete="tel" placeholder="+39" required></label>
+          <label class="f"><span data-i18n="b.country">Country</span><input type="text" name="country" autocomplete="country-name" required></label>
+          <label class="f"><span data-i18n="b.exp">Improv experience</span>
+            <select name="experience" required>
+              <option value="" data-i18n="b.pick">Choose one</option>
+              <option value="lt6" data-i18n="b.e1">Less than 6 months</option>
+              <option value="6-12" data-i18n="b.e2">6 to 12 months</option>
+              <option value="gt12" data-i18n="b.e3">More than a year</option>
+              <option value="pro" data-i18n="b.e4">I perform or teach regularly</option>
+            </select>
+          </label>
+          <label class="f full"><span><span data-i18n="b.school">School or group</span> <span class="opt-l" data-i18n="b.optional">(optional)</span></span><input type="text" name="school" autocomplete="organization"></label>
+        </div>
+        <label class="consent"><input type="checkbox" name="consent" required><span data-i18n="b.consent">I agree to Artyou Roma processing my data to manage this booking.</span></label>
+      </fieldset>
+      <div class="summary">
+        <div><small data-i18n="b.total">Total</small><span class="tot" id="total">€200</span></div>
+        <button class="btn btn-primary" type="submit" id="submitBtn" data-i18n="b.confirm">Confirm booking</button>
+      </div>
+      <p class="err" id="err" role="alert"></p>
+    </form>
+    <div class="done" id="done" hidden>
+      <h3 data-i18n="b.doneH">Booking received</h3>
+      <p id="doneText"></p>
+      <button class="btn btn-ink" type="button" id="doneClose" data-i18n="b.close">Back to the festival</button>
+    </div>
+  </div>
+</dialog>
 
 <script>
-const state={events:[],availability:{}};
-function isRif(k,x){return /(^|[-_ ])rif([-_ ]|$)|rome improv|roma improv|improv festival/i.test(k+" "+(x.titolo||"")+" "+(x.descrizione||""))}
-function isWorkshop(k,x){return !/spettacolo|show|serata/i.test(k+" "+(x.tipo||"")+" "+(x.titolo||""))&&/workshop|laboratorio|corso/i.test(k+" "+(x.tipo||"")+" "+(x.titolo||""))}
-function formatSub(x){return [x.data,x.ora].filter(Boolean).join(" · ")||x.descrizione||"Roma · RIF 2027"}
-async function loadEvents(){
- try{
-  const [er,ar]=await Promise.all([fetch("/api/mysql-events?ts="+Date.now(),{cache:"no-store"}),fetch("/api/mysql-events?disponibilita=1&ts="+Date.now(),{cache:"no-store"})]);
-  const e=await er.json(),a=await ar.json(); state.availability=a.disponibilita||{};
-  state.events=Object.entries(e.eventi||{}).filter(([k,x])=>isRif(k,x)&&isWorkshop(k,x)).sort((A,B)=>(A[1].ordine||999)-(B[1].ordine||999)).map(([slug,x])=>({slug,...x}));
- }catch(_){}
- if(!state.events.length) state.events=["rif-workshop-1","rif-workshop-2","rif-workshop-3","rif-workshop-4"].map((slug,i)=>({slug,titolo:"Workshop "+(i+1),descrizione:"Dettagli in arrivo dal gestionale"}));
- renderEvents();
+/* =========================================================
+   CONFIG: collegare qui il gestionale Artyou
+   availabilityUrl -> GET che restituisce [{id:"fri-a", left:7}, ...]
+   bookingUrl      -> POST JSON della prenotazione
+   Se null: posti dimostrativi e invio via email (mailto).
+   ========================================================= */
+const CONFIG = {
+  availabilityUrl: null,
+  bookingUrl: null,
+  contactEmail: "info@artyouroma.it",
+  venue: { name: "Artyou Roma", address: "" } // es. "Via ..., 00100 Roma"
+};
+
+/* Docenti: sostituire null con i dati reali. photo = URL immagine */
+const TEACHERS = [
+  { name: null, country: { en: null, it: null }, flag: "", photo: null, bio: { en: "", it: "" } },
+  { name: null, country: { en: null, it: null }, flag: "", photo: null, bio: { en: "", it: "" } },
+  { name: null, country: { en: null, it: null }, flag: "", photo: null, bio: { en: "", it: "" } },
+  { name: null, country: { en: null, it: null }, flag: "", photo: null, bio: { en: "", it: "" } }
+];
+
+/* Workshop: level = all | int | adv. capacity = posti totali */
+const WORKSHOPS = [
+  { id: "fri-a", day: "fri", time: "15:00–21:00", hours: 6, teacher: 0, level: "all", capacity: 16, left: 9,
+    title: { en: "Friday, track A", it: "Venerdì, track A" }, desc: { en: "Workshop title and description coming soon.", it: "Titolo e descrizione in arrivo." } },
+  { id: "fri-b", day: "fri", time: "15:00–21:00", hours: 6, teacher: 1, level: "int", capacity: 16, left: 4,
+    title: { en: "Friday, track B", it: "Venerdì, track B" }, desc: { en: "Workshop title and description coming soon.", it: "Titolo e descrizione in arrivo." } },
+  { id: "sat-a", day: "sat", time: "13:30–19:30", hours: 6, teacher: 2, level: "all", capacity: 16, left: 12,
+    title: { en: "Saturday, track A", it: "Sabato, track A" }, desc: { en: "Workshop title and description coming soon.", it: "Titolo e descrizione in arrivo." } },
+  { id: "sat-b", day: "sat", time: "13:30–19:30", hours: 6, teacher: 3, level: "adv", capacity: 14, left: 6,
+    title: { en: "Saturday, track B", it: "Sabato, track B" }, desc: { en: "Workshop title and description coming soon.", it: "Titolo e descrizione in arrivo." } },
+  { id: "sun-lab", day: "sun", time: "10:00–13:00", hours: 3, teacher: "all", level: "all", capacity: 40, left: 25, special: true,
+    title: { en: "Impro Lab", it: "Impro Lab" }, desc: { en: "Four short sessions, one with each teacher. The best way to taste every style of the festival.", it: "Quattro sessioni brevi, una con ogni docente. Il modo migliore per assaggiare tutti gli stili del festival." } }
+];
+
+const PASSES = { single: 95, full: 200, special: 40 };
+
+const I18N = {
+  en: {
+    "k.hero":"International improv festival","k.t":"Line-up 2027","k.w":"Learn and play","k.s":"Programme","k.p":"Booking","k.r":"Travel info","k.q":"FAQ",
+    "ft.about":"Social promotion association. Improv, theatre and stand-up comedy in Rome.","ft.contact":"Contact","ft.explore":"Explore","ft.home":"Artyou Roma home","ft.courses":"Courses in Rome","ft.follow":"Follow us",
+    "m.shows":"Shows","m.courses":"Courses","m.about":"About us","m.contact":"Contact","m.trial":"Free trial class","m.trialS":"Free trial",
+    "meta.title": "Roma Improv Festival 2027 · 12–14 March · Rome",
+    "nav.teachers":"Teachers","nav.workshops":"Workshops","nav.schedule":"Schedule","nav.passes":"Passes","nav.rome":"Rome",
+    "cta.bookShort":"Book","cta.book":"Book your pass","cta.see":"See the workshops",
+    "hero.l1":"Three days in Rome.","hero.l2":"Zero scripts.",
+    "hero.lead":"Intensive workshops with international teachers, taught in English. Train by day, play the show at night, and leave with new friends from across Europe.",
+    "stub.date":"12–14 March 2027","stub.place":"Rome, Italy. Hosted by Artyou Roma",
+    "stub.f1":"Taught in English","stub.f1s":"Our team on site speaks English and Italian",
+    "stub.f2":"15 hours of training","stub.f2s":"With a Full Festival pass: 2 workshops + Impro Lab",
+    "stub.f3":"Saturday night show","stub.f3s":"ALL IN, included with every workshop pass",
+    "stub.cal":"Add the dates to your calendar",
+    "t.h":"Meet your teachers","t.lead":"Four teachers from four countries. Each one leads a 6-hour workshop and joins the Sunday Impro Lab.",
+    "t.tba":"Announced soon","t.tbaD":"Name, country and the workshop they’re bringing to Rome.","t.country":"Country",
+    "w.h":"Workshops","w.lead":"Pick one track on Friday and one on Saturday. Every workshop shows its level, so you know who you’ll be playing with.",
+    "f.all":"All days","day.fri":"Friday 12","day.sat":"Saturday 13","day.sun":"Sunday 14",
+    "day.friL":"Friday 12 March","day.satL":"Saturday 13 March","day.sunL":"Sunday 14 March",
+    "lv.all":"All levels","lv.int":"Intermediate","lv.adv":"Advanced",
+    "lv.all.d":"some improv experience","lv.int.d":"6+ months on stage","lv.adv.d":"1+ year on stage",
+    "w.en":"In English","w.hours":"{h} hours","w.with":"with {t}","w.allT":"with all 4 teachers","w.tba":"teacher announced soon",
+    "w.left":"{n} places left","w.few":"Only {n} places left","w.sold":"Sold out","w.book":"Book this workshop",
+    "w.live":"Places updated live.","w.demo":"Places shown are examples until booking opens.","w.loading":"Checking places…",
+    "s.h":"The weekend at a glance","s.lead":"Training in the day, community and a show at night. All times are Rome time (CET).",
+    "s.ws":"Workshops, track A or B","s.6h":"6 hours, small groups","s.show":"The festival’s live improv show",
+    "s.lab":"4 teachers, 45 minutes each","s.from13":"From 13:00","s.close":"Closing","s.closeD":"Goodbyes and the group photo",
+    "p.h":"Choose your pass","p.lead":"Prices in euro. Your place is held as soon as you book; payment details arrive by email.",
+    "p.single":"One workshop","p.6h":"6 hours","p.15h":"15 hours","p.3h":"3 hours",
+    "p.i1":"One 6-hour workshop, Friday or Saturday","p.i2":"Ticket for the Saturday show","p.i3":"Festival T-shirt",
+    "p.save":"Save €30","p.f1":"Friday and Saturday workshops (12 hours)","p.f2":"Sunday Impro Lab with all 4 teachers","p.f3":"Saturday show, T-shirt and festival gifts",
+    "p.l1":"Sunday morning, 4 teachers back to back","p.l2":"Show and T-shirt not included",
+    "p.cta1":"Choose a workshop","p.cta2":"Book the Full Festival","p.cta3":"Book the Impro Lab",
+    "p.watch":"Just want to watch? Tickets for the Saturday show will be sold separately.",
+    "r.h":"Coming to Rome","r.lead":"Everything you need to plan the trip, in one place.",
+    "r.venue":"The venue","r.venueD":"{name}, Rome. The full address is in your booking confirmation.",
+    "r.air":"From the airport","r.airD":"Fiumicino (FCO): Leonardo Express train to Roma Termini, about 30 minutes. Ciampino (CIA): shuttle bus to Termini, about 40 minutes.",
+    "r.stay":"Where to stay","r.stayD":"Look for a place near a metro stop. Write to us and we’ll suggest areas that work well for the venue.",
+    "r.wx":"Rome in March","r.wxD":"Mild days, roughly 8–17 °C. Bring layers and clothes you can move in.",
+    "q.h":"Questions",
+    "q1":"Do I need to speak Italian?","a1":"No. All workshops are taught in English. Our team speaks English and Italian, so you can ask anything in either.",
+    "q2":"What level do I need?","a2":"Each workshop shows its level. All levels means some improv experience; Intermediate means about 6 months performing; Advanced means a year or more on stage.",
+    "q3":"How do I pay?","a3":"Book here to hold your place. You’ll receive a confirmation email with payment instructions.",
+    "q4":"What if I can’t come?","a4":"Write to info@artyouroma.it as soon as you know. The cancellation terms are in your confirmation email.",
+    "q5":"Can I book for my school or group?","a5":"Yes. Add your school or group in the booking form. For five or more people, write to us first so we can keep you together.",
+    "c.h":"See you in Rome?","c.p":"Places are limited on purpose: small groups mean more time on stage for everyone.",
+    "foot":"Roma Improv Festival 2027 is organised by Artyou Roma.",
+    "b.h":"Book your place","b.s1":"1. Pass","b.s2":"2. Workshops","b.s3":"3. Your details",
+    "b.full":"Full Festival","b.fullD":"Friday + Saturday workshops + Impro Lab","b.single":"One workshop","b.singleD":"One 6-hour workshop + show + T-shirt",
+    "b.special":"Impro Lab","b.specialD":"Sunday, 3 hours","b.fri":"Your Friday workshop","b.sat":"Your Saturday workshop","b.one":"Your workshop",
+    "b.labIncl":"Sunday Impro Lab is included.","b.labOnly":"Sunday 14 March, 10:00–13:00. Nothing else to choose.",
+    "b.first":"First name","b.last":"Last name","b.phone":"Phone, with country code","b.country":"Country","b.exp":"Improv experience",
+    "b.pick":"Choose one","b.e1":"Less than 6 months","b.e2":"6 to 12 months","b.e3":"More than a year","b.e4":"I perform or teach regularly",
+    "b.school":"School or group","b.optional":"(optional)","b.consent":"I agree to Artyou Roma processing my data to manage this booking.",
+    "b.total":"Total","b.confirm":"Confirm booking","b.sending":"Sending…",
+    "b.errWs":"Choose a workshop for each day of your pass.","b.errFields":"Fill in the highlighted fields to continue.","b.errEmail":"Enter a valid email address.","b.errConsent":"Tick the consent box to confirm.","b.errSend":"The booking didn’t go through. Try again, or write to {mail}.",
+    "b.doneH":"Booking received","b.done":"We’ve sent a confirmation to {email} with payment instructions. See you in Rome!",
+    "b.doneMail":"Your email app has opened with the booking details. Send that email to complete your request.",
+    "b.close":"Back to the festival"
+  },
+  it: {
+    "k.hero":"Festival internazionale di improvvisazione","k.t":"Line-up 2027","k.w":"Formazione","k.s":"Programma","k.p":"Iscrizioni","k.r":"Info pratiche","k.q":"Domande frequenti",
+    "ft.about":"Associazione di Promozione Sociale. Improvvisazione teatrale, teatro di testo e stand-up comedy a Roma.","ft.contact":"Contatti","ft.explore":"Esplora","ft.home":"Home Artyou Roma","ft.courses":"Corsi a Roma","ft.follow":"Seguici",
+    "m.shows":"Spettacoli","m.courses":"Corsi","m.about":"Chi Siamo","m.contact":"Contatti","m.trial":"Lezione di Prova Gratuita","m.trialS":"Prova Gratuita",
+    "meta.title": "Roma Improv Festival 2027 · 12–14 marzo · Roma",
+    "nav.teachers":"Docenti","nav.workshops":"Workshop","nav.schedule":"Programma","nav.passes":"Pass","nav.rome":"Roma",
+    "cta.bookShort":"Prenota","cta.book":"Prenota il tuo pass","cta.see":"Guarda i workshop",
+    "hero.l1":"Tre giorni a Roma.","hero.l2":"Zero copioni.",
+    "hero.lead":"Workshop intensivi con docenti internazionali, in inglese. Si studia di giorno, si va in scena la sera, e si riparte con nuovi amici da tutta Europa.",
+    "stub.date":"12–14 marzo 2027","stub.place":"Roma. Organizza Artyou Roma",
+    "stub.f1":"Workshop in inglese","stub.f1s":"Lo staff parla italiano e inglese",
+    "stub.f2":"15 ore di formazione","stub.f2s":"Con il Full Festival: 2 workshop + Impro Lab",
+    "stub.f3":"Spettacolo del sabato sera","stub.f3s":"ALL IN, incluso in ogni pass workshop",
+    "stub.cal":"Aggiungi le date al calendario",
+    "t.h":"I docenti","t.lead":"Quattro docenti da quattro paesi. Ognuno guida un workshop da 6 ore e partecipa all’Impro Lab della domenica.",
+    "t.tba":"In arrivo","t.tbaD":"Nome, paese e il workshop che porterà a Roma.","t.country":"Paese",
+    "w.h":"Workshop","w.lead":"Scegli un track il venerdì e uno il sabato. Ogni workshop indica il livello, così sai con chi giocherai.",
+    "f.all":"Tutti i giorni","day.fri":"Venerdì 12","day.sat":"Sabato 13","day.sun":"Domenica 14",
+    "day.friL":"Venerdì 12 marzo","day.satL":"Sabato 13 marzo","day.sunL":"Domenica 14 marzo",
+    "lv.all":"Tutti i livelli","lv.int":"Intermedio","lv.adv":"Avanzato",
+    "lv.all.d":"un po’ di esperienza di improvvisazione","lv.int.d":"6+ mesi in scena","lv.adv.d":"1+ anno in scena",
+    "w.en":"In inglese","w.hours":"{h} ore","w.with":"con {t}","w.allT":"con tutti e 4 i docenti","w.tba":"docente in arrivo",
+    "w.left":"{n} posti liberi","w.few":"Ultimi {n} posti","w.sold":"Esaurito","w.book":"Prenota questo workshop",
+    "w.live":"Posti aggiornati in tempo reale.","w.demo":"I posti mostrati sono indicativi fino all’apertura delle iscrizioni.","w.loading":"Verifico i posti…",
+    "s.h":"Il weekend in breve","s.lead":"Formazione di giorno, community e spettacolo la sera. Orari di Roma (CET).",
+    "s.ws":"Workshop, track A o B","s.6h":"6 ore, gruppi piccoli","s.show":"Lo spettacolo dal vivo del festival",
+    "s.lab":"4 docenti, 45 minuti ciascuno","s.from13":"Dalle 13:00","s.close":"Chiusura","s.closeD":"Saluti e foto di gruppo",
+    "p.h":"Scegli il pass","p.lead":"Prezzi in euro. Il posto è tuo appena prenoti; i dati per il pagamento arrivano via email.",
+    "p.single":"Un workshop","p.6h":"6 ore","p.15h":"15 ore","p.3h":"3 ore",
+    "p.i1":"Un workshop da 6 ore, venerdì o sabato","p.i2":"Biglietto per lo spettacolo del sabato","p.i3":"T-shirt del festival",
+    "p.save":"Risparmi €30","p.f1":"Workshop del venerdì e del sabato (12 ore)","p.f2":"Impro Lab della domenica con tutti e 4 i docenti","p.f3":"Spettacolo, T-shirt e gadget del festival",
+    "p.l1":"Domenica mattina, 4 docenti uno dopo l’altro","p.l2":"Spettacolo e T-shirt non inclusi",
+    "p.cta1":"Scegli un workshop","p.cta2":"Prenota il Full Festival","p.cta3":"Prenota l’Impro Lab",
+    "p.watch":"Vuoi solo guardare? I biglietti per lo spettacolo del sabato saranno in vendita separatamente.",
+    "r.h":"Arrivare a Roma","r.lead":"Tutto quello che serve per organizzare il viaggio.",
+    "r.venue":"La sede","r.venueD":"{name}, Roma. L’indirizzo completo è nella conferma di prenotazione.",
+    "r.air":"Dall’aeroporto","r.airD":"Fiumicino (FCO): treno Leonardo Express fino a Roma Termini, circa 30 minuti. Ciampino (CIA): bus navetta fino a Termini, circa 40 minuti.",
+    "r.stay":"Dove dormire","r.stayD":"Cerca un alloggio vicino a una fermata della metro. Scrivici e ti suggeriamo le zone più comode per la sede.",
+    "r.wx":"Roma a marzo","r.wxD":"Giornate miti, circa 8–17 °C. Porta abiti a strati e comodi per muoverti.",
+    "q.h":"Domande",
+    "q1":"Devo parlare inglese?","a1":"I workshop sono in inglese, ma i docenti usano un inglese semplice e lo staff è sempre disponibile in italiano.",
+    "q2":"Che livello serve?","a2":"Ogni workshop indica il livello. Tutti i livelli: un po’ di esperienza; Intermedio: circa 6 mesi in scena; Avanzato: un anno o più.",
+    "q3":"Come si paga?","a3":"Prenota qui per bloccare il posto. Riceverai un’email di conferma con le istruzioni per il pagamento.",
+    "q4":"E se non posso più venire?","a4":"Scrivi a info@artyouroma.it appena lo sai. Le condizioni di cancellazione sono nell’email di conferma.",
+    "q5":"Posso prenotare per la mia scuola o gruppo?","a5":"Sì, indica scuola o gruppo nel modulo. Se siete cinque o più, scrivici prima così vi teniamo insieme.",
+    "c.h":"Ci vediamo a Roma?","c.p":"I posti sono pochi di proposito: gruppi piccoli vuol dire più tempo in scena per tutti.",
+    "foot":"Roma Improv Festival 2027 è organizzato da Artyou Roma.",
+    "b.h":"Prenota il tuo posto","b.s1":"1. Pass","b.s2":"2. Workshop","b.s3":"3. I tuoi dati",
+    "b.full":"Full Festival","b.fullD":"Workshop venerdì + sabato + Impro Lab","b.single":"Un workshop","b.singleD":"Un workshop da 6 ore + spettacolo + T-shirt",
+    "b.special":"Impro Lab","b.specialD":"Domenica, 3 ore","b.fri":"Il tuo workshop del venerdì","b.sat":"Il tuo workshop del sabato","b.one":"Il tuo workshop",
+    "b.labIncl":"L’Impro Lab della domenica è incluso.","b.labOnly":"Domenica 14 marzo, 10:00–13:00. Non c’è altro da scegliere.",
+    "b.first":"Nome","b.last":"Cognome","b.phone":"Telefono, con prefisso","b.country":"Paese","b.exp":"Esperienza di improvvisazione",
+    "b.pick":"Scegli","b.e1":"Meno di 6 mesi","b.e2":"Da 6 a 12 mesi","b.e3":"Più di un anno","b.e4":"Recito o insegno regolarmente",
+    "b.school":"Scuola o gruppo","b.optional":"(facoltativo)","b.consent":"Acconsento al trattamento dei miei dati da parte di Artyou Roma per gestire la prenotazione.",
+    "b.total":"Totale","b.confirm":"Conferma prenotazione","b.sending":"Invio in corso…",
+    "b.errWs":"Scegli un workshop per ogni giorno del tuo pass.","b.errFields":"Compila i campi evidenziati per continuare.","b.errEmail":"Inserisci un indirizzo email valido.","b.errConsent":"Spunta il consenso per confermare.","b.errSend":"La prenotazione non è andata a buon fine. Riprova o scrivi a {mail}.",
+    "b.doneH":"Prenotazione ricevuta","b.done":"Abbiamo inviato una conferma a {email} con le istruzioni per il pagamento. Ci vediamo a Roma!",
+    "b.doneMail":"Si è aperta la tua app email con i dati della prenotazione. Invia quell’email per completare la richiesta.",
+    "b.close":"Torna al festival"
+  }
+};
+
+let lang = "en";
+try { const s = localStorage.getItem("rif-lang"); if (s === "en" || s === "it") lang = s; else if ((navigator.language || "").toLowerCase().startsWith("it")) lang = "it"; }
+catch (e) { if ((navigator.language || "").toLowerCase().startsWith("it")) lang = "it"; }
+
+const t = (k, vars) => {
+  let s = (I18N[lang] && I18N[lang][k]) ?? I18N.en[k] ?? k;
+  if (vars) for (const v in vars) s = s.replaceAll("{" + v + "}", vars[v]);
+  return s;
+};
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+let filter = "all";
+let liveData = false;
+
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.title = t("meta.title");
+  $$("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  $$(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  $("#venueText").textContent = CONFIG.venue.address
+    ? CONFIG.venue.name + ", " + CONFIG.venue.address
+    : t("r.venueD", { name: CONFIG.venue.name });
+  renderTeachers(); renderWorkshops(); renderBooking(false);
 }
-function renderEvents(){
- const wrap=document.getElementById("workshops"); const sel=document.getElementById("evento"); wrap.innerHTML="";sel.innerHTML="";
- state.events.slice(0,4).forEach((x,i)=>{
-  const free=Object.prototype.hasOwnProperty.call(state.availability,x.slug)?Number(state.availability[x.slug]):null;
-  const art=document.createElement("article");art.className="work";
-  art.innerHTML='<div class="work-body"><div class="work-top"><span class="badge">Workshop '+(i+1)+' · English</span><span class="spots">'+(free===null?"Disponibilità live":free===0?"Completo":free+" posti liberi")+'</span></div><h3>'+escapeHtml(x.titolo||("Workshop "+(i+1)))+'</h3><p>'+escapeHtml(x.descrizione||"Workshop internazionale di improvvisazione teatrale.")+'</p><div class="meta">'+escapeHtml(formatSub(x))+'</div><button class="cta book" data-event="'+escapeHtml(x.slug)+'">'+(free===0?"Lista d’attesa":"Iscriviti")+'</button></div>';
-  wrap.appendChild(art);
-  const o=document.createElement("option");o.value=x.slug;o.textContent=(x.titolo||x.slug)+(free===null?"":" · "+free+" posti");sel.appendChild(o);
- });
- bindBook();
+
+function teacherLabel(w) {
+  if (w.teacher === "all") return t("w.allT");
+  const tc = TEACHERS[w.teacher];
+  return tc && tc.name ? t("w.with", { t: tc.name }) : t("w.tba");
 }
-function escapeHtml(v){return String(v||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
-const modal=document.getElementById("bookingModal");
-function openModal(slug){if(slug)document.getElementById("evento").value=slug;modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.style.overflow="hidden"}
-function closeModal(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.style.overflow=""}
-function bindBook(){document.querySelectorAll(".book").forEach(b=>b.onclick=()=>openModal(b.dataset.event||""))}
-document.querySelector(".close").onclick=closeModal;modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
-document.getElementById("bookingForm").addEventListener("submit",async e=>{
- e.preventDefault();const msg=document.getElementById("msg");const btn=e.currentTarget.querySelector(".submit");btn.disabled=true;msg.textContent="Invio in corso…";
- const payload={action:"prenota",Evento:document.getElementById("evento").value,Nome:document.getElementById("nome").value.trim(),Cognome:document.getElementById("cognome").value.trim(),Email:document.getElementById("email").value.trim(),Telefono:document.getElementById("telefono").value.trim(),Posti:1,Privacy:document.getElementById("privacy").checked,scuola:document.getElementById("scuola").value.trim(),Note:"Landing RIF 2027",Scelte:"RIF 2027",Risorse:"",Pagamento:"Da definire",Importo:""};
- try{const r=await fetch("/api/artyou",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const j=await r.json();if(!r.ok||!j.ok)throw new Error(j.errore||"Errore");msg.textContent="Prenotazione registrata. Controlla la tua email per i dettagli.";e.currentTarget.reset();setTimeout(loadEvents,700)}
- catch(err){msg.textContent="Non siamo riusciti a registrare la prenotazione: "+err.message}
- finally{btn.disabled=false}
+
+function renderTeachers() {
+  $("#teacherGrid").innerHTML = TEACHERS.map((tc, i) => {
+    const country = tc.country && tc.country[lang];
+    const initials = tc.name ? tc.name.split(" ").map(p => p[0]).slice(0, 2).join("") : "?";
+    return `<article class="teacher">
+      <div class="photo">${tc.photo ? `<img src="${esc(tc.photo)}" alt="${esc(tc.name)}" loading="lazy">` : `<span class="mono" aria-hidden="true">${esc(initials)}</span>`}
+        ${country ? `<span class="flag">${esc(tc.flag)} ${esc(country)}</span>` : ""}</div>
+      <div class="tb"><h3 class="${tc.name ? "" : "tbc"}">${esc(tc.name || t("t.tba"))}</h3>
+      <p>${esc((tc.bio && tc.bio[lang]) || t("t.tbaD"))}</p></div>
+    </article>`;
+  }).join("");
+}
+
+function seatsHTML(w) {
+  if (w.left == null) return "";
+  if (w.left <= 0) return `<div class="seats low"><div class="seats-bar"><i style="width:0"></i></div><span class="seats-txt">${t("w.sold")}</span></div>`;
+  const pct = Math.max(4, Math.round((w.left / w.capacity) * 100));
+  const low = w.left <= 5;
+  return `<div class="seats ${low ? "low" : ""}"><div class="seats-bar" aria-hidden="true"><i style="width:${pct}%"></i></div>
+    <span class="seats-txt">${t(low ? "w.few" : "w.left", { n: w.left })}</span></div>`;
+}
+
+function renderWorkshops() {
+  const list = WORKSHOPS.filter(w => filter === "all" || w.day === filter);
+  $("#wsGrid").innerHTML = list.map(w => {
+    const sold = w.left != null && w.left <= 0;
+    const pass = w.special ? "special" : "single";
+    return `<article class="ws ${w.special ? "special" : ""}">
+      <div class="ws-when"><span>${t("day." + w.day)}</span><span class="time">${w.time}</span></div>
+      <h3>${esc(w.title[lang])}</h3>
+      <div class="by">${esc(teacherLabel(w))}</div>
+      <div class="tags"><span class="tag lv-${w.level}">${t("lv." + w.level)}</span><span class="tag">${t("w.en")}</span><span class="tag">${t("w.hours", { h: w.hours })}</span></div>
+      <p class="desc">${esc(w.desc[lang])}</p>
+      ${seatsHTML(w)}
+      <button class="btn ${w.special ? "btn-primary" : "btn-ink"}" type="button" data-book="${pass}" data-ws="${w.id}" ${sold ? "disabled" : ""}>${sold ? t("w.sold") : t("w.book")}</button>
+    </article>`;
+  }).join("");
+  $("#wsStatus").textContent = liveData ? t("w.live") : t("w.demo");
+}
+
+/* --- Disponibilità dal gestionale --- */
+async function loadAvailability() {
+  if (!CONFIG.availabilityUrl) return;
+  $("#wsStatus").textContent = t("w.loading");
+  try {
+    const r = await fetch(CONFIG.availabilityUrl, { headers: { Accept: "application/json" } });
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    data.forEach(d => { const w = WORKSHOPS.find(x => x.id === d.id); if (w && typeof d.left === "number") w.left = d.left; });
+    liveData = true;
+  } catch (e) { console.warn("Availability unavailable", e); }
+  renderWorkshops(); renderBooking(false);
+}
+
+/* --- Prenotazione --- */
+const state = { pass: "full", fri: null, sat: null, single: null };
+
+function wsOption(name, w, checked) {
+  const sold = w.left != null && w.left <= 0;
+  return `<label class="opt"><input type="radio" name="${name}" value="${w.id}" ${checked ? "checked" : ""} ${sold ? "disabled" : ""}>
+    <span class="o-main"><b>${esc(w.title[lang])}</b><small>${t("day." + w.day)}, ${w.time}. ${esc(cap(teacherLabel(w)))}. ${t("lv." + w.level)}${sold ? ". " + t("w.sold") : ""}</small></span></label>`;
+}
+
+function renderBooking(resetErr = true) {
+  $("#passOpts").innerHTML = ["full", "single", "special"].map(p => `
+    <label class="opt"><input type="radio" name="pass" value="${p}" ${state.pass === p ? "checked" : ""}>
+      <span class="o-main"><b>${t("b." + p)}</b><small>${t("b." + p + "D")}</small></span><span class="o-price">€${PASSES[p]}</span></label>`).join("");
+  let html = "";
+  const main = WORKSHOPS.filter(w => !w.special);
+  if (state.pass === "full") {
+    html += `<p class="sub-legend">${t("b.fri")}</p>` + main.filter(w => w.day === "fri").map(w => wsOption("fri", w, state.fri === w.id)).join("");
+    html += `<p class="sub-legend">${t("b.sat")}</p>` + main.filter(w => w.day === "sat").map(w => wsOption("sat", w, state.sat === w.id)).join("");
+    html += `<p class="ws-status">${t("b.labIncl")}</p>`;
+  } else if (state.pass === "single") {
+    html += `<p class="sub-legend">${t("b.one")}</p>` + main.map(w => wsOption("single", w, state.single === w.id)).join("");
+  } else {
+    html += `<p class="ws-status" style="margin-top:0">${t("b.labOnly")}</p>`;
+  }
+  $("#wsOpts").innerHTML = html;
+  $("#total").textContent = "€" + PASSES[state.pass];
+  if (resetErr) $("#err").textContent = "";
+}
+
+$("#bookForm").addEventListener("change", e => {
+  const n = e.target.name;
+  if (n === "pass") { state.pass = e.target.value; renderBooking(); }
+  if (["fri", "sat", "single"].includes(n)) state[n] = e.target.value;
 });
-bindBook();loadEvents();
+
+function openBooking(pass, wsId) {
+  state.pass = pass || "full";
+  if (wsId) {
+    const w = WORKSHOPS.find(x => x.id === wsId);
+    if (w && !w.special) state.single = wsId;
+  }
+  $("#bookForm").hidden = false; $("#done").hidden = true;
+  renderBooking();
+  const d = $("#dlg");
+  if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-book]");
+  if (b && !b.disabled) { e.preventDefault(); openBooking(b.dataset.book, b.dataset.ws); }
+  const f = e.target.closest("[data-filter]");
+  if (f) { filter = f.dataset.filter; $$("[data-filter]").forEach(c => c.setAttribute("aria-pressed", String(c === f))); renderWorkshops(); }
+  const l = e.target.closest("[data-lang]");
+  if (l) { lang = l.dataset.lang; try { localStorage.setItem("rif-lang", lang); } catch (_) {} applyLang(); }
+});
+const closeDlg = () => $("#dlg").close ? $("#dlg").close() : $("#dlg").removeAttribute("open");
+$("#dlgClose").addEventListener("click", closeDlg);
+$("#doneClose").addEventListener("click", closeDlg);
+$("#dlg").addEventListener("click", e => { if (e.target === e.currentTarget) closeDlg(); });
+
+$("#bookForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, err = $("#err");
+  err.textContent = "";
+  let workshops = [];
+  if (state.pass === "full") {
+    if (!state.fri || !state.sat) { err.textContent = t("b.errWs"); return; }
+    workshops = [state.fri, state.sat, "sun-lab"];
+  } else if (state.pass === "single") {
+    if (!state.single) { err.textContent = t("b.errWs"); return; }
+    workshops = [state.single];
+  } else workshops = ["sun-lab"];
+
+  const req = ["first", "last", "email", "phone", "country", "experience"];
+  const missing = req.filter(n => !String(f.elements[n].value).trim());
+  req.forEach(n => f.elements[n].setAttribute("aria-invalid", String(missing.includes(n))));
+  if (missing.length) { err.textContent = t("b.errFields"); f.elements[missing[0]].focus(); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.elements.email.value.trim())) { err.textContent = t("b.errEmail"); f.elements.email.focus(); return; }
+  if (!f.elements.consent.checked) { err.textContent = t("b.errConsent"); return; }
+
+  const payload = {
+    festival: "RIF2027", pass: state.pass, price: PASSES[state.pass], workshops, language: lang,
+    first: f.elements.first.value.trim(), last: f.elements.last.value.trim(), email: f.elements.email.value.trim(),
+    phone: f.elements.phone.value.trim(), country: f.elements.country.value.trim(),
+    experience: f.elements.experience.value, school: f.elements.school.value.trim()
+  };
+
+  const btn = $("#submitBtn");
+  if (CONFIG.bookingUrl) {
+    btn.disabled = true; btn.textContent = t("b.sending");
+    try {
+      const r = await fetch(CONFIG.bookingUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      if (!r.ok) throw new Error(r.status);
+      $("#doneText").textContent = t("b.done", { email: payload.email });
+      f.hidden = true; $("#done").hidden = false; f.reset(); loadAvailability();
+    } catch (x) {
+      err.textContent = t("b.errSend", { mail: CONFIG.contactEmail });
+    } finally { btn.disabled = false; btn.textContent = t("b.confirm"); }
+  } else {
+    const names = workshops.map(id => WORKSHOPS.find(w => w.id === id).title.en).join(", ");
+    const body = `Roma Improv Festival 2027 booking\n\nPass: ${state.pass} (€${payload.price})\nWorkshops: ${names}\nName: ${payload.first} ${payload.last}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nCountry: ${payload.country}\nExperience: ${payload.experience}\nSchool/group: ${payload.school || "-"}`;
+    location.href = `mailto:${CONFIG.contactEmail}?subject=${encodeURIComponent("RIF 2027 booking: " + payload.first + " " + payload.last)}&body=${encodeURIComponent(body)}`;
+    $("#doneText").textContent = t("b.doneMail");
+    f.hidden = true; $("#done").hidden = false;
+  }
+});
+
+/* Calendario (.ics) */
+(function () {
+  const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Artyou Roma//RIF 2027//EN","BEGIN:VEVENT","UID:rif2027@artyouroma.it",
+    "DTSTAMP:20261006T000000Z","DTSTART;VALUE=DATE:20270312","DTEND;VALUE=DATE:20270315","SUMMARY:Roma Improv Festival 2027",
+    "LOCATION:Artyou Roma\\, Rome\\, Italy","URL:" + location.href.split("#")[0],"END:VEVENT","END:VCALENDAR"].join("\r\n");
+  $("#ics").href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+})();
+
+/* Barra mobile: compare dopo l'hero */
+(function () {
+  const bar = $("#mbar"), hero = document.querySelector(".hero");
+  if (!("IntersectionObserver" in window)) return;
+  new IntersectionObserver(([e]) => {
+    const show = !e.isIntersecting;
+    bar.classList.toggle("show", show);
+    bar.setAttribute("aria-hidden", String(!show));
+    bar.querySelector("button").tabIndex = show ? 0 : -1;
+  }).observe(hero);
+})();
+
+/* Menu mobile */
+(function () {
+  const btn = $("#burger"), nav = $("#mainnav");
+  const set = open => { nav.classList.toggle("open", open); btn.setAttribute("aria-expanded", String(open)); };
+  btn.addEventListener("click", () => set(!nav.classList.contains("open")));
+  nav.addEventListener("click", e => { if (e.target.closest("a")) set(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") set(false); });
+})();
+
+applyLang();
+loadAvailability();
 </script>
-</body></html>
+</body>
+</html>
