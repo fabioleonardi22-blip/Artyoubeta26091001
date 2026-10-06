@@ -621,7 +621,7 @@
     if(!document.getElementById('artyou-workshow-tm-style')){
       var s=document.createElement('style');
       s.id='artyou-workshow-tm-style';
-      s.textContent='.artyou-tm{display:inline-block!important;font-size:.38em!important;line-height:1!important;vertical-align:top!important;position:relative!important;top:.04em!important;margin-left:.05em!important;font-weight:600!important;}';
+      s.textContent='.artyou-tm{display:inline-block!important;font-size:.38em!important;line-height:1!important;vertical-align:top!important;position:relative!important;top:.18em!important;margin-left:.05em!important;font-weight:600!important;}';
       document.head.appendChild(s);
     }
     var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
