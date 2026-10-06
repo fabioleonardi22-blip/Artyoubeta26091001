@@ -1,0 +1,23 @@
+'use strict';
+const M=ReplicaModel,key='artyou-replica-demo-v2',$=id=>document.getElementById(id);
+let state;try{state=JSON.parse(localStorage.getItem(key));if(!state?.users)state=M.seed();}catch{state=M.seed();}
+const user=state.users.find(u=>u.ruolo==='Membro');
+const today=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Rome'});
+const euro=n=>Number(n).toLocaleString('it-IT',{style:'currency',currency:'EUR'});
+function node(tag,text,parent){const e=document.createElement(tag);e.textContent=text;parent.append(e);return e;}
+function action(text,parent,fn,disabled=false){const b=node('button',text,parent);b.type='button';b.disabled=disabled;b.addEventListener('click',()=>{try{fn();localStorage.setItem(key,JSON.stringify(state));render();$('status').textContent='Modifica salvata nella demo.';}catch(e){$('status').textContent=e.message;}});return b;}
+function active(){return state.memberships.some(m=>m.utente===user.id&&m.stato==='Attiva'&&state.campaigns.some(c=>c.id===m.campagna&&c.inizio<=today()&&c.fine>=today()));}
+function render(){if(!user){$('status').textContent='Crea un utente Membro nell’amministrazione demo.';return;}for(const id of ['corsi','campagne','miei','lezioni'])$(id).replaceChildren();
+ const category=$('anno').value;
+ for(const c of state.courses.filter(c=>c.stato==='Pubblicato'&&(!category||(category==='post'?Number(c.anno)>3:category==='speciali'?!c.anno:c.anno===category)))){const box=node('article','',$('corsi'));node('h3',c.nome,box);node('p',`${c.sede} · ${c.giorni} ${c.orario} · ${c.inizio} – ${c.fine}`,box);node('p',`Docente: ${state.users.find(u=>u.id===c.docente)?.nome||'Da assegnare'}`,box);const seats=Number(c.posti)-state.enrollments.filter(e=>e.corso===c.id&&!e.sospesa).length;node('p',`${Math.max(0,seats)} posti disponibili`,box);node('p',`${euro(c.mensile)} al mese · ${euro(c.treRate)} per ciascuna delle 3 rate · ${euro(c.annuale)} unica rata`,box);const enrolled=state.enrollments.some(e=>e.utente===user.id&&e.corso===c.id);const blocked=c.tessera&&!active();if(enrolled)node('p','Già iscritto',box);else if(blocked)node('p','Richiede tessera attiva',box);else{const label=node('label','Formula di iscrizione',box);const select=node('select','',label);for(const p of ['Mensile','Annuale (3 rate)','Annuale (1 rata)'])node('option',p,select);action('Iscriviti nella demo',box,()=>M.save(state,'enrollments',{utente:user.id,corso:c.id,piano:select.value,inizio:today()>c.inizio?today():c.inizio,sospesa:false}),seats<=0||today()>c.fine);}}
+ if(!$('corsi').children.length)node('p','Nessun corso pubblicato in questa categoria.',$('corsi'));
+ for(const c of state.campaigns.filter(c=>c.stato==='Pubblicata'&&c.inizio<=today()&&c.fine>=today())){node('h3',c.nome,$('campagne'));node('p',`${euro(c.importo)} · ${c.inizio} – ${c.fine}`,$('campagne'));const exists=state.memberships.some(m=>m.utente===user.id&&m.campagna===c.id);action(exists?'Tessera assegnata':'Attiva tessera nella demo',$('campagne'),()=>M.save(state,'memberships',{utente:user.id,campagna:c.id,stato:'Attiva',numero:'DEMO-'+Date.now()}),exists);}
+ const mine=state.enrollments.filter(e=>e.utente===user.id);
+ if(!mine.length)node('p','Nessuna iscrizione.',$('miei'));
+ for(const e of mine){const c=state.courses.find(c=>c.id===e.corso);node('h3',c?.nome||'Corso archiviato',$('miei'));const r=M.paymentReport(state,e,today());node('p',`${e.piano} · ${e.sospesa?'Sospesa':'Attiva'} · ${r.paid}/${r.total} rate saldate · ${r.late} scadute · prossima: ${r.next}`,$('miei'));for(const rate of M.schedule(state,e))node('p',`${rate.data} · ${euro(rate.importo)}`,$('miei'));node('p','I pagamenti vengono registrati dall’amministrazione demo; nessun addebito online.',$('miei'));}
+ for(const l of state.lessons.filter(l=>mine.some(e=>e.corso===l.corso)).sort((a,b)=>a.data.localeCompare(b.data)))node('p',`${l.data} · ${state.courses.find(c=>c.id===l.corso)?.nome||''}`,$('lezioni'));
+ if(!$('lezioni').children.length)node('p','Nessuna lezione programmata.',$('lezioni'));
+ $('nome').value=user.nome;$('telefono').value=user.telefono||'';$('taglia').value=user.taglia||'M';}
+$('anno').addEventListener('change',render);
+$('profile-form').addEventListener('submit',e=>{e.preventDefault();try{M.save(state,'users',{...user,nome:$('nome').value.trim(),telefono:$('telefono').value.trim(),taglia:$('taglia').value});Object.assign(user,state.users.find(u=>u.id===user.id));localStorage.setItem(key,JSON.stringify(state));$('status').textContent='Profilo demo salvato.';}catch(err){$('status').textContent=err.message;}});
+window.addEventListener('storage',()=>location.reload());render();
