@@ -380,8 +380,18 @@ footer a{color:#9AA5AE}
 <section class="filters" id="filters"></section>
 
 <main class="content">
+<section aria-labelledby="upcoming-title">
+<h2 id="upcoming-title" style="margin:0 0 20px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:34px;line-height:1.05;">Prossimi spettacoli</h2>
 <div id="grid" class="grid"></div>
-<div id="empty" class="empty" style="display:none">Nessun evento disponibile per questa categoria.</div>
+<div id="empty" class="empty" style="display:none">Nessun evento futuro disponibile per questa categoria.</div>
+</section>
+<section id="past-events" aria-labelledby="past-title" style="margin-top:64px;padding-top:40px;border-top:1px solid #D9D2C6;">
+<p style="margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#6B747B;">Archivio</p>
+<h2 id="past-title" style="margin:0 0 12px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:34px;line-height:1.05;">Spettacoli passati</h2>
+<p style="margin:0 0 24px;font-size:16px;line-height:1.55;color:#626C74;">Gli eventi conclusi restano qui come archivio della stagione Artyou.</p>
+<div id="past-grid" class="grid"></div>
+<div id="past-empty" class="empty" style="display:none">Non ci sono ancora spettacoli passati in questa categoria.</div>
+</section>
 </main>
 
 <footer class="am-px am-wrap am-fs-body" style="flex-grow:1;background:#0D1115;color:#9AA5AE;padding:32px 120px;display:flex;justify-content:space-between;align-items:flex-start;font-size:14px;">
@@ -427,52 +437,67 @@ function renderFilters(){
  var box=document.getElementById("filters");box.innerHTML="";
  cats().forEach(function(cat){var b=document.createElement("button");b.className="filter"+(cat===current?" active":"");b.textContent=cat;b.onclick=function(){current=cat;renderFilters();render()};box.appendChild(b)});
 }
-function render(){
- var box=document.getElementById("grid"),empty=document.getElementById("empty");box.innerHTML="";
- var list=events.filter(function(e){return current==="Tutti"||e.cat===current});
- empty.style.display=list.length?"none":"block";
- list.forEach(function(e){
-   var first=e.dates&&e.dates.length?e.dates[0]:{label:"Data da definire"};
-   var b=badge(first.label,e.tbd),col=COLORS[e.cat]||["#26343D","#415D6B"];
-   var art=document.createElement("article");art.className="card";
-   var poster=e.poster||"";
-   var slugText=String(e.slug||"").toLowerCase();
-   var titleText=String(e.title||"").toLowerCase();
-   var dateText=String(first.label||"").toLowerCase();
-   if(/shortyou/.test(slugText+" "+titleText)){
-     if(/29\\s+novembre|29[-_ ]nov/.test(dateText+" "+slugText)) poster=(window.SHORTYOU_29_NOV_POSTER||poster||"");
-     else if(/4\\s+ottobre|04[-_ ]ott|4[-_ ]ott/.test(dateText+" "+slugText)) poster="/img/shortyou-4-ottobre.jpg";
-   }
-   var posterStyle=poster?'background-image:url('+encodeURI(String(poster))+');background-color:'+col[0]+';':'background-color:'+col[0]+';';
-   var where=[e.venue,e.addr].filter(Boolean).join(" · ");
-   var msg="Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".";
-   function eventHref(ev,firstDate){
-     var explicit=ev&&(ev.href||ev.url||ev.link||ev.permalink||ev.bookingUrl||ev.booking_url);
-     if(explicit) return String(explicit);
-     var title=String(ev&&ev.title||"").toLowerCase();
-     var slug=String(ev&&ev.slug||"");
-     var label=String(firstDate&&firstDate.label||"").toLowerCase();
-     var hay=[title,slug.toLowerCase(),label,String(ev&&ev.tipo||"").toLowerCase()].join(" ");
-     if(/shortyou/.test(hay)){
-       if(/29\\s+novembre|29[-_ ]nov/.test(hay)) return "/spettacolo.html#shortyou-29-novembre";
-       if(/4\\s+ottobre|04[-_ ]ott|4[-_ ]ott/.test(hay)) return "/spettacolo.html#shortyou";
-     }
-     if(/un\\s+vortice\\s+di\\s+emozioni|vortice-di-emozioni|un-vortice/.test(hay)) return "/un-vortice-di-emozioni/";
-     if(/rome\\s+improv\\s+festival|rome-improv-festival/.test(hay)) return "/rome-improv-festival/";
-     if(/\\byep\\b|yep-2027/.test(hay)) return "/yep/";
-     return "/spettacolo.html#"+encodeURIComponent(slug);
-   }
-   var detailHref=eventHref(e,first);
-   art.innerHTML='<a href="'+detailHref+'" class="poster" style="'+posterStyle+';text-decoration:none"><div class="badge"><strong>'+esc(b.day)+'</strong><span>'+esc(b.month)+'</span></div></a>'+
-     '<div class="card-body"><span class="cat" style="color:'+col[1]+'">'+esc(e.cat||"Evento")+'</span>'+
-     '<h2><a href="'+detailHref+'" style="color:inherit;text-decoration:none">'+esc(e.title||"Evento")+'</a></h2>'+
-     '<div class="when">'+esc(first.label||"Data da definire")+'</div>'+
-     (where?'<div class="where">'+esc(where)+'</div>':'')+
-     (e.desc?'<p class="desc">'+esc(e.desc)+'</p>':'')+
-     '<div class="actions"><a class="btn primary" href="'+detailHref+'">Prenota</a>'+
-     '<a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/393271881956?text='+encodeURIComponent(msg)+'">WhatsApp</a></div></div>';
-   box.appendChild(art);
+function eventEndTime(e){
+ if(!e||e.tbd)return Infinity;
+ var values=[],items=Array.isArray(e.dates)?e.dates:[];
+ items.forEach(function(d){
+   var raw=d&&(d.end||d.ends_at||d.endDate||d.start||d.starts_at||d.startDate||d.datetime||d.date);
+   if(raw){var parsed=new Date(raw);if(!isNaN(parsed.getTime()))values.push(parsed.getTime())}
  });
+ var labels=items.map(function(d){return d&&d.label||""}).join(" · ");
+ var months={gennaio:0,febbraio:1,marzo:2,aprile:3,maggio:4,giugno:5,luglio:6,agosto:7,settembre:8,ottobre:9,novembre:10,dicembre:11};
+ var now=new Date(),re=/(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)(?:\s+(20\d{2}))?/gi,m;
+ while((m=re.exec(labels))){
+   var mon=months[m[2].toLowerCase()],year=m[3]?Number(m[3]):now.getFullYear();
+   if(!m[3]&&mon<now.getMonth()-6)year+=1;
+   values.push(new Date(year,mon,Number(m[1]),23,59,59,999).getTime());
+ }
+ return values.length?Math.max.apply(Math,values):Infinity;
+}
+function eventHref(ev,firstDate){
+ var explicit=ev&&(ev.href||ev.url||ev.link||ev.permalink||ev.bookingUrl||ev.booking_url);
+ if(explicit)return String(explicit);
+ var title=String(ev&&ev.title||"").toLowerCase(),slug=String(ev&&ev.slug||""),label=String(firstDate&&firstDate.label||"").toLowerCase();
+ var hay=[title,slug.toLowerCase(),label,String(ev&&ev.tipo||"").toLowerCase()].join(" ");
+ if(/shortyou/.test(hay)){
+   if(/29\s+novembre|29[-_ ]nov/.test(hay))return "/spettacolo.html#shortyou-29-novembre";
+   if(/4\s+ottobre|04[-_ ]ott|4[-_ ]ott/.test(hay))return "/spettacolo.html#shortyou";
+ }
+ if(/un\s+vortice\s+di\s+emozioni|vortice-di-emozioni|un-vortice/.test(hay))return "/un-vortice-di-emozioni/";
+ if(/rome\s+improv\s+festival|rome-improv-festival/.test(hay))return "/rome-improv-festival/";
+ if(/\byep\b|yep-2027/.test(hay))return "/yep/";
+ return "/spettacolo.html#"+encodeURIComponent(slug);
+}
+function renderCard(e,past){
+ var first=e.dates&&e.dates.length?e.dates[0]:{label:"Data da definire"};
+ var b=badge(first.label,e.tbd),col=COLORS[e.cat]||["#26343D","#415D6B"];
+ var art=document.createElement("article");art.className="card";
+ var poster=e.poster||"",slugText=String(e.slug||"").toLowerCase(),titleText=String(e.title||"").toLowerCase(),dateText=String(first.label||"").toLowerCase();
+ if(/shortyou/.test(slugText+" "+titleText)){
+   if(/29\s+novembre|29[-_ ]nov/.test(dateText+" "+slugText))poster=(window.SHORTYOU_29_NOV_POSTER||poster||"");
+   else if(/4\s+ottobre|04[-_ ]ott|4[-_ ]ott/.test(dateText+" "+slugText))poster="/img/shortyou-4-ottobre.jpg";
+ }
+ var posterStyle=poster?'background-image:url('+encodeURI(String(poster))+');background-color:'+col[0]+';':'background-color:'+col[0]+';';
+ var where=[e.venue,e.addr].filter(Boolean).join(" · "),detailHref=eventHref(e,first);
+ var actions=past?'<div class="actions"><a class="btn" style="background:#EEF0F1;color:#26343D" href="'+detailHref+'">Vedi scheda</a></div>':
+   '<div class="actions"><a class="btn primary" href="'+detailHref+'">Prenota</a><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/393271881956?text='+encodeURIComponent("Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".")+'">WhatsApp</a></div>';
+ art.innerHTML='<a href="'+detailHref+'" class="poster" style="'+posterStyle+';text-decoration:none"><div class="badge"><strong>'+esc(b.day)+'</strong><span>'+esc(b.month)+'</span></div></a>'+
+   '<div class="card-body"><span class="cat" style="color:'+col[1]+'">'+esc(e.cat||"Evento")+'</span>'+
+   '<h2><a href="'+detailHref+'" style="color:inherit;text-decoration:none">'+esc(e.title||"Evento")+'</a></h2>'+
+   '<div class="when">'+esc(first.label||"Data da definire")+'</div>'+(where?'<div class="where">'+esc(where)+'</div>':'')+
+   (e.desc?'<p class="desc">'+esc(e.desc)+'</p>':'')+actions+'</div>';
+ return art;
+}
+function render(){
+ var box=document.getElementById("grid"),pastBox=document.getElementById("past-grid"),empty=document.getElementById("empty"),pastEmpty=document.getElementById("past-empty");
+ box.innerHTML="";pastBox.innerHTML="";
+ var filtered=events.filter(function(e){return current==="Tutti"||e.cat===current});
+ var now=Date.now(),upcoming=filtered.filter(function(e){return eventEndTime(e)>=now}),past=filtered.filter(function(e){return eventEndTime(e)<now});
+ upcoming.sort(function(a,b){return eventEndTime(a)-eventEndTime(b)});
+ past.sort(function(a,b){return eventEndTime(b)-eventEndTime(a)});
+ empty.style.display=upcoming.length?"none":"block";pastEmpty.style.display=past.length?"none":"block";
+ upcoming.forEach(function(e){box.appendChild(renderCard(e,false))});
+ past.forEach(function(e){pastBox.appendChild(renderCard(e,true))});
 }
 function load(){
  events=(window.ARTYOU_DYNAMIC_SHOWS&&window.ARTYOU_DYNAMIC_SHOWS.length)?window.ARTYOU_DYNAMIC_SHOWS:FALLBACK;
