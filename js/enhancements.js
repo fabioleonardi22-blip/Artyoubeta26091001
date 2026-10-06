@@ -621,7 +621,7 @@
     if(!document.getElementById('artyou-workshow-tm-style')){
       var s=document.createElement('style');
       s.id='artyou-workshow-tm-style';
-      s.textContent='.artyou-tm{display:inline-block!important;font-size:.38em!important;line-height:1!important;vertical-align:top!important;position:relative!important;top:.39em!important;margin-left:.05em!important;font-weight:600!important;} header nav .artyou-tm{top:.52em!important;} h1 .artyou-tm,h2 .artyou-tm,h3 .artyou-tm{top:.52em!important;} nav[aria-label="Percorso"] .artyou-tm{top:.82em!important;font-size:.34em!important;}';
+      s.textContent='.artyou-tm{display:inline-block!important;font-size:.38em!important;line-height:1!important;vertical-align:top!important;position:relative!important;top:.39em!important;margin-left:.05em!important;font-weight:600!important;} header nav .artyou-tm{top:.52em!important;} h1 .artyou-tm{top:.40em!important;} h2 .artyou-tm,h3 .artyou-tm{top:.52em!important;} nav[aria-label="Percorso"] .artyou-tm{top:.82em!important;font-size:.34em!important;}';
       document.head.appendChild(s);
     }
     var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
