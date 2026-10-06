@@ -10,6 +10,53 @@ function activeBookingWhere() {
   return "(b.status IN ('RISERVATO','PAGATO') OR (b.status='HOLD' AND (b.hold_expires_at IS NULL OR b.hold_expires_at>UTC_TIMESTAMP())))";
 }
 
+function isRifMaster(row) {
+  const text = String((row && row.slug) || "") + " " + String((row && row.title) || "");
+  return /\b(roma|rome)[-_ ]improv[-_ ]festival\b/i.test(text) &&
+         !/workshop|spettacolo|show|all[-_ ]in/i.test(text);
+}
+
+function defaultRifConfig() {
+  return {
+    year: 2027,
+    language: "inglese",
+    audience: "Improvvisatori e improvvisatrici di ogni scuola dal secondo anno di formazione",
+    calendar: {
+      start: "2027-03-12",
+      end: "2027-03-15",
+      label: "12–13–14 marzo 2027",
+      location: "Via La Spezia 73, Roma",
+      description: "Roma Improv Festival 2027 – tre giorni di workshop e spettacoli di improvvisazione teatrale a Roma."
+    },
+    pricing: [
+      {key:"double", label:"Doppio workshop", price:165, note:"2 workshop da 6 ore a scelta", included:"Spettacolo + T-Shirt inclusi"},
+      {key:"single", label:"Workshop", price:95, note:"1 workshop da 6 ore a scelta", included:"Spettacolo + T-Shirt inclusi"},
+      {key:"special", label:"Workshop Special", price:40, note:"1 workshop da 3 ore", included:"Spettacolo e T-Shirt non inclusi"},
+      {key:"show", label:"Spettacolo ALL IN", price:15, note:"Sabato 13 marzo · ore 22:00", included:"Improvvisazione teatrale multi-lingua"},
+      {key:"shirt", label:"T-Shirt Festival", price:10, note:"T-Shirt ufficiale del Festival", included:"Gadget ufficiale RIF"},
+      {key:"full", label:"Full Festival", price:200, note:"2 workshop da 6 ore + Workshop Special da 3 ore", included:"Eventi e gadget inclusi"}
+    ],
+    faq: [
+      {n:"01", q:"Serve esperienza?", a:"Il festival è pensato per improvvisatori e improvvisatrici di ogni scuola dal secondo anno di formazione. Ogni workshop indica inoltre il livello richiesto e le competenze consigliate."},
+      {n:"02", q:"Il festival è in inglese?", a:"Sì. I workshop e gli spettacoli internazionali sono pensati per improvvisatori provenienti da Paesi diversi e si svolgono in inglese."},
+      {n:"03", q:"Posso vedere solo gli spettacoli?", a:"Sì. ALL IN è prenotabile anche separatamente per il sabato sera, senza acquistare un workshop."},
+      {n:"04", q:"Posso partecipare da fuori Roma?", a:"Sì. Il Roma Improv Festival nasce come punto d'incontro tra la scena romana e improvvisatori e docenti provenienti da altre città e Paesi."}
+    ]
+  };
+}
+
+async function ensureRifConfig(row, meta) {
+  if (!isRifMaster(row)) return meta;
+  if (meta && meta.rif && typeof meta.rif === "object") return meta;
+  const next = Object.assign({}, meta || {}, {rif: defaultRifConfig()});
+  try {
+    await query("UPDATE events SET metadata=? WHERE id=? AND (metadata IS NULL OR JSON_EXTRACT(metadata,'$.rif') IS NULL)", [JSON.stringify(next), row.id]);
+  } catch (e) {
+    console.warn("RIF_METADATA_SEED_ERROR", String(e && e.message || e));
+  }
+  return next;
+}
+
 module.exports = async function handler(req, res) {
   setSecurityHeaders(res);
 
@@ -48,6 +95,7 @@ module.exports = async function handler(req, res) {
       const booked = Number(r.prenotati || 0);
       let meta = {};
       try { meta = typeof r.metadata === "string" ? JSON.parse(r.metadata || "{}") : (r.metadata || {}); } catch (_) {}
+      meta = await ensureRifConfig(r, meta);
       const dateRows = await query(
         "SELECT id,starts_at,date_label,capacity_override,price_override,active,metadata FROM event_dates WHERE event_id=? AND active=1 ORDER BY starts_at,id",
         [r.id]
@@ -123,6 +171,7 @@ module.exports = async function handler(req, res) {
       const booked = Number(r.prenotati || 0);
       let meta = {};
       try { meta = typeof r.metadata === "string" ? JSON.parse(r.metadata || "{}") : (r.metadata || {}); } catch (_) {}
+      meta = await ensureRifConfig(r, meta);
       eventi[r.slug] = {
         slug:r.slug,
         titolo:r.title,
