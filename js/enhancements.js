@@ -409,6 +409,33 @@
       if(merch) nav.insertBefore(company,merch);
       else if(blog) nav.insertBefore(company,blog);
       else nav.appendChild(company);
+
+      /* Logical desktop/mobile order:
+         Chi Siamo → Corsi → Spettacoli → WorkshoW → Festival → Aziende → Blog → Merchandising → Contatti.
+         Keep any non-primary links after the main navigation items. */
+      var desiredOrder=[
+        {label:/^\s*chi siamo\s*$/i, href:'/chi-siamo/'},
+        {label:/^\s*corsi\s*$/i, href:'/improvvisazione-teatrale/'},
+        {label:/^\s*spettacoli\s*$/i},
+        {label:/^\s*workshow\s*$/i, href:'/workshow/'},
+        {label:/^\s*festival\s*$/i, href:'/rome-improv-festival/'},
+        {label:/^\s*aziende\s*$/i, href:'/formazione-aziende/'},
+        {label:/^\s*blog\s*$/i, href:'/la-finestra-sul-cortile/'},
+        {label:/^\s*merchandising\s*$/i, href:'/merchandising/'},
+        {label:/^\s*contatti\s*$/i}
+      ];
+      var links=Array.from(nav.querySelectorAll(':scope > a'));
+      var used=new Set();
+      desiredOrder.forEach(function(rule){
+        var a=links.find(function(link){
+          if(used.has(link)) return false;
+          var txt=(link.textContent||'').trim();
+          var href=(link.getAttribute('href')||'').replace(location.origin,'');
+          return rule.label.test(txt) || (rule.href && href===rule.href);
+        });
+        if(a){ nav.appendChild(a); used.add(a); }
+      });
+      links.forEach(function(a){ if(!used.has(a)) nav.appendChild(a); });
     });
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',updateCompaniesMenu);
