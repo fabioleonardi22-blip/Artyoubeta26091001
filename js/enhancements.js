@@ -613,3 +613,40 @@
   `;
   document.head.appendChild(s);
 })();
+
+
+/* WorkshoW trademark: keep the ™ discreet and typographically superscripted. */
+(function(){
+  function styleWorkshowTrademark(){
+    if(!document.getElementById('artyou-workshow-tm-style')){
+      var s=document.createElement('style');
+      s.id='artyou-workshow-tm-style';
+      s.textContent='.artyou-tm{font-size:.42em!important;line-height:0!important;vertical-align:super!important;margin-left:.08em!important;font-weight:600!important;}';
+      document.head.appendChild(s);
+    }
+    var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    var nodes=[],n;
+    while((n=walker.nextNode())){
+      var p=n.parentElement;
+      if(!p||/^(SCRIPT|STYLE|TEXTAREA|OPTION)$/i.test(p.tagName)||p.closest('.artyou-tm')) continue;
+      if(n.nodeValue&&n.nodeValue.indexOf('WorkshoW™')!==-1) nodes.push(n);
+    }
+    nodes.forEach(function(node){
+      var parts=node.nodeValue.split('WorkshoW™'),frag=document.createDocumentFragment();
+      parts.forEach(function(part,i){
+        if(i){
+          frag.appendChild(document.createTextNode('WorkshoW'));
+          var sup=document.createElement('sup');
+          sup.className='artyou-tm';
+          sup.textContent='™';
+          frag.appendChild(sup);
+        }
+        if(part) frag.appendChild(document.createTextNode(part));
+      });
+      node.parentNode.replaceChild(frag,node);
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',styleWorkshowTrademark);
+  else styleWorkshowTrademark();
+  window.addEventListener('pageshow',styleWorkshowTrademark);
+})();
