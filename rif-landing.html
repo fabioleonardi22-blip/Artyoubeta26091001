@@ -293,11 +293,31 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
   #artyou-language-slot{margin-left:auto}
 }
 </style>
+<style id="rif-artyou-logo-style">
+.subbar{background:#13181D;border-bottom-color:#2A333B}
+.subbar .wrap{min-height:72px}
+.rif-artyou-logo{display:flex;align-items:center;flex:0 0 auto;text-decoration:none}
+.rif-artyou-logo img{display:block;height:42px;width:auto;max-width:150px}
+.fest-name{color:#F6F3EC}
+.festnav a{color:#D5DCE1}
+.festnav a:hover{background:#232C33;color:#FFFFFF}
+@media(max-width:1000px){
+  .rif-artyou-logo img{height:36px;max-width:130px}
+  .subbar .wrap{min-height:64px}
+}
+@media(max-width:560px){
+  .rif-artyou-logo img{height:32px;max-width:112px}
+  .fest-name{font-size:16px}
+}
+</style>
 </head>
 <body>
 
 <div class="subbar">
   <div class="wrap">
+    <a class="rif-artyou-logo" href="/" aria-label="Artyou Roma – Home">
+      <img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma">
+    </a>
     <a class="fest-name" href="#top">Roma Improv Festival <span>2027</span></a>
     <nav class="festnav" aria-label="Festival">
       <a href="#teachers" data-i18n="nav.teachers">Teachers</a>
