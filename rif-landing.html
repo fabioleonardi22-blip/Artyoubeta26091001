@@ -369,6 +369,16 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
 .rif-program-first .sec-head{margin-bottom:24px!important}
 .rif-program-first .days{margin-top:0!important}
 </style>
+<style id="rif-workshops-always-open">
+#workshops{display:block!important;visibility:visible!important;opacity:1!important}
+#workshops .ws-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px!important}
+#workshops .ws{display:flex!important;flex-direction:column!important;visibility:visible!important;opacity:1!important;min-height:320px!important}
+#workshops .ws.special{grid-column:1/-1!important;min-height:0!important}
+@media(max-width:760px){
+  #workshops .ws-grid{grid-template-columns:1fr!important}
+  #workshops .ws.special{grid-column:auto!important}
+}
+</style>
 </head>
 <body>
 
@@ -487,7 +497,48 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
         <span><b data-i18n="lv.int">Intermediate</b>: <span data-i18n="lv.int.d">6+ months on stage</span></span>
         <span><b data-i18n="lv.adv">Advanced</b>: <span data-i18n="lv.adv.d">1+ year on stage</span></span>
       </p>
-      <div class="ws-grid" id="wsGrid" aria-live="polite"></div>
+      <div class="ws-grid" id="wsGrid" aria-live="polite">
+        <article class="ws">
+          <div class="ws-when"><span>Venerdì 12</span><span class="time">15:00–21:00</span></div>
+          <h3>Workshop 1</h3>
+          <div class="by">Docente in arrivo</div>
+          <div class="tags"><span class="tag lv-all">Tutti i livelli</span><span class="tag">In inglese</span><span class="tag">6 ore</span></div>
+          <p class="desc">Titolo e descrizione in arrivo dal gestionale.</p>
+          <button class="btn btn-ink" type="button" data-book="single">Prenota questo workshop</button>
+        </article>
+        <article class="ws">
+          <div class="ws-when"><span>Venerdì 12</span><span class="time">15:00–21:00</span></div>
+          <h3>Workshop 2</h3>
+          <div class="by">Docente in arrivo</div>
+          <div class="tags"><span class="tag lv-int">Intermedio</span><span class="tag">In inglese</span><span class="tag">6 ore</span></div>
+          <p class="desc">Titolo e descrizione in arrivo dal gestionale.</p>
+          <button class="btn btn-ink" type="button" data-book="single">Prenota questo workshop</button>
+        </article>
+        <article class="ws">
+          <div class="ws-when"><span>Sabato 13</span><span class="time">13:30–19:30</span></div>
+          <h3>Workshop 3</h3>
+          <div class="by">Docente in arrivo</div>
+          <div class="tags"><span class="tag lv-all">Tutti i livelli</span><span class="tag">In inglese</span><span class="tag">6 ore</span></div>
+          <p class="desc">Titolo e descrizione in arrivo dal gestionale.</p>
+          <button class="btn btn-ink" type="button" data-book="single">Prenota questo workshop</button>
+        </article>
+        <article class="ws">
+          <div class="ws-when"><span>Sabato 13</span><span class="time">13:30–19:30</span></div>
+          <h3>Workshop 4</h3>
+          <div class="by">Docente in arrivo</div>
+          <div class="tags"><span class="tag lv-adv">Avanzato</span><span class="tag">In inglese</span><span class="tag">6 ore</span></div>
+          <p class="desc">Titolo e descrizione in arrivo dal gestionale.</p>
+          <button class="btn btn-ink" type="button" data-book="single">Prenota questo workshop</button>
+        </article>
+        <article class="ws special">
+          <div class="ws-when"><span>Domenica 14</span><span class="time">10:00–13:00</span></div>
+          <h3>Workshop Special / Impro Lab</h3>
+          <div class="by">Con i docenti del festival</div>
+          <div class="tags"><span class="tag lv-all">Tutti i livelli</span><span class="tag">In inglese</span><span class="tag">3 ore</span></div>
+          <p class="desc">Sessione speciale della domenica mattina.</p>
+          <button class="btn btn-primary" type="button" data-book="special">Prenota il Workshop Special</button>
+        </article>
+      </div>
       <p class="ws-status" id="wsStatus"></p>
     </div>
   </section>
@@ -875,8 +926,11 @@ function seatsHTML(w) {
 }
 
 function renderWorkshops() {
+  const grid = $("#wsGrid");
+  if (!grid) return;
   const list = WORKSHOPS.filter(w => filter === "all" || w.day === filter);
-  $("#wsGrid").innerHTML = list.map(w => {
+  if (!list.length) return;
+  grid.innerHTML = list.map(w => {
     const sold = w.left != null && w.left <= 0;
     const pass = w.special ? "special" : "single";
     return `<article class="ws ${w.special ? "special" : ""}">
