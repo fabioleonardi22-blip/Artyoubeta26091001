@@ -606,6 +606,144 @@ input[type=text],input[type=email],input[type=tel],select{
   #workshops .ws .btn{width:100%!important;min-width:0!important}
 }
 </style>
+<style id="rif-pass-design-v2">
+#passes .passes{
+  gap:16px!important;
+  align-items:stretch!important;
+}
+#passes .pass{
+  position:relative!important;
+  overflow:hidden!important;
+  padding:24px 22px 20px!important;
+  min-height:300px!important;
+  border:1px solid #DED7CB!important;
+  border-radius:20px!important;
+  background:
+    radial-gradient(circle at top right,rgba(240,144,0,.08),transparent 34%),
+    #fff!important;
+  box-shadow:0 10px 28px rgba(20,24,28,.07)!important;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important;
+}
+#passes .pass:hover{
+  transform:translateY(-3px)!important;
+  box-shadow:0 16px 34px rgba(20,24,28,.11)!important;
+  border-color:#CEC4B6!important;
+}
+#passes .pass::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:5px;
+  background:#2CA8E0;
+}
+#passes .pass:nth-child(2)::before{background:#28B4A8}
+#passes .pass:nth-child(4)::before{background:#F09000}
+#passes .pass:nth-child(5)::before{background:#941880}
+#passes .pass:nth-child(6)::before{background:#70777D}
+#passes .pass h3{
+  font-size:19px!important;
+  letter-spacing:-.25px!important;
+  margin:2px 0 12px!important;
+}
+#passes .pass .price{
+  display:flex!important;
+  align-items:flex-end!important;
+  gap:8px!important;
+  font-size:50px!important;
+  line-height:.9!important;
+  letter-spacing:-2px!important;
+  margin:0 0 18px!important;
+}
+#passes .pass .price small{
+  font-size:12px!important;
+  line-height:1.2!important;
+  letter-spacing:0!important;
+  font-weight:800!important;
+  color:#5E676D!important;
+  margin-bottom:4px!important;
+}
+#passes .pass ul{
+  list-style:none!important;
+  padding:0!important;
+  margin:0 0 20px!important;
+}
+#passes .pass li{
+  position:relative!important;
+  padding-left:22px!important;
+  font-size:13.5px!important;
+  line-height:1.45!important;
+  margin:0 0 8px!important;
+}
+#passes .pass li::before{
+  content:"✓";
+  position:absolute;
+  left:0;top:0;
+  font-weight:900;
+  color:#15836F;
+}
+#passes .pass li.no::before{
+  content:"–";
+  color:#8B6D5C;
+}
+#passes .pass .btn{
+  margin-top:auto!important;
+  min-height:42px!important;
+  font-size:13px!important;
+  font-weight:800!important;
+  border-radius:12px!important;
+  width:100%!important;
+}
+#passes .pass.best{
+  color:#fff!important;
+  background:
+    radial-gradient(circle at top right,rgba(240,144,0,.25),transparent 32%),
+    linear-gradient(150deg,#13181D 0%,#1B242B 100%)!important;
+  border-color:#13181D!important;
+  box-shadow:0 18px 34px rgba(15,19,23,.22)!important;
+  transform:translateY(-5px)!important;
+}
+#passes .pass.best::before{
+  height:6px!important;
+  background:linear-gradient(90deg,#F09000,#FFB22E)!important;
+}
+#passes .pass.best h3,
+#passes .pass.best li{color:#fff!important}
+#passes .pass.best .price{color:#FF9A00!important}
+#passes .pass.best .price small{color:#D8DEE2!important}
+#passes .pass.best li::before{color:#FFB22E!important}
+#passes .pass.best .btn{
+  background:#F09000!important;
+  border-color:#F09000!important;
+  color:#111!important;
+  box-shadow:0 8px 20px rgba(240,144,0,.28)!important;
+}
+#passes .pass.best .save{
+  top:14px!important;
+  right:14px!important;
+  padding:7px 11px!important;
+  border-radius:999px!important;
+  font-size:10px!important;
+  letter-spacing:.04em!important;
+  background:#F09000!important;
+  color:#111!important;
+}
+#passes .watch{
+  margin-top:18px!important;
+  padding:12px 14px!important;
+  border-radius:12px!important;
+  background:#FFF8EB!important;
+  border:1px solid #F1DFC0!important;
+  color:#65523B!important;
+  font-size:13px!important;
+}
+@media(max-width:900px){
+  #passes .pass.best{transform:none!important}
+}
+@media(max-width:620px){
+  #passes .pass{min-height:0!important;padding:20px 18px!important}
+  #passes .pass .price{font-size:44px!important}
+}
+</style>
 </head>
 <body>
 
