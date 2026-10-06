@@ -947,7 +947,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <p class="am-fs-body" style="margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #1A6E99;">In scena</p>
 <h2 class="am-fs-xl" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -1.5px;">Spettacoli ed Eventi</h2>
 <p class="am-fs-lead" style="margin: 0; font-size: 18px; line-height: 1.55; color: #3F474E;">Si alternano gli spettacoli della compagnia e le serate con i Doc e gli allievi più esperti: «masticare il palco» è uno dei modi migliori per formarsi.</p>
-<p class="am-wrap" style="margin: 0; display: flex; align-items: flex-start; gap: 10px; font-size: 16px; font-weight: 600; color: #13181D; line-height: 1.45;"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; background: #F09000; margin-top: 6px; flex-shrink: 0;"></span>ShortYou, show &amp; aperitivo al The Spot Improv (Valle Aurelia): prossimi appuntamenti domenica 4 ottobre e domenica 29 novembre dalle 19:30.</p>
+<p class="am-wrap" style="margin: 0; display: flex; align-items: flex-start; gap: 10px; font-size: 16px; font-weight: 600; color: #13181D; line-height: 1.45;"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; background: #F09000; margin-top: 6px; flex-shrink: 0;"></span>ShortYou, show &amp; aperitivo al The Spot Improv (Valle Aurelia): prossimo appuntamento domenica 29 novembre dalle 19:30.</p>
 <div class="am-wrap home-show-filters" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;">
 <sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
 <button type="button" onClick="{{f.pick}}" class="am-fs-body" style="padding: 12px 20px; border-radius: 999px; border: 1px solid {{f.border}}; background: {{f.bg}}; color: {{f.fg}}; font-family: 'Instrument Sans', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; min-height: 44px;">{{f.label}}</button>
@@ -1424,11 +1424,38 @@ class Component extends DCLogic {
         title: e.title,
         where: [e.venue,e.addr].filter(Boolean).join(" · "),
         img: e.poster || "",
-        tbd: !!e.tbd
+        tbd: !!e.tbd,
+        dates: Array.isArray(e.dates) ? e.dates : []
       };
     }) : [];
 
-    var all = managed.length ? managed : fallbackShows;
+    function eventEndTime(s) {
+      if (!s || s.tbd) return Infinity;
+      var values = [];
+      var dateItems = Array.isArray(s.dates) ? s.dates : [];
+      dateItems.forEach(function (d) {
+        var raw = d && (d.end || d.ends_at || d.endDate || d.start || d.starts_at || d.startDate || d.datetime || d.date);
+        if (raw) {
+          var parsed = new Date(raw);
+          if (!isNaN(parsed.getTime())) values.push(parsed.getTime());
+        }
+      });
+      var label = String(s.when || (dateItems[dateItems.length - 1] && dateItems[dateItems.length - 1].label) || "");
+      var months = {gennaio:0,febbraio:1,marzo:2,aprile:3,maggio:4,giugno:5,luglio:6,agosto:7,settembre:8,ottobre:9,novembre:10,dicembre:11};
+      var now = new Date();
+      var re = /(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)(?:\s+(20\d{2}))?/gi;
+      var m;
+      while ((m = re.exec(label))) {
+        var mon = months[m[2].toLowerCase()];
+        var year = m[3] ? Number(m[3]) : now.getFullYear();
+        if (!m[3] && mon < now.getMonth() - 6) year += 1;
+        values.push(new Date(year, mon, Number(m[1]), 23, 59, 59, 999).getTime());
+      }
+      return values.length ? Math.max.apply(Math, values) : Infinity;
+    }
+    var all = (managed.length ? managed : fallbackShows).filter(function (s) {
+      return eventEndTime(s) >= Date.now();
+    });
     var venues = { "Improvvisazione": "[Teatro], Roma", "Teatro": "[Teatro], Roma", "Stand-up": "[Locale], Roma", "ImproEnglish": "[Teatro], Roma", "Eventi": "Roma", "Festival": "Roma", "Workshop": "Roma" };
     var shows = all.filter(function (s) { return filter === "Tutti" || s.cat === filter; }).map(function (s) {
       var msg = s.waText || ("Ciao! Vorrei informazioni su " + (s.title || "l'evento") + " · " + s.when + ".");
