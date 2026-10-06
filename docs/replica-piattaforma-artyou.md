@@ -33,3 +33,28 @@ Utenti e ruoli; sedi; corsi e docenti assegnati; iscrizioni; lezioni; presenze u
 
 ## Verifica
 Controllo sintassi JS e struttura HTML/metadati. Verifica visuale desktop/mobile ancora da eseguire. La demo non costituisce replica completa né backend operativo.
+
+## Analisi amministratore — 6 ottobre 2026
+Accesso amministratore verificato. Dashboard con 364 utenti, 133 tesserati, 22 corsi e 54 pagamenti al momento della lettura; questi numeri non sono importati nella demo.
+
+### Funzioni osservate
+- Utenti: nome/email, ruolo, anno corso, indicatore foto, azioni e allegati; esportazione CSV e paginazione. Moduli delle azioni senza etichetta non esaminati.
+- Tesserati: numero tessera, utente, importo, stato, date. Aggiunta con selezione utente/campagna.
+- Campagne: nome, descrizione, importo, valuta, date, stato; aggiunta verificata.
+- Corsi: nome, sede, anno minimo opzionale, capienza, requisito tessera, descrizione, date, orario, prezzi mensile/tre rate/annuale, giorni, stato, docente. Comandi modifica/duplica/calendario visibili.
+- Pagamenti: utente, corso, importo, data, tipo, note. Il modulo iniziale chiede l’utente; passaggi successivi non esaminati. Storico contiene pagamenti Stripe e contanti.
+- Finanza: periodo, bilancio mensile e totale; bilancio corso; elenco movimenti con metodo e registrante; CSV. Spesa generale o ripartita tra corsi, nome, importo, mese, note.
+- Comunicazioni: titolo, corpo, tutti gli account/tesserati attivi/docenti/partecipanti corso/copia a sé, anteprima destinatari, invio. Nessun invio effettuato.
+- Report docenti: corso, sede, iscritti, sospesi, date svolte/previste, media presenze. Report pagamenti: piano, stato, importo, partenza, scadenza, rate, ritardi; esclude gratuiti e utenti rimossi. CSV.
+- Avanzate: etichetta, data taglio, note e calcolo anteprima archiviazione anno sociale. Guida dichiara archivi consultabili in finanza e ripristino ultimo archivio. Operazioni non eseguite.
+
+### Blocco rilevato
+Pagina avanzate: errore caricamento archivi. Ritorno amministrazione: errore caricamento dati; un solo reload restituisce 502 Bad Gateway / Connection refused. Non identificato come blocco anti-bot.
+
+### Implementazione nella branch
+`piattaforma-replica/admin.html`: gestione locale con dati inventati, CRUD, ricerca/ordinamento, CSV, duplicazione corso in bozza, tessere/iscrizioni, calendario/presenze, registrazione pagamenti dimostrativi, spese/rimborsi/trasferimenti, bilanci/report, bozze comunicazioni, fotografia archivio e ripristino locale. Stato persistito nel browser con fallback in memoria. Gli allegati memorizzano solo nome/dimensione, nessun upload. I piani rateali e allocazioni contabili sono regole proposte, da validare con l’originale. La preesistente area docente è ancora una demo separata in memoria.
+
+Non implementati come servizi reali: login/ruoli server, MySQL, Stripe, email, file storage, backup DB e notifiche. Nessuna migrazione o copia dei dati reali. L’archiviazione è sperimentale e richiede backup locale; i trasferimenti registrati non muovono denaro.
+
+### Validazione
+Sintassi JS verificata. Test modello per duplicati tessere/date, periodo lezioni, calendario rate, ritardi, bilancio in centesimi, separazione spese generali/corso e fotografia archivio. Verifica visuale e test end-to-end non ancora completati.
