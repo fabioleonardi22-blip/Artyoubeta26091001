@@ -310,6 +310,17 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 <script src="/js/artyou-language.js" defer></script>
+<style id="rif-language-slot-style">
+#artyou-language-slot{display:flex;align-items:center;flex:0 0 auto}
+#artyou-language-slot #artyou-language{margin:0!important}
+@media(max-width:1000px){
+  #artyou-language-slot{margin-left:auto}
+}
+@media(max-width:420px){
+  .subbar .btn{display:inline-flex}
+  #artyou-language-slot{margin-left:auto}
+}
+</style>
 </head>
 <body>
 
@@ -346,6 +357,7 @@ input:focus,select:focus{border-color:var(--orange);outline:none;box-shadow:0 0 
       <a href="#rome" data-i18n="nav.rome">Rome</a>
       <a href="#faq">FAQ</a>
     </nav>
+    <div id="artyou-language-slot" class="notranslate" translate="no"></div>
     <button class="btn btn-primary" type="button" data-book="full" data-i18n="cta.bookShort">Book</button>
   </div>
 </div>
