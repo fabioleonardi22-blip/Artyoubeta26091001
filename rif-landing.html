@@ -1122,7 +1122,9 @@ $("#bookForm").addEventListener("submit", async e => {
   const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Artyou Roma//RIF 2027//EN","BEGIN:VEVENT","UID:rif2027@artyouroma.it",
     "DTSTAMP:20261006T000000Z","DTSTART;VALUE=DATE:20270312","DTEND;VALUE=DATE:20270315","SUMMARY:Roma Improv Festival 2027",
     "LOCATION:Artyou Roma\\, Rome\\, Italy","URL:" + location.href.split("#")[0],"END:VEVENT","END:VCALENDAR"].join("\r\n");
-  const icsHref = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);\n  const heroIcs = $("#ics"); if (heroIcs) heroIcs.href = icsHref;\n  $(".calendar-ics").forEach(a => a.href = icsHref);
+  const icsHref = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+  const heroIcs = $("#ics"); if (heroIcs) heroIcs.href = icsHref;
+  $(".calendar-ics").forEach(a => a.href = icsHref);
 })();
 
 /* Barra mobile: compare dopo l'hero */
