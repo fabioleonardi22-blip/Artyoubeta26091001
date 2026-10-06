@@ -417,7 +417,7 @@
         {label:/^\s*chi siamo\s*$/i, href:'/chi-siamo/'},
         {label:/^\s*corsi\s*$/i, href:'/improvvisazione-teatrale/'},
         {label:/^\s*spettacoli\s*$/i},
-        {label:/^\s*workshow\s*$/i, href:'/workshow/'},
+        {label:/^\s*workshow(?:™)?\s*$/i, href:'/workshow/'},
         {label:/^\s*festival\s*$/i, href:'/rome-improv-festival/'},
         {label:/^\s*aziende\s*$/i, href:'/formazione-aziende/'},
         {label:/^\s*blog\s*$/i, href:'/la-finestra-sul-cortile/'},
