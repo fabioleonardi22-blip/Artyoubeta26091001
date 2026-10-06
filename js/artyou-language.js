@@ -51,7 +51,9 @@ function css(){
 }
 function build(){
  if(document.getElementById('artyou-language')){normalizeHeaderUi();return;}css();normalizeHeaderUi();
- var h=document.querySelector('header');if(!h)return;
+ var slot=document.getElementById('artyou-language-slot');
+ var h=document.querySelector('header');
+ if(!h&&!slot)return;
  var w=document.createElement('div');w.id='artyou-language';w.className='notranslate';w.setAttribute('translate','no');
  w.innerHTML='<div class="artyou-lang-row"><label class="artyou-lang-heading" for="artyou-lang-select">🌐 Lingue</label><select id="artyou-lang-select" class="artyou-lang-select" aria-label="Scegli la lingua"></select></div><button type="button" class="artyou-lang-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua"><span aria-hidden="true">🌐</span><span class="artyou-lang-current"></span><span aria-hidden="true">▾</span></button><div class="artyou-lang-menu" role="menu" aria-label="Lingua del sito"></div>';
  var m=w.querySelector('.artyou-lang-menu'), cur=saved()&&L[saved()]?saved():SOURCE;
@@ -60,20 +62,21 @@ function build(){
  Object.keys(L).forEach(function(c){var option=document.createElement('option');option.value=c;option.textContent=L[c][0];option.selected=c===cur;select.appendChild(option)});
  select.onchange=function(){choose(select.value)};
  w.querySelector('.artyou-lang-current').textContent=L[cur][1];
- var mb=h.querySelector('.artyou-menu-btn'), actions=mb&&mb.parentElement, nav=h.querySelector('nav');
+ var mb=h&&h.querySelector('.artyou-menu-btn'), actions=mb&&mb.parentElement, nav=h&&h.querySelector('nav');
  var desktopHome=null;
- if(actions&&actions.parentElement===h) desktopHome=actions;
- else desktopHome=h.querySelector(':scope > div:last-child');
+ if(h&&actions&&actions.parentElement===h) desktopHome=actions;
+ else desktopHome=h&&h.querySelector(':scope > div:last-child');
 
  function placeLanguage(){
    // The page renderer may replace the header after DOMContentLoaded.
    h=document.querySelector('header');
-   if(!h)return;
+   slot=document.getElementById('artyou-language-slot');
+   if(!h&&!slot)return;
    normalizeHeaderUi();
-   nav=h.querySelector('nav');
-   mb=h.querySelector('.artyou-menu-btn');
+   nav=h&&h.querySelector('nav');
+   mb=h&&h.querySelector('.artyou-menu-btn');
    actions=mb&&mb.parentElement;
-   desktopHome=actions||h.querySelector(':scope > div:last-child');
+   desktopHome=actions||(h&&h.querySelector(':scope > div:last-child'));
    var mobile=window.matchMedia&&window.matchMedia('(max-width:820px)').matches;
    // Inline visibility wins over generic mobile navigation button rules.
    var legacyTrigger=w.querySelector('.artyou-lang-trigger');
@@ -117,8 +120,9 @@ function build(){
  // Keep the existing selector and its handlers when a rendered header is replaced.
  var headerObserver=new MutationObserver(function(){
    var liveHeader=document.querySelector('header');
+   var liveSlot=document.getElementById('artyou-language-slot');
    normalizeHeaderUi();
-   if(liveHeader&&(!w.isConnected||!liveHeader.contains(w)))placeLanguage();
+   if((liveHeader||liveSlot)&&(!w.isConnected||!(liveHeader&&liveHeader.contains(w))&&!(liveSlot&&liveSlot.contains(w))))placeLanguage();
  });
  headerObserver.observe(document.body,{childList:true,subtree:true});
  var t=w.querySelector('.artyou-lang-trigger');t.onclick=function(e){e.stopPropagation();var o=w.getAttribute('data-open')==='1';w.setAttribute('data-open',o?'0':'1');t.setAttribute('aria-expanded',o?'false':'true')};
