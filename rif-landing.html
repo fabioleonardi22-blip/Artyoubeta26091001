@@ -405,6 +405,13 @@ body{
   .wrap{padding-left:20px!important;padding-right:20px!important}
 }
 </style>
+<style id="rif-teacher-workshop-copy">
+#teachers .teacher .tb{display:flex;flex-direction:column;gap:8px}
+#teachers .teacher-workshop{margin-top:10px;padding-top:14px;border-top:1px solid #E5DDD2}
+#teachers .teacher-workshop-label{display:inline-block;margin-bottom:6px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#C46A00}
+#teachers .teacher-workshop h4{margin:0 0 6px;font-size:17px;line-height:1.2;color:#13181D}
+#teachers .teacher-workshop p{margin:0;font-size:14px;line-height:1.5;color:#666D72}
+</style>
 </head>
 <body>
 
@@ -498,10 +505,10 @@ body{
         <p class="lead" data-i18n="t.lead">Quattro docenti da quattro Paesi. Ognuno guida un workshop da 6 ore e partecipa all’Impro Lab della domenica.</p>
       </div>
       <div class="teachers" id="teacherGrid">
-        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 01</h3><p>Nome, Paese e workshop in arrivo dal gestionale.</p></div></article>
-        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 02</h3><p>Nome, Paese e workshop in arrivo dal gestionale.</p></div></article>
-        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 03</h3><p>Nome, Paese e workshop in arrivo dal gestionale.</p></div></article>
-        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 04</h3><p>Nome, Paese e workshop in arrivo dal gestionale.</p></div></article>
+        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 01</h3><p>Nome e Paese in arrivo dal gestionale.</p><div class="teacher-workshop"><span class="teacher-workshop-label">Workshop</span><h4>Titolo workshop in arrivo</h4><p>Descrizione del workshop in arrivo dal gestionale.</p></div></div></article>
+        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 02</h3><p>Nome e Paese in arrivo dal gestionale.</p><div class="teacher-workshop"><span class="teacher-workshop-label">Workshop</span><h4>Titolo workshop in arrivo</h4><p>Descrizione del workshop in arrivo dal gestionale.</p></div></div></article>
+        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 03</h3><p>Nome e Paese in arrivo dal gestionale.</p><div class="teacher-workshop"><span class="teacher-workshop-label">Workshop</span><h4>Titolo workshop in arrivo</h4><p>Descrizione del workshop in arrivo dal gestionale.</p></div></div></article>
+        <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 04</h3><p>Nome e Paese in arrivo dal gestionale.</p><div class="teacher-workshop"><span class="teacher-workshop-label">Workshop</span><h4>Titolo workshop in arrivo</h4><p>Descrizione del workshop in arrivo dal gestionale.</p></div></div></article>
       </div>
     </div>
   </section>
@@ -957,8 +964,15 @@ function renderTeachers() {
     return `<article class="teacher">
       <div class="photo">${tc.photo ? `<img src="${esc(tc.photo)}" alt="${esc(tc.name)}" loading="lazy">` : `<span class="mono" aria-hidden="true">${esc(initials)}</span>`}
         ${country ? `<span class="flag">${esc(tc.flag)} ${esc(country)}</span>` : ""}</div>
-      <div class="tb"><h3 class="${tc.name ? "" : "tbc"}">${esc(tc.name || t("t.tba"))}</h3>
-      <p>${esc((tc.bio && tc.bio[lang]) || t("t.tbaD"))}</p></div>
+      <div class="tb">
+        <h3 class="${tc.name ? "" : "tbc"}">${esc(tc.name || t("t.tba"))}</h3>
+        <p>${esc((tc.bio && tc.bio[lang]) || t("t.tbaD"))}</p>
+        <div class="teacher-workshop">
+          <span class="teacher-workshop-label">Workshop</span>
+          <h4>${esc((tc.workshop && tc.workshop.title && tc.workshop.title[lang]) || "Titolo workshop in arrivo")}</h4>
+          <p>${esc((tc.workshop && tc.workshop.desc && tc.workshop.desc[lang]) || "Descrizione del workshop in arrivo dal gestionale.")}</p>
+        </div>
+      </div>
     </article>`;
   }).join("");
 }
