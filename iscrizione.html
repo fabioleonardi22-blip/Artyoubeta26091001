@@ -301,7 +301,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <nav class="am-wrap" style="display: flex; gap: 36px; align-items: center;">
 <a href="/#spettacoli" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Spettacoli</a>
 <a href="/improvvisazione-teatrale/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Corsi</a>
-<a href="/workshow/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">WorkshoW</a>
+<a href="/workshow/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">WorkshoW™</a>
 <a href="/rome-improv-festival/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Festival</a>
 <a href="/chi-siamo/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Chi Siamo</a>
 <a href="/merchandising.html" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Merchandising</a>
@@ -331,7 +331,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div></div>
 </sc-if>
 <sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}">
-<div id="artyou-workshow-selected" style="padding:16px 18px;border-radius:14px;background:#FDF1DE;border:1px solid #EADFCB;display:flex;flex-direction:column;gap:4px;"><span style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#9A5A00;">WorkshoW selezionato</span><strong id="artyou-workshow-label" style="font-size:18px;color:#13181D;">{{selLabel}}</strong></div>
+<div id="artyou-workshow-selected" style="padding:16px 18px;border-radius:14px;background:#FDF1DE;border:1px solid #EADFCB;display:flex;flex-direction:column;gap:4px;"><span style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#9A5A00;">WorkshoW™ selezionato</span><strong id="artyou-workshow-label" style="font-size:18px;color:#13181D;">{{selLabel}}</strong></div>
 </sc-if>
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}">
 <div id="artyou-field-sede" style="display: flex; flex-direction: column; gap: 8px;"><label for="f-sede" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Sede preferita</label><select id="f-sede" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 14px; font-size: 16px; font-family: inherit; background: #FFFFFF;"><option>Nessuna preferenza</option><option>San Giovanni</option><option>Eroi</option><option>Ionio</option><option>Valle Aurelia</option><option>Africano</option><option>Boccea</option></select></div>
@@ -354,7 +354,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <input id="f-corso-selezionato" type="hidden" value="{{selLabel}}">
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}"><button id="artyou-generic-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Invia l’iscrizione tramite Mail</button></sc-if>
 <a id="artyou-whatsapp-enrollment" href="{{waEnrollment}}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;min-height:58px;padding:14px 20px;border-radius:14px;background:#25D366;color:#0B2E1A;font-weight:700;font-size:17px;text-decoration:none;text-align:center;box-sizing:border-box;">Iscriviti con WhatsApp</a>
-<sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}"><button id="artyou-workshow-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 800; font-size: 17px; cursor: pointer;">Conferma prenotazione WorkshoW</button></sc-if>
+<sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}"><button id="artyou-workshow-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 800; font-size: 17px; cursor: pointer;">Conferma prenotazione WorkshoW™</button></sc-if>
 </div>
 </sc-if>
 <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
