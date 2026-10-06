@@ -514,6 +514,98 @@ input[type=text],input[type=email],input[type=tel],select{
   #passes .pass .price{font-size:42px!important}
 }
 </style>
+<style id="rif-workshop-redesign">
+#workshops .ws-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important;
+  align-items:stretch!important;
+}
+#workshops .ws{
+  position:relative!important;
+  min-height:0!important;
+  padding:20px 20px 18px!important;
+  border-radius:18px!important;
+  border:1px solid #DDD6CA!important;
+  background:#fff!important;
+  box-shadow:0 6px 18px rgba(18,24,29,.045)!important;
+}
+#workshops .ws::before{
+  content:"";
+  display:block;
+  width:44px;
+  height:4px;
+  border-radius:999px;
+  background:#29A9DE;
+  margin-bottom:14px;
+}
+#workshops .ws-when{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  margin-bottom:10px!important;
+  font-size:13px!important;
+  font-weight:800!important;
+}
+#workshops .ws-when .time{
+  font-size:13px!important;
+  font-weight:800!important;
+}
+#workshops .ws h3{
+  font-size:24px!important;
+  line-height:1.08!important;
+  letter-spacing:-.4px!important;
+  margin:0 0 6px!important;
+}
+#workshops .ws .by{
+  font-size:15px!important;
+  font-weight:600!important;
+  margin-bottom:12px!important;
+  color:#343B40!important;
+}
+#workshops .ws .tags{
+  gap:6px!important;
+  margin-bottom:12px!important;
+}
+#workshops .ws .tag{
+  font-size:11px!important;
+  padding:6px 9px!important;
+}
+#workshops .ws .desc{
+  font-size:14px!important;
+  line-height:1.5!important;
+  color:#626A70!important;
+  min-height:42px!important;
+  margin:0 0 16px!important;
+}
+#workshops .ws .seats{
+  margin:0 0 14px!important;
+}
+#workshops .ws .btn{
+  width:auto!important;
+  min-width:190px!important;
+  min-height:42px!important;
+  align-self:flex-start!important;
+  padding:0 18px!important;
+  font-size:13px!important;
+  border-radius:999px!important;
+}
+#workshops .ws.special{
+  grid-column:auto!important;
+  background:#FFF7E8!important;
+  border-color:#F0D5A5!important;
+}
+#workshops .ws.special::before{background:#F09000!important}
+#workshops .ws.special .btn{
+  box-shadow:none!important;
+}
+@media(max-width:760px){
+  #workshops .ws-grid{grid-template-columns:1fr!important}
+  #workshops .ws{padding:18px!important}
+  #workshops .ws .btn{width:100%!important;min-width:0!important}
+}
+</style>
 </head>
 <body>
 
