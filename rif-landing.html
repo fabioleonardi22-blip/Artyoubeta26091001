@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#13181D">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Event","name":"Roma Improv Festival 2027","description":"Festival internazionale di improvvisazione teatrale a Roma con workshop e spettacoli in inglese.","startDate":"2027-03-12","endDate":"2027-03-14","eventStatus":"https://schema.org/EventScheduled","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","location":{"@type":"Place","name":"Artyou Roma","address":{"@type":"PostalAddress","streetAddress":"Via La Spezia 73","addressLocality":"Roma","addressRegion":"RM","addressCountry":"IT"}},"organizer":{"@type":"Organization","name":"Artyou Roma","url":"https://artyouroma.it/"}}
+{"@context":"https://schema.org","@type":"Event","name":"Roma Improv Festival 2027","description":"Festival internazionale di improvvisazione teatrale a Roma con workshop e spettacoli in inglese.","startDate":"2027-03-12","endDate":"2027-03-14","eventStatus":"https://schema.org/EventScheduled","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","location":{"@type":"Place","name":"Artyou Roma","address":{"@type":"PostalAddress","streetAddress":"Via La Spezia 73","addressLocality":"Roma","addressRegion":"RM","addressPaese":"IT"}},"organizer":{"@type":"Organization","name":"Artyou Roma","url":"https://artyouroma.it/"}}
 </script>
 <link rel="icon" type="image/png" href="/img/favicon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -175,7 +175,7 @@ section{padding:clamp(72px,9vw,112px) 0}
 .slot .t{font:800 18px/1.3 var(--display);color:var(--cream)}
 .slot b{display:block;color:var(--cream)}
 .slot small{color:#9AA5AE;font-size:14px}
-.slot.show b{color:var(--orange)}
+.slot.spettacolo b{color:var(--orange)}
 @media (max-width:900px){.days{grid-template-columns:1fr}}
 
 /* Pass */
@@ -242,7 +242,7 @@ footer .legal a{color:#9AA5AE}
 
 /* Barra mobile */
 .mbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--ink);color:var(--cream);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:none;align-items:center;gap:12px;transform:translateY(110%);transition:transform .25s ease;box-shadow:0 -8px 24px rgba(0,0,0,.2)}
-.mbar.show{transform:none}
+.mbar.spettacolo{transform:none}
 .mbar div{flex:1;line-height:1.25;font-size:14px;color:var(--on-dark-2)}
 .mbar b{display:block;font-size:16px;color:var(--cream)}
 .mbar .btn{min-height:46px}
@@ -433,23 +433,23 @@ body{
       <div>
         <p class="kicker" style="color:var(--orange)" data-i18n="k.hero">Festival internazionale di improvvisazione</p>
         <h1><span class="line" data-i18n="hero.l1">Tre giorni a Roma.</span><span class="line" data-i18n="hero.l2">Zero copioni.</span></h1>
-        <p class="lead" data-i18n="hero.lead">Intensive workshops with international teachers, taught in English. Train by day, play the show at night, and leave with new friends from across Europe.</p>
+        <p class="lead" data-i18n="hero.lead">Workshop intensivi con docenti internazionali, in inglese. Formazione di giorno, spettacolo la sera e nuove connessioni con improvvisatori da tutta Europa.</p>
         <div class="hero-ctas">
           <button class="btn btn-primary" type="button" data-book="full" data-i18n="cta.book">Prenota il tuo pass</button>
           <a class="btn btn-light" href="#workshops" data-i18n="cta.see">Scopri i workshop</a>
         </div>
       </div>
       <aside class="glance" aria-label="Festival at a glance">
-        <div class="glance-date" data-i18n="stub.date">12–14 March 2027</div>
-        <div class="glance-place" data-i18n="stub.place">Rome, Italy. Hosted by Artyou Roma</div>
+        <div class="glance-date" data-i18n="stub.date">12–14 marzo 2027</div>
+        <div class="glance-place" data-i18n="stub.place">Roma, Italia. Organizzato da Artyou Roma</div>
         <ul>
-          <li><div><b data-i18n="stub.f1">Taught in English</b><small data-i18n="stub.f1s">Our team on site speaks English and Italian</small></div></li>
-          <li><div><b data-i18n="stub.f2">15 hours of training</b><small data-i18n="stub.f2s">With a Full Festival pass: 2 workshops + Impro Lab</small></div></li>
-          <li><div><b data-i18n="stub.f3">Saturday night show</b><small data-i18n="stub.f3s">ALL IN, included with every workshop pass</small></div></li>
+          <li><div><b data-i18n="stub.f1">Workshop in inglese</b><small data-i18n="stub.f1s">Lo staff parla italiano e inglese</small></div></li>
+          <li><div><b data-i18n="stub.f2">15 ore di formazione</b><small data-i18n="stub.f2s">Con il Full Festival: 2 workshop + Impro Lab</small></div></li>
+          <li><div><b data-i18n="stub.f3">Spettacolo del sabato sera</b><small data-i18n="stub.f3s">ALL IN, incluso in ogni pass workshop</small></div></li>
         </ul>
         <div class="glance-foot" style="display:flex;flex-wrap:wrap;gap:14px">
-    <a id="ics" href="#" download="roma-improv-festival-2027.ics" data-i18n="stub.cal">Add the dates to your calendar</a>
-    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Roma%20Improv%20Festival&dates=20270312%2F20270315&details=Roma%20Improv%20Festival%202027%20%E2%80%93%20workshops%20and%20improv%20shows%20in%20Rome&location=Via%20La%20Spezia%2073%2C%20Roma&ctz=Europe%2FRome" target="_blank" rel="noopener" data-i18n="stub.gcal">Google Calendar</a>
+    <a id="ics" href="#" download="roma-improv-festival-2027.ics" data-i18n="stub.cal">Aggiungi le date al calendario</a>
+    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Roma%20Improv%20Festival&dates=20270312%2F20270315&details=Roma%20Improv%20Festival%202027%20%E2%80%93%20workshops%20and%20improv%20spettacolos%20in%20Rome&location=Via%20La%20Spezia%2073%2C%20Roma&ctz=Europe%2FRome" target="_blank" rel="noopener" data-i18n="stub.gcal">Google Calendar</a>
   </div>
       </aside>
     </div>
@@ -457,23 +457,23 @@ body{
   <section id="schedule" class="on-dark rif-program-first">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="kicker" data-i18n="k.s">Programme</p><h2 data-i18n="s.h">The weekend at a glance</h2></div>
-        <p class="lead" data-i18n="s.lead">Training in the day, community and a show at night. All times are Rome time (CET).</p>
+        <div><p class="kicker" data-i18n="k.s">Programma</p><h2 data-i18n="s.h">Il weekend in breve</h2></div>
+        <p class="lead" data-i18n="s.lead">Formazione di giorno, community e spettacolo la sera. Tutti gli orari sono quelli di Roma (CET).</p>
       </div>
       <div class="days">
         <div class="day">
-          <h3 data-i18n="day.friL">Friday 12 March</h3>
-          <div class="slot"><span class="t">15:00–21:00</span><div><b data-i18n="s.ws">Workshops, track A or B</b><small data-i18n="s.6h">6 hours, small groups</small></div></div>
+          <h3 data-i18n="day.friL">Venerdì 12 March</h3>
+          <div class="slot"><span class="t">15:00–21:00</span><div><b data-i18n="s.ws">Workshop, percorso A o B</b><small data-i18n="s.6h">6 ore, gruppi piccoli</small></div></div>
         </div>
         <div class="day">
-          <h3 data-i18n="day.satL">Saturday 13 March</h3>
-          <div class="slot"><span class="t">13:30–19:30</span><div><b data-i18n="s.ws">Workshops, track A or B</b><small data-i18n="s.6h">6 hours, small groups</small></div></div>
-          <div class="slot show"><span class="t">22:00</span><div><b>ALL IN</b><small data-i18n="s.show">The festival’s live improv show</small></div></div>
+          <h3 data-i18n="day.satL">Sabato 13 March</h3>
+          <div class="slot"><span class="t">13:30–19:30</span><div><b data-i18n="s.ws">Workshop, percorso A o B</b><small data-i18n="s.6h">6 ore, gruppi piccoli</small></div></div>
+          <div class="slot spettacolo"><span class="t">22:00</span><div><b>ALL IN</b><small data-i18n="s.spettacolo">Lo spettacolo dal vivo del festival</small></div></div>
         </div>
         <div class="day">
-          <h3 data-i18n="day.sunL">Sunday 14 March</h3>
-          <div class="slot"><span class="t">10:00–13:00</span><div><b>Impro Lab</b><small data-i18n="s.lab">4 teachers, 45 minutes each</small></div></div>
-          <div class="slot"><span class="t" data-i18n="s.from13">From 13:00</span><div><b data-i18n="s.close">Closing</b><small data-i18n="s.closeD">Goodbyes and the group photo</small></div></div>
+          <h3 data-i18n="day.sunL">Domenica 14 March</h3>
+          <div class="slot"><span class="t">10:00–13:00</span><div><b>Impro Lab</b><small data-i18n="s.lab">4 docenti, 45 minuti ciascuno</small></div></div>
+          <div class="slot"><span class="t" data-i18n="s.from13">Dalle 13:00</span><div><b data-i18n="s.close">Chiusura</b><small data-i18n="s.closeD">Saluti e foto di gruppo</small></div></div>
         </div>
       </div>
     </div>
@@ -481,11 +481,11 @@ body{
   <section id="about-rif" style="padding-top:72px;padding-bottom:72px">
     <div class="wrap">
       <div class="sec-head" style="margin-bottom:0">
-        <div><p class="kicker" data-i18n="intro.k">International improv festival in Rome</p><h2 data-i18n="intro.h">The international improv festival in Rome</h2></div>
+        <div><p class="kicker" data-i18n="intro.k">Festival internazionale di improvvisazione in Rome</p><h2 data-i18n="intro.h">Il festival internazionale di improvvisazione teatrale a Roma</h2></div>
         <div>
-          <p class="lead" data-i18n="intro.p1">For three days every March, Rome becomes a meeting point for improvisers from all over Europe and beyond: workshops by day with international teachers and live shows at night, all in English.</p>
-          <p class="lead" data-i18n="intro.p2" style="margin-top:14px">A chance to train with teachers you rarely meet in Italy, challenge yourself in another language and connect with improvisers from other schools.</p>
-          <div class="tags" style="margin-top:18px"><span class="tag" data-i18n="intro.tag1">Open to every school</span><span class="tag" data-i18n="intro.tag2">From 2nd year</span><span class="tag" data-i18n="intro.tag3">All in English</span></div>
+          <p class="lead" data-i18n="intro.p1">Per tre giorni a marzo Roma diventa un punto d’incontro per improvvisatori e improvvisatrici da tutta Europa e non solo: workshop di giorno con docenti internazionali e spettacoli la sera, tutto in inglese.</p>
+          <p class="lead" data-i18n="intro.p2" style="margin-top:14px">È l’occasione per lavorare con docenti che di solito non si incontrano in Italia, mettersi alla prova in un’altra lingua e conoscere improvvisatori di altre scuole.</p>
+          <div class="tags" style="margin-top:18px"><span class="tag" data-i18n="intro.tag1">Aperto a ogni scuola</span><span class="tag" data-i18n="intro.tag2">Dal secondo anno</span><span class="tag" data-i18n="intro.tag3">Tutto in inglese</span></div>
         </div>
       </div>
     </div>
@@ -494,8 +494,8 @@ body{
   <section id="teachers">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="kicker" data-i18n="k.t">Line-up 2027</p><h2 data-i18n="t.h">Meet your teachers</h2></div>
-        <p class="lead" data-i18n="t.lead">Four teachers from four countries. Each one leads a 6-hour workshop and joins the Sunday Impro Lab.</p>
+        <div><p class="kicker" data-i18n="k.t">Line-up 2027</p><h2 data-i18n="t.h">I docenti</h2></div>
+        <p class="lead" data-i18n="t.lead">Quattro docenti da quattro Paesi. Ognuno guida un workshop da 6 ore e partecipa all’Impro Lab della domenica.</p>
       </div>
       <div class="teachers" id="teacherGrid">
         <article class="teacher teacher-placeholder"><div class="photo"><span class="mono" aria-hidden="true">?</span></div><div class="tb"><h3>Docente 01</h3><p>Nome, Paese e workshop in arrivo dal gestionale.</p></div></article>
@@ -573,62 +573,62 @@ body{
   <section id="passes">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="kicker" data-i18n="k.p">Booking</p><h2 data-i18n="p.h">Choose your pass</h2></div>
-        <p class="lead" data-i18n="p.lead">Prices in euro. Your place is held as soon as you book; payment details arrive by email.</p>
+        <div><p class="kicker" data-i18n="k.p">Iscrizioni</p><h2 data-i18n="p.h">Scegli il pass</h2></div>
+        <p class="lead" data-i18n="p.lead">Prezzi in euro. Il posto viene riservato con la prenotazione; le istruzioni per il pagamento arrivano via email.</p>
       </div>
       <div class="passes">
         <article class="pass">
-          <h3 data-i18n="p.double">Double workshop</h3>
+          <h3 data-i18n="p.double">Doppio workshop</h3>
           <div class="price">€165 <small>2 × 6h</small></div>
-          <ul><li data-i18n="p.d1">Two 6-hour workshops of your choice</li><li data-i18n="p.i2">Ticket for the Saturday show</li><li data-i18n="p.i3">Festival T-shirt</li></ul>
-          <button class="btn btn-ghost" type="button" data-book="double" data-i18n="p.ctaD">Choose two workshops</button>
+          <ul><li data-i18n="p.d1">Due workshop da 6 ore a scelta</li><li data-i18n="p.i2">Biglietto per lo spettacolo del sabato</li><li data-i18n="p.i3">T-shirt del festival</li></ul>
+          <button class="btn btn-ghost" type="button" data-book="double" data-i18n="p.ctaD">Scegli due workshop</button>
         </article>
         <article class="pass">
-          <h3 data-i18n="p.single">One workshop</h3>
-          <div class="price">€95 <small data-i18n="p.6h">6 hours</small></div>
-          <ul><li data-i18n="p.i1">One 6-hour workshop, Friday or Saturday</li><li data-i18n="p.i2">Ticket for the Saturday show</li><li data-i18n="p.i3">Festival T-shirt</li></ul>
-          <button class="btn btn-ghost" type="button" data-book="single" data-i18n="p.cta1">Choose a workshop</button>
+          <h3 data-i18n="p.single">Un workshop</h3>
+          <div class="price">€95 <small data-i18n="p.6h">6 ore</small></div>
+          <ul><li data-i18n="p.i1">Un workshop da 6 ore, venerdì o sabato</li><li data-i18n="p.i2">Biglietto per lo spettacolo del sabato</li><li data-i18n="p.i3">T-shirt del festival</li></ul>
+          <button class="btn btn-ghost" type="button" data-book="single" data-i18n="p.cta1">Scegli un workshop</button>
         </article>
         <article class="pass best">
           <span class="save" data-i18n="p.fullBadge">FULL FESTIVAL</span>
           <h3>Full Festival</h3>
-          <div class="price">€200 <small data-i18n="p.15h">15 hours</small></div>
-          <ul><li data-i18n="p.f1">Friday and Saturday workshops (12 hours)</li><li data-i18n="p.f2">Sunday Impro Lab with all 4 teachers</li><li data-i18n="p.f3">Saturday show, T-shirt and festival gifts</li></ul>
-          <button class="btn btn-primary" type="button" data-book="full" data-i18n="p.cta2">Book the Full Festival</button>
+          <div class="price">€200 <small data-i18n="p.15h">15 ore</small></div>
+          <ul><li data-i18n="p.f1">Workshop del venerdì e del sabato (12 ore)</li><li data-i18n="p.f2">Impro Lab della domenica con tutti e 4 i docenti</li><li data-i18n="p.f3">Spettacolo del sabato, T-shirt e gadget del festival</li></ul>
+          <button class="btn btn-primary" type="button" data-book="full" data-i18n="p.cta2">Prenota il Full Festival</button>
         </article>
         <article class="pass">
           <h3 data-i18n="p.special">Workshop Special</h3>
-          <div class="price">€40 <small data-i18n="p.3h">3 hours</small></div>
-          <ul><li data-i18n="p.l1">Sunday morning, 4 teachers back to back</li><li class="no" data-i18n="p.l2">Show and T-shirt not included</li></ul>
-          <button class="btn btn-ghost" type="button" data-book="special" data-i18n="p.cta3">Book the Impro Lab</button>
+          <div class="price">€40 <small data-i18n="p.3h">3 ore</small></div>
+          <ul><li data-i18n="p.l1">Domenica mattina, 4 docenti uno dopo l’altro</li><li class="no" data-i18n="p.l2">Spettacolo e T-shirt non inclusi</li></ul>
+          <button class="btn btn-ghost" type="button" data-book="special" data-i18n="p.cta3">Prenota l’Impro Lab</button>
         </article>
         <article class="pass">
           <h3>ALL IN</h3>
-          <div class="price">€15 <small data-i18n="p.show">show</small></div>
-          <ul><li data-i18n="p.show1">Saturday 13 March · 22:00</li><li data-i18n="p.show2">Multilingual improv show</li></ul>
-          <button class="btn btn-ghost" type="button" data-book="show" data-i18n="p.ctaShow">Book the show</button>
+          <div class="price">€15 <small data-i18n="p.spettacolo">spettacolo</small></div>
+          <ul><li data-i18n="p.spettacolo1">Sabato 13 March · 22:00</li><li data-i18n="p.spettacolo2">Multilingual improv spettacolo</li></ul>
+          <button class="btn btn-ghost" type="button" data-book="spettacolo" data-i18n="p.ctaShow">Book the spettacolo</button>
         </article>
         <article class="pass">
-          <h3 data-i18n="p.shirt">Festival T-shirt</h3>
+          <h3 data-i18n="p.shirt">T-shirt del festival</h3>
           <div class="price">€10 <small>RIF</small></div>
-          <ul><li data-i18n="p.shirt1">Official Roma Improv Festival T-shirt</li><li class="no" data-i18n="p.shirt2">Available separately from workshop passes</li></ul>
+          <ul><li data-i18n="p.shirt1">Official Roma Improv T-shirt del festival</li><li class="no" data-i18n="p.shirt2">Disponibile anche separatamente dai pass workshop</li></ul>
         </article>
       </div>
-      <p class="watch" data-i18n="p.watch">Just want to watch? Tickets for the Saturday show will be sold separately.</p>
+      <p class="watch" data-i18n="p.watch">Just want to watch? Tickets for the Saturday spettacolo will be sold separately.</p>
     </div>
   </section>
 
   <section id="rome" class="rome-sec">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="kicker" data-i18n="k.r">Travel info</p><h2 data-i18n="r.h">Coming to Rome</h2></div>
-        <p class="lead" data-i18n="r.lead">Everything you need to plan the trip, in one place.</p>
+        <div><p class="kicker" data-i18n="k.r">Info pratiche</p><h2 data-i18n="r.h">Arrivare a Roma</h2></div>
+        <p class="lead" data-i18n="r.lead">Tutto quello che serve per organizzare il viaggio.</p>
       </div>
       <div class="rome-grid">
-        <div class="rome-item"><h3 data-i18n="r.venue">The venue</h3><p id="venueText"></p></div>
-        <div class="rome-item"><h3 data-i18n="r.air">From the airport</h3><p data-i18n="r.airD">Fiumicino (FCO): Leonardo Express train to Roma Termini, about 30 minutes. Ciampino (CIA): shuttle bus to Termini, about 40 minutes.</p></div>
-        <div class="rome-item"><h3 data-i18n="r.stay">Where to stay</h3><p data-i18n="r.stayD">Look for a place near a metro stop. Write to us and we’ll suggest areas that work well for the venue.</p></div>
-        <div class="rome-item"><h3 data-i18n="r.wx">Rome in March</h3><p data-i18n="r.wxD">Mild days, roughly 8–17 °C. Bring layers and clothes you can move in.</p></div>
+        <div class="rome-item"><h3 data-i18n="r.venue">La sede</h3><p id="venueText"></p></div>
+        <div class="rome-item"><h3 data-i18n="r.air">Dall’aeroporto</h3><p data-i18n="r.airD">Fiumicino (FCO): Leonardo Express train to Roma Termini, about 30 minutes. Ciampino (CIA): shuttle bus to Termini, about 40 minutes.</p></div>
+        <div class="rome-item"><h3 data-i18n="r.stay">Dove dormire</h3><p data-i18n="r.stayD">Look for a place near a metro stop. Write to us and we’ll suggest areas that work well for the venue.</p></div>
+        <div class="rome-item"><h3 data-i18n="r.wx">Roma a marzo</h3><p data-i18n="r.wxD">Giornate miti, circa 8–17 °C. Porta abiti a strati e comodi per muoverti.</p></div>
       </div>
     </div>
   </section>
@@ -680,7 +680,7 @@ body{
   <section class="final">
     <div class="wrap">
       <div class="final-box">
-        <div><h2 data-i18n="c.h">See you in Rome?</h2><p data-i18n="c.p">Places are limited on purpose: small groups mean more time on stage for everyone.</p></div>
+        <div><h2 data-i18n="c.h">Ci vediamo a Roma?</h2><p data-i18n="c.p">I posti sono limitati di proposito: gruppi piccoli significano più tempo in scena per tutti.</p></div>
         <button class="btn btn-light" type="button" data-book="full" data-i18n="cta.book">Prenota il tuo pass</button>
       </div>
     </div>
@@ -690,25 +690,25 @@ body{
 <footer id="contatti">
   <div class="wrap">
     <div class="fgrid-foot">
-      <div class="col"><span>Artyou Roma</span><span data-i18n="ft.about">Social promotion association. Improv, theatre and stand-up comedy in Rome.</span></div>
-      <div class="col"><span data-i18n="ft.contact">Contact</span><a href="mailto:info@artyouroma.it">info@artyouroma.it</a><a href="https://wa.me/393271881956" target="_blank" rel="noopener">WhatsApp +39 327 188 1956</a></div>
-      <div class="col"><span data-i18n="ft.explore">Explore</span><a href="/" data-i18n="ft.home">Artyou Roma home</a><a href="/improvvisazione-teatrale/" data-i18n="ft.courses">Courses in Rome</a><a href="/la-finestra-sul-cortile/">Blog</a></div>
-      <div class="col"><span data-i18n="ft.follow">Follow us</span><a href="https://www.instagram.com/artyouroma/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/artyouroma/" target="_blank" rel="noopener">Facebook</a></div>
+      <div class="col"><span>Artyou Roma</span><span data-i18n="ft.about">Associazione di Promozione Sociale. Improvvisazione teatrale, teatro di testo e stand-up comedy a Roma.</span></div>
+      <div class="col"><span data-i18n="ft.contact">Contatti</span><a href="mailto:info@artyouroma.it">info@artyouroma.it</a><a href="https://wa.me/393271881956" target="_blank" rel="noopener">WhatsApp +39 327 188 1956</a></div>
+      <div class="col"><span data-i18n="ft.explore">Esplora</span><a href="/" data-i18n="ft.home">Home Artyou Roma</a><a href="/improvvisazione-teatrale/" data-i18n="ft.courses">Corsi a Roma</a><a href="/la-finestra-sul-cortile/">Blog</a></div>
+      <div class="col"><span data-i18n="ft.follow">Seguici</span><a href="https://www.instagram.com/artyouroma/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/artyouroma/" target="_blank" rel="noopener">Facebook</a></div>
     </div>
-    <div class="legal"><span>© 2026 Artyou Roma</span><span data-i18n="foot">Roma Improv Festival 2027 is organised by Artyou Roma.</span><a href="/privacy-policy/">Privacy Policy</a></div>
+    <div class="legal"><span>© 2026 Artyou Roma</span><span data-i18n="foot">Roma Improv Festival 2027 è organizzato da Artyou Roma.</span><a href="/privacy-policy/">Privacy Policy</a></div>
   </div>
 </footer>
 
 <a class="wa" href="https://wa.me/393271881956" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg></a>
 
 <div class="mbar" id="mbar" aria-hidden="true">
-  <div><b>Full Festival €200</b><span data-i18n="stub.date">12–14 March 2027</span></div>
+  <div><b>Full Festival €200</b><span data-i18n="stub.date">12–14 marzo 2027</span></div>
   <button class="btn btn-primary" type="button" data-book="full" data-i18n="cta.bookShort" tabindex="-1">Prenota</button>
 </div>
 
 <dialog id="dlg" aria-labelledby="dlgTitle">
   <div class="dlg-head">
-    <h2 id="dlgTitle" data-i18n="b.h">Book your place</h2>
+    <h2 id="dlgTitle" data-i18n="b.h">Prenota il tuo posto</h2>
     <button class="x" type="button" id="dlgClose" aria-label="Close">✕</button>
   </div>
   <div class="dlg-body">
@@ -722,36 +722,36 @@ body{
         <div id="wsOpts"></div>
       </fieldset>
       <fieldset>
-        <legend data-i18n="b.s3">3. Your details</legend>
+        <legend data-i18n="b.s3">3. I tuoi dati</legend>
         <div class="fgrid">
-          <label class="f"><span data-i18n="b.first">First name</span><input type="text" name="first" autocomplete="given-name" required></label>
-          <label class="f"><span data-i18n="b.last">Last name</span><input type="text" name="last" autocomplete="family-name" required></label>
+          <label class="f"><span data-i18n="b.first">Nome</span><input type="text" name="first" autocomplete="given-name" required></label>
+          <label class="f"><span data-i18n="b.last">Cognome</span><input type="text" name="last" autocomplete="family-name" required></label>
           <label class="f"><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
-          <label class="f"><span data-i18n="b.phone">Phone, with country code</span><input type="tel" name="phone" autocomplete="tel" placeholder="+39" required></label>
-          <label class="f"><span data-i18n="b.country">Country</span><input type="text" name="country" autocomplete="country-name" required></label>
-          <label class="f"><span data-i18n="b.exp">Improv experience</span>
+          <label class="f"><span data-i18n="b.phone">Telefono, con prefisso internazionale</span><input type="tel" name="phone" autocomplete="tel" placeholder="+39" required></label>
+          <label class="f"><span data-i18n="b.country">Paese</span><input type="text" name="country" autocomplete="country-name" required></label>
+          <label class="f"><span data-i18n="b.exp">Esperienza di improvvisazione</span>
             <select name="experience" required>
-              <option value="" data-i18n="b.pick">Choose one</option>
-              <option value="lt6" data-i18n="b.e1">Less than 6 months</option>
-              <option value="6-12" data-i18n="b.e2">6 to 12 months</option>
-              <option value="gt12" data-i18n="b.e3">More than a year</option>
-              <option value="pro" data-i18n="b.e4">I perform or teach regularly</option>
+              <option value="" data-i18n="b.pick">Scegli</option>
+              <option value="lt6" data-i18n="b.e1">Meno di 6 mesi</option>
+              <option value="6-12" data-i18n="b.e2">Da 6 a 12 mesi</option>
+              <option value="gt12" data-i18n="b.e3">Più di un anno</option>
+              <option value="pro" data-i18n="b.e4">Recito o insegno regolarmente</option>
             </select>
           </label>
-          <label class="f full"><span><span data-i18n="b.school">School or group</span> <span class="opt-l" data-i18n="b.optional">(optional)</span></span><input type="text" name="school" autocomplete="organization"></label>
+          <label class="f full"><span><span data-i18n="b.school">Scuola o gruppo</span> <span class="opt-l" data-i18n="b.optional">(facoltativo)</span></span><input type="text" name="school" autocomplete="organization"></label>
         </div>
-        <label class="consent"><input type="checkbox" name="consent" required><span data-i18n="b.consent">I agree to Artyou Roma processing my data to manage this booking.</span></label>
+        <label class="consent"><input type="checkbox" name="consent" required><span data-i18n="b.consent">Acconsento al trattamento dei miei dati da parte di Artyou Roma per gestire la prenotazione.</span></label>
       </fieldset>
       <div class="summary">
-        <div><small data-i18n="b.total">Total</small><span class="tot" id="total">€200</span></div>
-        <button class="btn btn-primary" type="submit" id="submitBtn" data-i18n="b.confirm">Confirm booking</button>
+        <div><small data-i18n="b.total">Totale</small><span class="tot" id="total">€200</span></div>
+        <button class="btn btn-primary" type="submit" id="submitBtn" data-i18n="b.confirm">Conferma prenotazione</button>
       </div>
       <p class="err" id="err" role="alert"></p>
     </form>
     <div class="done" id="done" hidden>
-      <h3 data-i18n="b.doneH">Booking received</h3>
+      <h3 data-i18n="b.doneH">Iscrizioni received</h3>
       <p id="doneText"></p>
-      <button class="btn btn-ink" type="button" id="doneClose" data-i18n="b.close">Back to the festival</button>
+      <button class="btn btn-ink" type="button" id="doneClose" data-i18n="b.close">Torna al festival</button>
     </div>
   </div>
 </dialog>
@@ -792,74 +792,74 @@ let WORKSHOPS = [
     title: { en: "Impro Lab", it: "Impro Lab" }, desc: { en: "Four short sessions, one with each teacher. The best way to taste every style of the festival.", it: "Quattro sessioni brevi, una con ogni docente. Il modo migliore per assaggiare tutti gli stili del festival." } }
 ];
 
-let PASSES = { single: 95, double: 165, full: 200, special: 40, show: 15 };
+let PASSES = { single: 95, double: 165, full: 200, special: 40, spettacolo: 15 };
 
 const I18N = {
   en: {
-    "k.hero":"International improv festival","k.t":"Line-up 2027","k.w":"Learn and play","k.s":"Programme","k.p":"Booking","k.r":"Travel info","k.q":"FAQ",
-    "ft.about":"Social promotion association. Improv, theatre and stand-up comedy in Rome.","ft.contact":"Contact","ft.explore":"Explore","ft.home":"Artyou Roma home","ft.courses":"Courses in Rome","ft.follow":"Follow us",
-    "m.shows":"Shows","m.courses":"Courses","m.about":"About us","m.contact":"Contact","m.trial":"Free trial class","m.trialS":"Free trial",
+    "k.hero":"Festival internazionale di improvvisazione","k.t":"Line-up 2027","k.w":"Formazione","k.s":"Programma","k.p":"Iscrizioni","k.r":"Info pratiche","k.q":"FAQ",
+    "ft.about":"Associazione di Promozione Sociale. Improvvisazione teatrale, teatro di testo e stand-up comedy a Roma.","ft.contact":"Contatti","ft.explore":"Esplora","ft.home":"Home Artyou Roma","ft.courses":"Corsi a Roma","ft.follow":"Seguici",
+    "m.spettacolos":"Shows","m.courses":"Courses","m.about":"About us","m.contact":"Contatti","m.trial":"Free trial class","m.trialS":"Free trial",
     "meta.title": "Roma Improv Festival 2027 · 12–14 March · Rome",
     "nav.teachers":"Teachers","nav.workshops":"Workshops","nav.schedule":"Schedule","nav.passes":"Passes","nav.rome":"Rome",
-    "cta.bookShort":"Book","cta.book":"Book your pass","cta.see":"See the workshops",
-    "hero.l1":"Three days in Rome.","hero.l2":"Zero scripts.",
-    "hero.lead":"Intensive workshops with international teachers, taught in English. Train by day, play the show at night, and leave with new friends from across Europe.",
-    "stub.date":"12–14 March 2027","stub.place":"Rome, Italy. Hosted by Artyou Roma",
-    "stub.f1":"Taught in English","stub.f1s":"Our team on site speaks English and Italian",
-    "stub.f2":"15 hours of training","stub.f2s":"With a Full Festival pass: 2 workshops + Impro Lab",
-    "stub.f3":"Saturday night show","stub.f3s":"ALL IN, included with every workshop pass",
-    "stub.cal":"Add the dates to your calendar","stub.gcal":"Google Calendar",
-    "intro.k":"International improv festival in Rome","intro.h":"The international improv festival in Rome","intro.p1":"For three days every March, Rome becomes a meeting point for improvisers from all over Europe and beyond: workshops by day with international teachers and live shows at night, all in English.","intro.p2":"A chance to train with teachers you rarely meet in Italy, challenge yourself in another language and connect with improvisers from other schools.","intro.tag1":"Open to every school","intro.tag2":"From 2nd year","intro.tag3":"All in English",
-    "t.h":"Meet your teachers","t.lead":"Four teachers from four countries. Each one leads a 6-hour workshop and joins the Sunday Impro Lab.",
-    "t.tba":"Announced soon","t.tbaD":"Name, country and the workshop they’re bringing to Rome.","t.country":"Country",
-    "w.h":"Workshops","w.lead":"Pick one track on Friday and one on Saturday. Every workshop shows its level, so you know who you’ll be playing with.",
-    "f.all":"All days","day.fri":"Friday 12","day.sat":"Saturday 13","day.sun":"Sunday 14",
-    "day.friL":"Friday 12 March","day.satL":"Saturday 13 March","day.sunL":"Sunday 14 March",
-    "lv.all":"All levels","lv.int":"Intermediate","lv.adv":"Advanced",
-    "lv.all.d":"some improv experience","lv.int.d":"6+ months on stage","lv.adv.d":"1+ year on stage",
+    "cta.bookShort":"Book","cta.book":"Prenota il tuo pass","cta.see":"Scopri i workshop",
+    "hero.l1":"Tre giorni a Roma.","hero.l2":"Zero copioni.",
+    "hero.lead":"Workshop intensivi con docenti internazionali, in inglese. Formazione di giorno, spettacolo la sera e nuove connessioni con improvvisatori da tutta Europa.",
+    "stub.date":"12–14 marzo 2027","stub.place":"Roma, Italia. Organizzato da Artyou Roma",
+    "stub.f1":"Workshop in inglese","stub.f1s":"Lo staff parla italiano e inglese",
+    "stub.f2":"15 ore di formazione","stub.f2s":"Con il Full Festival: 2 workshop + Impro Lab",
+    "stub.f3":"Spettacolo del sabato sera","stub.f3s":"ALL IN, incluso in ogni pass workshop",
+    "stub.cal":"Aggiungi le date al calendario","stub.gcal":"Google Calendar",
+    "intro.k":"Festival internazionale di improvvisazione in Rome","intro.h":"Il festival internazionale di improvvisazione teatrale a Roma","intro.p1":"Per tre giorni a marzo Roma diventa un punto d’incontro per improvvisatori e improvvisatrici da tutta Europa e non solo: workshop di giorno con docenti internazionali e spettacoli la sera, tutto in inglese.","intro.p2":"È l’occasione per lavorare con docenti che di solito non si incontrano in Italia, mettersi alla prova in un’altra lingua e conoscere improvvisatori di altre scuole.","intro.tag1":"Aperto a ogni scuola","intro.tag2":"Dal secondo anno","intro.tag3":"Tutto in inglese",
+    "t.h":"I docenti","t.lead":"Quattro docenti da quattro Paesi. Ognuno guida un workshop da 6 ore e partecipa all’Impro Lab della domenica.",
+    "t.tba":"Announced soon","t.tbaD":"Name, country and the workshop they’re bringing to Rome.","t.country":"Paese",
+    "w.h":"Workshops","w.lead":"Scegli un percorso il venerdì e uno il sabato. Ogni workshop indica il livello richiesto.",
+    "f.all":"Tutti i giorni","day.fri":"Venerdì 12","day.sat":"Sabato 13","day.sun":"Domenica 14",
+    "day.friL":"Venerdì 12 March","day.satL":"Sabato 13 March","day.sunL":"Domenica 14 March",
+    "lv.all":"Tutti i livelli","lv.int":"Intermedio","lv.adv":"Avanzato",
+    "lv.all.d":"un po’ di esperienza di improvvisazione","lv.int.d":"almeno 6 mesi in scena","lv.adv.d":"almeno 1 anno in scena",
     "w.en":"In English","w.hours":"{h} hours","w.with":"with {t}","w.allT":"with all 4 teachers","w.tba":"teacher announced soon",
     "w.left":"{n} places left","w.few":"Only {n} places left","w.sold":"Sold out","w.book":"Book this workshop",
-    "w.live":"Places updated live.","w.demo":"Places shown are examples until booking opens.","w.loading":"Checking places…",
-    "s.h":"The weekend at a glance","s.lead":"Training in the day, community and a show at night. All times are Rome time (CET).",
-    "s.ws":"Workshops, track A or B","s.6h":"6 hours, small groups","s.show":"The festival’s live improv show",
-    "s.lab":"4 teachers, 45 minutes each","s.from13":"From 13:00","s.close":"Closing","s.closeD":"Goodbyes and the group photo",
-    "p.h":"Choose your pass","p.lead":"Prices in euro. Your place is held as soon as you book; payment details arrive by email.",
-    "p.double":"Double workshop","p.d1":"Two 6-hour workshops of your choice","p.ctaD":"Choose two workshops","p.single":"One workshop","p.special":"Workshop Special","p.fullBadge":"FULL FESTIVAL","p.show":"show","p.show1":"Saturday 13 March · 22:00","p.show2":"Multilingual improv show","p.ctaShow":"Book the show","p.shirt":"Festival T-shirt","p.shirt1":"Official Roma Improv Festival T-shirt","p.shirt2":"Available separately from workshop passes","p.6h":"6 hours","p.15h":"15 hours","p.3h":"3 hours",
-    "p.i1":"One 6-hour workshop, Friday or Saturday","p.i2":"Ticket for the Saturday show","p.i3":"Festival T-shirt",
-    "p.save":"Save €30","p.f1":"Friday and Saturday workshops (12 hours)","p.f2":"Sunday Impro Lab with all 4 teachers","p.f3":"Saturday show, T-shirt and festival gifts",
-    "p.l1":"Sunday morning, 4 teachers back to back","p.l2":"Show and T-shirt not included",
-    "p.cta1":"Choose a workshop","p.cta2":"Book the Full Festival","p.cta3":"Book the Impro Lab",
-    "p.watch":"Just want to watch? Tickets for the Saturday show will be sold separately.",
-    "r.h":"Coming to Rome","r.lead":"Everything you need to plan the trip, in one place.",
-    "r.venue":"The venue","r.venueD":"{name}, Rome. The full address is in your booking confirmation.",
-    "r.air":"From the airport","r.airD":"Fiumicino (FCO): Leonardo Express train to Roma Termini, about 30 minutes. Ciampino (CIA): shuttle bus to Termini, about 40 minutes.",
-    "r.stay":"Where to stay","r.stayD":"Look for a place near a metro stop. Write to us and we’ll suggest areas that work well for the venue.",
-    "r.wx":"Rome in March","r.wxD":"Mild days, roughly 8–17 °C. Bring layers and clothes you can move in.",
+    "w.live":"Places updated live.","w.demo":"Places spettacolon are examples until booking opens.","w.loading":"Checking places…",
+    "s.h":"Il weekend in breve","s.lead":"Formazione di giorno, community e spettacolo la sera. Tutti gli orari sono quelli di Roma (CET).",
+    "s.ws":"Workshop, percorso A o B","s.6h":"6 ore, gruppi piccoli","s.spettacolo":"Lo spettacolo dal vivo del festival",
+    "s.lab":"4 docenti, 45 minuti ciascuno","s.from13":"Dalle 13:00","s.close":"Chiusura","s.closeD":"Saluti e foto di gruppo",
+    "p.h":"Scegli il pass","p.lead":"Prezzi in euro. Il posto viene riservato con la prenotazione; le istruzioni per il pagamento arrivano via email.",
+    "p.double":"Doppio workshop","p.d1":"Due workshop da 6 ore a scelta","p.ctaD":"Scegli due workshop","p.single":"Un workshop","p.special":"Workshop Special","p.fullBadge":"FULL FESTIVAL","p.spettacolo":"spettacolo","p.spettacolo1":"Sabato 13 March · 22:00","p.spettacolo2":"Multilingual improv spettacolo","p.ctaShow":"Book the spettacolo","p.shirt":"T-shirt del festival","p.shirt1":"Official Roma Improv T-shirt del festival","p.shirt2":"Disponibile anche separatamente dai pass workshop","p.6h":"6 ore","p.15h":"15 ore","p.3h":"3 ore",
+    "p.i1":"Un workshop da 6 ore, venerdì o sabato","p.i2":"Biglietto per lo spettacolo del sabato","p.i3":"T-shirt del festival",
+    "p.save":"Save €30","p.f1":"Workshop del venerdì e del sabato (12 ore)","p.f2":"Impro Lab della domenica con tutti e 4 i docenti","p.f3":"Spettacolo del sabato, T-shirt e gadget del festival",
+    "p.l1":"Domenica mattina, 4 docenti uno dopo l’altro","p.l2":"Spettacolo e T-shirt non inclusi",
+    "p.cta1":"Scegli un workshop","p.cta2":"Prenota il Full Festival","p.cta3":"Prenota l’Impro Lab",
+    "p.watch":"Just want to watch? Tickets for the Saturday spettacolo will be sold separately.",
+    "r.h":"Arrivare a Roma","r.lead":"Tutto quello che serve per organizzare il viaggio.",
+    "r.venue":"La sede","r.venueD":"{name}, Rome. The full address is in your booking confirmation.",
+    "r.air":"Dall’aeroporto","r.airD":"Fiumicino (FCO): Leonardo Express train to Roma Termini, about 30 minutes. Ciampino (CIA): shuttle bus to Termini, about 40 minutes.",
+    "r.stay":"Dove dormire","r.stayD":"Look for a place near a metro stop. Write to us and we’ll suggest areas that work well for the venue.",
+    "r.wx":"Roma a marzo","r.wxD":"Giornate miti, circa 8–17 °C. Porta abiti a strati e comodi per muoverti.",
     "q.h":"Questions",
     "q1":"Do I need to speak Italian?","a1":"No. All workshops are taught in English. Our team speaks English and Italian, so you can ask anything in either.",
-    "q2":"What level do I need?","a2":"The festival is intended for improvisers from any school from their second year of training. Each workshop also shows its specific level and recommended experience.",
+    "q2":"What level do I need?","a2":"The festival is intended for improvisers from any school from their second year of training. Each workshop also spettacolos its specific level and recommended experience.",
     "q3":"How do I pay?","a3":"Book here to hold your place. You’ll receive a confirmation email with payment instructions.",
     "q4":"What if I can’t come?","a4":"Write to info@artyouroma.it as soon as you know. The cancellation terms are in your confirmation email.",
-    "q5":"Can I book for my school or group?","a5":"Yes. Add your school or group in the booking form. For five or more people, write to us first so we can keep you together.","q6":"Can I come just for the show?","a6":"Yes. ALL IN tickets are sold separately for Saturday night.","q7":"Can I join from outside Rome?","a7":"Yes. The festival is designed as a meeting point between the Rome scene and improvisers and teachers from other cities and countries.",
-    "c.h":"See you in Rome?","c.p":"Places are limited on purpose: small groups mean more time on stage for everyone.",
-    "foot":"Roma Improv Festival 2027 is organised by Artyou Roma.",
-    "b.h":"Book your place","b.s1":"1. Pass","b.s2":"2. Workshops","b.s3":"3. Your details",
-    "b.full":"Full Festival","b.fullD":"Friday + Saturday workshops + Impro Lab","b.double":"Double workshop","b.doubleD":"Friday + Saturday workshops","b.show":"ALL IN show","b.showD":"Saturday 13 March · 22:00","b.single":"One workshop","b.singleD":"One 6-hour workshop + show + T-shirt",
-    "b.special":"Impro Lab","b.specialD":"Sunday, 3 hours","b.fri":"Your Friday workshop","b.sat":"Your Saturday workshop","b.one":"Your workshop",
-    "b.labIncl":"Sunday Impro Lab is included.","b.labOnly":"Sunday 14 March, 10:00–13:00. Nothing else to choose.","b.showOnly":"ALL IN · Saturday 13 March at 22:00.",
-    "b.first":"First name","b.last":"Last name","b.phone":"Phone, with country code","b.country":"Country","b.exp":"Improv experience",
-    "b.pick":"Choose one","b.e1":"Less than 6 months","b.e2":"6 to 12 months","b.e3":"More than a year","b.e4":"I perform or teach regularly",
-    "b.school":"School or group","b.optional":"(optional)","b.consent":"I agree to Artyou Roma processing my data to manage this booking.",
-    "b.total":"Total","b.confirm":"Confirm booking","b.sending":"Sending…",
-    "b.errWs":"Choose a workshop for each day of your pass.","b.errFields":"Fill in the highlighted fields to continue.","b.errEmail":"Enter a valid email address.","b.errConsent":"Tick the consent box to confirm.","b.errSend":"The booking didn’t go through. Try again, or write to {mail}.",
-    "b.doneH":"Booking received","b.done":"We’ve sent a confirmation to {email} with payment instructions. See you in Rome!",
+    "q5":"Can I book for my school or group?","a5":"Yes. Add your school or group in the booking form. For five or more people, write to us first so we can keep you together.","q6":"Can I come just for the spettacolo?","a6":"Yes. ALL IN tickets are sold separately for Saturday night.","q7":"Can I join from outside Rome?","a7":"Yes. The festival is designed as a meeting point between the Rome scene and improvisers and teachers from other cities and countries.",
+    "c.h":"Ci vediamo a Roma?","c.p":"I posti sono limitati di proposito: gruppi piccoli significano più tempo in scena per tutti.",
+    "foot":"Roma Improv Festival 2027 è organizzato da Artyou Roma.",
+    "b.h":"Prenota il tuo posto","b.s1":"1. Pass","b.s2":"2. Workshops","b.s3":"3. I tuoi dati",
+    "b.full":"Full Festival","b.fullD":"Friday + Saturday workshops + Impro Lab","b.double":"Doppio workshop","b.doubleD":"Friday + Saturday workshops","b.spettacolo":"ALL IN spettacolo","b.spettacoloD":"Sabato 13 March · 22:00","b.single":"Un workshop","b.singleD":"One 6-hour workshop + spettacolo + T-shirt",
+    "b.special":"Impro Lab","b.specialD":"Sunday, 3 ore","b.fri":"Your Friday workshop","b.sat":"Your Saturday workshop","b.one":"Your workshop",
+    "b.labIncl":"Sunday Impro Lab is included.","b.labOnly":"Domenica 14 March, 10:00–13:00. Nothing else to choose.","b.spettacoloOnly":"ALL IN · Sabato 13 March at 22:00.",
+    "b.first":"Nome","b.last":"Cognome","b.phone":"Telefono, con prefisso internazionale","b.country":"Paese","b.exp":"Esperienza di improvvisazione",
+    "b.pick":"Scegli","b.e1":"Meno di 6 mesi","b.e2":"Da 6 a 12 mesi","b.e3":"Più di un anno","b.e4":"Recito o insegno regolarmente",
+    "b.school":"Scuola o gruppo","b.optional":"(facoltativo)","b.consent":"Acconsento al trattamento dei miei dati da parte di Artyou Roma per gestire la prenotazione.",
+    "b.total":"Totale","b.confirm":"Conferma prenotazione","b.sending":"Sending…",
+    "b.errWs":"Scegli un workshop for each day of your pass.","b.errFields":"Fill in the highlighted fields to continue.","b.errEmail":"Enter a valid email address.","b.errConsent":"Tick the consent box to confirm.","b.errSend":"The booking didn’t go through. Try again, or write to {mail}.",
+    "b.doneH":"Iscrizioni received","b.done":"We’ve sent a confirmation to {email} with payment instructions. See you in Rome!",
     "b.doneMail":"Your email app has opened with the booking details. Send that email to complete your request.",
-    "b.close":"Back to the festival"
+    "b.close":"Torna al festival"
   },
   it: {
     "k.hero":"Festival internazionale di improvvisazione","k.t":"Line-up 2027","k.w":"Formazione","k.s":"Programma","k.p":"Iscrizioni","k.r":"Info pratiche","k.q":"Domande frequenti",
     "ft.about":"Associazione di Promozione Sociale. Improvvisazione teatrale, teatro di testo e stand-up comedy a Roma.","ft.contact":"Contatti","ft.explore":"Esplora","ft.home":"Home Artyou Roma","ft.courses":"Corsi a Roma","ft.follow":"Seguici",
-    "m.shows":"Spettacoli","m.courses":"Corsi","m.about":"Chi Siamo","m.contact":"Contatti","m.trial":"Lezione di Prova Gratuita","m.trialS":"Prova Gratuita",
+    "m.spettacolos":"Spettacoli","m.courses":"Corsi","m.about":"Chi Siamo","m.contact":"Contatti","m.trial":"Lezione di Prova Gratuita","m.trialS":"Prova Gratuita",
     "meta.title": "Roma Improv Festival 2027 · 12–14 marzo · Roma",
     "nav.teachers":"Docenti","nav.workshops":"Workshop","nav.schedule":"Programma","nav.passes":"Pass","nav.rome":"Roma",
     "cta.bookShort":"Prenota","cta.book":"Prenota il tuo pass","cta.see":"Guarda i workshop",
@@ -870,7 +870,7 @@ const I18N = {
     "stub.f2":"15 ore di formazione","stub.f2s":"Con il Full Festival: 2 workshop + Impro Lab",
     "stub.f3":"Spettacolo del sabato sera","stub.f3s":"ALL IN, incluso in ogni pass workshop",
     "stub.cal":"Aggiungi le date al calendario","stub.gcal":"Google Calendar",
-    "intro.k":"International improv festival in Roma","intro.h":"Il festival internazionale di improvvisazione teatrale a Roma","intro.p1":"Per tre giorni a marzo Roma diventa un punto d’incontro per improvvisatori e improvvisatrici da tutta Europa e non solo: workshop di giorno con insegnanti internazionali e spettacoli la sera, tutto in inglese.","intro.p2":"È l’occasione per lavorare con docenti che di solito non si incontrano in Italia, mettersi alla prova in un’altra lingua e conoscere improvvisatori di altre scuole.","intro.tag1":"Aperto a ogni scuola","intro.tag2":"Dal secondo anno","intro.tag3":"Tutto in inglese",
+    "intro.k":"Festival internazionale di improvvisazione in Roma","intro.h":"Il festival internazionale di improvvisazione teatrale a Roma","intro.p1":"Per tre giorni a marzo Roma diventa un punto d’incontro per improvvisatori e improvvisatrici da tutta Europa e non solo: workshop di giorno con insegnanti internazionali e spettacoli la sera, tutto in inglese.","intro.p2":"È l’occasione per lavorare con docenti che di solito non si incontrano in Italia, mettersi alla prova in un’altra lingua e conoscere improvvisatori di altre scuole.","intro.tag1":"Aperto a ogni scuola","intro.tag2":"Dal secondo anno","intro.tag3":"Tutto in inglese",
     "t.h":"I docenti","t.lead":"Quattro docenti da quattro paesi. Ognuno guida un workshop da 6 ore e partecipa all’Impro Lab della domenica.",
     "t.tba":"In arrivo","t.tbaD":"Nome, paese e il workshop che porterà a Roma.","t.country":"Paese",
     "w.h":"Workshop","w.lead":"Scegli un track il venerdì e uno il sabato. Ogni workshop indica il livello, così sai con chi giocherai.",
@@ -882,10 +882,10 @@ const I18N = {
     "w.left":"{n} posti liberi","w.few":"Ultimi {n} posti","w.sold":"Esaurito","w.book":"Prenota questo workshop",
     "w.live":"Posti aggiornati in tempo reale.","w.demo":"I posti mostrati sono indicativi fino all’apertura delle iscrizioni.","w.loading":"Verifico i posti…",
     "s.h":"Il weekend in breve","s.lead":"Formazione di giorno, community e spettacolo la sera. Orari di Roma (CET).",
-    "s.ws":"Workshop, track A o B","s.6h":"6 ore, gruppi piccoli","s.show":"Lo spettacolo dal vivo del festival",
+    "s.ws":"Workshop, track A o B","s.6h":"6 ore, gruppi piccoli","s.spettacolo":"Lo spettacolo dal vivo del festival",
     "s.lab":"4 docenti, 45 minuti ciascuno","s.from13":"Dalle 13:00","s.close":"Chiusura","s.closeD":"Saluti e foto di gruppo",
     "p.h":"Scegli il pass","p.lead":"Prezzi in euro. Il posto è tuo appena prenoti; i dati per il pagamento arrivano via email.",
-    "p.double":"Doppio workshop","p.d1":"Due workshop da 6 ore a scelta","p.ctaD":"Scegli due workshop","p.single":"Un workshop","p.special":"Workshop Special","p.fullBadge":"FULL FESTIVAL","p.show":"spettacolo","p.show1":"Sabato 13 marzo · ore 22:00","p.show2":"Spettacolo di improvvisazione multi-lingua","p.ctaShow":"Prenota lo spettacolo","p.shirt":"T-shirt Festival","p.shirt1":"T-shirt ufficiale del Roma Improv Festival","p.shirt2":"Disponibile anche separatamente dai pass workshop","p.6h":"6 ore","p.15h":"15 ore","p.3h":"3 ore",
+    "p.double":"Doppio workshop","p.d1":"Due workshop da 6 ore a scelta","p.ctaD":"Scegli due workshop","p.single":"Un workshop","p.special":"Workshop Special","p.fullBadge":"FULL FESTIVAL","p.spettacolo":"spettacolo","p.spettacolo1":"Sabato 13 marzo · ore 22:00","p.spettacolo2":"Spettacolo di improvvisazione multi-lingua","p.ctaShow":"Prenota lo spettacolo","p.shirt":"T-shirt Festival","p.shirt1":"T-shirt ufficiale del Roma Improv Festival","p.shirt2":"Disponibile anche separatamente dai pass workshop","p.6h":"6 ore","p.15h":"15 ore","p.3h":"3 ore",
     "p.i1":"Un workshop da 6 ore, venerdì o sabato","p.i2":"Biglietto per lo spettacolo del sabato","p.i3":"T-shirt del festival",
     "p.save":"Risparmi €30","p.f1":"Workshop del venerdì e del sabato (12 ore)","p.f2":"Impro Lab della domenica con tutti e 4 i docenti","p.f3":"Spettacolo, T-shirt e gadget del festival",
     "p.l1":"Domenica mattina, 4 docenti uno dopo l’altro","p.l2":"Spettacolo e T-shirt non inclusi",
@@ -905,13 +905,13 @@ const I18N = {
     "c.h":"Ci vediamo a Roma?","c.p":"I posti sono pochi di proposito: gruppi piccoli vuol dire più tempo in scena per tutti.",
     "foot":"Roma Improv Festival 2027 è organizzato da Artyou Roma.",
     "b.h":"Prenota il tuo posto","b.s1":"1. Pass","b.s2":"2. Workshop","b.s3":"3. I tuoi dati",
-    "b.full":"Full Festival","b.fullD":"Workshop venerdì + sabato + Impro Lab","b.double":"Doppio workshop","b.doubleD":"Workshop venerdì + sabato","b.show":"Spettacolo ALL IN","b.showD":"Sabato 13 marzo · ore 22:00","b.single":"Un workshop","b.singleD":"Un workshop da 6 ore + spettacolo + T-shirt",
+    "b.full":"Full Festival","b.fullD":"Workshop venerdì + sabato + Impro Lab","b.double":"Doppio workshop","b.doubleD":"Workshop venerdì + sabato","b.spettacolo":"Spettacolo ALL IN","b.spettacoloD":"Sabato 13 marzo · ore 22:00","b.single":"Un workshop","b.singleD":"Un workshop da 6 ore + spettacolo + T-shirt",
     "b.special":"Impro Lab","b.specialD":"Domenica, 3 ore","b.fri":"Il tuo workshop del venerdì","b.sat":"Il tuo workshop del sabato","b.one":"Il tuo workshop",
-    "b.labIncl":"L’Impro Lab della domenica è incluso.","b.labOnly":"Domenica 14 marzo, 10:00–13:00. Non c’è altro da scegliere.","b.showOnly":"ALL IN · Sabato 13 marzo alle 22:00.",
+    "b.labIncl":"L’Impro Lab della domenica è incluso.","b.labOnly":"Domenica 14 marzo, 10:00–13:00. Non c’è altro da scegliere.","b.spettacoloOnly":"ALL IN · Sabato 13 marzo alle 22:00.",
     "b.first":"Nome","b.last":"Cognome","b.phone":"Telefono, con prefisso","b.country":"Paese","b.exp":"Esperienza di improvvisazione",
     "b.pick":"Scegli","b.e1":"Meno di 6 mesi","b.e2":"Da 6 a 12 mesi","b.e3":"Più di un anno","b.e4":"Recito o insegno regolarmente",
     "b.school":"Scuola o gruppo","b.optional":"(facoltativo)","b.consent":"Acconsento al trattamento dei miei dati da parte di Artyou Roma per gestire la prenotazione.",
-    "b.total":"Totale","b.confirm":"Conferma prenotazione","b.sending":"Invio in corso…",
+    "b.total":"Totalee","b.confirm":"Conferma prenotazione","b.sending":"Invio in corso…",
     "b.errWs":"Scegli un workshop per ogni giorno del tuo pass.","b.errFields":"Compila i campi evidenziati per continuare.","b.errEmail":"Inserisci un indirizzo email valido.","b.errConsent":"Spunta il consenso per confermare.","b.errSend":"La prenotazione non è andata a buon fine. Riprova o scrivi a {mail}.",
     "b.doneH":"Prenotazione ricevuta","b.done":"Abbiamo inviato una conferma a {email} con le istruzioni per il pagamento. Ci vediamo a Roma!",
     "b.doneMail":"Si è aperta la tua app email con i dati della prenotazione. Invia quell’email per completare la richiesta.",
@@ -941,7 +941,7 @@ function applyLang() {
   $("#venueText").textContent = CONFIG.venue.address
     ? CONFIG.venue.name + ", " + CONFIG.venue.address
     : t("r.venueD", { name: CONFIG.venue.name });
-  renderTeachers(); renderWorkshops(); renderBooking(false);
+  renderTeachers(); renderWorkshops(); renderIscrizioni(false);
 }
 
 function teacherLabel(w) {
@@ -1000,7 +1000,7 @@ function isRifEvent(id, x) {
 }
 function isRifMaster(id, x) {
   const s = (String(id||"")+" "+String((x&&(x.titolo||""))||"")).toLowerCase();
-  return /(roma|rome)[-_ ]improv[-_ ]festival/.test(s) && !/workshop|spettacolo|show|all[-_ ]in/.test(s);
+  return /(roma|rome)[-_ ]improv[-_ ]festival/.test(s) && !/workshop|spettacolo|spettacolo|all[-_ ]in/.test(s);
 }
 function isWorkshopEvent(id, x) {
   const s = (String(id||"")+" "+String((x&&(x.titolo||x.tipo||x.categoria))||"")).toLowerCase();
@@ -1030,12 +1030,12 @@ function renderRifConfig(master) {
     PASSES = Object.assign({}, PASSES, priceMap);
     const passes = $("#passes .passes");
     if (passes) {
-      const ordered = ["double","single","full","special","show","shirt"];
+      const ordered = ["double","single","full","special","spettacolo","shirt"];
       passes.innerHTML = ordered.map(key => {
         const p = cfg.pricing.find(x => x && x.key === key);
         if (!p) return "";
         const isFull = key === "full";
-        const button = key === "shirt" ? "" : '<button class="btn '+(isFull?'btn-primary':'btn-ghost')+'" type="button" data-book="'+esc(key)+'">'+esc(key==="double"?"Scegli due workshop":key==="single"?"Scegli un workshop":key==="special"?"Prenota il Workshop Special":key==="show"?"Prenota lo spettacolo":"Prenota il Full Festival")+'</button>';
+        const button = key === "shirt" ? "" : '<button class="btn '+(isFull?'btn-primary':'btn-ghost')+'" type="button" data-book="'+esc(key)+'">'+esc(key==="double"?"Scegli due workshop":key==="single"?"Scegli un workshop":key==="special"?"Prenota il Workshop Special":key==="spettacolo"?"Prenota lo spettacolo":"Prenota il Full Festival")+'</button>';
         return '<article class="pass '+(isFull?'best':'')+'">'+
           (isFull?'<span class="save">FULL FESTIVAL</span>':'')+
           '<h3>'+esc(p.label||key)+'</h3>'+
@@ -1076,7 +1076,7 @@ function renderRifConfig(master) {
     }
   }
 
-  renderBooking(false);
+  renderIscrizioni(false);
 }
 async function loadAvailability() {
   if (!CONFIG.availabilityUrl) return;
@@ -1122,7 +1122,7 @@ async function loadAvailability() {
 
     liveData = true;
   } catch (e) { console.warn("Availability unavailable", e); }
-  renderWorkshops(); renderBooking(false);
+  renderWorkshops(); renderIscrizioni(false);
 }
 
 /* --- Prenotazione --- */
@@ -1134,8 +1134,8 @@ function wsOption(name, w, checked) {
     <span class="o-main"><b>${esc(w.title[lang])}</b><small>${t("day." + w.day)}, ${w.time}. ${esc(cap(teacherLabel(w)))}. ${t("lv." + w.level)}${sold ? ". " + t("w.sold") : ""}</small></span></label>`;
 }
 
-function renderBooking(resetErr = true) {
-  $("#passOpts").innerHTML = ["full", "double", "single", "special", "show"].map(p => `
+function renderIscrizioni(resetErr = true) {
+  $("#passOpts").innerHTML = ["full", "double", "single", "special", "spettacolo"].map(p => `
     <label class="opt"><input type="radio" name="pass" value="${p}" ${state.pass === p ? "checked" : ""}>
       <span class="o-main"><b>${t("b." + p)}</b><small>${t("b." + p + "D")}</small></span><span class="o-price">€${PASSES[p]}</span></label>`).join("");
   let html = "";
@@ -1148,8 +1148,8 @@ function renderBooking(resetErr = true) {
     html += `<p class="sub-legend">${t("b.one")}</p>` + main.map(w => wsOption("single", w, state.single === w.id)).join("");
   } else if (state.pass === "special") {
     html += `<p class="ws-status" style="margin-top:0">${t("b.labOnly")}</p>`;
-  } else if (state.pass === "show") {
-    html += `<p class="ws-status" style="margin-top:0">${t("b.showOnly")}</p>`;
+  } else if (state.pass === "spettacolo") {
+    html += `<p class="ws-status" style="margin-top:0">${t("b.spettacoloOnly")}</p>`;
   }
   $("#wsOpts").innerHTML = html;
   $("#total").textContent = "€" + PASSES[state.pass];
@@ -1158,25 +1158,25 @@ function renderBooking(resetErr = true) {
 
 $("#bookForm").addEventListener("change", e => {
   const n = e.target.name;
-  if (n === "pass") { state.pass = e.target.value; renderBooking(); }
+  if (n === "pass") { state.pass = e.target.value; renderIscrizioni(); }
   if (["fri", "sat", "single"].includes(n)) state[n] = e.target.value;
 });
 
-function openBooking(pass, wsId) {
+function openIscrizioni(pass, wsId) {
   state.pass = pass || "full";
   if (wsId) {
     const w = WORKSHOPS.find(x => x.id === wsId);
     if (w && !w.special) state.single = wsId;
   }
   $("#bookForm").hidden = false; $("#done").hidden = true;
-  renderBooking();
+  renderIscrizioni();
   const d = $("#dlg");
-  if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+  if (typeof d.spettacoloModal === "function") d.spettacoloModal(); else d.setAttribute("open", "");
 }
 
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-book]");
-  if (b && !b.disabled) { e.preventDefault(); openBooking(b.dataset.book, b.dataset.ws); }
+  if (b && !b.disabled) { e.preventDefault(); openIscrizioni(b.dataset.book, b.dataset.ws); }
   const f = e.target.closest("[data-filter]");
   if (f) { filter = f.dataset.filter; $$("[data-filter]").forEach(c => c.setAttribute("aria-pressed", String(c === f))); renderWorkshops(); }
 });
@@ -1226,9 +1226,9 @@ $("#bookForm").addEventListener("submit", async e => {
   } else {
     const names = workshops.map(id => {
       const w = WORKSHOPS.find(x => x.id === id);
-      return w ? w.title.en : (id === "all-in" ? "ALL IN show" : id);
+      return w ? w.title.en : (id === "all-in" ? "ALL IN spettacolo" : id);
     }).join(", ");
-    const body = `Roma Improv Festival 2027 booking\n\nPass: ${state.pass} (€${payload.price})\nWorkshops: ${names}\nName: ${payload.first} ${payload.last}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nCountry: ${payload.country}\nExperience: ${payload.experience}\nSchool/group: ${payload.school || "-"}`;
+    const body = `Roma Improv Festival 2027 booking\n\nPass: ${state.pass} (€${payload.price})\nWorkshops: ${names}\nName: ${payload.first} ${payload.last}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nPaese: ${payload.country}\nExperience: ${payload.experience}\nSchool/group: ${payload.school || "-"}`;
     location.href = `mailto:${CONFIG.contactEmail}?subject=${encodeURIComponent("RIF 2027 booking: " + payload.first + " " + payload.last)}&body=${encodeURIComponent(body)}`;
     $("#doneText").textContent = t("b.doneMail");
     f.hidden = true; $("#done").hidden = false;
@@ -1250,10 +1250,10 @@ $("#bookForm").addEventListener("submit", async e => {
   const bar = $("#mbar"), hero = document.querySelector(".hero");
   if (!("IntersectionObserver" in window)) return;
   new IntersectionObserver(([e]) => {
-    const show = !e.isIntersecting;
-    bar.classList.toggle("show", show);
-    bar.setAttribute("aria-hidden", String(!show));
-    bar.querySelector("button").tabIndex = show ? 0 : -1;
+    const spettacolo = !e.isIntersecting;
+    bar.classList.toggle("spettacolo", spettacolo);
+    bar.setAttribute("aria-hidden", String(!spettacolo));
+    bar.querySelector("button").tabIndex = spettacolo ? 0 : -1;
   }).observe(hero);
 })();
 
