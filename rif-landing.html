@@ -28,7 +28,8 @@
   --line:#E4DED2; --line-warm:#EADFCB;
   --display:"Bricolage Grotesque",Georgia,sans-serif;
   --body:"Instrument Sans","Helvetica Neue",Helvetica,sans-serif;
-  --wrap:1200px;
+  --wrap:1440px;
+  --page-pad:120px;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -39,7 +40,9 @@ body{margin:0;background:var(--cream);color:var(--ink);font:400 17px/1.6 var(--b
 img{max-width:100%;display:block}
 a{color:var(--blue)} a:hover{color:#12506F}
 :focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:6px}
-.wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(20px,5vw,64px)}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding-left:var(--page-pad);padding-right:var(--page-pad)}
+@media(max-width:1100px){:root{--page-pad:40px}}
+@media(max-width:820px){:root{--page-pad:20px}}
 h1,h2,h3{font-family:var(--display);font-weight:800;margin:0;color:inherit}
 h2{font-size:clamp(36px,5vw,56px);line-height:1;letter-spacing:-1.5px}
 h3{font-size:24px;line-height:1.1;letter-spacing:-.5px}
@@ -77,7 +80,7 @@ p{margin:0 0 1em}
 .subbar .btn{min-height:42px;padding:0 20px;font-size:15px;box-shadow:0 6px 16px rgba(240,144,0,.3)}
 @media (max-width:1000px){
   .subbar .wrap{flex-wrap:wrap;gap:8px 12px;padding-top:10px;padding-bottom:0;min-height:0}
-.festnav{order:5;width:calc(100% + 2*clamp(20px,5vw,64px));margin:0 calc(-1*clamp(20px,5vw,64px));padding:6px clamp(20px,5vw,64px) 10px;overflow-x:auto;scrollbar-width:none}
+.festnav{order:5;width:calc(100% + 2*var(--page-pad));margin:0 calc(-1*var(--page-pad));padding:6px var(--page-pad) 10px;overflow-x:auto;scrollbar-width:none}
   .festnav::-webkit-scrollbar{display:none}
   .festnav a{background:var(--cream)}
 }
