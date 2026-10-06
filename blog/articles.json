@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-05",
+  "updated": "2026-10-06",
   "articles": [
     {
       "slug": "festival-radar-ottobre",
@@ -8,7 +8,10 @@
       "date": "2026-10-05",
       "excerpt": "Un viaggio tra i festival di improvvisazione in arrivo a ottobre 2026: da Wellington a Santiago de Compostela e Walnut Creek.",
       "url": "/la-finestra-sul-cortile/festival-radar-ottobre/",
-      "imageQuery": "improv theater stage"
+      "imageQuery": "improv theater stage",
+      "image": "/img/rome-improv-festival.jpg",
+      "imageThumb": "/img/rome-improv-festival.jpg",
+      "imageAlt": "Palco e atmosfera del Roma Improv Festival"
     },
     {
       "slug": "improv-around-the-world-da-chicago-a-londra-e-barcellona",
