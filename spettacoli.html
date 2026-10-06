@@ -479,7 +479,7 @@ function renderCard(e,past){
  }
  var posterStyle=poster?'background-image:url('+encodeURI(String(poster))+');background-color:'+col[0]+';':'background-color:'+col[0]+';';
  var where=[e.venue,e.addr].filter(Boolean).join(" · "),detailHref=eventHref(e,first);
- var actions=past?'<div class="actions"><a class="btn" style="background:#EEF0F1;color:#26343D" href="'+detailHref+'">Vedi scheda</a></div>':
+ var actions=past?"":
    '<div class="actions"><a class="btn primary" href="'+detailHref+'">Prenota</a><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/393271881956?text='+encodeURIComponent("Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".")+'">WhatsApp</a></div>';
  art.innerHTML='<a href="'+detailHref+'" class="poster" style="'+posterStyle+';text-decoration:none"><div class="badge"><strong>'+esc(b.day)+'</strong><span>'+esc(b.month)+'</span></div></a>'+
    '<div class="card-body"><span class="cat" style="color:'+col[1]+'">'+esc(e.cat||"Evento")+'</span>'+
