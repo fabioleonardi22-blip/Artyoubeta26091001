@@ -88,7 +88,14 @@ function build(){
      legacyTrigger.style.removeProperty('display');
      legacyMenu.style.removeProperty('display');
    }
-   if(mobile&&nav){
+   var slot=document.getElementById('artyou-language-slot');
+   if(slot){
+     if(w.parentElement!==slot) slot.appendChild(w);
+     w.classList.remove('artyou-language-mobile');
+     var slotLabel=w.querySelector('.artyou-lang-current');
+     if(slotLabel) slotLabel.textContent=L[cur][1];
+     w.querySelector('.artyou-lang-trigger').setAttribute('aria-expanded',w.getAttribute('data-open')==='1'?'true':'false');
+   }else if(mobile&&nav){
      if(w.parentElement!==nav) nav.appendChild(w);
      w.querySelector('.artyou-lang-trigger').setAttribute('aria-expanded','true');
      w.classList.add('artyou-language-mobile');
