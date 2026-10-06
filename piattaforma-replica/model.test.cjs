@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict');const {webcrypto}=require('node:crypto');global.crypto=webcrypto;const M=require('./model.js');const s=M.seed();
+M.save(s,'memberships',{utente:'u1',campagna:'ca1',numero:'DEMO-001',stato:'Attiva'});
+assert.throws(()=>M.save(s,'memberships',{utente:'u1',campagna:'ca1',numero:'DEMO-002',stato:'Attiva'}),/già/);
+assert.throws(()=>M.save(s,'lessons',{corso:'c1',data:'2026-10-01'}),/già/);
+assert.throws(()=>M.save(s,'lessons',{corso:'c1',data:'2028-10-01'}),/fuori/);
+assert.equal(M.schedule(s,s.enrollments[0]).length,9);
+M.save(s,'payments',{iscrizione:'e1',importo:75,data:'2026-10-01',metodo:'Contanti'});
+assert.equal(M.paymentReport(s,s.enrollments[0],'2026-10-06').paid,1);
+assert.equal(M.paymentReport(s,s.enrollments[0],'2026-12-06').late,2);
+assert.equal(M.balance(s).incoming,10500);
+M.save(s,'expenses',{nome:'Sala',tipo:'Per Corso',corsi:['c1'],importo:20,data:'2026-10-01'});
+assert.equal(M.courseBalance(s,'c1').net,5500);assert.equal(M.balance(s).net,10500);
+assert.throws(()=>M.save(s,'payments',{iscrizione:'e1',importo:-1,data:'2026-10-01'}),/positivo/);
+const archive=M.archive(s,'Demo','2027-08-31');assert.equal(s.courses.length,0);assert.equal(archive.snapshot.courses.length,1);assert.equal(archive.snapshot.payments.length,1);
+console.log('OK: date, duplicati, rate, ritardi, bilanci in centesimi e fotografia archivio.');
