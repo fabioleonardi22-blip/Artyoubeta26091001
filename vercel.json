@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/rif-landing",
+      "destination": "/rif-landing/",
+      "permanent": true
+    },
+    {
       "source": "/formazione-aziende",
       "destination": "/formazione-aziende/",
       "permanent": true
@@ -197,6 +202,10 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/rif-landing/",
+      "destination": "/rif-landing.html"
+    },
     {
       "source": "/",
       "has": [
