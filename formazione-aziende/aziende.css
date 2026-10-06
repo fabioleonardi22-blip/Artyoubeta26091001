@@ -54,6 +54,14 @@ html{scroll-behavior:smooth;scroll-padding-top:170px}
 #form-status.err{color:#B3261E}
 
 @media(max-width:820px){
+  /* Header/subnav: nessuna fascia beige tra la riga bordeaux e la navigazione Aziende */
+  .am-wfull.am-hauto{gap:0!important;}
+  header + div[aria-hidden="true"]{
+    height:6px!important;min-height:6px!important;flex:0 0 6px!important;
+    margin:0!important;padding:0!important;
+  }
+  #aziende-subnav{margin:0!important;}
+
   html{scroll-padding-top:140px}
   #aziende-subnav{top:84px!important;gap:22px!important}
   .az-maphead{display:none}
