@@ -222,3 +222,12 @@ CREATE TABLE IF NOT EXISTS security_audit (
   KEY idx_security_audit_date (created_at),
   KEY idx_security_audit_actor (actor_email, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS security_rate_limits (
+  bucket_key CHAR(64) NOT NULL,
+  request_count INT UNSIGNED NOT NULL DEFAULT 0,
+  expires_at DATETIME NOT NULL,
+  PRIMARY KEY (bucket_key),
+  KEY idx_security_rate_expiry (expires_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
