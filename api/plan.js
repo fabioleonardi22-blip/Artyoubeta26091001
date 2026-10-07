@@ -86,6 +86,15 @@ async function authorizedUser(identity) {
 function requireEditor(user) {
   if (!user || (user.role !== "admin" && user.role !== "staff")) throw new Error("permesso_modifica_richiesto");
 }
+function requireAdmin(user) {
+  if (!user || user.role !== "admin") throw new Error("permesso_admin_richiesto");
+}
+function roleFromAccessLevel(level) {
+  const v=String(level||"").toLowerCase();
+  if(v==="amministratore"||v==="admin")return "admin";
+  if(v==="staff")return "staff";
+  return "teacher";
+}
 
 async function parseBody(req) {
   let body = req.body;
@@ -192,6 +201,46 @@ async function listPeople() {
       notes:String(m.notes || "")
     };
   });
+}
+
+async function savePerson(admin,p) {
+  requireAdmin(admin);
+  p=p||{};
+  const email=String(p.email||"").trim().toLowerCase();
+  const name=String(p.name||"").trim().slice(0,255);
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new Error("email_non_valida");
+  if(!name)throw new Error("nome_mancante");
+  const role=roleFromAccessLevel(p.accessLevel);
+  const metadata=JSON.stringify({
+    kind:String(p.kind||"Docente").slice(0,80),
+    role:String(p.role||"").slice(0,120),
+    skills:Array.isArray(p.skills)?p.skills.map(String).slice(0,50):[],
+    phone:String(p.phone||"").slice(0,100),
+    emailOn:p.emailOn!==false,
+    whatsappOn:!!p.whatsappOn,
+    notes:String(p.notes||"").slice(0,2000)
+  });
+  const id=/^\d+$/.test(String(p.id||""))?Number(p.id):0;
+  if(id){
+    await query("UPDATE users SET email=?,display_name=?,role=?,active=?,metadata=?,updated_at=CURRENT_TIMESTAMP WHERE id=?",
+      [email,name,role,p.active===false?0:1,metadata,id]);
+  }else{
+    await query(`INSERT INTO users (email,display_name,role,active,metadata) VALUES (?,?,?,?,?)
+      ON DUPLICATE KEY UPDATE display_name=VALUES(display_name),role=VALUES(role),active=VALUES(active),metadata=VALUES(metadata),updated_at=CURRENT_TIMESTAMP`,
+      [email,name,role,p.active===false?0:1,metadata]);
+  }
+  const rows=await query("SELECT id,email,display_name,role,active,metadata FROM users WHERE LOWER(email)=LOWER(?) LIMIT 1",[email]);
+  return rows[0]||null;
+}
+
+async function deletePerson(admin,id) {
+  requireAdmin(admin);
+  const n=Number(id);
+  if(!Number.isInteger(n)||n<=0)throw new Error("persona_non_trovata");
+  if(Number(admin.id)===n)throw new Error("non_puoi_disattivare_te_stesso");
+  const result=await query("UPDATE users SET active=0,updated_at=CURRENT_TIMESTAMP WHERE id=?",[n]);
+  if(!result||!result.affectedRows)throw new Error("persona_non_trovata");
+  return true;
 }
 
 async function listSiteEvents(from, to) {
@@ -556,6 +605,18 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ok:true,people:people});
     }
 
+    if (action === "save_person") {
+      const person=await savePerson(user,body.person||{});
+      await audit({email:identity.email,role:user.role},"user_save",String(person&&person.id||""),{targetEmail:person&&person.email||""});
+      return res.status(200).json({ok:true,person:person});
+    }
+
+    if (action === "delete_person") {
+      await deletePerson(user,body.id);
+      await audit({email:identity.email,role:user.role},"user_deactivate",String(body.id||""),{});
+      return res.status(200).json({ok:true});
+    }
+
     if (action === "list") {
       let migration = null;
       try { migration = await migrateLegacyIfNeeded(credential); }
@@ -591,7 +652,7 @@ module.exports = async function handler(req, res) {
     const code = String(err && err.message || "errore");
     console.error("PLAN_MYSQL_ERROR", code);
     if (code === "accesso_non_autorizzato") return res.status(403).json({ok:false,errore:code});
-    if (code === "permesso_modifica_richiesto") return res.status(403).json({ok:false,errore:code});
+    if (code === "permesso_modifica_richiesto" || code === "permesso_admin_richiesto") return res.status(403).json({ok:false,errore:code});
     if (code === "payload_too_large") return res.status(413).json({ok:false,errore:code});
     if (code === "json_non_valido" || /_mancante$/.test(code) || /_non_trov/.test(code)) return res.status(400).json({ok:false,errore:code});
     if (/google_/.test(code)) return res.status(401).json({ok:false,errore:"autenticazione_non_valida"});
