@@ -80,6 +80,8 @@ async function authorizedUser(identity) {
   );
   const u = rows && rows[0];
   if (!u || !u.active) throw new Error("accesso_non_autorizzato");
+  u.role = String(u.role || "").trim().toLowerCase();
+  if (!["admin","staff","teacher"].includes(u.role)) throw new Error("ruolo_non_valido");
   return u;
 }
 
@@ -651,7 +653,7 @@ module.exports = async function handler(req, res) {
   } catch (err) {
     const code = String(err && err.message || "errore");
     console.error("PLAN_MYSQL_ERROR", code);
-    if (code === "accesso_non_autorizzato") return res.status(403).json({ok:false,errore:code});
+    if (code === "accesso_non_autorizzato" || code === "ruolo_non_valido") return res.status(403).json({ok:false,errore:code});
     if (code === "permesso_modifica_richiesto" || code === "permesso_admin_richiesto") return res.status(403).json({ok:false,errore:code});
     if (code === "payload_too_large") return res.status(413).json({ok:false,errore:code});
     if (code === "json_non_valido" || /_mancante$/.test(code) || /_non_trov/.test(code)) return res.status(400).json({ok:false,errore:code});
