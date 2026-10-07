@@ -132,6 +132,10 @@ module.exports = async function handler(req, res) {
       try { parsed = JSON.parse(raw || "{}"); }
       catch (_) { return reject(res, 400, "json_non_valido"); }
 
+      if (String(parsed._hp || "").trim()) {
+        return res.status(200).json({ ok:true });
+      }
+
       if (String(parsed.action || "").toLowerCase() !== "prenota") {
         return reject(res, 403, "azione_non_consentita");
       }
