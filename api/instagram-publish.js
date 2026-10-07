@@ -45,7 +45,6 @@ module.exports = async function handler(req, res) {
       catch (_) { return res.status(400).json({ ok:false, errore:"json_non_valido" }); }
     }
 
-    delete body.pin;
     const caption = String(body.caption || "").trim();
     const imageUrl = String(body.imageUrl || "").trim();
 
