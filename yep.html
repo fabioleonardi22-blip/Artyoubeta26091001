@@ -6,16 +6,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><script id="artyou-viewport">(function(){try{if(window.matchMedia&&window.matchMedia("(max-width: 820px)").matches){document.documentElement.classList.add("am-mobile");}}catch(e){}})();</script>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<script src="/js/support.js"></script>
+
 <script src="/js/enhancements.js"></script>
 
 <style id="artyou-centered-layout">
 html{background:#C79A2B!important;}
 body{margin:0!important;background:#C79A2B!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;min-height:100vh!important;}
-body>x-dc,x-dc{width:100%!important;max-width:1200px!important;margin:0 auto!important;}
-x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 auto!important;background:#fff!important;box-shadow:0 0 36px rgba(44,31,8,.30)!important;min-height:100vh!important;}
-@media(min-width:1200px){body>x-dc,x-dc,x-dc>div:first-of-type{width:1200px!important;max-width:1200px!important;}}
-@media(max-width:1199px){html,body{background:#fff!important;} body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;box-shadow:none!important;}}
+body>#artyou-page-root,#artyou-page-root{width:100%!important;max-width:1200px!important;margin:0 auto!important;}
+#artyou-page-root>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 auto!important;background:#fff!important;box-shadow:0 0 36px rgba(44,31,8,.30)!important;min-height:100vh!important;}
+@media(min-width:1200px){body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:1200px!important;max-width:1200px!important;}}
+@media(max-width:1199px){html,body{background:#fff!important;} body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:100%!important;max-width:100%!important;box-shadow:none!important;}}
 </style>
 
 
@@ -231,7 +231,7 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 @media (max-width: 820px){
   *,*::before,*::after{box-sizing:border-box;}
   html,body{width:100%;max-width:100%;overflow-x:hidden!important;}
-  body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
+  body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
   [style*="width: 1440px"],[style*="width:1440px"]{width:100%!important;max-width:100%!important;min-width:0!important;}
   main,section,article,header,footer,nav,form{max-width:100%;min-width:0;}
   img,video,iframe,svg{max-width:100%;height:auto;}
@@ -384,15 +384,15 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 </style>
 </head>
 <body>
-<x-dc>
-<helmet>
+<div id="artyou-page-root">
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=Instrument+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="icon" type="image/png" href="/img/favicon-192.png">
 <style>
 body{margin:0;background:#F6F3EC}
 a{color:#1A6E99}a:hover{color:#12506F}
 </style>
-</helmet>
+
 <div class="am-wfull am-hauto" style="width: 1440px; height: auto; min-height: 100vh; display: flex; flex-direction: column; background: #F6F3EC; color: #13181D; font-family: 'Instrument Sans', 'Helvetica Neue', Helvetica, sans-serif; position: relative;">
 <header class="am-px am-wrap" style="display: flex; align-items: center; justify-content: space-between; padding: 20px 120px; position: sticky; top: 0; z-index: 500; background: #13181D;">
 <a href="/" aria-label="Artyou Roma – Home" class="am-wrap" style="display: flex; align-items: center;"><img decoding="async" src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" style="height: 56px; width: auto; display: block;"></a>
@@ -721,7 +721,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <input id="f-prezzo" type="hidden" value="{{paymentAmount}}">
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-camera" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Con chi vuoi condividere la camera? <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-camera" type="text" placeholder="Nome e cognome" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cibo" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Esigenze alimentari <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-cibo" type="text" placeholder="Es. vegetariano" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
-<button id="f-submit-booking" type="button" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
+<button id="f-submit-booking" type="button" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: #F09000; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
 <a target="_blank" rel="noopener" href="{{wa}}" class="am-wrap" style="height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #25D366; color: #0B2E1A; border-radius: 14px; font-weight: 700; font-size: 16px; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.001c-5.523 0-10 4.477-10 10 0 1.762.464 3.479 1.345 4.997L2 22l5.161-1.352a9.953 9.953 0 0 0 4.879 1.253h.005c5.522 0 9.999-4.477 9.999-10 0-2.671-1.04-5.182-2.929-7.07A9.935 9.935 0 0 0 12.04 2Zm0 18.174h-.004a8.172 8.172 0 0 1-4.166-1.14l-.299-.177-3.096.812.827-3.016-.194-.31a8.163 8.163 0 0 1-1.253-4.343c0-4.508 3.669-8.176 8.19-8.176a8.14 8.14 0 0 1 5.79 2.398 8.13 8.13 0 0 1 2.397 5.788c0 4.508-3.669 8.164-8.192 8.164Zm4.484-6.13c-.246-.123-1.454-.718-1.68-.8-.226-.082-.39-.123-.554.123-.164.246-.635.8-.778.964-.144.165-.287.185-.533.062-.246-.123-1.037-.382-1.976-1.22-.73-.65-1.222-1.453-1.365-1.7-.144-.246-.015-.379.108-.501.11-.11.246-.287.369-.43.123-.144.164-.246.246-.41.082-.164.041-.308-.02-.43-.062-.123-.554-1.335-.76-1.828-.2-.48-.404-.415-.554-.423l-.472-.008a.906.906 0 0 0-.656.307c-.226.246-.862.842-.862 2.054 0 1.212.883 2.383 1.006 2.548.123.164 1.74 2.658 4.216 3.727.589.254 1.049.406 1.408.52.591.188 1.13.161 1.556.098.475-.071 1.454-.595 1.66-1.169.205-.574.205-1.066.144-1.169-.062-.102-.226-.164-.472-.287Z"></path></svg> Prenota su WhatsApp</a>
 </div>
 </sc-if>
@@ -742,7 +742,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </sc-if>
 <sc-if value="{{confirmed}}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
-<span class="am-wrap" style="width: 60px; height: 60px; border-radius: 30px; background: {{accent}}; color: #1C1606; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg></span>
+<span class="am-wrap" style="width: 60px; height: 60px; border-radius: 30px; background: #F09000; color: #1C1606; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg></span>
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">{{doneTitle}}</h2>
 <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">{{summary}}</p>
 <p class="am-fs-body" style="margin: 0; font-size: 15px; line-height: 1.5; color: #555D64;">{{doneNote}}</p>
@@ -775,207 +775,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <a href="mailto:info@artyouroma.it" style="color: #9AA5AE;">info@artyouroma.it</a><a href="/privacy-policy/" target="_blank" rel="noopener" style="color:#9AA5AE;">Privacy Policy</a>
 </footer>
 </div>
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F09000","options":["#F09000","#2CA8E0","#E41870","#7A1631"]},"postiPerLivello":{"editor":"int","default":16,"min":1,"max":60},"$preview":{"width":1440,"height":2520}}'>
-class Component extends DCLogic {
-  constructor(props) {
-    super(props);
-    this.state = { type: 0, lv: 0, room: 0, pay: 0, confirmed: false };
-  }
-  componentDidMount() {
-    var self = this;
-    this.onCapacityRefresh = function () { self.setState({ capVersion: Date.now() }); };
-    window.addEventListener("hashchange", this.onCapacityRefresh);
-    window.addEventListener("artyou:capacity-updated", this.onCapacityRefresh);
-    this.onBookingSuccess = function () { self.setState({ confirmed: true }); };
-    window.addEventListener("artyou:booking-success", this.onBookingSuccess);
-    this.onCapacityRefresh();
-    setTimeout(this.onCapacityRefresh, 250);
-    setTimeout(this.onCapacityRefresh, 1000);
-  }
-  componentWillUnmount() {
-    window.removeEventListener("hashchange", this.onCapacityRefresh);
-    window.removeEventListener("artyou:capacity-updated", this.onCapacityRefresh);
-    window.removeEventListener("artyou:booking-success", this.onBookingSuccess);
-  }
-  avail(r) {
-    if (r === null || r === undefined) {
-      return { left: "Dato in arrivo LIVE", leftColor: "#777777", leftWeight: 600 };
-    }
-    return { left: r === 0 ? "Completo" : (r <= 5 ? "Ultimi " + r + " posti" : r + " posti liberi"), leftColor: r <= 5 ? "#7A1631" : "#555D64", leftWeight: r <= 5 ? 700 : 500 };
-  }
-  chip(on) {
-    return { bg: on ? "#13181D" : "#FFFFFF", fg: on ? "#FFFFFF" : "#13181D", border: on ? "#13181D" : "#CFC8BA" };
-  }
-  row(on) {
-    return { bg: on ? "#E6F3FA" : "#FFFFFF", border: on ? "#1A6E99" : "#E4DED2" };
-  }
-  renderVals() {
-    var self = this, st = this.state || {};
-    var typeNames = ["Alloggio + workshop", "Solo vacanza", "Solo workshop"];
-    var type = st.type || 0, lv = st.lv || 0, room = st.room || 0, pay = st.pay == null ? 0 : st.pay;
-    var mysqlCap = window.ARTYOU_YEP_MYSQL_CAP || {};
-    var mysqlEvents = window.ARTYOU_YEP_MYSQL_EVENT_INFO || {};
-    var capMap = Object.keys(mysqlCap).length ? mysqlCap : (window.ARTYOU_CAP || {});
-    var eventMap = Object.keys(mysqlEvents).length ? mysqlEvents : (window.ARTYOU_EVENT_INFO || {});
-    var keys = Object.keys(eventMap || {});
-
-    function isYep(k, info) {
-      var t = String((info && (info.titolo || info.descrizione || info.tipo)) || "");
-      return /^yep[-_]/i.test(k) || /\byep\b/i.test(t);
-    }
-    function isRoom(k, info) {
-      var tipo = String((info && info.tipo) || "");
-      var t = String((info && (info.titolo || info.descrizione)) || "");
-      return /camera|room/i.test(tipo) || /camera|room|doppia|tripla|singola/i.test(k) || /camera|room|doppia|tripla|singola/i.test(t);
-    }
-    function isWorkshop(k, info) {
-      var tipo = String((info && info.tipo) || "");
-      var t = String((info && (info.titolo || info.descrizione)) || "");
-      return !isRoom(k,info) && (/workshop|corso|livello/i.test(tipo) || /workshop|corso|livello|principianti|intermedio|intermedi|avanzati|tutti/i.test(k) || /workshop|corso|livello|principianti|intermedio|intermedi|avanzati|tutti/i.test(t));
-    }
-    function sortIds(a,b) {
-      var A=eventMap[a]||{}, B=eventMap[b]||{};
-      var oa=Number(A.ordine||9999), ob=Number(B.ordine||9999);
-      if(oa!==ob) return oa-ob;
-      return String(A.data||"").localeCompare(String(B.data||"")) || String(A.ora||"").localeCompare(String(B.ora||"")) || a.localeCompare(b);
-    }
-
-    var dynamicLevels = keys.filter(function(k){ return isYep(k,eventMap[k]) && isWorkshop(k,eventMap[k]); }).sort(sortIds);
-    var legacyLevels = ["yep-2027-livello-principianti","yep-2027-livello-intermedio","yep-2027-livello-avanzati","yep-2027-livello-tutti"];
-    var levelIds = dynamicLevels.length ? dynamicLevels : legacyLevels;
-
-    var lvData = levelIds.map(function(id, i) {
-      var info = eventMap[id] || {};
-      return {
-        label: info.titolo || ("Livello " + (i + 1)),
-        sub: info.descrizione || [info.data, info.ora].filter(Boolean).join(" · ") || "Dato in arrivo LIVE nel gestionale"
-      };
-    });
-
-    var roomData = [
-      { label: "Camera quadrupla", key:"quadrupla", sub: "Preferenza, non garantisce disponibilità" },
-      { label: "Camera tripla", key:"tripla", sub: "Preferenza, non garantisce disponibilità" },
-      { label: "Camera doppia", key:"doppia", sub: "Preferenza, non garantisce disponibilità" },
-      { label: "Camera singola", key:"singola", sub: "Su richiesta, con supplemento" }
-    ];
-
-    if (lv >= lvData.length) lv = 0;
-    if (room >= roomData.length) room = 0;
-
-    var lvRem = lvData.map(function (l, i) {
-      return Object.prototype.hasOwnProperty.call(capMap, levelIds[i])
-        ? Math.max(0, Number(capMap[levelIds[i]]) || 0)
-        : null;
-    });
-
-    var hasWorkshop = type === 0 || type === 2;
-    var hasStay = type === 0 || type === 1;
-    var isWs = hasWorkshop;
-    var levelRem = lvRem[lv];
-    var capacityReady = !isWs || (levelRem !== null && levelRem !== undefined);
-    var rem = !isWs ? 1 : levelRem;
-
-    var types = typeNames.map(function (l, i) {
-      return Object.assign({ label: l, pick: function () { self.setState({ type: i }); } }, self.chip(i === type));
-    });
-
-    var wsMeta = [["#2CA8E0", "#1A6E99", "#0F4A66"], ["#F09000", "#9A5A00", "#5C3700"], ["#941880", "#941880", "#4A1040"], ["#28B4A8", "#127A70", "#0E4A45"]];
-    var wsCards = lvData.map(function (l, i) {
-      var m = wsMeta[i % wsMeta.length];
-      var on = isWs && i === lv, full = lvRem[i] === 0, info = eventMap[levelIds[i]] || {};
-      return {
-        level: l.label,
-        title: info.titolo || l.label,
-        desc: info.descrizione || l.sub,
-        color: m[0], tag: m[1], tint: m[2], border: on ? "#13181D" : "#E4DED2",
-        btnLabel: full ? "Completo · lista d’attesa" : (on ? "Selezionato" : "Scegli questo workshop"),
-        btnBg: on ? "#13181D" : "#FFFFFF", btnFg: on ? "#FFFFFF" : "#13181D",
-        pick: function () { self.setState({ type: 0, lv: i }); }
-      };
-    });
-
-    var levels = lvData.map(function (l, i) {
-      var a = (lvRem[i] === null || lvRem[i] === undefined)
-        ? { left: "Dato in arrivo LIVE", leftColor: "#555D64", leftWeight: 500 }
-        : self.avail(lvRem[i]);
-      return Object.assign({ label: l.label, sub: l.sub, pick: function () { self.setState({ lv: i }); } }, a, self.row(i === lv));
-    });
-
-    var rooms = roomData.map(function (r, i) {
-      return Object.assign({
-        label: r.label,
-        sub: r.sub,
-        left: i === room ? "Selezionata" : (i === 3 ? "Opzionale" : "Preferenza"),
-        leftColor: i === room ? "#1A6E99" : "#555D64",
-        leftWeight: i === room ? 700 : 600,
-        pick: function () { self.setState({ room: i }); }
-      }, self.row(i === room));
-    });
-
-    var payOpts = [
-      "Paga l’iscrizione · 10 € e salda prima del Festival",
-      "Paga tutto · prezzo completo"
-    ].map(function(l,i){
-      return Object.assign({
-        label:l,
-        pick:function(){ self.setState({pay:i}); }
-      },self.chip(i===pay));
-    });
-
-    var what = typeNames[type] + (hasWorkshop ? " · " + lvData[lv].label : "") + (hasStay ? " · " + roomData[room].label : "");
-    var eventId = hasWorkshop ? levelIds[lv] : "yep-2027-solo-soggiorno";
-
-    var defaults={cutoff:"2027-06-30",early:{alloggioWorkshop:{quadrupla:320,tripla:330,doppia:350},soloVacanza:{quadrupla:200,tripla:210,doppia:230},soloWorkshop:250},late:{alloggioWorkshop:{quadrupla:350,tripla:360,doppia:380},soloVacanza:{quadrupla:230,tripla:240,doppia:260},soloWorkshop:280}};
-    var pricing=defaults;
-    for(var pk=0;pk<keys.length;pk++){var pi=eventMap[keys[pk]]||{};if(pi.yepPricing){pricing=pi.yepPricing;break;}}
-    var now=new Date(), cutoff=new Date((pricing.cutoff||"2027-06-30")+"T23:59:59");
-    var tier=now<=cutoff?(pricing.early||defaults.early):(pricing.late||defaults.late);
-    var roomKey=roomData[room].key;
-    var fullPrice=0;
-    if(type===0) fullPrice=roomKey==="singola"?0:Number((tier.alloggioWorkshop||{})[roomKey]||0);
-    else if(type===1) fullPrice=roomKey==="singola"?0:Number((tier.soloVacanza||{})[roomKey]||0);
-    else fullPrice=Number(tier.soloWorkshop||0);
-    var priceText=fullPrice?fullPrice+" €":"Supplemento su richiesta";
-    var roomNote=hasStay?"Preferenza camera: "+roomData[room].label:"Nessun alloggio";
-
-    return {
-      accent: this.props.accent ?? "#F09000",
-      eventId: eventId,
-      bookingResources: "",
-      bookingChoice: what,
-      bookingNote: roomNote + " · Prezzo YEP: " + priceText,
-      bookingSeats: 1,
-      payOnline: true,
-      paymentMode: pay===0 ? "Iscrizione 10 € + saldo prima del Festival" : "Pagamento completo",
-      paymentAmount: pay===0 ? 10 : fullPrice,
-      payOpts: payOpts,
-      wsCards: wsCards,
-      types: types, levels: levels, rooms: rooms,
-      isWs: isWs, hasStay: hasStay,
-      available: capacityReady && rem > 0,
-      soldOut: capacityReady && rem === 0,
-      capacityPending: !capacityReady,
-      soldTitle: "Workshop al completo",
-      payNote: pay===0
-        ? "Paghi ora <strong>10 €</strong> di iscrizione con PayPal a info@artyouroma.it e saldi il restante importo prima del Festival. La camera resta una preferenza."
-        : "Paghi ora l’intero importo di <strong>"+(fullPrice?fullPrice+" €":"da confermare")+"</strong> con PayPal a info@artyouroma.it." + (hasStay ? " La camera resta una preferenza." : ""),
-      ctaLabel: "Conferma e paga con PayPal",
-      wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare YEP 2027: " + what + "."),
-      waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Per YEP 2027 (" + what + ") il workshop risulta completo: potete mettermi in lista d’attesa?"),
-      confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
-      doneTitle: "Prenotazione confermata!",
-      summary: "YEP 2027, 3-4-5 settembre · " + what + ".",
-      doneNote: "Ti abbiamo inviato un’email con i dettagli della prenotazione.",
-      confirm: function () { self.setState({ confirmed: true }); },
-      edit: function () { self.setState({ confirmed: false }); }
-    };
-
-  }
-}
-</script>
-
-
+</div>
 <script id="yep-pricing-sync">
 (function(){
   var fallback={early:{alloggioWorkshop:{quadrupla:320,tripla:330,doppia:350},soloVacanza:{quadrupla:200,tripla:210,doppia:230},soloWorkshop:250},late:{alloggioWorkshop:{quadrupla:350,tripla:360,doppia:380},soloVacanza:{quadrupla:230,tripla:240,doppia:260},soloWorkshop:280}};
