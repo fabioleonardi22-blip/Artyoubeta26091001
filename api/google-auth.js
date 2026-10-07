@@ -13,6 +13,7 @@ const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "").trim();
 const ALLOW_LEGACY_AUTH = String(process.env.ARTYOU_ALLOW_LEGACY_AUTH || "").toLowerCase() === "true";
 const COOKIE = "artyou_id_token";
 const { audit } = require("../lib/audit");
+const { normalizeRole } = require("../lib/authorization");
 
 function roleToAccessLevel(role) {
   if (role === "admin") return "Amministratore";
@@ -136,6 +137,11 @@ module.exports = async function handler(req,res) {
     if(!user||!user.active){
       if(method==="POST")clearAuthCookie(res);
       return res.status(403).json({ok:false,errore:"accesso_non_autorizzato"});
+    }
+    user.role=normalizeRole(user.role);
+    if(!user.role){
+      if(method==="POST")clearAuthCookie(res);
+      return res.status(403).json({ok:false,errore:"ruolo_non_valido"});
     }
 
     if(method==="POST"){
