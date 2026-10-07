@@ -458,7 +458,6 @@ function refresh(){
   setStatus("Caricamento eventi…","info");
   apiGet("list").then(assert).then(function(r){
     events=r.events||[];
-    try{sessionStorage.setItem("artyouGestionalePin",pin())}catch(e){}
     $("logoutBtn").style.display="inline-block";
     renderList();
     var editKey="";
@@ -483,9 +482,8 @@ function refresh(){
       setStatus("Gestionale collegato. "+events.length+" eventi trovati.","ok");
     }
   }).catch(function(e){
-    if(String(e.message||"").indexOf("pin_non_valido")!==-1){
-      try{sessionStorage.removeItem("artyouGestionalePin")}catch(x){}
-      $("logoutBtn").style.display="none";
+    if(String(e.message||"").indexOf("google_login_required")!==-1||String(e.message||"").indexOf("permesso_insufficiente")!==-1){
+      ArtyouGoogleAuth.clear();$("logoutBtn").style.display="none";
     }
     setStatus(e.message,"err");
   });
@@ -557,7 +555,7 @@ function updateJulyImportCount(){
   var btn=$("confirmJulyImportBtn");if(btn)btn.disabled=!selected;
 }
 function openJulyImport(){
-  if(!pin()){setStatus("Inserisci prima il PIN amministratore.","err");return}
+  if(!ArtyouGoogleAuth.getSession()){setStatus("Accedi con Google prima di continuare.","err");return}
   renderJulyImportList();
   $("julyImportModal").classList.add("open");
 }
