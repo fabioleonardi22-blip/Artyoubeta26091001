@@ -602,7 +602,10 @@ module.exports = async function handler(req, res) {
       if (user.role === "teacher") {
         return res.status(200).json({ok:true,people:people.map(function(p){return {id:p.id,name:p.name,kind:p.kind,role:p.role,active:p.active};})});
       }
-      return res.status(200).json({ok:true,people:people});
+      if (user.role === "admin" || user.role === "staff") {
+        return res.status(200).json({ok:true,people:people});
+      }
+      return res.status(403).json({ok:false,errore:"ruolo_non_valido"});
     }
 
     if (action === "save_person") {
