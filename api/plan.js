@@ -618,14 +618,11 @@ module.exports = async function handler(req, res) {
     }
 
     if (action === "list") {
-      let migration = null;
-      try { migration = await migrateLegacyIfNeeded(credential); }
-      catch (migrationErr) { console.error("PLAN_LEGACY_MIGRATION_ERROR", String(migrationErr && migrationErr.message || migrationErr)); }
       const from = String(body.from || params.get("from") || "");
       const to = String(body.to || params.get("to") || "");
       const stored = await listStoredTasks(from,to);
       const site = await listSiteEvents(from,to);
-      return res.status(200).json({ok:true,events:stored.concat(site),storage:"mysql",calendarMirror:!!APPS_SCRIPT_URL,migration:migration});
+      return res.status(200).json({ok:true,events:stored.concat(site),storage:"mysql",calendarMirror:!!APPS_SCRIPT_URL});
     }
 
     if (action === "save") {
