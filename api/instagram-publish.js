@@ -7,6 +7,7 @@ const {
 } = require("../lib/security");
 
 const { requireUser, authErrorStatus } = require("../lib/authorization");
+const { audit } = require("../lib/audit");
 
 module.exports = async function handler(req, res) {
   setSecurityHeaders(res);
@@ -23,7 +24,8 @@ module.exports = async function handler(req, res) {
   if (!general.ok) return rejectRateLimited(res, general);
 
   try {
-    try { await requireUser(req, ["admin"]); }
+    let auth;
+    try { auth=await requireUser(req, ["admin"]); }
     catch (authErr) {
       const code=String(authErr&&authErr.message||"auth_error");
       return res.status(authErrorStatus(code)).json({ok:false,errore:code});
@@ -98,6 +100,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    await audit({email:auth.identity.email,role:auth.user.role},"instagram_publish",String(publishData.id||""),{});
     return res.status(200).json({
       ok: true,
       media_id: publishData.id,
