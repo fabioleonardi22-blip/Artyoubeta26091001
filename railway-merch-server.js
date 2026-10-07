@@ -12,6 +12,8 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
 const MERCH_FROM_EMAIL = process.env.MERCH_FROM_EMAIL || "Artyou Roma <ordini@artyouroma.it>";
 const MERCH_ADMIN_EMAIL = process.env.MERCH_ADMIN_EMAIL || "info@artyouroma.it";
 const MERCH_BACKUP_EMAIL = process.env.MERCH_BACKUP_EMAIL || "artyouroma@gmail.com";
+const PROXY_SECRET = String(process.env.ARTYOU_MERCH_PROXY_SECRET || "").trim();
+const rateBuckets = new Map();
 
 const pool = mysql.createPool({
   host: process.env.MYSQLHOST,
@@ -28,6 +30,19 @@ const clean=(v,n)=>String(v==null?"":v).replace(/[\u0000-\u001F]+/g," ").trim().
 const keyOf=(a,b,c)=>[a,b,c].map(v=>String(v==null?"":v).trim()).join("|");
 const send=(res,status,obj)=>{const body=JSON.stringify(obj);res.writeHead(status,{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"});res.end(body)};
 const paypalUrl=(id,total)=>"https://www.paypal.com/cgi-bin/webscr?"+new URLSearchParams({cmd:"_xclick",business:PAYPAL_EMAIL,item_name:"Artyou Merch "+id,invoice:id,amount:Number(total).toFixed(2),currency_code:"EUR"}).toString();
+function sameSecret(a,b){
+  const aa=Buffer.from(String(a||"")),bb=Buffer.from(String(b||""));
+  if(!aa.length||aa.length!==bb.length)return false;
+  return crypto.timingSafeEqual(aa,bb);
+}
+function clientIp(req){return String(req.headers["x-forwarded-for"]||req.socket.remoteAddress||"unknown").split(",")[0].trim()}
+function allowRequest(req,limit,windowMs){
+  const now=Date.now(),key=clientIp(req),old=rateBuckets.get(key);
+  const item=!old||old.resetAt<=now?{count:0,resetAt:now+windowMs}:old;
+  item.count++;rateBuckets.set(key,item);
+  if(rateBuckets.size>5000)for(const [k,v] of rateBuckets)if(v.resetAt<=now)rateBuckets.delete(k);
+  return item.count<=limit;
+}
 const orderCode=()=>{const d=new Date(),p=n=>String(n).padStart(2,"0");return "MERCH-"+d.getUTCFullYear()+p(d.getUTCMonth()+1)+p(d.getUTCDate())+"-"+p(d.getUTCHours())+p(d.getUTCMinutes())+p(d.getUTCSeconds())+"-"+crypto.randomBytes(3).toString("hex").toUpperCase()};
 
 async function stockPayload(conn){
@@ -167,9 +182,15 @@ const server=http.createServer(async(req,res)=>{
   try{
     const url=new URL(req.url||"/","http://localhost");
     if(req.method==="GET"&&url.pathname==="/health")return send(res,200,{ok:true,service:"artyou-merch"});
-    if(req.method==="GET"&&url.pathname==="/merch"&&url.searchParams.get("stock")==="1")return send(res,200,{ok:true,varianti:await stockPayload()});
+    if(req.method==="GET"&&url.pathname==="/merch"&&url.searchParams.get("stock")==="1"){
+      if(!allowRequest(req,180,60*1000))return send(res,429,{ok:false,errore:"troppi_tentativi"});
+      return send(res,200,{ok:true,varianti:await stockPayload()});
+    }
     if(req.method==="POST"&&url.pathname==="/merch"){
+      if(PROXY_SECRET&&!sameSecret(req.headers["x-artyou-proxy-secret"],PROXY_SECRET))return send(res,403,{ok:false,errore:"forbidden"});
+      if(!allowRequest(req,12,60*1000))return send(res,429,{ok:false,errore:"troppi_tentativi"});
       const data=await readBody(req);
+      if(String(data._hp||"").trim())return send(res,200,{ok:true});
       const out=await createOrder(data);
       if(out.status===200&&out.mail){
         try{await sendOrderEmails(out.mail);console.log("MERCH_EMAIL_SUCCESS")}
