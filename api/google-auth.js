@@ -14,6 +14,7 @@ const ALLOW_LEGACY_AUTH = String(process.env.ARTYOU_ALLOW_LEGACY_AUTH || "").toL
 const COOKIE = "artyou_id_token";
 const { audit } = require("../lib/audit");
 const { normalizeRole } = require("../lib/authorization");
+const { persistentRateLimit } = require("../lib/persistent-rate-limit");
 
 function roleToAccessLevel(role) {
   if (role === "admin") return "Amministratore";
@@ -102,7 +103,9 @@ module.exports = async function handler(req,res) {
   }
   if(!sameOrigin(req)) return res.status(403).json({ok:false,errore:"origin_non_consentita"});
 
-  const limit=rateLimit(req,{key:"google-auth",limit:30,windowMs:60*1000});
+  let limit;
+  try{limit=await persistentRateLimit(req,{key:"google-auth",limit:30,windowMs:60*1000});}
+  catch(_){limit=rateLimit(req,{key:"google-auth-fallback",limit:30,windowMs:60*1000});}
   applyRateLimitHeaders(res,limit);
   if(!limit.ok)return rejectRateLimited(res,limit);
 
