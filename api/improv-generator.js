@@ -48,9 +48,7 @@ module.exports=async function handler(req,res){
     const slug=String(req.query&&req.query.slug||"").toLowerCase();
     const seo=SEO[slug];
     if(!seo)return res.status(404).send("Pagina non trovata");
-    const proto=String(req.headers["x-forwarded-proto"]||"https");
-    const host=String(req.headers.host||"");
-    const origin=proto+"://"+host;
+    const origin="https://artyouroma.it";
     const r=await fetch(origin+"/improv-generator/index.html?seo="+Date.now(),{redirect:"follow",cache:"no-store"});
     let html=await r.text();
     const canonical="https://artyouroma.it/improv-generator/"+slug+"/";
