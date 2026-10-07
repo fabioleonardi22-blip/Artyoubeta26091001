@@ -109,7 +109,7 @@ async function parseBody(req) {
 async function legacyCall(action, credential, payload) {
   if (!APPS_SCRIPT_URL || !credential) return null;
   try {
-    let url = APPS_SCRIPT_URL + "?action=" + encodeURIComponent("po_" + action) + "&token=" + encodeURIComponent(credential) + "&_=" + Date.now();
+    let url = APPS_SCRIPT_URL + "?action=" + encodeURIComponent("po_" + action) + "&_=" + Date.now();
     const options = { method:payload ? "POST" : "GET", redirect:"follow", headers:{} };
     if (payload) {
       const body = Object.assign({}, payload, { action:"po_" + action, token:credential });
