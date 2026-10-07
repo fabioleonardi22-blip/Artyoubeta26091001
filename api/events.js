@@ -3,6 +3,7 @@ const {
 } = require("../lib/security");
 const { requireUser, authErrorStatus } = require("../lib/authorization");
 const { transaction } = require("../lib/db");
+const { audit } = require("../lib/audit");
 
 const APPS_SCRIPT_URL=String(process.env.ARTYOU_APPS_SCRIPT_URL||"").trim();
 const ADMIN_PIN=String(process.env.ARTYOU_GESTIONALE_PIN||"").trim();
@@ -38,6 +39,7 @@ module.exports=async function handler(req,res){
   setSecurityHeaders(res);
   if(!APPS_SCRIPT_URL)return res.status(503).json({ok:false,errore:"backend_non_configurato"});
   try{
+    let auth=null;
     const method=String(req.method||"GET").toUpperCase();
     if(!["GET","HEAD","POST"].includes(method)){res.setHeader("Allow","GET, HEAD, POST");return res.status(405).json({ok:false,errore:"method_not_allowed"});}
     const params=getQuery(req), queryAction=String(params.get("action")||"").toLowerCase();
@@ -50,7 +52,7 @@ module.exports=async function handler(req,res){
       if(!sameOrigin(req))return res.status(403).json({ok:false,errore:"origin_non_consentita"});
       const limit=rateLimit(req,{key:"events-admin",limit:60,windowMs:60*1000});applyRateLimitHeaders(res,limit);
       if(!limit.ok)return rejectRateLimited(res,limit);
-      try{await requireUser(req,["admin","staff"]);}catch(e){const code=String(e&&e.message||"auth_error");return res.status(authErrorStatus(code)).json({ok:false,errore:code});}
+      try{auth=await requireUser(req,["admin","staff"]);}catch(e){const code=String(e&&e.message||"auth_error");return res.status(authErrorStatus(code)).json({ok:false,errore:code});}
       if(!ADMIN_PIN)return res.status(503).json({ok:false,errore:"gestionale_secret_non_configurato"});
     }
 
