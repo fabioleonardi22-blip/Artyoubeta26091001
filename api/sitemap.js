@@ -78,9 +78,7 @@ module.exports = async function handler(req, res) {
   }
 
   const today = new Date().toISOString().slice(0,10);
-  const proto = String(req.headers["x-forwarded-proto"] || "https");
-  const host = String(req.headers.host || "");
-  const origin = proto + "://" + host;
+  const origin = "https://artyouroma.it";
 
   const urls = new Map();
   STATIC_URLS.forEach(path => urls.set(SITE + path, null));
