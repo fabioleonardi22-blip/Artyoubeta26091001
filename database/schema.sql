@@ -231,3 +231,34 @@ CREATE TABLE IF NOT EXISTS security_rate_limits (
   PRIMARY KEY (bucket_key),
   KEY idx_security_rate_expiry (expires_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- Identità esterne: l'autorizzazione usa il subject Google immutabile, non l'email.
+CREATE TABLE IF NOT EXISTS auth_identities (
+  provider VARCHAR(32) NOT NULL,
+  subject VARCHAR(255) NOT NULL,
+  user_id BIGINT NOT NULL,
+  email_at_link VARCHAR(255) NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_seen_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (provider,subject),
+  UNIQUE KEY uq_auth_identity_user (provider,user_id),
+  KEY idx_auth_identity_user (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Sessioni opache lato server. Nel browser non viene conservato il Google ID token.
+CREATE TABLE IF NOT EXISTS auth_sessions (
+  session_hash CHAR(64) NOT NULL,
+  user_id BIGINT NOT NULL,
+  google_subject VARCHAR(255) NOT NULL,
+  google_email VARCHAR(255) NOT NULL,
+  google_name VARCHAR(255) NULL,
+  google_picture TEXT NULL,
+  google_credential TEXT NULL,
+  expires_at DATETIME NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_seen_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (session_hash),
+  KEY idx_auth_sessions_user (user_id),
+  KEY idx_auth_sessions_expiry (expires_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
