@@ -89,10 +89,11 @@ function requireAdmin(user) {
   if (!user || user.role !== "admin") throw new Error("permesso_admin_richiesto");
 }
 function roleFromAccessLevel(level) {
-  const v=String(level||"").toLowerCase();
+  const v=String(level||"").trim().toLowerCase();
   if(v==="amministratore"||v==="admin")return "admin";
   if(v==="staff")return "staff";
-  return "teacher";
+  if(v==="docente"||v==="teacher")return "teacher";
+  throw new Error("ruolo_non_valido");
 }
 
 async function parseBody(req) {
