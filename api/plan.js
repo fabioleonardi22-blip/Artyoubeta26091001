@@ -1,5 +1,6 @@
 const { verifyGoogleIdToken, authToken } = require("../lib/google-auth");
 const { query, transaction } = require("../lib/db");
+const { audit } = require("../lib/audit");
 const {
   rateLimit,
   applyRateLimitHeaders,
@@ -568,16 +569,19 @@ module.exports = async function handler(req, res) {
 
     if (action === "save") {
       const event = await saveTask(user, credential, body.event || {});
+      await audit({email:identity.email,role:user.role},"plan_save",String(event&&event.id||""),{});
       return res.status(200).json({ok:true,event:event,storage:"mysql"});
     }
 
     if (action === "delete") {
       await deleteTask(user, credential, body.id);
+      await audit({email:identity.email,role:user.role},"plan_delete",String(body.id||""),{});
       return res.status(200).json({ok:true,storage:"mysql"});
     }
 
     if (action === "generate_plan") {
       const out = await generatePlan(user, body.siteEventId, body.siteDateIndex);
+      await audit({email:identity.email,role:user.role},"plan_generate",String(body.siteEventId||""),{created:out&&out.created||0});
       out.storage = "mysql";
       return res.status(200).json(out);
     }
