@@ -11,6 +11,7 @@ const {
 const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "").trim();
 const ALLOW_LEGACY_AUTH = String(process.env.ARTYOU_ALLOW_LEGACY_AUTH || "").toLowerCase() === "true";
 const COOKIE = "artyou_id_token";
+const { audit } = require("../lib/audit");
 
 function roleToAccessLevel(role) {
   if (role === "admin") return "Amministratore";
@@ -139,7 +140,10 @@ module.exports = async function handler(req,res) {
       return res.status(403).json({ok:false,errore:"accesso_non_autorizzato"});
     }
 
-    if(method==="POST")setAuthCookie(res,credential);
+    if(method==="POST"){
+      setAuthCookie(res,credential);
+      await audit({email:identity.email,role:user.role},"login","google",{});
+    }
     return res.status(200).json(sessionFromUser(identity,user));
   }catch(err){
     const code=String(err&&err.message||"autenticazione_non_valida");
