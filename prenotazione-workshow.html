@@ -7,16 +7,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><script id="artyou-viewport">(function(){try{if(window.matchMedia&&window.matchMedia("(max-width: 820px)").matches){document.documentElement.classList.add("am-mobile");}}catch(e){}})();</script>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<script src="/js/support.js"></script>
+
 <script src="/js/enhancements.js"></script>
 
 <style id="artyou-centered-layout">
 html{background:#C79A2B!important;}
 body{margin:0!important;background:#C79A2B!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;min-height:100vh!important;}
-body>x-dc,x-dc{width:100%!important;max-width:1200px!important;margin:0 auto!important;}
-x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 auto!important;background:#fff!important;box-shadow:0 0 36px rgba(44,31,8,.30)!important;min-height:100vh!important;}
-@media(min-width:1200px){body>x-dc,x-dc,x-dc>div:first-of-type{width:1200px!important;max-width:1200px!important;}}
-@media(max-width:1199px){html,body{background:#fff!important;} body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;box-shadow:none!important;}}
+body>#artyou-page-root,#artyou-page-root{width:100%!important;max-width:1200px!important;margin:0 auto!important;}
+#artyou-page-root>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 auto!important;background:#fff!important;box-shadow:0 0 36px rgba(44,31,8,.30)!important;min-height:100vh!important;}
+@media(min-width:1200px){body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:1200px!important;max-width:1200px!important;}}
+@media(max-width:1199px){html,body{background:#fff!important;} body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:100%!important;max-width:100%!important;box-shadow:none!important;}}
 </style>
 
 
@@ -204,7 +204,7 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 @media (max-width: 820px){
   *,*::before,*::after{box-sizing:border-box;}
   html,body{width:100%;max-width:100%;overflow-x:hidden!important;}
-  body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
+  body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
   [style*="width: 1440px"],[style*="width:1440px"]{width:100%!important;max-width:100%!important;min-width:0!important;}
   main,section,article,header,footer,nav,form{max-width:100%;min-width:0;}
   img,video,iframe,svg{max-width:100%;height:auto;}
@@ -304,15 +304,15 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 <style id="workshow-booking-tm-align">.workshow-booking-title .artyou-tm{top:.78em!important;}</style>
 </head>
 <body>
-<x-dc>
-<helmet>
+<div id="artyou-page-root">
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=Instrument+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="icon" type="image/png" href="/img/favicon-192.png">
 <style>
 body{margin:0;background:#F6F3EC}
 a{color:#1A6E99}a:hover{color:#12506F}
 </style>
-</helmet>
+
 <div class="am-wfull am-hauto" style="width: 1440px; height: auto; min-height: 100vh; display: flex; flex-direction: column; background: #F6F3EC; color: #13181D; font-family: 'Instrument Sans', 'Helvetica Neue', Helvetica, sans-serif; position: relative;">
 <header class="am-px am-wrap" style="display: flex; align-items: center; justify-content: space-between; padding: 20px 120px; position: sticky; top: 0; z-index: 500; background: #13181D;">
 <a href="/" aria-label="Artyou Roma – Home" class="am-wrap" style="display: flex; align-items: center;"><img decoding="async" src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" style="height: 56px; width: auto; display: block;"></a>
@@ -384,7 +384,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <a href="mailto:info@artyouroma.it" style="color: #9AA5AE;">info@artyouroma.it</a><a href="/privacy-policy/" target="_blank" rel="noopener" style="color:#9AA5AE;">Privacy Policy</a>
 </footer>
 </div>
-</x-dc>
+</div>
 
 
 
