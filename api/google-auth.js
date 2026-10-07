@@ -1,5 +1,6 @@
 const { verifyGoogleIdToken, authToken } = require("../lib/google-auth");
 const { query } = require("../lib/db");
+const { userByGoogleSubject, bootstrapGoogleIdentity } = require("../lib/auth-identity");
 const {
   rateLimit,
   applyRateLimitHeaders,
@@ -44,12 +45,9 @@ function sessionFromUser(identity, user) {
   };
 }
 
-async function findMysqlUser(email) {
-  const rows = await query(
-    "SELECT id,email,display_name,role,active,metadata FROM users WHERE LOWER(email)=LOWER(?) LIMIT 1",
-    [email]
-  );
-  return rows && rows[0] ? rows[0] : null;
+async function findMysqlUser(identity, allowBootstrap) {
+  if (!identity || !identity.sub) return null;
+  return allowBootstrap ? bootstrapGoogleIdentity(identity) : userByGoogleSubject(identity.sub);
 }
 
 async function authorizeViaAppsScript(credential) {
@@ -82,7 +80,7 @@ async function migrateLegacyUser(identity, session) {
      ON DUPLICATE KEY UPDATE display_name=VALUES(display_name),active=VALUES(active),metadata=VALUES(metadata),updated_at=CURRENT_TIMESTAMP`,
     [identity.email,person.name||identity.name||"",role,person.active===false?0:1,JSON.stringify(metadata)]
   );
-  return findMysqlUser(identity.email);
+  return bootstrapGoogleIdentity(identity);
 }
 
 function setAuthCookie(res, token) {
@@ -128,7 +126,7 @@ module.exports = async function handler(req,res) {
 
     const identity=await verifyGoogleIdToken(credential);
     let user=null;
-    try{user=await findMysqlUser(identity.email);}
+    try{user=await findMysqlUser(identity,method==="POST");}
     catch(dbErr){console.error("MYSQL_AUTH_LOOKUP_ERROR",String(dbErr&&dbErr.message||dbErr));throw new Error("mysql_unavailable");}
 
     if(!user && method==="POST" && ALLOW_LEGACY_AUTH){
