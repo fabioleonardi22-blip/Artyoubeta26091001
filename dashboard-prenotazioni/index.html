@@ -92,9 +92,11 @@ a{text-decoration:none;color:inherit}
   }
 }
 
+.auth-gate{position:fixed;inset:0;z-index:100;background:#F6F3EC;display:flex;align-items:center;justify-content:center;padding:20px}.auth-card{width:min(420px,100%);background:#fff;border:1px solid #DCE3E8;border-radius:14px;padding:26px;box-shadow:0 18px 50px rgba(25,35,45,.12);text-align:center}.auth-card h2{margin:0 0 8px}.auth-card p{color:#68737D;line-height:1.45}.auth-status{margin-top:12px;font-size:13px;color:#68737D}.auth-gate.hidden{display:none}
 </style>
 </head>
 <body>
+<div id="authGate" class="auth-gate"><div class="auth-card"><h2>Area riservata Artyou</h2><p>Accedi con un account Google autorizzato per visualizzare la dashboard prenotazioni.</p><div id="googleLoginButton" style="display:flex;justify-content:center;margin-top:16px"></div><div id="loginStatus" class="auth-status">Verifica accesso Google…</div></div></div>
 <header class="topbar">
   <a class="brand" href="/"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma"></a>
   <nav class="topnav">
@@ -243,7 +245,16 @@ function exportExcel(){
 $("refresh").onclick=refresh;$("printBtn").onclick=function(){window.print()};$("exportBtn").onclick=exportExcel;
 ["eventFilter","typeFilter","statusFilter","fromDate","toDate"].forEach(function(id){$(id).addEventListener("change",applyFilters)});$("search").addEventListener("input",applyFilters);
 $("clearFilters").onclick=function(){$("eventFilter").value="all";$("typeFilter").value="all";$("statusFilter").value="all";$("fromDate").value="";$("toDate").value="";$("search").value="";applyFilters()};
-refresh();setInterval(refresh,10000);
+ArtyouGoogleAuth.init({
+  buttonId:"googleLoginButton",
+  statusId:"loginStatus",
+  roles:["admin","staff"],
+  onAuthorized:function(){
+    $("authGate").classList.add("hidden");
+    refresh();
+    setInterval(refresh,10000);
+  }
+});
 })();
 </script>
 </body>
