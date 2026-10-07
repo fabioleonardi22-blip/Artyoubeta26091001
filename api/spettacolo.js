@@ -37,9 +37,7 @@ function fallback(slug) {
 module.exports = async function handler(req, res) {
   try {
     const slug = String((req.query && req.query.slug) || "").trim();
-    const proto = String(req.headers["x-forwarded-proto"] || "https");
-    const host = String(req.headers.host || "");
-    const origin = proto + "://" + host;
+    const origin = "https://artyouroma.it";
 
     const templateResp = await fetch(origin + "/spettacolo.html", { redirect: "follow" });
     let html = await templateResp.text();
