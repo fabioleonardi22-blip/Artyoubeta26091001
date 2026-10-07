@@ -1,4 +1,4 @@
-const { verifyGoogleIdToken, bearerToken } = require("../lib/google-auth");
+const { verifyGoogleIdToken, authToken } = require("../lib/google-auth");
 const { query, transaction } = require("../lib/db");
 const {
   rateLimit,
@@ -536,7 +536,7 @@ module.exports = async function handler(req, res) {
   if (!limit.ok) return rejectRateLimited(res, limit);
 
   try {
-    const credential = bearerToken(req);
+    const credential = authToken(req);
     if (!credential || credential.length > 8192) return res.status(401).json({ok:false,errore:"google_login_required"});
     const identity = await verifyGoogleIdToken(credential);
     const user = await authorizedUser(identity);
@@ -547,7 +547,13 @@ module.exports = async function handler(req, res) {
     const body = method === "POST" ? await parseBody(req) : {};
     const action = String(body.action || params.get("action") || "").replace(/^po_/,"");
 
-    if (action === "people") return res.status(200).json({ok:true,people:await listPeople()});
+    if (action === "people") {
+      const people = await listPeople();
+      if (user.role === "teacher") {
+        return res.status(200).json({ok:true,people:people.map(function(p){return {id:p.id,name:p.name,kind:p.kind,role:p.role,active:p.active};})});
+      }
+      return res.status(200).json({ok:true,people:people});
+    }
 
     if (action === "list") {
       let migration = null;
