@@ -2,6 +2,7 @@ const {
   rateLimit, applyRateLimitHeaders, rejectRateLimited, sameOrigin, setSecurityHeaders
 } = require("../lib/security");
 const { requireUser, authErrorStatus } = require("../lib/authorization");
+const { audit } = require("../lib/audit");
 
 module.exports=async function handler(req,res){
   setSecurityHeaders(res);
@@ -11,7 +12,8 @@ module.exports=async function handler(req,res){
   const general=rateLimit(req,{key:"checkin-general",limit:90,windowMs:60*1000});
   applyRateLimitHeaders(res,general);if(!general.ok)return rejectRateLimited(res,general);
 
-  try{await requireUser(req,["admin","staff"]);}
+  let auth;
+  try{auth=await requireUser(req,["admin","staff"]);}
   catch(authErr){const code=String(authErr&&authErr.message||"auth_error");return res.status(authErrorStatus(code)).json({ok:false,errore:code});}
 
   let body=req.body||{};
@@ -41,6 +43,7 @@ module.exports=async function handler(req,res){
     });
     const text=await upstream.text();let data;
     try{data=JSON.parse(text);}catch(_){return res.status(502).json({ok:false,errore:"risposta_apps_script_non_valida"});}
+    if(upstream.ok&&data&&data.ok&&action==="checkin")await audit({email:auth.identity.email,role:auth.user.role},"checkin",normalizedCode,{evento:normalizedEvent});
     return res.status(upstream.ok?200:upstream.status).json(data);
   }catch(_){return res.status(502).json({ok:false,errore:"apps_script_non_raggiungibile"});}
 };
