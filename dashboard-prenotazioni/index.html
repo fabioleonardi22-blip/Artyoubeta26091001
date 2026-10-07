@@ -7,6 +7,8 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <script src="/js/artyou-booking-config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="/js/artyou-google-auth.js"></script>
 <style>
 :root{
   --ink:#13181D;--ink2:#1D252D;--paper:#F5F7F9;--white:#fff;--line:#DCE3E8;--line2:#E8EDF1;
@@ -181,7 +183,7 @@ a{text-decoration:none;color:inherit}
 <script>
 (function(){
 "use strict";
-var endpoint="/api/mysql-events";
+var endpoint="/api/admin-dashboard";
 var data=[],filtered=[];
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
@@ -228,9 +230,9 @@ function updateStats(){
 }
 function refresh(){
  $("rows").innerHTML='<tr><td colspan="9" class="empty">Caricamento…</td></tr>';
- Promise.all([getJSON(endpoint+"?_="+Date.now()),getJSON(endpoint+"?disponibilita=1&_="+Date.now())]).then(function(r){
-   if(!r[0].ok||!r[1].ok)throw new Error((r[0].errore||r[1].errore||"Errore dati"));
-   var events=r[0].eventi||{},free=r[1].disponibilita||{};
+ getJSON(endpoint+"?_="+Date.now()).then(function(r){
+   if(!r.ok)throw new Error(r.errore||"Errore dati");
+   var events=r.eventi||{},free=r.disponibilita||{};
    data=Object.keys(events).map(function(id){var e=events[id]||{},cap=Math.max(0,parseInt(e.capienza||0,10)||0),f=Math.max(0,parseInt(free[id]||0,10)||0),sortDate=String(e.dataInput||normDate(e.data)||""),sortTime=String(e.oraInput||e.ora||"");return{id:id,title:e.titolo||id,date:e.data||"",cap:cap,free:f,booked:Math.max(0,cap-f),category:categoryOf(e.titolo||id,id,e.tipo),sortDate:sortDate,sortTime:sortTime}}).sort(function(a,b){var da=a.sortDate||"9999-12-31",db=b.sortDate||"9999-12-31";if(da!==db)return da.localeCompare(db);return(a.sortTime||"").localeCompare(b.sortTime||"")});
    updateStats();populateEvents();$("updated").value="Aggiornato "+new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit",second:"2-digit"});applyFilters()
  }).catch(function(err){$("rows").innerHTML='<tr><td colspan="9" class="error">Impossibile caricare i dati: '+esc(err.message)+'</td></tr>'})
