@@ -6,22 +6,10 @@ const {
   setSecurityHeaders
 } = require("../lib/security");
 
-const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "").trim();
-
-async function validateAdminPin(pin) {
-  if (!pin || pin.length > 128) return false;
-  const url = APPS_SCRIPT_URL + "?action=list&pin=" + encodeURIComponent(pin) + "&_=" + Date.now();
-  const r = await fetch(url, { redirect: "follow" });
-  if (!r.ok) return false;
-  let data = null;
-  try { data = await r.json(); } catch (_) { return false; }
-  return !!(data && data.ok);
-}
+const { requireUser, authErrorStatus } = require("../lib/authorization");
 
 module.exports = async function handler(req, res) {
   setSecurityHeaders(res);
-  if (!APPS_SCRIPT_URL) return res.status(503).json({ ok:false, errore:"backend_non_configurato" });
-
   if (String(req.method || "GET").toUpperCase() !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ ok: false, errore: "method_not_allowed" });
@@ -35,6 +23,11 @@ module.exports = async function handler(req, res) {
   if (!general.ok) return rejectRateLimited(res, general);
 
   try {
+    try { await requireUser(req, ["admin"]); }
+    catch (authErr) {
+      const code=String(authErr&&authErr.message||"auth_error");
+      return res.status(authErrorStatus(code)).json({ok:false,errore:code});
+    }
     const token = process.env.INSTAGRAM_ACCESS_TOKEN;
     const accountId = process.env.INSTAGRAM_ACCOUNT_ID;
     if (!token || !accountId) {
@@ -50,16 +43,9 @@ module.exports = async function handler(req, res) {
       catch (_) { return res.status(400).json({ ok:false, errore:"json_non_valido" }); }
     }
 
-    const pin = String(body.pin || "").trim();
+    delete body.pin;
     const caption = String(body.caption || "").trim();
     const imageUrl = String(body.imageUrl || "").trim();
-
-    if (!(await validateAdminPin(pin))) {
-      const failed = rateLimit(req, { key:"instagram-pin-fail", limit:5, windowMs:10 * 60 * 1000 });
-      applyRateLimitHeaders(res, failed);
-      if (!failed.ok) return rejectRateLimited(res, failed);
-      return res.status(401).json({ ok: false, errore: "pin_non_valido" });
-    }
 
     if (!caption || caption.length > 2200) {
       return res.status(400).json({ ok: false, errore: "caption_non_valida" });
