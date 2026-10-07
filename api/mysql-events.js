@@ -48,13 +48,8 @@ function defaultRifConfig() {
 async function ensureRifConfig(row, meta) {
   if (!isRifMaster(row)) return meta;
   if (meta && meta.rif && typeof meta.rif === "object") return meta;
-  const next = Object.assign({}, meta || {}, {rif: defaultRifConfig()});
-  try {
-    await query("UPDATE events SET metadata=? WHERE id=? AND (metadata IS NULL OR JSON_EXTRACT(metadata,'$.rif') IS NULL)", [JSON.stringify(next), row.id]);
-  } catch (e) {
-    console.warn("RIF_METADATA_SEED_ERROR", String(e && e.message || e));
-  }
-  return next;
+  // Endpoint pubblico: mai modificare il database durante una lettura GET.
+  return Object.assign({}, meta || {}, {rif: defaultRifConfig()});
 }
 
 module.exports = async function handler(req, res) {
