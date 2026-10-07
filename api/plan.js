@@ -1,5 +1,6 @@
 const { verifyGoogleIdToken, authToken } = require("../lib/google-auth");
 const { query, transaction } = require("../lib/db");
+const { userByGoogleSubject } = require("../lib/auth-identity");
 const { audit } = require("../lib/audit");
 const {
   rateLimit,
@@ -74,11 +75,7 @@ function accessLevel(role) {
 }
 
 async function authorizedUser(identity) {
-  const rows = await query(
-    "SELECT id,email,display_name,role,active,metadata FROM users WHERE LOWER(email)=LOWER(?) LIMIT 1",
-    [identity.email]
-  );
-  const u = rows && rows[0];
+  const u = await userByGoogleSubject(identity && identity.sub);
   if (!u || !u.active) throw new Error("accesso_non_autorizzato");
   u.role = String(u.role || "").trim().toLowerCase();
   if (!["admin","staff","teacher"].includes(u.role)) throw new Error("ruolo_non_valido");
