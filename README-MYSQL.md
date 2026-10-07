@@ -104,3 +104,13 @@ Google Identity → API Vercel → tabella users MySQL
 Per rendere la migrazione non distruttiva, gli utenti non ancora presenti in MySQL vengono verificati una sola volta tramite il vecchio backend Apps Script; se autorizzati, vengono inseriti automaticamente nella tabella `users`. Dagli accessi successivi l'autorizzazione viene letta direttamente da MySQL.
 
 Se MySQL è temporaneamente indisponibile durante questa fase di transizione, Apps Script resta come fallback per evitare di bloccare l'area interna.
+
+
+## Hardening autenticazione · 7 ottobre 2026
+
+- MySQL `users` è l'unica authority per autorizzare gli accessi; il fallback Apps Script è disattivato di default (`ARTYOU_ALLOW_LEGACY_AUTH=false`).
+- Google Identity viene verificato server-side (firma, audience, issuer, scadenza, email verificata) e il token viene conservato in cookie `HttpOnly; Secure; SameSite=Strict`, non in localStorage/sessionStorage.
+- Gestionale Eventi, Scanner QR e Dashboard Prenotazioni richiedono Google login e RBAC. Le mutazioni Eventi/Piano Operativo/Check-in/Instagram vengono registrate in `security_audit`.
+- Il Gestionale Eventi usa MySQL come storage autoritativo. Il vecchio PIN non viene più inviato dal browser né usato per list/save/delete; resta solo come integrazione server-side opzionale per l'upload immagini legacy Apps Script.
+- Il proxy merchandising applica rate limit, honeypot e può autenticarsi verso Railway con `ARTYOU_MERCH_PROXY_SECRET`; la stessa variabile deve essere configurata su Vercel e sul servizio Railway.
+- La CSP è ora applicata anche in enforcement mode; la policy Report-Only più restrittiva resta attiva per guidare la successiva eliminazione degli script inline.
