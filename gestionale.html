@@ -7,6 +7,8 @@
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <script src="/js/artyou-events-config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="/js/artyou-google-auth.js"></script>
 <style>
 :root{--ink:#13181D;--paper:#F5F7F9;--line:#DCE3E8;--orange:#F09000;--blue:#0B74E5;--green:#0FAF62;--muted:#68737D;--white:#fff;--red:#9E2942;--shadow:0 7px 22px rgba(18,26,34,.06)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}a{text-decoration:none;color:inherit}
@@ -139,15 +141,16 @@ label{font-size:12px;font-weight:800;display:flex;flex-direction:column;gap:7px}
 <div class="app">
   <aside class="panel sidebar">
     <div>
-      <label>PIN amministratore</label>
-      <div class="login"><input id="pin" type="password" autocomplete="current-password" placeholder="PIN"><button class="btn dark" id="loginBtn">Accedi</button><button class="btn soft" id="logoutBtn" style="display:none">Esci</button></div>
+      <label>Accesso area interna</label>
+      <div id="googleLoginButton" style="margin-top:8px"></div>
+      <button class="btn soft" id="logoutBtn" style="display:none;margin-top:8px">Esci</button>
     </div>
     <div class="toolbar"><button class="btn primary" id="newBtn">+ Nuovo evento</button><button class="btn soft" id="refreshBtn">Aggiorna</button><button class="btn soft" id="importJuly2027Btn">Importa luglio 2027</button></div>
     <div style="display:grid;grid-template-columns:1fr 120px;gap:8px">
       <input id="eventSearch" placeholder="Cerca evento…">
       <select id="eventStatusFilter"><option value="all">Tutti</option><option value="published">Pubblicati</option><option value="draft">Bozze</option></select>
     </div>
-    <div id="status" class="status info">Configura l'endpoint e inserisci il PIN per iniziare.</div>
+    <div id="status" class="status info">Verifica accesso Google…</div>
     <div class="list" id="eventList"><div class="empty">Nessun evento caricato.</div></div>
   </aside>
 
@@ -335,12 +338,11 @@ var returnTo="/calendario-docenti/";
 
 
 function $(id){return document.getElementById(id)}
-function pin(){return $("pin").value.trim()}
 function setStatus(msg,type){var s=$("status");s.className="status "+(type||"info");s.textContent=msg}
 function slugify(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")}
 function toggleSaggiFields(){var on=$("eventType")&&$("eventType").value==="SAGGI";var box=$("saggiFields");if(box)box.style.display=on?"block":"none";var y=$("yepPricingFields");if(y)y.style.display=$("eventType")&&$("eventType").value==="YEP"?"block":"none"}
-function apiGet(action){if(!endpoint) return Promise.reject(new Error("Endpoint Gestionale non configurato"));return fetch(endpoint+"?action="+encodeURIComponent(action)+"&pin="+encodeURIComponent(pin())+"&_="+Date.now()).then(r=>r.json())}
-function apiPost(body){if(!endpoint) return Promise.reject(new Error("Endpoint Gestionale non configurato"));body.pin=pin();return fetch(endpoint,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)}).then(r=>r.json())}
+function apiGet(action){if(!endpoint)return Promise.reject(new Error("Endpoint Gestionale non configurato"));return fetch(endpoint+"?action="+encodeURIComponent(action)+"&_="+Date.now(),{credentials:"same-origin",headers:ArtyouGoogleAuth.authHeaders()}).then(r=>r.json())}
+function apiPost(body){if(!endpoint)return Promise.reject(new Error("Endpoint Gestionale non configurato"));return fetch(endpoint,{method:"POST",credentials:"same-origin",headers:ArtyouGoogleAuth.authHeaders({"Content-Type":"application/json"}),body:JSON.stringify(body)}).then(r=>r.json())}
 function assert(res){if(!res||!res.ok)throw new Error((res&&res.errore)||"Operazione non riuscita");return res}
 function mysqlEventForEditor(slug){
   if(!slug)return Promise.resolve(null);
@@ -671,8 +673,9 @@ function publishInstagram(){
   setStatus("Pubblicazione su Instagram in corso…","info");
   fetch("/api/instagram-publish",{
     method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({pin:pin(),caption:caption,imageUrl:image})
+    credentials:"same-origin",
+    headers:ArtyouGoogleAuth.authHeaders({"Content-Type":"application/json"}),
+    body:JSON.stringify({caption:caption,imageUrl:image})
   }).then(function(r){return r.json().then(function(j){return {ok:r.ok,data:j}})})
     .then(function(x){
       if(!x.ok||!x.data||!x.data.ok)throw new Error((x.data&&x.data.errore)||"Pubblicazione non riuscita");
@@ -693,29 +696,28 @@ function upload(){
   var reader=new FileReader();setStatus("Caricamento immagine…","info");
   reader.onload=function(){var b64=String(reader.result).split(",")[1]||"";apiPost({action:"uploadimage",name:file.name,mime:file.type,base64:b64}).then(assert).then(function(r){$("poster").value=r.url;updatePoster();setStatus("Immagine caricata.","ok")}).catch(function(e){setStatus(e.message,"err")})};reader.readAsDataURL(file);
 }
-$("loginBtn").onclick=refresh;$("refreshBtn").onclick=refresh;$("eventSearch").oninput=renderList;$("eventStatusFilter").onchange=renderList;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("importJuly2027Btn").onclick=openJulyImport;$("closeJulyImportBtn").onclick=closeJulyImport;$("selectAllJulyBtn").onclick=selectAllJuly;$("clearAllJulyBtn").onclick=clearAllJuly;$("confirmJulyImportBtn").onclick=importJuly2027;$("julyImportModal").onclick=function(e){if(e.target===$("julyImportModal"))closeJulyImport()};$("deleteBtn").onclick=del;
+$("refreshBtn").onclick=refresh;$("eventSearch").oninput=renderList;$("eventStatusFilter").onchange=renderList;$("newBtn").onclick=clearForm;$("saveBtn").onclick=save;$("importJuly2027Btn").onclick=openJulyImport;$("closeJulyImportBtn").onclick=closeJulyImport;$("selectAllJulyBtn").onclick=selectAllJuly;$("clearAllJulyBtn").onclick=clearAllJuly;$("confirmJulyImportBtn").onclick=importJuly2027;$("julyImportModal").onclick=function(e){if(e.target===$("julyImportModal"))closeJulyImport()};$("deleteBtn").onclick=del;
 $("logoutBtn").onclick=function(){
-  try{sessionStorage.removeItem("artyouGestionalePin")}catch(e){}
-  $("pin").value="";
-  $("logoutBtn").style.display="none";
-  events=[];currentId="";
-  renderList();clearForm();
-  setStatus("Sessione chiusa. Inserisci il PIN per accedere.","info");
+  ArtyouGoogleAuth.clear();
+  location.reload();
 };
 $("addDateBtn").onclick=function(){addDate()};$("addCastBtn").onclick=function(){addCast()};$("poster").oninput=updatePoster;$("uploadBtn").onclick=upload;
 $("prepareInstagramBtn").onclick=prepareInstagram;$("copyInstagramBtn").onclick=copyInstagram;$("publishInstagramBtn").onclick=publishInstagram;
 $("title").oninput=function(){if(!currentId&&!$("slug").value.trim())$("slug").value=slugify(this.value);updatePreviewLink()};$("slug").oninput=updatePreviewLink;$("eventType").onchange=toggleSaggiFields;
 clearForm();
-var savedPin="";
-try{savedPin=sessionStorage.getItem("artyouGestionalePin")||""}catch(e){}
-if(savedPin){
-  $("pin").value=savedPin;
-  $("logoutBtn").style.display="inline-block";
-  refresh();
-}else if(!endpoint){
-  setStatus("Prima configurazione: inserisci l'URL /exec del Gestionale in js/artyou-events-config.js.","err");
+if(!endpoint){
+  setStatus("Endpoint Gestionale non configurato.","err");
 }else{
-  setStatus("Inserisci il PIN amministratore per iniziare. Verrà ricordato fino alla chiusura del browser.","info");
+  ArtyouGoogleAuth.init({
+    buttonId:"googleLoginButton",
+    statusId:"status",
+    roles:["admin","staff"],
+    onAuthorized:function(session){
+      $("logoutBtn").style.display="inline-block";
+      setStatus("Accesso autorizzato · "+(session.name||session.email||""),"ok");
+      refresh();
+    }
+  });
 }
 })();
 </script>
