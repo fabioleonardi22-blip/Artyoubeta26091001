@@ -8,6 +8,7 @@ const {
 
 const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "").trim();
 const { query } = require("../lib/db");
+const { persistentRateLimit } = require("../lib/persistent-rate-limit");
 
 function reject(res, status, errore) {
   setSecurityHeaders(res);
@@ -119,9 +120,11 @@ module.exports = async function handler(req, res) {
         return reject(res, 403, "origin_non_consentita");
       }
 
-      const limit = rateLimit(req, { key:"booking-write", limit:15, windowMs:10 * 60 * 1000 });
-      applyRateLimitHeaders(res, limit);
-      if (!limit.ok) return rejectRateLimited(res, limit);
+      let limit;
+      try { limit = await persistentRateLimit(req,{key:"booking-write",limit:15,windowMs:10*60*1000}); }
+      catch (_) { limit = rateLimit(req,{key:"booking-write-fallback",limit:15,windowMs:10*60*1000}); }
+      applyRateLimitHeaders(res,limit);
+      if(!limit.ok)return rejectRateLimited(res,limit);
 
       const raw = typeof req.body === "string" ? req.body : JSON.stringify(req.body || {});
       if (Buffer.byteLength(raw, "utf8") > 32 * 1024) {
