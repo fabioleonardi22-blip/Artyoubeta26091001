@@ -14,6 +14,8 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="icon" href="/img/favicon-192.png" type="image/png">
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="/js/artyou-google-auth.js"></script>
   <style>
     :root{--bg:#0f1418;--panel:#171d22;--line:#303941;--text:#fff;--muted:#aab3ba;--orange:#f39a00;--green:#2e7d32;--red:#b52e2e;--amber:#b67b00}
     *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100%}
@@ -88,12 +90,9 @@
 <div id="loginOverlay" class="overlay show">
   <div class="login">
     <h2>Accesso staff</h2>
-    <div>Inserisci il PIN dello scanner.</div>
-    <div class="pinbox">
-      <input id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="PIN">
-      <button class="primary" onclick="unlock()">Entra</button>
-    </div>
-    <div id="loginMsg" class="hint"></div>
+    <div>Accedi con un account Google autorizzato da Artyou.</div>
+    <div id="googleLoginButton" style="display:flex;justify-content:center;margin-top:16px"></div>
+    <div id="loginStatus" class="hint">Verifica accesso Google…</div>
   </div>
 </div>
 
@@ -154,7 +153,6 @@ async function installScannerApp(){
   help.innerHTML='Su Android: apri il menu di Chrome <strong>⋮</strong> e scegli <strong>Installa app</strong> oppure <strong>Aggiungi a schermata Home</strong>.';
   help.classList.toggle("show");
 }
-function pin(){return sessionStorage.getItem('artyouScannerPin')||''}
 $("installBtn").addEventListener("click",installScannerApp);
 updateInstallUI();
 if("serviceWorker" in navigator){
@@ -162,20 +160,11 @@ if("serviceWorker" in navigator){
     navigator.serviceWorker.register("/scanner-sw.js").catch(function(){});
   });
 }
-async function unlock(){
-  const v=$('pin').value.trim();
-  if(!v){$('loginMsg').textContent='Inserisci il PIN.';return}
-  sessionStorage.setItem('artyouScannerPin',v);
-  $('loginOverlay').classList.remove('show');
-  $('loginMsg').textContent='';
-  await loadStats();
-  await startScanner();
-}
 function flash(t){$('flash').textContent=t;$('flash').classList.add('show');setTimeout(()=>$('flash').classList.remove('show'),3500)}
 async function api(action,code,event){
-  const r=await fetch('/api/checkin',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action,code,event,pin:pin()})});
+  const r=await fetch('/api/checkin',{method:'POST',credentials:'same-origin',headers:ArtyouGoogleAuth.authHeaders({'content-type':'application/json'}),body:JSON.stringify({action,code,event})});
   const data=await r.json().catch(()=>({ok:false,errore:'risposta_non_valida'}));
-  if(r.status===401){sessionStorage.removeItem('artyouScannerPin');$('loginOverlay').classList.add('show');throw new Error('PIN non valido')}
+  if(r.status===401||r.status===403){ArtyouGoogleAuth.clear();$('loginOverlay').classList.add('show');throw new Error('Accesso non autorizzato')}
   if(!r.ok&&!data.ok) throw new Error(data.errore||'Errore server');
   return data;
 }
@@ -327,10 +316,15 @@ async function scanAnother(){
   await startScanner();
 }
 window.addEventListener('beforeunload',stopScanner);
-if(pin()){
-  $('loginOverlay').classList.remove('show');
-  setTimeout(async()=>{await loadStats();await startScanner();},250);
-}
+ArtyouGoogleAuth.init({
+  buttonId:'googleLoginButton',
+  statusId:'loginStatus',
+  roles:['admin','staff'],
+  onAuthorized:function(){
+    $('loginOverlay').classList.remove('show');
+    setTimeout(async()=>{await loadStats();await startScanner();},250);
+  }
+});
 </script>
 </body>
 </html>
