@@ -1,6 +1,5 @@
-const { verifyGoogleIdToken, authToken } = require("../lib/google-auth");
 const { query, transaction } = require("../lib/db");
-const { userByGoogleSubject } = require("../lib/auth-identity");
+const { requireUser } = require("../lib/authorization");
 const { audit } = require("../lib/audit");
 const {
   rateLimit,
@@ -72,14 +71,6 @@ function accessLevel(role) {
   if (role === "admin") return "Amministratore";
   if (role === "staff") return "Staff";
   return "Docente";
-}
-
-async function authorizedUser(identity) {
-  const u = await userByGoogleSubject(identity && identity.sub);
-  if (!u || !u.active) throw new Error("accesso_non_autorizzato");
-  u.role = String(u.role || "").trim().toLowerCase();
-  if (!["admin","staff","teacher"].includes(u.role)) throw new Error("ruolo_non_valido");
-  return u;
 }
 
 function requireEditor(user) {
@@ -586,10 +577,10 @@ module.exports = async function handler(req, res) {
   if (!limit.ok) return rejectRateLimited(res, limit);
 
   try {
-    const credential = authToken(req);
-    if (!credential || credential.length > 8192) return res.status(401).json({ok:false,errore:"google_login_required"});
-    const identity = await verifyGoogleIdToken(credential);
-    const user = await authorizedUser(identity);
+    const auth = await requireUser(req, ["admin","staff","teacher"]);
+    const credential = auth.token;
+    const identity = auth.identity;
+    const user = auth.user;
 
     const rawUrl = String(req.url || "");
     const qIndex = rawUrl.indexOf("?");
@@ -651,7 +642,8 @@ module.exports = async function handler(req, res) {
   } catch (err) {
     const code = String(err && err.message || "errore");
     console.error("PLAN_MYSQL_ERROR", code);
-    if (code === "accesso_non_autorizzato" || code === "ruolo_non_valido") return res.status(403).json({ok:false,errore:code});
+    if (code === "google_login_required") return res.status(401).json({ok:false,errore:code});
+    if (code === "accesso_non_autorizzato" || code === "ruolo_non_valido" || code === "permesso_insufficiente") return res.status(403).json({ok:false,errore:code});
     if (code === "permesso_modifica_richiesto" || code === "permesso_admin_richiesto") return res.status(403).json({ok:false,errore:code});
     if (code === "payload_too_large") return res.status(413).json({ok:false,errore:code});
     if (code === "json_non_valido" || /_mancante$/.test(code) || /_non_trov/.test(code)) return res.status(400).json({ok:false,errore:code});
