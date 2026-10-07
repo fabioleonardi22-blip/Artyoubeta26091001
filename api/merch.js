@@ -1,6 +1,7 @@
 const {
   rateLimit, applyRateLimitHeaders, rejectRateLimited, sameOrigin, setSecurityHeaders
 } = require("../lib/security");
+const { persistentRateLimit } = require("../lib/persistent-rate-limit");
 
 const RAILWAY_MERCH_API=process.env.ARTYOU_MERCH_API_URL||"https://artyou-merch-api-production.up.railway.app";
 const PROXY_SECRET=String(process.env.ARTYOU_MERCH_PROXY_SECRET||"").trim();
@@ -10,7 +11,11 @@ module.exports=async function handler(req,res){
   const method=String(req.method||"GET").toUpperCase();
   if(method!=="GET"&&method!=="POST"){res.setHeader("Allow","GET, POST");return res.status(405).json({ok:false,errore:"metodo_non_consentito"});}
 
-  const limit=rateLimit(req,{key:method==="POST"?"merch-order":"merch-stock",limit:method==="POST"?8:120,windowMs:60*1000});
+  let limit;
+  if(method==="POST"){
+    try{limit=await persistentRateLimit(req,{key:"merch-order",limit:8,windowMs:60*1000})}
+    catch(_){limit=rateLimit(req,{key:"merch-order-fallback",limit:8,windowMs:60*1000})}
+  }else limit=rateLimit(req,{key:"merch-stock",limit:120,windowMs:60*1000});
   applyRateLimitHeaders(res,limit);if(!limit.ok)return rejectRateLimited(res,limit);
   if(method==="POST"&&!sameOrigin(req))return res.status(403).json({ok:false,errore:"origin_non_consentita"});
 
