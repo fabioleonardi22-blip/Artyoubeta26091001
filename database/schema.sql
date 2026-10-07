@@ -207,3 +207,18 @@ CREATE TABLE IF NOT EXISTS inventory_movements (
   CONSTRAINT fk_inventory_variant FOREIGN KEY (product_variant_id) REFERENCES product_variants(id) ON DELETE CASCADE,
   CONSTRAINT fk_inventory_order FOREIGN KEY (order_id) REFERENCES merch_orders(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- Audit delle operazioni sensibili nelle aree interne
+CREATE TABLE IF NOT EXISTS security_audit (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  actor_email VARCHAR(254) NULL,
+  actor_role VARCHAR(32) NULL,
+  action VARCHAR(120) NOT NULL,
+  resource VARCHAR(190) NULL,
+  metadata JSON NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_security_audit_date (created_at),
+  KEY idx_security_audit_actor (actor_email, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
