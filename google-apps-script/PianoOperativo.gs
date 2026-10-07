@@ -96,7 +96,8 @@ function PO_emailFromGoogleToken_(token) {
   if(!info.email || String(info.email_verified)!=='true') throw new Error('google_email_non_verificata');
 
   const expected=String(PropertiesService.getScriptProperties().getProperty('PO_GOOGLE_CLIENT_ID')||'').trim();
-  if(expected && String(info.aud||'')!==expected) throw new Error('google_audience_non_valida');
+  if(!expected) throw new Error('google_client_id_non_configurato');
+  if(String(info.aud||'')!==expected) throw new Error('google_audience_non_valida');
 
   const email=PO_normalizeEmail_(info.email);
   cache.put(cacheKey,email,300);
