@@ -20,5 +20,7 @@ jobs:
           node-version: '22'
       - name: Pure simulation
         run: node sandbox/booking-lab/booking-lab.test.js
+      - name: Anonymized reconciliation comparator
+        run: node sandbox/booking-lab/compare-snapshots.test.js
       - name: Staging modules (no external network)
         run: node sandbox/booking-lab/staging.test.js
