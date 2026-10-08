@@ -1,6 +1,21 @@
 {
   "redirects": [
     {
+      "source": "/insegnanti/:slug/insegnanti.html",
+      "destination": "/insegnanti/",
+      "permanent": true
+    },
+    {
+      "source": "/insegnanti/:slug/chi-siamo.html",
+      "destination": "/chi-siamo/",
+      "permanent": true
+    },
+    {
+      "source": "/insegnanti/:slug/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
       "source": "/rif-landing",
       "destination": "/rif-landing/",
       "permanent": true
