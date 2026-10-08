@@ -9,11 +9,19 @@ async function run(){
   await check("disabled without sandbox mode",()=>{
     assert.throws(()=>ensureLabEnv({ARTYOU_BOOKING_LAB_DATABASE_URL:"mysql://a:b@db/lab",ARTYOU_BOOKING_LAB_TOKEN:"x".repeat(32)}),/lab_disabled/);
   });
+  await check("production environment always forbidden",()=>{
+    assert.throws(()=>ensureLabEnv({
+      VERCEL_ENV:"production",ARTYOU_BOOKING_LAB_MODE:"sandbox",
+      ARTYOU_BOOKING_LAB_DATABASE_URL:"mysql://a:b@db/lab",
+      ARTYOU_BOOKING_LAB_TOKEN:"x".repeat(32)
+    }),/lab_production_forbidden/);
+  });
   await check("rejects production DB and missing token",()=>{
     const env={ARTYOU_BOOKING_LAB_MODE:"sandbox",ARTYOU_BOOKING_LAB_DATABASE_URL:"mysql://a:b@db/prod",
       DATABASE_URL:"mysql://a:b@db/prod",ARTYOU_BOOKING_LAB_TOKEN:"x".repeat(32)};
     assert.throws(()=>ensureLabEnv(env),/matches_production/);
     assert.throws(()=>ensureLabEnv({...env,DATABASE_URL:"mysql://a:b@db/other",ARTYOU_BOOKING_LAB_TOKEN:"weak"}),/token_missing/);
+    assert.throws(()=>ensureLabEnv({...env,DATABASE_URL:"mysql://other:password@db/prod"}),/matches_production/);
   });
   await check("constant time token matching",()=>{
     const env={ARTYOU_BOOKING_LAB_TOKEN:"a".repeat(32)};
@@ -36,6 +44,10 @@ async function run(){
     const provider=createPayPal({ARTYOU_BOOKING_LAB_PAYPAL_CLIENT_ID:"FAKE",ARTYOU_BOOKING_LAB_PAYPAL_SECRET:"FAKE"},fetcher);
     const booking={id:"LAB-1",amountCents:1500,captureId:"CAP-1"};
     assert.equal((await provider.createOrder(booking)).id,"ORDER-1");
+    assert.throws(()=>provider.assertOrder({id:"ORDER-1",purchase_units:[{custom_id:"WRONG"}]},
+      {...booking,orderId:"ORDER-1"}),/identity_mismatch/);
+    provider.assertOrder({id:"ORDER-1",purchase_units:[{custom_id:"LAB-1"}]},
+      {...booking,orderId:"ORDER-1"});
     assert.equal((await provider.captureOrder("ORDER-1",booking.id)).capture.amountCents,1500);
     assert.equal((await provider.refund(booking)).id,"REF-1");
     assert.ok(urls.every(u=>u.startsWith("https://api-m.sandbox.paypal.com/")));
