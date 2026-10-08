@@ -13,16 +13,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><script id="artyou-viewport">(function(){try{if(window.matchMedia&&window.matchMedia("(max-width: 820px)").matches){document.documentElement.classList.add("am-mobile");}}catch(e){}})();</script>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
+<script src="/js/support.js"></script>
 <script src="/js/enhancements.js"></script>
 
 <style id="artyou-centered-layout">
 html{background:#C79A2B!important;}
 body{margin:0!important;background:#C79A2B!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;min-height:100vh!important;}
-body>#artyou-page-root,#artyou-page-root{width:100%!important;max-width:1200px!important;margin:0 auto!important;}
-#artyou-page-root>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 auto!important;background:#fff!important;box-shadow:0 0 36px rgba(44,31,8,.30)!important;min-height:100vh!important;}
-@media(min-width:1200px){body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:1200px!important;max-width:1200px!important;}}
-@media(max-width:1199px){html,body{background:#fff!important;} body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:100%!important;max-width:100%!important;box-shadow:none!important;}}
+body>x-dc,x-dc{width:100%!important;max-width:1200px!important;margin:0 auto!important;}
+x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 auto!important;background:#fff!important;box-shadow:0 0 36px rgba(44,31,8,.30)!important;min-height:100vh!important;}
+@media(min-width:1200px){body>x-dc,x-dc,x-dc>div:first-of-type{width:1200px!important;max-width:1200px!important;}}
+@media(max-width:1199px){html,body{background:#fff!important;} body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;box-shadow:none!important;}}
 </style>
 
 
@@ -273,7 +273,7 @@ body>#artyou-page-root,#artyou-page-root{width:100%!important;max-width:1200px!i
 @media (max-width: 820px){
   *,*::before,*::after{box-sizing:border-box;}
   html,body{width:100%;max-width:100%;overflow-x:hidden!important;}
-  body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
+  body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
   [style*="width: 1440px"],[style*="width:1440px"]{width:100%!important;max-width:100%!important;min-width:0!important;}
   main,section,article,header,footer,nav,form{max-width:100%;min-width:0;}
   img,video,iframe,svg{max-width:100%;height:auto;}
@@ -354,15 +354,15 @@ body>#artyou-page-root,#artyou-page-root{width:100%!important;max-width:1200px!i
 </style>
 </head>
 <body>
-<div id="artyou-page-root">
-
+<x-dc>
+<helmet>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=Instrument+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="icon" type="image/png" href="/img/favicon-192.png">
 <style>
 body{margin:0;background:#F6F3EC}
 a{color:#1A6E99}a:hover{color:#12506F}
 </style>
-
+</helmet>
 <div class="am-wfull am-hauto" style="width: 1440px; height: auto; min-height: 100vh; display: flex; flex-direction: column; background: #F6F3EC; color: #13181D; font-family: 'Instrument Sans', 'Helvetica Neue', Helvetica, sans-serif; position: relative;">
 <header class="am-px am-wrap" style="display: flex; align-items: center; justify-content: space-between; padding: 20px 120px; position: sticky; top: 0; z-index: 500; background: #13181D;">
 <a href="/" aria-label="Artyou Roma – Home" class="am-wrap" style="display: flex; align-items: center;"><img decoding="async" src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" style="height: 56px; width: auto; display: block;"></a>
@@ -471,7 +471,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <input id="f-prezzo" type="hidden" value="12">
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-allievo" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Chi vieni a vedere? <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-allievo" type="text" placeholder="Nome dell’allievo o della classe" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input id="f-privacy" type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
-<button id="f-submit-booking" type="button" data-artyou-submit="1" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: #F09000; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
+<button id="f-submit-booking" type="button" data-artyou-submit="1" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
 <a target="_blank" rel="noopener" href="{{wa}}" class="am-wrap" style="height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #25D366; color: #0B2E1A; border-radius: 14px; font-weight: 700; font-size: 16px; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.001c-5.523 0-10 4.477-10 10 0 1.762.464 3.479 1.345 4.997L2 22l5.161-1.352a9.953 9.953 0 0 0 4.879 1.253h.005c5.522 0 9.999-4.477 9.999-10 0-2.671-1.04-5.182-2.929-7.07A9.935 9.935 0 0 0 12.04 2Zm0 18.174h-.004a8.172 8.172 0 0 1-4.166-1.14l-.299-.177-3.096.812.827-3.016-.194-.31a8.163 8.163 0 0 1-1.253-4.343c0-4.508 3.669-8.176 8.19-8.176a8.14 8.14 0 0 1 5.79 2.398 8.13 8.13 0 0 1 2.397 5.788c0 4.508-3.669 8.164-8.192 8.164Zm4.484-6.13c-.246-.123-1.454-.718-1.68-.8-.226-.082-.39-.123-.554.123-.164.246-.635.8-.778.964-.144.165-.287.185-.533.062-.246-.123-1.037-.382-1.976-1.22-.73-.65-1.222-1.453-1.365-1.7-.144-.246-.015-.379.108-.501.11-.11.246-.287.369-.43.123-.144.164-.246.246-.41.082-.164.041-.308-.02-.43-.062-.123-.554-1.335-.76-1.828-.2-.48-.404-.415-.554-.423l-.472-.008a.906.906 0 0 0-.656.307c-.226.246-.862.842-.862 2.054 0 1.212.883 2.383 1.006 2.548.123.164 1.74 2.658 4.216 3.727.589.254 1.049.406 1.408.52.591.188 1.13.161 1.556.098.475-.071 1.454-.595 1.66-1.169.205-.574.205-1.066.144-1.169-.062-.102-.226-.164-.472-.287Z"></path></svg> Hai domande? Scrivici</a>
 </div>
 </sc-if>
@@ -486,7 +486,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </sc-if>
 <sc-if value="{{confirmed}}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
-<span class="am-wrap" style="width: 60px; height: 60px; border-radius: 30px; background: #F09000; color: #1C1606; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg></span>
+<span class="am-wrap" style="width: 60px; height: 60px; border-radius: 30px; background: {{accent}}; color: #1C1606; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg></span>
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">{{doneTitle}}</h2>
 <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">{{summary}}</p>
 <p class="am-fs-body" style="margin: 0; font-size: 15px; line-height: 1.5; color: #555D64;">{{doneNote}}</p>
@@ -504,7 +504,71 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <a href="mailto:info@artyouroma.it" style="color: #9AA5AE;">info@artyouroma.it</a><a href="/privacy-policy/" target="_blank" rel="noopener" style="color:#9AA5AE;">Privacy Policy</a>
 </footer>
 </div>
-</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F09000","options":["#F09000","#2CA8E0","#E41870","#7A1631"]},"postiPerSpettacolo":{"editor":"int","default":80,"min":1,"max":500},"maxPerPrenotazione":{"editor":"int","default":6,"min":1,"max":20},"$preview":{"width":1440,"height":2820}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { ev: 0, seats: 2, confirmed: false };
+  }
+  avail(r) {
+    return { left: r === 0 ? "Completo" : (r <= 5 ? "Ultimi " + r + " posti" : r + " posti liberi"), leftColor: r <= 5 ? "#7A1631" : "#555D64", leftWeight: r <= 5 ? 700 : 500 };
+  }
+  chip(on) {
+    return { bg: on ? "#13181D" : "#FFFFFF", fg: on ? "#FFFFFF" : "#13181D", border: on ? "#13181D" : "#CFC8BA" };
+  }
+  row(on) {
+    return { bg: on ? "#E6F3FA" : "#FFFFFF", border: on ? "#1A6E99" : "#E4DED2" };
+  }
+  renderVals() {
+    var self = this, st = this.state || {};
+    var maxPer = this.props.maxPerPrenotazione ?? 6;
+    var names = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica", "Lunedì"];
+    var shNames = ["Spettacolo", "Spettacolo"], shTimes = ["Caricamento…", "Caricamento…"];
+    var ev = st.ev || 0, sh = st.sh || 0;
+    var remS = names.map(function(){ return [null,null]; });
+    var mk = function (i) { return { label: names[i] + " " + (15 + i) + " febbraio", sub: "Primo e secondo spettacolo" }; };
+    var evenings = names.map(function (n, i) {
+      var d = mk(i);
+      return Object.assign({ label: d.label, sub: "Caricamento dal gestionale…", pick: function () { self.setState({ ev: i }); } },
+        {left:"Caricamento…",leftColor:"#555D64",leftWeight:500}, self.row(i === ev));
+    });
+    var calendar = names.map(function (n, i) {
+      return { day: String(15 + i), wd: n.slice(0, 3), shows: [0, 1].map(function (j) {
+        var on = i === ev && j === sh;
+        return Object.assign({ n: "Spettacolo", time: "Caricamento…", title: "Caricamento dal gestionale…", teacher: "", posterCss: "none", posterFallback: "Locandina", bg: on ? "#F6EAF3" : "#FFFFFF", border: on ? "#941880" : "#E4DED2", pick: function () { self.setState({ ev: i, sh: j }); } }, {left:"",leftColor:"#555D64",leftWeight:500});
+      }) };
+    });
+    var showOpts = [0, 1].map(function (j) { return Object.assign({ label: "Caricamento dal gestionale…", time: "", pick: function () { self.setState({ sh: j }); } }, {left:"Caricamento…",leftColor:"#555D64",leftWeight:500}, self.row(j === sh)); });
+    var r = null;
+    var maxAllowed = maxPer;
+    var seats = Math.max(1, Math.min(st.seats || 2, Math.max(1, maxAllowed)));
+    var seatsLabel = seats === 1 ? "1 posto" : seats + " posti";
+    var what = seatsLabel + " per il " + shNames[sh].toLowerCase() + " di " + mk(ev).label.toLowerCase();
+    return {
+      accent: this.props.accent ?? "#F09000",
+      evenings: evenings, calendar: calendar, showOpts: showOpts,
+      seats: seats, maxNote: "Disponibilità dal gestionale",
+      plusOpacity: seats >= maxAllowed ? 0.35 : 1,
+      available: true, soldOut: false, soldTitle: "Spettacolo esaurito",
+      payNote: "Costo: 12 € a persona. Totale per " + seatsLabel + ": " + (12 * seats) + " €.",
+      ctaLabel: "Conferma e paga con PayPal",
+      wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare per Un Vortice di Emozioni: " + what + "."),
+      waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Il " + shNames[sh].toLowerCase() + " di " + mk(ev).label.toLowerCase() + " di Un Vortice di Emozioni è esaurito: potete mettermi in lista d’attesa?"),
+      confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
+      doneTitle: "Posto prenotato!",
+      summary: "Un Vortice di Emozioni · " + what + ".",
+      doneNote: "Anticipo ricevuto: ti abbiamo inviato un’email con la ricevuta. Il saldo si paga in cassa la sera dello spettacolo.",
+      minus: function () { self.setState({ seats: Math.max(1, seats - 1) }); },
+      plus: function () { self.setState({ seats: Math.min(maxAllowed, seats + 1) }); },
+      confirm: function () { self.setState({ confirmed: true }); },
+      edit: function () { self.setState({ confirmed: false }); }
+    };
+  }
+}
+</script>
+
+
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 

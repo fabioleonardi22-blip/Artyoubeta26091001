@@ -13,10 +13,10 @@
 <style id="artyou-centered-layout">
 html{background:#C79A2B!important;}
 body{margin:0!important;background:#C79A2B!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;min-height:100vh!important;}
-body>#artyou-page-root,#artyou-page-root{width:100%!important;max-width:1200px!important;margin:0 auto!important;}
-#artyou-page-root>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 auto!important;background:#fff!important;box-shadow:0 0 36px rgba(44,31,8,.30)!important;min-height:100vh!important;}
-@media(min-width:1200px){body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:1200px!important;max-width:1200px!important;}}
-@media(max-width:1199px){html,body{background:#fff!important;} body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:100%!important;max-width:100%!important;box-shadow:none!important;}}
+body>x-dc,x-dc{width:100%!important;max-width:1200px!important;margin:0 auto!important;}
+x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 auto!important;background:#fff!important;box-shadow:0 0 36px rgba(44,31,8,.30)!important;min-height:100vh!important;}
+@media(min-width:1200px){body>x-dc,x-dc,x-dc>div:first-of-type{width:1200px!important;max-width:1200px!important;}}
+@media(max-width:1199px){html,body{background:#fff!important;} body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;box-shadow:none!important;}}
 </style>
 
 
@@ -204,7 +204,7 @@ body>#artyou-page-root,#artyou-page-root{width:100%!important;max-width:1200px!i
 @media (max-width: 820px){
   *,*::before,*::after{box-sizing:border-box;}
   html,body{width:100%;max-width:100%;overflow-x:hidden!important;}
-  body>#artyou-page-root,#artyou-page-root,#artyou-page-root>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
+  body>x-dc,x-dc,x-dc>div:first-of-type{width:100%!important;max-width:100%!important;min-width:0!important;}
   [style*="width: 1440px"],[style*="width:1440px"]{width:100%!important;max-width:100%!important;min-width:0!important;}
   main,section,article,header,footer,nav,form{max-width:100%;min-width:0;}
   img,video,iframe,svg{max-width:100%;height:auto;}
@@ -285,15 +285,15 @@ body>#artyou-page-root,#artyou-page-root{width:100%!important;max-width:1200px!i
 </style>
 </head>
 <body>
-<div id="artyou-page-root">
-
+<x-dc>
+<helmet>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=Instrument+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="icon" type="image/png" href="/img/favicon-192.png">
 <style>
 body{margin:0;background:#F6F3EC}
 a{color:#1A6E99}a:hover{color:#12506F}
 </style>
-
+</helmet>
 <div class="am-wfull am-hauto" style="width: 1440px; height: auto; min-height: 100vh; display: flex; flex-direction: column; background: #F6F3EC; color: #13181D; font-family: 'Instrument Sans', 'Helvetica Neue', Helvetica, sans-serif; position: relative;">
 <header class="am-px am-wrap" style="display: flex; align-items: center; justify-content: space-between; padding: 20px 120px; position: sticky; top: 0; z-index: 500; background: #13181D;">
 <a href="/" aria-label="Artyou Roma – Home" class="am-wrap" style="display: flex; align-items: center;"><img decoding="async" src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" style="height: 56px; width: auto; display: block;"></a>
@@ -352,14 +352,14 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </sc-if>
 </div>
 <input id="f-corso-selezionato" type="hidden" value="{{selLabel}}">
-<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}"><button id="artyou-generic-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: #F09000; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Invia l’iscrizione tramite Mail</button></sc-if>
+<sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}"><button id="artyou-generic-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">Invia l’iscrizione tramite Mail</button></sc-if>
 <a id="artyou-whatsapp-enrollment" href="{{waEnrollment}}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;min-height:58px;padding:14px 20px;border-radius:14px;background:#25D366;color:#0B2E1A;font-weight:700;font-size:17px;text-decoration:none;text-align:center;box-sizing:border-box;">Iscriviti con WhatsApp</a>
-<sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}"><button id="artyou-workshow-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: #F09000; color: #1C1606; font-family: inherit; font-weight: 800; font-size: 17px; cursor: pointer;">Conferma prenotazione WorkshoW™</button></sc-if>
+<sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}"><button id="artyou-workshow-submit" type="button" onClick="{{send}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 800; font-size: 17px; cursor: pointer;">Conferma prenotazione WorkshoW™</button></sc-if>
 </div>
 </sc-if>
 <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
-<span class="am-wrap" style="width: 60px; height: 60px; border-radius: 30px; background: #F09000; color: #1C1606; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg></span>
+<span class="am-wrap" style="width: 60px; height: 60px; border-radius: 30px; background: {{accent}}; color: #1C1606; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg></span>
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Iscrizione inviata!</h2>
 <sc-if value="{{notWorkshow}}" hint-placeholder-val="{{ true }}"><p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">Hai chiesto l’iscrizione a <strong>{{selLabel}}</strong>. Ti ricontattiamo a breve per confermare posto, quota e tessera.</p></sc-if>
 <sc-if value="{{isWorkshow}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 17px; line-height: 1.55; color: #3F474E;">Abbiamo ricevuto la prenotazione per <strong>{{selLabel}}</strong>. Riceverai la conferma all’indirizzo email indicato.</p></sc-if>
@@ -387,7 +387,32 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <a href="mailto:info@artyouroma.it" style="color: #9AA5AE;">info@artyouroma.it</a><a href="/privacy-policy/" target="_blank" rel="noopener" style="color:#9AA5AE;">Privacy Policy</a>
 </footer>
 </div>
-</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F09000","options":["#F09000","#2CA8E0","#E41870","#7A1631"]},"$preview":{"width":1440,"height":1790}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { sent: false }; }
+  componentDidMount() {
+    var self = this;
+    this.onHash = function () { self.setState({ h: window.location.hash, pick: null }); };
+    window.addEventListener("hashchange", this.onHash);
+  }
+  componentWillUnmount() { window.removeEventListener("hashchange", this.onHash); }
+  hash() { try { return decodeURIComponent((window.location.hash || "").slice(1)); } catch (e) { return ""; } }
+  renderVals() {
+    var self = this, st = this.state || {};
+    var C = [["pattern", "Amatori · Pattern"], ["gioco-della-scena", "Amatori · Il gioco della scena"], ["grand-hotel-bellevue", "Amatori · Grand Hotel Bellevue"], ["coscienza-di-zero", "Amatori · La coscienza di Zero"], ["dalla-testa-ai-piedi", "Amatori · Dalla testa ai piedi"]];
+    var h = this.hash();
+    var idx = st.pick != null ? st.pick : Math.max(0, C.map(function (c) { return c[0]; }).indexOf(h));
+    var courses = C.map(function (c, i) { var on = i === idx; return { label: c[1], bg: on ? "#13181D" : "#FFFFFF", fg: on ? "#FFFFFF" : "#13181D", border: on ? "#13181D" : "#CFC8BA", pick: function () { self.setState({ pick: i }); } }; });
+    var selId = C[idx][0];
+    var isWorkshow = /^ws-/.test(selId);
+    return { accent: this.props.accent ?? "#F09000", courses: courses, selLabel: C[idx][1], selId: selId, waEnrollment: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao volevo iscrivermi al corso " + C[idx][1].replace(/^Amatori · /, "") + " degli Amatori"), isWorkshow: isWorkshow, notWorkshow: !isWorkshow, sent: !!st.sent, notSent: !st.sent,
+      send: function () { self.setState({ sent: true }); }, reset: function () { self.setState({ sent: false }); } };
+  }
+}
+</script>
+
+
 <script id="artyou-menu-js">document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("header nav a");if(a){var t=document.getElementById("artyou-menu-toggle");if(t)t.checked=false;}});</script>
 <script id="artyou-hash-scroll">(function(){var h=location.hash;if(!h||h.length<2)return;var id;try{id=decodeURIComponent(h.slice(1));}catch(e){return;}var moved=false;["wheel","touchmove","keydown"].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{passive:true,once:true});});function go(){if(moved)return true;var el=document.getElementById(id);if(!el)return false;el.scrollIntoView({block:"start"});return true;}var n=0,t=setInterval(function(){n++;var el=document.getElementById(id);if(el){clearInterval(t);go();setTimeout(go,350);setTimeout(go,1200);}else if(n>100){clearInterval(t);}},50);window.addEventListener("load",function(){setTimeout(go,200);});})();</script>
 
