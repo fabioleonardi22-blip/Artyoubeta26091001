@@ -3,7 +3,8 @@ const fs=require("node:fs");
 const path=require("node:path");
 const TABLES=["lab_events","lab_bookings","lab_webhooks","lab_refunds","lab_payment_intents"];
 function statements(sql){
-  return sql.split(";").map(part=>part.split("\n").filter(line=>!/^\s*--/.test(line)).join("\n").trim()).filter(part=>part && !/^\s*--/.test(part));
+  const withoutComments=sql.split("\n").filter(line=>!/^\s*--/.test(line)).join("\n");
+  return withoutComments.split(";").map(part=>part.trim()).filter(Boolean);
 }
 function verifyStatement(statement){
   const match=/^CREATE\s+TABLE\s+IF\s+NOT\s+EXISTS\s+(lab_[a-z_]+)\s*\(/i.exec(statement);
