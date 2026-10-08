@@ -127,9 +127,9 @@ if(res&&(res.errore==="esaurito"||res.errore==="posti_insufficienti"))throw new 
 if(res&&res.errore==="prenotazioni_chiuse")throw new Error("Le prenotazioni per questo evento sono chiuse.");
 if(res&&res.errore==="prenotazioni_non_aperte")throw new Error("Le prenotazioni per questo evento non sono ancora aperte.");
 var base=escapeHtml((res&&res.errore)||"Invio non riuscito.");
-if(window.ARTYOU_BOOKING_DEBUG)base+=" [Evento: "+(d.Evento||"-")+" · HTTP: "+(res&&res.__http||"-")+"]";
+if(window.ARTYOU_BOOKING_DEBUG)base+=" [Evento: "+escapeHtml(d.Evento||"-")+" · HTTP: "+escapeHtml(res&&res.__http||"-")+"]";
 throw new Error(base);
-}if(window.ARTYOU_CAP&&d.Evento&&typeof res.liberi==="number"){window.ARTYOU_CAP[d.Evento]=res.liberi;window.dispatchEvent(new Event("hashchange"));}var codice=res.codice||res.id||"";var h=codice?'Prenotazione registrata. Codice: <b>'+escapeHtml(codice)+'</b>.':"Prenotazione registrata.";if(res.stato==="HOLD")h+=" I posti sono bloccati per <b>"+res.holdMinutes+" minuti</b> in attesa del pagamento.";else if(/^PayPal/i.test(String(d.Pagamento||"")))h+=" Il pagamento non è ancora confermato: completa la procedura su PayPal.";else h+=" I posti sono stati riservati.";msg(b,"ok",h);if(codice){window.dispatchEvent(new CustomEvent("artyou-booking-code",{detail:codice}));}
+}if(window.ARTYOU_CAP&&d.Evento&&typeof res.liberi==="number"){window.ARTYOU_CAP[d.Evento]=res.liberi;window.dispatchEvent(new Event("hashchange"));}var codice=res.codice||res.id||"";var h=codice?'Prenotazione registrata. Codice: <b>'+escapeHtml(codice)+'</b>.':"Prenotazione registrata.";if(res.stato==="HOLD")h+=" I posti sono bloccati per <b>"+escapeHtml(res.holdMinutes)+" minuti</b> in attesa del pagamento.";else if(/^PayPal/i.test(String(d.Pagamento||"")))h+=" Il pagamento non è ancora confermato: completa la procedura su PayPal.";else h+=" I posti sono stati riservati.";msg(b,"ok",h);if(codice){window.dispatchEvent(new CustomEvent("artyou-booking-code",{detail:codice}));}
 var pp=paypalUrl(d);
 if(pp){
   window.dispatchEvent(new CustomEvent("artyou:paypal-redirect",{detail:{url:pp,amount:d.Importo,pagamento:d.Pagamento}}));
