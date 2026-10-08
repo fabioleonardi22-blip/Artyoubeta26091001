@@ -1,47 +1,63 @@
-# Artyou Booking Lab — isolamento totale
+# Artyou Booking Lab — staging isolato
 
-Questa cartella è una **simulazione**, non un sostituto del backend in produzione.
+Branch di lavoro: \`booking-lab-isolated-20261008\`. **Non effettuare merge su main.**
 
-## Sicurezza e separazione
+## Componenti
 
-- Nessun accesso a \`/api/artyou\`, Apps Script, MySQL, PayPal, Railway o alle email.
-- Tutti i dati sono inventati e conservati **solo in memoria**.
-- La pagina si resetta a ogni ricaricamento. Non usare dati personali reali.
-- La branch \`booking-lab-isolated-20261008\` non va fusa in \`main\` prima di test, review e autorizzazione.
-- Non collegare le variabili \`DATABASE_URL\`, \`MYSQL_URL\`, \`ARTYOU_APPS_SCRIPT_URL\` o credenziali PayPal reali al progetto laboratorio.
+- \`index.html\` e \`booking-lab.js\`: dimostrazione completamente offline in memoria; nessuna API o vendita reale.
+- \`api/booking-lab.js\`: endpoint Vercel di staging, **disabilitato di default**, che richiede token segreto in header.
+- \`store.js\`: MySQL transazionale con lock InnoDB \`SELECT ... FOR UPDATE\` per evento, idempotenza e prezzi lato server.
+- \`paypal-sandbox.js\`: API PayPal **solo sandbox**, per order, capture e refund; non usa URL produzione.
+- \`staging-schema.sql\`: schema da applicare solo su **database MySQL separato**.
+- \`booking-lab.test.js\` e \`staging.test.js\`: test offline senza chiamate reali.
 
-## Esecuzione test
+## Avvio sicuro
 
-\`\`\`sh
-node --test sandbox/booking-lab/booking-lab.test.js
-\`\`\`
+1. Creare un **nuovo database** MySQL staging (con credenziali dedicate e dati fittizi). **Non usare DATABASE_URL / MYSQL_URL di produzione.**
+2. Applicare \`staging-schema.sql\` sul DB staging, e inserire eventi demo:
+   \`\`\`sql
+   INSERT INTO lab_events (slug,capacity,price_cents)
+   VALUES ('shortyou-demo',5,1500),('workshow-demo',3,9500),('yep-demo',4,2000);
+   \`\`\`
+3. Creare un **progetto Vercel staging separato**, collegato alla branch, con queste variabili configurate **solo sul progetto staging**:
+   - \`ARTYOU_BOOKING_LAB_MODE=sandbox\`
+   - \`ARTYOU_BOOKING_LAB_DATABASE_URL=mysql://.../DB_DI_STAGING\`
+   - \`ARTYOU_BOOKING_LAB_TOKEN=<segreto casuale di almeno 32 caratteri>\`
+   - \`ARTYOU_BOOKING_LAB_PAYPAL_CLIENT_ID=<client ID di PayPal Sandbox>\`
+   - \`ARTYOU_BOOKING_LAB_PAYPAL_SECRET=<secret di PayPal Sandbox>\`
+   - \`ARTYOU_BOOKING_LAB_SSL=true\` solo con certificato MySQL valido e verificabile
+   - \`ARTYOU_BOOKING_LAB_POOL_SIZE=2\` (default)
+4. Nessun altro progetto deve ricevere queste variabili. L'API rifiuta l'avvio se mode/token/DB staging mancano o se l'URL coincide con il DB produzione.
 
-Il file contiene otto scenari con assert e termina con codice di errore in caso di fallimento. Per esecuzione diretta:
+## API privata di staging
+
+Tutte le chiamate richiedono header \`X-Booking-Lab-Token: <segreto>\`. Non mettere mai il token nel browser o nel codice pubblico; usare client server-side/test runner.
+
+- \`GET /api/booking-lab?eventSlug=shortyou-demo\` — capienza.
+- \`POST /api/booking-lab\` JSON \`{"action":"reserve","eventSlug":"shortyou-demo","seats":1,"requestKey":"uuid-test-0001"}\`.
+- \`{"action":"order","bookingId":"UUID"}\` — crea ordine PayPal Sandbox.
+- Dopo approvazione PayPal Sandbox: \`{"action":"capture","bookingId":"UUID"}\` — cattura verificata server-side.
+- \`{"action":"refund","bookingId":"UUID"}\` — rimborso sandbox, mantiene il posto occupato.
+- \`{"action":"cancel","bookingId":"UUID"}\` — libera il posto solo se il pagamento è regolato.
+- \`{"action":"compare","eventSlug":"shortyou-demo","manager":{"capacity":5,"booked":1,"remaining":4}}\` — confronto con **dati forniti dal test runner**, non con il gestionale live.
+
+La capture in stato \`CAPTURING\` resta contabilizzata anche durante timeout del provider per evitare overbooking; richiede riconciliazione manuale/automatica prima del go-live. Un rimborso \`REFUNDING\` incerto non deve essere duplicato: va riconciliato con PayPal.
+
+## Test automatici
 
 \`\`\`sh
 node sandbox/booking-lab/booking-lab.test.js
+node sandbox/booking-lab/staging.test.js
 \`\`\`
 
-## Roadmap per migrazione reale (NON implementata qui)
+La suite usa un fake MySQL in memoria per verificare il flusso SQL, **non prova realmente transazioni su più istanze Vercel**.
 
-1. MySQL di **staging separato** (non replica dello stesso database production), schema di staging e seed fittizi.
-2. API server-side Vercel staging con transazioni InnoDB, lock per evento/data, idempotency key e scadenza HOLD; gestione prezzi lato server e audit log.
-3. PayPal **Sandbox** Orders API e webhook con verifica firma, deduplicazione di capture/refund e riconciliazione; mai usare client redirect come prova di pagamento.
-4. Stati contabili separati da stati dei posti: \`booking_status\` e \`payment_status\`; nel database attuale \`bookings.status\` enum non include RIMBORSATO, quindi serve migrazione progettata.
-5. Importazione e confronto su copie **anonimizzate** dei dati del gestionale; controllare per ogni evento posti totali, HOLD attivi, pagati, annullati, rimborsi, QR e importi.
-6. Canary per un evento non critico, monitoraggio, rollback con riconciliazione delle prenotazioni scritte durante il canary. Non ripristinare ciecamente un backup sovrascrivendo vendite nuove.
+## Limitazioni attuali e gate di attivazione
 
-### Requisiti di go/no-go
+- Non sono ancora disponibili credenziali e istanza MySQL staging e PayPal Sandbox configurate; nessun pagamento, rimborso o prenotazione reali sono stati effettuati.
+- Non sono implementati webhook PayPal con verifica firma e riconciliazione completa di capture/refund pendenti; **non utilizzare in produzione**.
+- Il modello dimostrativo copre evento singolo. YEP/RIF con workshop multipli e risorse condivise richiedono inventario e lock granulari.
+- Manca confronto con **copia anonimizzata** del gestionale reale, import storico e verifica QR/check-in.
+- Prima di migrare: prove su MySQL vero, PayPal Sandbox, E2E di tutte le pagine, audit di sicurezza, rollback e verifica differenze pari a zero.
 
-- Zero overbooking con richieste concorrenti a DB reale, anche da più istanze serverless.
-- Nessun \`PAGATO\` senza capture verificata server-side; webhook ripetuti innocui.
-- Rimborsi tracciati e QR disattivati soltanto con policy di annullamento esplicita.
-- Reconciliation 100% di prenotazioni, posti e incassi nel dataset di staging.
-- Test E2E di tutte le categorie: Spettacoli, WorkshoW, YEP, RIF, Un Vortice di Emozioni.
-- Backup, rollback e freeze del passaggio documentati; nessun cambio a produzione senza review.
-
-### Criticità rilevata nel backend attuale
-
-\`api/artyou.js\` scrive prima su Apps Script e poi replica in MySQL in un \`try/catch\` che non blocca la prenotazione quando il mirror fallisce. Quindi non esiste ancora consistenza transazionale tra le due fonti. La migrazione dovrà prevedere un solo sistema autoritativo per l'inventario e una riconciliazione degli stati.
-
-**Questo prototipo non ha verificato MySQL né PayPal.**
+**La produzione continua a utilizzare il backend attuale e non viene toccata da questa branch.**
