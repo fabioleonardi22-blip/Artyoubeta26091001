@@ -76,7 +76,7 @@ module.exports = async function handler(req, res) {
       '\n<meta property="og:type" content="profile">' +
       '\n<meta property="og:url" content="' + escHtml(canonical) + '">' +
       (image ? '\n<meta property="og:image" content="' + escHtml(image) + '">' : "") +
-      '\n<script type="application/ld+json">' + safeJson(schema) + '<\\/script>\n';
+      '\n<script type="application/ld+json">' + safeJson(schema) + '</script>\n';
 
     html = html.replace("</head>", seoBlock + "</head>");
 
