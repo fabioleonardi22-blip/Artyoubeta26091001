@@ -19,7 +19,7 @@ Branch di lavoro: \`booking-lab-isolated-20261008\`. **Non effettuare merge su m
    INSERT INTO lab_events (slug,capacity,price_cents)
    VALUES ('shortyou-demo',5,1500),('workshow-demo',3,9500),('yep-demo',4,2000);
    \`\`\`
-3. Creare un **progetto Vercel staging separato**, collegato alla branch, con queste variabili configurate **solo sul progetto staging**:
+3. Creare un **progetto Vercel staging separato** e utilizzare il target **preview** (non produzione), collegato alla branch, con queste variabili configurate **solo sul progetto staging**:
    - \`ARTYOU_BOOKING_LAB_MODE=sandbox\`
    - \`ARTYOU_BOOKING_LAB_DATABASE_URL=mysql://.../DB_DI_STAGING\`
    - \`ARTYOU_BOOKING_LAB_TOKEN=<segreto casuale di almeno 32 caratteri>\`
@@ -53,6 +53,21 @@ node sandbox/booking-lab/compare-snapshots.js legacy-anon.json staging-anon.json
 \`\`\`
 
 La suite usa un fake MySQL in memoria per verificare il flusso SQL, **non prova realmente transazioni su più istanze Vercel**.
+
+## Smoke test su MySQL reale (solo quando staging è configurato)
+
+Lo script `staging-smoke.js` invia prenotazioni sintetiche concorrenti tramite HTTPS,
+verifica che i posti liberi scendano esattamente del numero di richieste accettate e
+rifiuta qualunque host diverso dalla preview isolata Vercel.
+
+```sh
+ARTYOU_BOOKING_LAB_PREVIEW_URL="https://artyoubeta2691001-git-booking-lab-isolated-20261008-weroad.vercel.app" \
+ARTYOU_BOOKING_LAB_TOKEN="<segreto-staging>" \
+node sandbox/booking-lab/staging-smoke.js
+```
+
+Non lanciare su database di produzione; lo script crea prenotazioni fittizie sul database
+di staging e non simula catture PayPal.
 
 ## Limitazioni attuali e gate di attivazione
 
