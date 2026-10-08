@@ -67,6 +67,7 @@ module.exports=async function(req,res){
         const provider=createPayPal();
         // Always query PayPal first: covers retry after a serverless crash/timeout.
         const existing=await provider.getOrder(b.orderId);
+        provider.assertOrder(existing,b);
         let capture=provider.captureDetails(existing);
         if(!capture||capture.status!=="COMPLETED"){
           const captured=await provider.captureOrder(b.orderId,b.id);
@@ -80,10 +81,13 @@ module.exports=async function(req,res){
         if(!allowed(data.bookingId,36))throw new LabError("invalid_booking",400);
         const started=await store.startRefund(data.bookingId);
         if(started.replay){result=started;break;}
-        // For a pending refund, do NOT create a second provider refund blindly.
-        // PayPal-Request-Id is stable, but a separate reconciliation must confirm outcome.
-        if(started.pending){result={pending:true,booking:started.booking,needsReconciliation:true};break;}
-        const refund=await createPayPal().refund(started.booking);
+        const provider=createPayPal();
+        const pending=started.pending?await store.pendingRefund(started.booking.id):null;
+        // Reconcile a known provider refund before attempting a stable idempotent retry.
+        const refund=pending
+          ? await provider.getRefund(pending.provider_refund_id)
+          : await provider.refund(started.booking);
+        await store.recordRefund(started.booking.id,refund);
         if(refund.status!=="COMPLETED"){
           result={pending:true,booking:started.booking,needsReconciliation:true,providerStatus:refund.status};break;
         }

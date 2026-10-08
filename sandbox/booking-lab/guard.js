@@ -1,11 +1,20 @@
 "use strict";
 const crypto = require("node:crypto");
 function ensureLabEnv(env = process.env) {
+  if (env.VERCEL_ENV === "production") throw new Error("lab_production_forbidden");
   if (env.ARTYOU_BOOKING_LAB_MODE !== "sandbox") throw new Error("lab_disabled");
   const labUrl = String(env.ARTYOU_BOOKING_LAB_DATABASE_URL || "").trim();
   if (!labUrl || !/^mysql:\/\//i.test(labUrl)) throw new Error("lab_database_not_configured");
   const prodUrls = [env.DATABASE_URL, env.MYSQL_URL].filter(Boolean).map(String);
   if (prodUrls.includes(labUrl)) throw new Error("lab_database_matches_production");
+  for (const rawProd of prodUrls) {
+    try {
+      const prod = new URL(rawProd);
+      const lab = new URL(labUrl);
+      if (prod.hostname === lab.hostname && (prod.port || "3306") === (lab.port || "3306") &&
+          prod.pathname === lab.pathname) throw new Error("lab_database_matches_production");
+    } catch (e) { if (e.message === "lab_database_matches_production") throw e; }
+  }
   const u = new URL(labUrl);
   if (!u.pathname || u.pathname === "/") throw new Error("lab_database_name_required");
   if (!String(env.ARTYOU_BOOKING_LAB_TOKEN || "").trim() || String(env.ARTYOU_BOOKING_LAB_TOKEN).length < 32)

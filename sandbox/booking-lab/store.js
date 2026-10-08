@@ -120,6 +120,23 @@ function createStore(pool) {
       return {booking:format(Object.assign({},b,{payment_status:"REFUNDING"}))};
     });
   }
+  async function pendingRefund(id){
+    const [rows]=await pool.execute(
+      "SELECT r.provider_refund_id,r.status FROM lab_refunds r JOIN lab_bookings b ON b.id=r.booking_id WHERE b.public_id=? ORDER BY r.id DESC LIMIT 1",[id]);
+    return rows[0]||null;
+  }
+  async function recordRefund(id,refund){
+    if(!refund?.id||!["PENDING","COMPLETED"].includes(refund.status))fail("invalid_provider_refund");
+    return transaction(async conn=>{
+      const b=await lockedBooking(conn,id);
+      if(!["REFUNDING","REFUNDED"].includes(b.payment_status))fail("refund_not_started");
+      if(refund.amountCents!==Number(b.amount_cents)||refund.currency!=="EUR")fail("refund_amount_mismatch");
+      await conn.execute(
+        "INSERT INTO lab_refunds (booking_id,provider_refund_id,amount_cents,status) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE status=VALUES(status)",
+        [b.id,refund.id,refund.amountCents,refund.status]);
+      return {recorded:true};
+    });
+  }
   async function confirmRefund(id,refund){
     return transaction(async conn=>{
       const b=await lockedBooking(conn,id);
@@ -130,7 +147,8 @@ function createStore(pool) {
       }
       if(b.payment_status!=="REFUNDING"||refund.status!=="COMPLETED"||refund.amountCents!==Number(b.amount_cents)||refund.currency!=="EUR")
         fail("refund_verification_failed");
-      await conn.execute("INSERT INTO lab_refunds (booking_id,provider_refund_id,amount_cents,status) VALUES (?,?,?,'COMPLETED')",
+      await conn.execute(
+        "INSERT INTO lab_refunds (booking_id,provider_refund_id,amount_cents,status) VALUES (?,?,?,'COMPLETED') ON DUPLICATE KEY UPDATE status='COMPLETED'",
         [b.id,refund.id,refund.amountCents]);
       await conn.execute("UPDATE lab_bookings SET payment_status='REFUNDED' WHERE public_id=?",[id]);
       return format(Object.assign({},b,{payment_status:"REFUNDED"}));
@@ -146,6 +164,6 @@ function createStore(pool) {
       return format(Object.assign({},b,{booking_status:"CANCELLED"}));
     });
   }
-  return {reserve,availability,booking,setOrder,startCapture,confirmCapture,failCapture,startRefund,confirmRefund,cancel};
+  return {reserve,availability,booking,setOrder,startCapture,confirmCapture,failCapture,startRefund,pendingRefund,recordRefund,confirmRefund,cancel};
 }
 module.exports={createStore,LabError};

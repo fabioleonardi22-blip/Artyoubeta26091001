@@ -44,7 +44,12 @@ function createPayPal(env=process.env,fetcher=globalThis.fetch){
     return {id:capture.id,status:capture.status,currency:capture.amount?.currency_code,
       amountCents:cents(capture.amount?.value)};
   }
+  function assertOrder(order,booking){
+    if(order?.id!==booking.orderId || order?.purchase_units?.[0]?.custom_id!==booking.id)
+      throw new Error("provider_order_identity_mismatch");
+  }
   return {
+    assertOrder,
     createOrder:async b=>api("POST","/v2/checkout/orders",{
       intent:"CAPTURE",
       purchase_units:[{reference_id:b.id,custom_id:b.id,
