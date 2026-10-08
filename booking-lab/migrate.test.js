@@ -37,3 +37,17 @@ test("unexpected database aborts before schema changes",async()=>{
  })}));
  assert.equal(queries.length,1);
 });
+
+test("SQL comments containing semicolons never become executable statements",()=>{
+ const {statements,verifyStatement}=require("./migrate");
+ const sql="-- note; this is not SQL\nCREATE TABLE IF NOT EXISTS lab_events (id INT);\n-- another; comment\n";
+ const parsed=statements(sql);
+ assert.equal(parsed.length,1);
+ assert.equal(verifyStatement(parsed[0]),"lab_events");
+});
+test("unsafe SQL and unapproved tables are rejected",()=>{
+ const {verifyStatement}=require("./migrate");
+ assert.throws(()=>verifyStatement("DROP TABLE lab_events"));
+ assert.throws(()=>verifyStatement("CREATE TABLE IF NOT EXISTS users (id INT)"));
+ assert.throws(()=>verifyStatement("CREATE TABLE IF NOT EXISTS lab_store_orders (id INT)"));
+});
