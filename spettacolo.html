@@ -518,10 +518,33 @@ class Component extends DCLogic {
     var self = this, st = this.state || {};
     /* COME INSERIRE IL CAST: dentro ogni spettacolo usa, per esempio, cast: [{name: "Fabio Leonardi", slug: "fabio-leonardi"}] */
     var SHOWS_FALLBACK = [{"slug": "shortyou", "title": "ShortYou · show & aperitivo", "cat": "Improvvisazione", "poster": "img/shortyou-4-ottobre.jpg", "desc": "Scene brevi, giochi e tanta complicità con il pubblico: lo show di improvvisazione di Artyou, con aperitivo, al The Spot Improv.", "venue": "The Spot Improv", "addr": "Via Giuseppe Bonaccorsi, 28 – Roma (Valle Aurelia)", "maps": "The Spot Improv, Via Giuseppe Bonaccorsi 28, Roma", "price": 15, "pagaOnline": true, "capienza": 40, "dates": [{"label": "Domenica 4 ottobre · dalle 19:30", "sold": 0}], "cast": []}, {"slug": "shortyou-29-novembre", "title": "ShortYou · show & aperitivo", "cat": "Improvvisazione", "poster": (window.SHORTYOU_29_NOV_POSTER || ""), "desc": "Scene brevi, giochi e tanta complicità con il pubblico: lo show di improvvisazione di Artyou, con aperitivo, al The Spot Improv.", "venue": "The Spot Improv", "addr": "Via Giuseppe Bonaccorsi, 28 – Roma (Valle Aurelia)", "maps": "The Spot Improv, Via Giuseppe Bonaccorsi 28, Roma", "price": 15, "pagaOnline": true, "capienza": 40, "dates": [{"label": "Domenica 29 novembre · dalle 19:30", "sold": 0}], "cast": []}, {"slug": "spettacolo-9-ottobre", "title": "[Titolo spettacolo]", "cat": "Improvvisazione", "poster": "", "desc": "[Descrizione dello spettacolo: il format, chi sale sul palco, cosa aspettarsi.]", "venue": "[Teatro]", "addr": "[Indirizzo], Roma", "maps": "Roma", "price": "[Prezzo]", "dates": [{"label": "Venerdì 9 ottobre · 21:00", "sold": 22}], "cast": []}, {"slug": "spettacolo-24-ottobre", "title": "[Titolo spettacolo]", "cat": "Teatro", "poster": "", "desc": "[Descrizione dello spettacolo.]", "venue": "[Teatro]", "addr": "[Indirizzo], Roma", "maps": "Roma", "price": "[Prezzo]", "dates": [{"label": "Sabato 24 ottobre · 20:45", "sold": 54}], "cast": []}, {"slug": "standup-bistrot68", "title": "Stand-up comedy · lo spettacolo del corso", "cat": "Stand-up", "poster": "", "desc": "Gli allievi del corso di stand-up comedy salgono sul palco con i loro monologhi. Data in via di definizione: lascia il contatto e ti avvisiamo appena esce.", "venue": "Bistrot68 Centocelle", "addr": "[Indirizzo], Roma (Centocelle)", "maps": "Bistrot68 Centocelle Roma", "price": "[Prezzo]", "tbd": true, "dates": [{"label": "Data da definire", "sold": 0}], "cast": []}];
-    var SHOWS = (window.ARTYOU_DYNAMIC_SHOWS && window.ARTYOU_DYNAMIC_SHOWS.length) ? window.ARTYOU_DYNAMIC_SHOWS : SHOWS_FALLBACK;
+    // Preserve static event details when the API returns only a subset of events.
+    // A missing slug must never silently display another event or mark it as past.
+    var liveShows = Array.isArray(window.ARTYOU_DYNAMIC_SHOWS) ? window.ARTYOU_DYNAMIC_SHOWS : [];
+    var SHOWS = SHOWS_FALLBACK.map(function (fallback) {
+      var live = liveShows.filter(function (x) { return x && x.slug === fallback.slug; })[0];
+      if (!live) return fallback;
+      var merged = Object.assign({}, fallback, live);
+      if (!live.title) merged.title = fallback.title;
+      if (!live.desc) merged.desc = fallback.desc;
+      if (!live.poster) merged.poster = fallback.poster;
+      if (!live.venue) merged.venue = fallback.venue;
+      if (!live.addr) merged.addr = fallback.addr;
+      if (!live.maps) merged.maps = fallback.maps;
+      if (!live.cat) merged.cat = fallback.cat;
+      if (!Array.isArray(live.dates) || !live.dates.length || !live.dates.some(function(d){return d && (d.label || d.start || d.date);})) merged.dates = fallback.dates;
+      return merged;
+    }).concat(liveShows.filter(function(x){
+      return x && x.slug && !SHOWS_FALLBACK.some(function(f){return f.slug===x.slug;});
+    }));
     var META = {"Improvvisazione": ["#1A6E99", "#2CA8E0", "#0F4A66"], "Teatro": ["#941880", "#941880", "#4A1040"], "Stand-up": ["#C0145C", "#E41870", "#5A0F30"], "ImproEnglish": ["#127A70", "#28B4A8", "#0E4A45"]};
     var slug = this.hash();
-    var cur = SHOWS.filter(function (x) { return x.slug === slug; })[0] || SHOWS[0];
+    var cur = SHOWS.filter(function (x) { return x && x.slug === slug; })[0] || SHOWS_FALLBACK.filter(function (x) { return x.slug === slug; })[0] || null;
+    if (!cur) {
+      cur = {slug:slug,title:"Spettacolo non disponibile",cat:"Improvvisazione",desc:"Non troviamo questo spettacolo. Consulta il calendario per gli eventi disponibili.",poster:"",venue:"",addr:"",maps:"Roma",price:0,tbd:true,dates:[{label:"Data da definire",sold:0}],cast:[]};
+    }
+    if (!Array.isArray(cur.dates) || !cur.dates.length) cur.dates=[{label:"Data da definire",sold:0}];
+    if (!META[cur.cat]) cur.cat="Improvvisazione";
     function eventEndTime(ev) {
       if (!ev || ev.tbd) return Infinity;
       var values = [], items = Array.isArray(ev.dates) ? ev.dates : [];
