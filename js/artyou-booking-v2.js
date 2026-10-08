@@ -3,7 +3,7 @@
 var ENDPOINT=window.ARTYOU_BOOKING_ENDPOINT||"";
 var WA="https://wa.me/393271881956?text="+encodeURIComponent("Ciao! Ho bisogno di aiuto con una prenotazione Artyou.");
 function q(id){return document.getElementById("f-"+id)||document.getElementById("p-"+id);}
-function escapeHtml(v){return String(v==null?"":v).replace(/[&<>"\x27]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"'":"&quot;","\x27":"&#39;"}[c];});}
+function escapeHtml(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){switch(c){case "&":return "&amp;";case "<":return "&lt;";case ">":return "&gt;";case '"':return "&quot;";default:return "&#39;";}});}
 function txt(el){return (el&&(el.innerText||el.textContent)||"").replace(/\s+/g," ").trim();}
 function msg(b,k,h){document.querySelectorAll(".artyou-booking-msg").forEach(x=>x.remove());var d=document.createElement("div");d.className="artyou-booking-msg "+k;d.style.cssText="margin-top:12px;padding:12px 14px;border-radius:10px;font-size:14px;line-height:1.45;"+(k==="err"?"background:#fff1f0;border:1px solid #ffccc7;color:#8c1d18;":k==="ok"?"background:#f6ffed;border:1px solid #b7eb8f;color:#275c14;":"background:#fffbe6;border:1px solid #ffe58f;color:#6b4e00;");d.setAttribute("role",k==="err"?"alert":"status");d.setAttribute("aria-live",k==="err"?"assertive":"polite");d.innerHTML=h;b.insertAdjacentElement("afterend",d);}
 function submitBtn(t){var b=t.closest&&t.closest("button");if(!b)return null;if(b.getAttribute("data-artyou-no-submit")==="1")return null;var l=txt(b),a=b.getAttribute("onclick")||b.getAttribute("onClick")||"";if(!/\b(invia|prenota|conferma|avvisami|paga)\b/i.test(l)&&!/\b(send|submit|confirm)\b/i.test(a))return null;if(!q("nome"))return null;return b;}
