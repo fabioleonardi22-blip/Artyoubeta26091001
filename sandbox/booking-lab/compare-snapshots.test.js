@@ -1,0 +1,13 @@
+"use strict";
+const assert=require("node:assert/strict");
+const {compare,validate}=require("./compare-snapshots");
+const row={slug:"shortyou-demo",capacity:5,confirmedSeats:2,heldSeats:1,paidCents:3000,refundCents:0,checkedInSeats:1};
+const source={asOf:"2026-10-08T10:00:00Z",events:[row]};
+assert.equal(compare(source,structuredClone(source)).match,true);
+const modified=structuredClone(source);modified.events[0].paidCents=1500;
+const r=compare(source,modified);
+assert.equal(r.match,false);
+assert.equal(r.differences[0].field,"paidCents");
+assert.throws(()=>validate({asOf:source.asOf,events:[{...row,confirmedSeats:6}]},"bad"),/overbooked/);
+assert.equal(compare(source,{asOf:source.asOf,events:[]}).differences[0].type,"event_missing");
+console.log("PASS anonymized snapshot comparison, mismatch, overbooking, missing event");
