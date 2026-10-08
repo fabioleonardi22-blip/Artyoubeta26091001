@@ -9,9 +9,14 @@ function safeJson(obj) {
 module.exports = async function handler(req, res) {
   try {
     const slug = String((req.query && req.query.slug) || "").trim();
-    const origin = "https://artyouroma.it";
+    const host = String((req.headers && (req.headers["x-forwarded-host"] || req.headers.host)) || "").trim();
+    const proto = String((req.headers && req.headers["x-forwarded-proto"]) || "https").split(",")[0].trim() || "https";
+    const origin = host ? (proto + "://" + host) : "https://artyoubeta2691001.vercel.app";
 
-    const templateResp = await fetch(origin + "/insegnante.html", { redirect: "follow" });
+    // Always load the teacher template from the current deployment.
+    // Fetching artyouroma.it here can return the legacy/WordPress site and break the profile page.
+    const templateResp = await fetch(origin + "/insegnante.html", { redirect: "follow", cache: "no-store" });
+    if (!templateResp.ok) throw new Error("Template insegnante non disponibile: HTTP " + templateResp.status);
     let html = await templateResp.text();
 
     const m = html.match(/var TEACH = (\[[\s\S]*?\]);\s*var META/);
