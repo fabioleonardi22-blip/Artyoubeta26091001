@@ -3,8 +3,9 @@
 var ENDPOINT=window.ARTYOU_BOOKING_ENDPOINT||"";
 var WA="https://wa.me/393271881956?text="+encodeURIComponent("Ciao! Ho bisogno di aiuto con una prenotazione Artyou.");
 function q(id){return document.getElementById("f-"+id)||document.getElementById("p-"+id);}
+function escapeHtml(v){return String(v==null?"":v).replace(/[&<>"\x27]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"'":"&quot;","\x27":"&#39;"}[c];});}
 function txt(el){return (el&&(el.innerText||el.textContent)||"").replace(/\s+/g," ").trim();}
-function msg(b,k,h){document.querySelectorAll(".artyou-booking-msg").forEach(x=>x.remove());var d=document.createElement("div");d.className="artyou-booking-msg "+k;d.style.cssText="margin-top:12px;padding:12px 14px;border-radius:10px;font-size:14px;line-height:1.45;"+(k==="err"?"background:#fff1f0;border:1px solid #ffccc7;color:#8c1d18;":k==="ok"?"background:#f6ffed;border:1px solid #b7eb8f;color:#275c14;":"background:#fffbe6;border:1px solid #ffe58f;color:#6b4e00;");d.innerHTML=h;b.insertAdjacentElement("afterend",d);}
+function msg(b,k,h){document.querySelectorAll(".artyou-booking-msg").forEach(x=>x.remove());var d=document.createElement("div");d.className="artyou-booking-msg "+k;d.style.cssText="margin-top:12px;padding:12px 14px;border-radius:10px;font-size:14px;line-height:1.45;"+(k==="err"?"background:#fff1f0;border:1px solid #ffccc7;color:#8c1d18;":k==="ok"?"background:#f6ffed;border:1px solid #b7eb8f;color:#275c14;":"background:#fffbe6;border:1px solid #ffe58f;color:#6b4e00;");d.setAttribute("role",k==="err"?"alert":"status");d.setAttribute("aria-live",k==="err"?"assertive":"polite");d.innerHTML=h;b.insertAdjacentElement("afterend",d);}
 function submitBtn(t){var b=t.closest&&t.closest("button");if(!b)return null;if(b.getAttribute("data-artyou-no-submit")==="1")return null;var l=txt(b),a=b.getAttribute("onclick")||b.getAttribute("onClick")||"";if(!/\b(invia|prenota|conferma|avvisami|paga)\b/i.test(l)&&!/\b(send|submit|confirm)\b/i.test(a))return null;if(!q("nome"))return null;return b;}
 function evento(){var h=document.getElementById("f-evento-id");if(h&&h.value)return h.value;var h1=document.querySelector("h1");return h1?txt(h1):"";}
 function posti(b){var h=document.getElementById("f-posti");if(h&&h.value)return parseInt(h.value,10)||1;var m=txt(b).match(/(\d+)\s+post/i);if(m)return parseInt(m[1],10)||1;var s=document.querySelector('select[id*="posti"],select[name*="posti"]');return s?(parseInt(s.value,10)||1):1;}
@@ -125,10 +126,10 @@ document.addEventListener("click",function(e){var b=submitBtn(e.target);if(!b)re
 if(res&&(res.errore==="esaurito"||res.errore==="posti_insufficienti"))throw new Error("Sono rimasti "+(res.liberi||0)+" posti disponibili.");
 if(res&&res.errore==="prenotazioni_chiuse")throw new Error("Le prenotazioni per questo evento sono chiuse.");
 if(res&&res.errore==="prenotazioni_non_aperte")throw new Error("Le prenotazioni per questo evento non sono ancora aperte.");
-var base=(res&&res.errore)||"Invio non riuscito.";
+var base=escapeHtml((res&&res.errore)||"Invio non riuscito.");
 if(window.ARTYOU_BOOKING_DEBUG)base+=" [Evento: "+(d.Evento||"-")+" · HTTP: "+(res&&res.__http||"-")+"]";
 throw new Error(base);
-}if(window.ARTYOU_CAP&&d.Evento&&typeof res.liberi==="number"){window.ARTYOU_CAP[d.Evento]=res.liberi;window.dispatchEvent(new Event("hashchange"));}var codice=res.codice||res.id||"";var h=codice?'Prenotazione registrata. Codice: <b>'+codice+'</b>.':"Prenotazione registrata.";if(res.stato==="HOLD")h+=" I posti sono bloccati per <b>"+res.holdMinutes+" minuti</b> in attesa del pagamento.";else h+=" I posti sono stati riservati.";msg(b,"ok",h);if(codice){window.dispatchEvent(new CustomEvent("artyou-booking-code",{detail:codice}));}
+}if(window.ARTYOU_CAP&&d.Evento&&typeof res.liberi==="number"){window.ARTYOU_CAP[d.Evento]=res.liberi;window.dispatchEvent(new Event("hashchange"));}var codice=res.codice||res.id||"";var h=codice?'Prenotazione registrata. Codice: <b>'+escapeHtml(codice)+'</b>.':"Prenotazione registrata.";if(res.stato==="HOLD")h+=" I posti sono bloccati per <b>"+res.holdMinutes+" minuti</b> in attesa del pagamento.";else if(/^PayPal/i.test(String(d.Pagamento||"")))h+=" Il pagamento non è ancora confermato: completa la procedura su PayPal.";else h+=" I posti sono stati riservati.";msg(b,"ok",h);if(codice){window.dispatchEvent(new CustomEvent("artyou-booking-code",{detail:codice}));}
 var pp=paypalUrl(d);
 if(pp){
   window.dispatchEvent(new CustomEvent("artyou:paypal-redirect",{detail:{url:pp,amount:d.Importo,pagamento:d.Pagamento}}));
@@ -137,6 +138,6 @@ if(pp){
 window.dispatchEvent(new CustomEvent("artyou:booking-success",{detail:res}));
 avail();
 b.dataset.artyouBookingBypass="1";
-setTimeout(()=>{try{b.click();}catch(_){ }},100);}).catch(err=>{var em=(err&&err.message?err.message:"Invio non riuscito.");if(window.ARTYOU_BOOKING_DEBUG)em+=" [Evento: "+(d.Evento||"-")+" · Risorse: "+(d.Risorse||"-")+"]";msg(b,"err",em+' <a href="'+WA+'" target="_blank" rel="noopener">Contattaci su WhatsApp</a>.');}).finally(()=>{delete b.dataset.artyouBusy;b.style.opacity="";});},true);
+setTimeout(()=>{try{b.click();}catch(_){ }},100);}).catch(err=>{var em=(err&&err.message?err.message:"Invio non riuscito.");if(window.ARTYOU_BOOKING_DEBUG)em+=" [Evento: "+(d.Evento||"-")+" · Risorse: "+(d.Risorse||"-")+"]";msg(b,"err",escapeHtml(em)+' <a href="'+WA+'" target="_blank" rel="noopener">Contattaci su WhatsApp</a>.');}).finally(()=>{delete b.dataset.artyouBusy;b.style.opacity="";});},true);
 avail();
 })();
