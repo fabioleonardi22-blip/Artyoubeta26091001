@@ -1,37 +1,46 @@
 "use strict";
 const fs=require("node:fs");
 const path=require("node:path");
-const {createConnection}=require("mysql2/promise");
-const dbName=process.env.LAB_MYSQL_DATABASE;
-if(process.env.BOOKING_LAB_MIGRATIONS!=="true" || process.env.NODE_ENV==="production" || process.env.VERCEL_ENV==="production" || !/^artyou_booking_lab(?:_[a-z0-9_]+)?$/.test(dbName||"")) {
-  console.error("Refusing migrations: explicit lab-only configuration required");
-  process.exit(1);
+const TABLES=["lab_events","lab_bookings","lab_webhooks","lab_refunds","lab_payment_intents"];
+function statements(sql){
+  return sql.split(";").map(part=>part.replace(/^\s*(?:--[^\n]*(?:\n|$)\s*)*/g,"").trim()).filter(Boolean);
 }
-const required=["LAB_MYSQL_HOST","LAB_MYSQL_USER","LAB_MYSQL_PASSWORD"];
-if(required.some(k=>!process.env[k])) {console.error("Missing dedicated lab migration credentials");process.exit(1);}
-(async()=>{
-  const db=await createConnection({
-    host:process.env.LAB_MYSQL_HOST,
-    port:Number(process.env.LAB_MYSQL_PORT||3306),
-    user:process.env.LAB_MYSQL_USER,
-    password:process.env.LAB_MYSQL_PASSWORD,
-    database:dbName,
-    multipleStatements:false,
-    ssl:process.env.LAB_MYSQL_SSL==="true"?{rejectUnauthorized:true}:undefined
+function verifyStatement(statement){
+  const match=/^CREATE\s+TABLE\s+IF\s+NOT\s+EXISTS\s+(lab_[a-z_]+)\s*\(/i.exec(statement);
+  if(!match || !TABLES.includes(match[1].toLowerCase())) throw Error("Unexpected SQL statement");
+  return match[1].toLowerCase();
+}
+function readMigrations(){
+  const files=["schema.sql","refunds-schema.sql","payment-intents-schema.sql"];
+  const sql=files.flatMap(file=>statements(fs.readFileSync(path.join(__dirname,file),"utf8")));
+  const names=sql.map(verifyStatement);
+  if(names.length!==TABLES.length || new Set(names).size!==TABLES.length || TABLES.some(name=>!names.includes(name))) throw Error("Unexpected lab schema inventory");
+  return sql;
+}
+function assertLabEnvironment(env){
+  if(env.BOOKING_LAB_MIGRATIONS!=="true" || env.NODE_ENV==="production" || env.VERCEL_ENV==="production" || env.LAB_MYSQL_DATABASE!=="artyou_booking_lab") throw Error("Lab-only migration guard refused");
+  for(const key of ["LAB_MYSQL_HOST","LAB_MYSQL_USER","LAB_MYSQL_PASSWORD"]) if(!env[key]) throw Error("Missing dedicated migration configuration");
+}
+async function migrate({env=process.env,connect}={}){
+  assertLabEnvironment(env);
+  const sql=readMigrations();
+  const connection=await connect({
+    host:env.LAB_MYSQL_HOST,port:Number(env.LAB_MYSQL_PORT||3306),user:env.LAB_MYSQL_USER,password:env.LAB_MYSQL_PASSWORD,
+    database:env.LAB_MYSQL_DATABASE,multipleStatements:false,
+    ssl:env.LAB_MYSQL_SSL==="true"?{rejectUnauthorized:true}:undefined
   });
   try {
-    const [[identity]]=await db.query("SELECT DATABASE() AS name");
-    if(identity.name!==dbName) throw Error("Connected to unexpected schema");
-    for(const file of ["schema.sql","refunds-schema.sql","payment-intents-schema.sql"]){
-      const sql=fs.readFileSync(path.join(__dirname,file),"utf8");
-      const statements=sql.split(";").map(s=>s.trim()).filter(s=>s&&!s.startsWith("--") || s.includes("CREATE TABLE"));
-      for(const statement of statements) {
-        const cleaned=statement.replace(/^(?:\s*--[^\n]*\n)*/gm,"").trim();
-        if(!cleaned) continue;
-        if(!/^CREATE TABLE IF NOT EXISTS lab_(?:events|bookings|webhooks|refunds|payment_intents)\s*\(/i.test(cleaned)) throw Error("Unexpected migration statement in "+file);
-        await db.query(cleaned);
-      }
-      console.log("Applied lab migration: "+file);
-    }
-  }finally{await db.end();}
-})().catch(e=>{console.error("Lab migration failed:",e.message);process.exitCode=1;});
+    const [[identity]]=await connection.query("SELECT DATABASE() AS name");
+    if(identity.name!=="artyou_booking_lab") throw Error("Wrong database");
+    for(const statement of sql) await connection.query(statement);
+    const [rows]=await connection.query("SELECT table_name FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name LIKE 'lab_%'");
+    const found=new Set(rows.map(row=>String(row.TABLE_NAME||row.table_name).toLowerCase()));
+    if(TABLES.some(table=>!found.has(table))) throw Error("Missing lab tables after migration");
+    return TABLES;
+  } finally {await connection.end();}
+}
+module.exports={TABLES,statements,verifyStatement,readMigrations,assertLabEnvironment,migrate};
+if(require.main===module){
+  const {createConnection}=require("mysql2/promise");
+  migrate({connect:createConnection}).then(tables=>console.log("Verified lab tables:",tables.join(", "))).catch(e=>{console.error("Migration refused or failed:",e.message);process.exitCode=1;});
+}
