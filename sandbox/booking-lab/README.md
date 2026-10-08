@@ -48,6 +48,8 @@ La capture in stato \`CAPTURING\` resta contabilizzata anche durante timeout del
 \`\`\`sh
 node sandbox/booking-lab/booking-lab.test.js
 node sandbox/booking-lab/staging.test.js
+node sandbox/booking-lab/compare-snapshots.test.js
+node sandbox/booking-lab/compare-snapshots.js legacy-anon.json staging-anon.json
 \`\`\`
 
 La suite usa un fake MySQL in memoria per verificare il flusso SQL, **non prova realmente transazioni su più istanze Vercel**.
