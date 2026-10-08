@@ -3,11 +3,11 @@ const fs=require("node:fs");
 const path=require("node:path");
 const TABLES=["lab_events","lab_bookings","lab_webhooks","lab_refunds","lab_payment_intents"];
 function statements(sql){
-  return sql.split(";").map(part=>part.split("\n").filter(line=>!/^\s*--/.test(line)).join("\n").trim()).filter(Boolean);
+  return sql.split(";").map(part=>part.split("\n").filter(line=>!/^\s*--/.test(line)).join("\n").trim()).filter(part=>part && !/^\s*--/.test(part));
 }
 function verifyStatement(statement){
   const match=/^CREATE\s+TABLE\s+IF\s+NOT\s+EXISTS\s+(lab_[a-z_]+)\s*\(/i.exec(statement);
-  if(!match || !TABLES.includes(match[1].toLowerCase())) throw Error("Unexpected SQL statement");
+  if(!match || !TABLES.includes(match[1].toLowerCase())) throw Error("Unexpected SQL statement: "+statement.slice(0,120).replace(/\\s+/g," "));
   return match[1].toLowerCase();
 }
 function readMigrations(){
