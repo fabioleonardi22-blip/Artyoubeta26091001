@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS lab_bookings (
   request_fingerprint CHAR(64) NOT NULL,
   seats INT UNSIGNED NOT NULL,
   amount_cents INT UNSIGNED NOT NULL,
-  booking_status ENUM('HELD','CONFIRMED','EXPIRED','CANCELLED') NOT NULL,
-  payment_status ENUM('NOT_REQUIRED','PENDING','PAID','FAILED','REFUNDED','PARTIALLY_REFUNDED') NOT NULL DEFAULT 'PENDING',
+  booking_status ENUM('HELD','CAPTURING','CONFIRMED','EXPIRED','CANCELLED') NOT NULL,
+  payment_status ENUM('NOT_REQUIRED','PENDING','PAID','FAILED','REFUNDING','REFUNDED','PARTIALLY_REFUNDED') NOT NULL DEFAULT 'PENDING',
   hold_expires_at DATETIME NULL,
   provider_order_id VARCHAR(255) NULL UNIQUE,
   provider_capture_id VARCHAR(255) NULL UNIQUE,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS lab_refunds (
 -- 3. Cerca idempotency_key e confronta request_fingerprint: stessa richiesta -> stesso esito;
 --    diversa richiesta con stessa chiave -> 409.
 -- 4. SELECT SUM(seats) FROM lab_bookings WHERE event_id=? AND
---    (booking_status='CONFIRMED' OR
+--    (booking_status IN ('CONFIRMED','CAPTURING') OR
 --     (booking_status='HELD' AND hold_expires_at>UTC_TIMESTAMP()))
 -- 5. Se somma + nuovi posti > capacity: ROLLBACK, 409 SOLD_OUT.
 -- 6. Calcola importo SOLO dal listino MySQL e crea HELD con scadenza.
