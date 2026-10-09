@@ -286,8 +286,8 @@ async function listSiteEvents(from, to) {
       siteDateLabel:String(r.date_label || "")
     };
   }).filter(function(event) {
-    // Undated events cannot be placed on a monthly calendar; avoid inventing a date.
-    if (!event.date) return false;
+    // Keep undated events visible in the operational planner's "da pianificare" list.
+    if (!event.date) return true;
     return (!from || event.date >= from) && (!to || event.date <= to);
   });
 }
