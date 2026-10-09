@@ -62,10 +62,34 @@ async function saveEvent(input){
         id=Number(ins.insertId);
       }
     }
-    await conn.execute("DELETE FROM event_dates WHERE event_id=?",[id]);
+    // Preserve date IDs referenced by existing bookings and tickets.
+    // Match repeated date labels deterministically, rather than deleting and recreating rows.
+    const [existingDates]=await conn.execute("SELECT id,date_label FROM event_dates WHERE event_id=? ORDER BY id FOR UPDATE",[id]);
+    const byLabel=new Map();
+    for(const row of existingDates){
+      const label=String(row.date_label||"");
+      if(!byLabel.has(label))byLabel.set(label,[]);
+      byLabel.get(label).push(row.id);
+    }
+    const retained=new Set();
     for(const d of dates){
       const label=clean(d&&d.label,255);if(!label)continue;
-      await conn.execute("INSERT INTO event_dates (event_id,starts_at,date_label,active,metadata) VALUES (?,NULL,?,1,?)",[id,label,JSON.stringify((d&&d.metadata)||{})]);
+      const metadata=JSON.stringify((d&&d.metadata)||{});
+      const available=byLabel.get(label)||[];
+      const dateId=available.shift();
+      if(dateId!=null){
+        retained.add(String(dateId));
+        await conn.execute("UPDATE event_dates SET active=1,metadata=? WHERE id=? AND event_id=?",[metadata,dateId,id]);
+      }else{
+        const [created]=await conn.execute("INSERT INTO event_dates (event_id,starts_at,date_label,active,metadata) VALUES (?,NULL,?,1,?)",[id,label,metadata]);
+        retained.add(String(created.insertId));
+      }
+    }
+    for(const row of existingDates){
+      if(!retained.has(String(row.id))){
+        // Inactivation preserves existing ticket references and historical dates.
+        await conn.execute("UPDATE event_dates SET active=0 WHERE id=? AND event_id=?",[row.id,id]);
+      }
     }
     const [rows]=await conn.execute("SELECT * FROM events WHERE id=? LIMIT 1",[id]);
     return eventObject(rows[0],conn);
