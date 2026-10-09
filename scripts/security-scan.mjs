@@ -46,7 +46,7 @@ for (const file of files) {
     for (const p of patterns) {
       if (p.name === "Database URL") {
         const matches = line.match(/\bmysql:\/\/[^\s"\x27<>]+/gi) || [];
-        const fixtureUrls = new Set(["mysql://a:b@db/lab","mysql://a:b@db/prod","mysql://a:b@db/other","mysql://other:password@db/prod"]);
+        const fixtureUrls = new Set(["mysql://a:b@db/lab","mysql://a:b@db/prod","mysql://a:b@db/other","mysql://other:password@db/prod","mysql://a:b@db/artyou_booking_staging","mysql://a:b@db/"]);
         const isFixture = path.relative(root,file).replace(/\\/g,"/") === "sandbox/booking-lab/staging.test.js";
         const relativePath = path.relative(root,file).replace(/\\/g,"/");
         const isDoc = relativePath === "sandbox/booking-lab/README.md";
