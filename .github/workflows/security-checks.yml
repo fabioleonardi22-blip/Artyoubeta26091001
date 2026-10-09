@@ -29,7 +29,7 @@ jobs:
         run: node scripts/security-scan.mjs
 
       - name: Install production dependencies safely
-        run: npm install --package-lock=false --ignore-scripts --no-audit --no-fund
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
 
       - name: Audit dependencies
         run: npm audit --omit=dev --audit-level=high
