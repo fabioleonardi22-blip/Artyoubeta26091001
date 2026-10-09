@@ -17,6 +17,11 @@ function ensureLabEnv(env = process.env) {
   }
   const u = new URL(labUrl);
   if (!u.pathname || u.pathname === "/") throw new Error("lab_database_name_required");
+  // The Railway booking-lab migrator uses a DIFFERENT schema with the same lab_ table names.
+  // Never point this legacy staging API at artyou_booking_lab or a production schema.
+  const schema = decodeURIComponent(u.pathname.slice(1));
+  if (!/^artyou_booking_staging(?:_[a-z0-9_]+)?$/i.test(schema))
+    throw new Error("lab_staging_schema_required");
   if (!String(env.ARTYOU_BOOKING_LAB_TOKEN || "").trim() || String(env.ARTYOU_BOOKING_LAB_TOKEN).length < 32)
     throw new Error("lab_token_missing");
   return labUrl;
