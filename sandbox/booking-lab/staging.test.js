@@ -20,8 +20,15 @@ async function run(){
     const env={ARTYOU_BOOKING_LAB_MODE:"sandbox",ARTYOU_BOOKING_LAB_DATABASE_URL:"mysql://a:b@db/prod",
       DATABASE_URL:"mysql://a:b@db/prod",ARTYOU_BOOKING_LAB_TOKEN:"x".repeat(32)};
     assert.throws(()=>ensureLabEnv(env),/matches_production/);
-    assert.throws(()=>ensureLabEnv({...env,DATABASE_URL:"mysql://a:b@db/other",ARTYOU_BOOKING_LAB_TOKEN:"weak"}),/token_missing/);
+    assert.throws(()=>ensureLabEnv({...env,ARTYOU_BOOKING_LAB_DATABASE_URL:"mysql://a:b@db/artyou_booking_staging",DATABASE_URL:"mysql://a:b@db/other",ARTYOU_BOOKING_LAB_TOKEN:"weak"}),/token_missing/);
     assert.throws(()=>ensureLabEnv({...env,DATABASE_URL:"mysql://other:password@db/prod"}),/matches_production/);
+  });
+  await check("requires compatible isolated staging schema",()=>{
+    const env={ARTYOU_BOOKING_LAB_MODE:"sandbox",ARTYOU_BOOKING_LAB_TOKEN:"x".repeat(32)};
+    for(const schema of ["prod","lab","artyou_booking_lab"])
+      assert.throws(()=>ensureLabEnv({...env,ARTYOU_BOOKING_LAB_DATABASE_URL:"mysql://a:b@db/"+schema}),/lab_staging_schema_required/);
+    for(const schema of ["artyou_booking_staging","artyou_booking_staging_e2e"])
+      assert.equal(ensureLabEnv({...env,ARTYOU_BOOKING_LAB_DATABASE_URL:"mysql://a:b@db/"+schema}),"mysql://a:b@db/"+schema);
   });
   await check("constant time token matching",()=>{
     const env={ARTYOU_BOOKING_LAB_TOKEN:"a".repeat(32)};
