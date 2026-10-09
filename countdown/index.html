@@ -46,13 +46,13 @@ body{display:flex;justify-content:center}
 .start{height:68px;border:0;border-radius:16px;background:#800020;color:#fff;padding:0 24px;font-size:17px;font-weight:950;cursor:pointer}
 .clock{margin-top:16px;background:#111820;border-radius:22px;padding:24px 16px;text-align:center;color:#fff}
 .clock-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#AAB5BC;font-weight:900}
-.clock-value{font-size:74px;line-height:1;font-weight:950;letter-spacing:-3px;margin:8px 0 6px;font-variant-numeric:tabular-nums}
+.clock-value{font-size:clamp(32px,9vw,60px);white-space:nowrap;line-height:1;font-weight:950;letter-spacing:-3px;margin:8px 0 6px;font-variant-numeric:tabular-nums}
 .clock-hint{font-size:13px;color:#C5CDD2}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.secondary{height:48px;border-radius:14px;border:1px solid #D7DDE1;background:#fff;color:#111820;font-weight:900;cursor:pointer}.secondary.dark{background:#111820;color:#fff;border-color:#111820}
 .status{margin-top:12px;border-radius:14px;padding:12px 14px;background:#F6F3EC;color:#5D6670;font-size:12px;line-height:1.35}
 .footer{text-align:center;color:#7D8992;font-size:11px;padding-top:2px}
 .install-sheet{position:fixed;inset:0;background:rgba(0,0,0,.58);display:none;align-items:flex-end;justify-content:center;padding:14px;z-index:99}.install-sheet.open{display:flex}.install-card{width:100%;max-width:560px;background:#fff;color:#111820;border-radius:24px 24px 18px 18px;padding:20px}.install-card h3{margin:0 0 8px;font-size:22px}.install-card p{margin:0 0 14px;color:#5E6870;line-height:1.45}.step{background:#F6F3EC;border-radius:14px;padding:12px;margin-top:9px;font-size:14px}.close{width:100%;margin-top:14px;border:0;border-radius:14px;background:#111820;color:#fff;padding:13px;font-weight:900}
-@media(max-width:420px){.hero h1{font-size:35px}.clock-value{font-size:62px}.duration-row{grid-template-columns:1fr}.start{width:100%}}
+@media(max-width:420px){.hero h1{font-size:35px}.clock-value{font-size:clamp(30px,8.5vw,44px)}.duration-row{grid-template-columns:1fr}.start{width:100%}}
 
 .focus-logo{display:none}
 body.timer-focus{overflow:hidden}
@@ -95,7 +95,7 @@ body.timer-focus{overflow:hidden}
     <div class="clock">
       <button class="focus-logo" id="focusExit" type="button" aria-label="Esci da tutto schermo"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" width="88" height="30"></button>
       <div class="clock-label" id="clockLabel">Pronti?</div>
-      <div class="clock-value" id="clockValue">3:00</div>
+      <div class="clock-value" id="clockValue">3:00.00</div>
       <div class="clock-hint" id="clockHint">Imposta i minuti e premi Avvia</div>
     </div>
 
@@ -125,12 +125,12 @@ body.timer-focus{overflow:hidden}
 <script>
 (function(){
 "use strict";
-var timerId=null,remaining=180,running=false,audioCtx=null,deferredPrompt=null,soundEnabled=true,alarmNodes=[],alarmGeneration=0;
+var timerId=null,remaining=180000,running=false,audioCtx=null,deferredPrompt=null,soundEnabled=true,alarmNodes=[],alarmGeneration=0;
 function $(id){return document.getElementById(id)}
 var mode="timer",deadline=0,runStarted=0,elapsedAtStart=0;
 function clampMinutes(){var m=parseInt($("minutes").value||"3",10)||3;m=Math.max(1,Math.min(60,m));$("minutes").value=m;return m}
-function fmt(s){var m=Math.floor(s/60),sec=s%60;return m+":"+String(sec).padStart(2,"0")}
-function render(){ $("clockValue").textContent=fmt(Math.max(0,remaining));fitFocus(); }
+function fmt(ms){var total=Math.max(0,Math.ceil(ms/10));var m=Math.floor(total/6000),sec=Math.floor(total/100)%60,cs=total%100;return m+":"+String(sec).padStart(2,"0")+"."+String(cs).padStart(2,"0")}
+function render(){ $("clockValue").textContent=fmt(remaining);fitFocus(); }
 var alarmMedia=new Audio("/countdown/alarm.wav");
 alarmMedia.preload="auto";
 alarmMedia.setAttribute("playsinline","");
@@ -201,22 +201,22 @@ function finish(){
  alarm();
 }
 function tick(){
- if(mode==="stopwatch"){remaining=elapsedAtStart+Math.floor((performance.now()-runStarted)/1000);render();return}
- var previous=remaining;remaining=Math.max(0,Math.ceil((deadline-performance.now())/1000));
- if(remaining<=0){finish();return}render();if(remaining!==previous&&remaining<=3&&navigator.vibrate)navigator.vibrate(35);
+ if(mode==="stopwatch"){remaining=elapsedAtStart+(performance.now()-runStarted);render();return}
+ var previous=remaining;remaining=Math.max(0,deadline-performance.now());
+ if(remaining<=0){finish();return}render();if(Math.ceil(remaining/1000)!==Math.ceil(previous/1000)&&remaining<=3000&&navigator.vibrate)navigator.vibrate(35);
 }
 function beginRun(){
- running=true;runStarted=performance.now();elapsedAtStart=remaining;deadline=runStarted+remaining*1000;
+ running=true;runStarted=performance.now();elapsedAtStart=remaining;deadline=runStarted+remaining;
  $("clockLabel").textContent=mode==="timer"?"In corso":"Cronometro in corso";
  $("clockHint").textContent=mode==="timer"?"Scena attiva":"Tempo trascorso";
  $("pauseBtn").disabled=false;$("pauseBtn").textContent="Pausa";$("startBtn").textContent="Avvia";
- render();timerId=setInterval(tick,200);
+ render();timerId=setInterval(tick,10);
 }
 function start(){
  if(running)return;
  if($("clockLabel").textContent==="In pausa"){resume();return}
  stopAlarm();
- if(mode==="timer"){ensureAudio();primeMedia();remaining=clampMinutes()*60}else remaining=0;
+ if(mode==="timer"){ensureAudio();primeMedia();remaining=clampMinutes()*60000}else remaining=0;
  beginRun();
 }
 function pause(){
@@ -234,7 +234,7 @@ function resume(){
 function reset(){
  stopAlarm();
  if(timerId)clearInterval(timerId);timerId=null;running=false;
- remaining=mode==="timer"?clampMinutes()*60:0;render();
+ remaining=mode==="timer"?clampMinutes()*60000:0;render();
  $("clockLabel").textContent="Pronti?";
  $("clockHint").textContent=mode==="timer"?"Imposta i minuti e premi Avvia":"Premi Avvia per partire da zero";
  $("pauseBtn").disabled=true;$("pauseBtn").textContent="Pausa";$("startBtn").textContent="Avvia";
