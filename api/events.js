@@ -2,9 +2,12 @@ const { rateLimit,applyRateLimitHeaders,rejectRateLimited,sameOrigin,setSecurity
 const { requireUser,authErrorStatus }=require("../lib/authorization");
 const { query,transaction }=require("../lib/db");
 const { audit }=require("../lib/audit");
+const { startsAtFromLabel,isPast }=require("../lib/event-dates");
 
 const APPS_SCRIPT_URL=String(process.env.ARTYOU_APPS_SCRIPT_URL||"").trim();
 const UPLOAD_PIN=String(process.env.ARTYOU_GESTIONALE_PIN||"").trim();
+// Fonte della lista pubblica: "mysql" dopo aver completato i dati con scripts/mysql-sync-site-events.js.
+const PUBLIC_SOURCE=String(process.env.ARTYOU_EVENTS_SOURCE||"apps-script").trim().toLowerCase();
 
 function paramsOf(req){const raw=String(req.url||""),i=raw.indexOf("?");return new URLSearchParams(i>=0?raw.slice(i+1):"")}
 function meta(v){if(!v)return{};if(typeof v==="object")return v;try{return JSON.parse(String(v))}catch(_){return{}}}
@@ -30,6 +33,19 @@ async function eventObject(row,conn){
 async function listAdminEvents(){
   const rows=await query("SELECT * FROM events ORDER BY sort_order,title,id");
   const out=[];for(const r of rows)out.push(await eventObject(r));return out;
+}
+async function listPublicEvents(){
+  const rows=await query("SELECT * FROM events WHERE active=1 ORDER BY sort_order,title,id");
+  const out=[];
+  for(const r of rows){
+    const e=await eventObject(r);
+    const dateRows=await query("SELECT starts_at FROM event_dates WHERE event_id=? AND active=1 ORDER BY starts_at,id",[r.id]);
+    const future=e.dates.filter((d,i)=>!(dateRows[i]&&dateRows[i].starts_at&&isPast(dateRows[i].starts_at)));
+    if(e.dates.length&&!future.length&&!e.tbd)continue; // solo date passate: fuori dalla lista pubblica
+    out.push({slug:e.slug,title:e.title,cat:e.cat,poster:e.poster,desc:e.desc,venue:e.venue,addr:e.addr,maps:e.maps,price:e.price,
+      pagaOnline:e.pagaOnline,capienza:e.capienza,dates:future,cast:e.cast,yepPricing:e.yepPricing,tbd:e.tbd});
+  }
+  return out;
 }
 async function saveEvent(input){
   const e=input||{},title=clean(e.title,255),slug=clean(e.slug,190).toLowerCase();
@@ -62,11 +78,22 @@ async function saveEvent(input){
         id=Number(ins.insertId);
       }
     }
-    await conn.execute("DELETE FROM event_dates WHERE event_id=?",[id]);
+    // Le date restano con id stabili (le prenotazioni vi fanno riferimento): si aggiornano,
+    // si aggiungono o si disattivano, mai cancellate.
+    const [existingDates]=await conn.execute("SELECT id,date_label FROM event_dates WHERE event_id=?",[id]);
+    const byLabel=new Map();for(const r of existingDates){const k=String(r.date_label||"");if(!byLabel.has(k))byLabel.set(k,Number(r.id));}
+    const kept=new Set();
     for(const d of dates){
       const label=clean(d&&d.label,255);if(!label)continue;
-      await conn.execute("INSERT INTO event_dates (event_id,starts_at,date_label,active,metadata) VALUES (?,NULL,?,1,?)",[id,label,JSON.stringify((d&&d.metadata)||{})]);
+      const startsAt=startsAtFromLabel(label),meta=JSON.stringify((d&&d.metadata)||{});
+      const existingId=byLabel.get(label);
+      if(existingId&&!kept.has(existingId)){
+        await conn.execute("UPDATE event_dates SET starts_at=?,active=1,metadata=? WHERE id=?",[startsAt,meta,existingId]);kept.add(existingId);
+      }else{
+        const [ins]=await conn.execute("INSERT INTO event_dates (event_id,starts_at,date_label,active,metadata) VALUES (?,?,?,1,?)",[id,startsAt,label,meta]);kept.add(Number(ins.insertId));
+      }
     }
+    for(const r of existingDates){if(!kept.has(Number(r.id)))await conn.execute("UPDATE event_dates SET active=0 WHERE id=?",[r.id]);}
     const [rows]=await conn.execute("SELECT * FROM events WHERE id=? LIMIT 1",[id]);
     return eventObject(rows[0],conn);
   });
@@ -80,7 +107,7 @@ async function uploadImage(body){
   if(!APPS_SCRIPT_URL||!UPLOAD_PIN)throw new Error("upload_non_configurato");
   const payload={action:"uploadimage",pin:UPLOAD_PIN,name:clean(body.name,255),mime:clean(body.mime,100),base64:String(body.base64||"")};
   if(Buffer.byteLength(payload.base64,"utf8")>8*1024*1024)throw new Error("payload_too_large");
-  const r=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});
+  const r=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow",signal:AbortSignal.timeout(30000)});
   const text=await r.text();let data;try{data=JSON.parse(text)}catch(_){throw new Error("upload_response_invalid")}
   if(!r.ok||!data||!data.ok)throw new Error((data&&data.errore)||"upload_failed");return data;
 }
@@ -93,8 +120,12 @@ module.exports=async function handler(req,res){
   const publicRead=(method==="GET"||method==="HEAD")&&action==="public";
   if(publicRead){
     const limit=rateLimit(req,{key:"events-public",limit:120,windowMs:60*1000});applyRateLimitHeaders(res,limit);if(!limit.ok)return rejectRateLimited(res,limit);
+    if(PUBLIC_SOURCE==="mysql"){
+      try{const events=await listPublicEvents();res.setHeader("Cache-Control","public, s-maxage=60, stale-while-revalidate=300");return res.status(200).json({ok:true,events,storage:"mysql"})}
+      catch(e){console.error("EVENTS_PUBLIC_MYSQL_ERROR",String(e&&e.message||e))}
+    }
     if(!APPS_SCRIPT_URL)return res.status(503).json({ok:false,errore:"backend_non_configurato"});
-    try{const upstream=await fetch(APPS_SCRIPT_URL+"?action=public&_="+Date.now(),{redirect:"follow"}),text=await upstream.text();res.status(upstream.status);res.setHeader("Content-Type",upstream.headers.get("content-type")||"application/json; charset=utf-8");return res.send(text)}
+    try{const upstream=await fetch(APPS_SCRIPT_URL+"?action=public&_="+Date.now(),{redirect:"follow",signal:AbortSignal.timeout(15000)}),text=await upstream.text();res.status(upstream.status);res.setHeader("Content-Type",upstream.headers.get("content-type")||"application/json; charset=utf-8");return res.send(text)}
     catch(_){return res.status(502).json({ok:false,errore:"proxy_error"})}
   }
   if(!sameOrigin(req))return res.status(403).json({ok:false,errore:"origin_non_consentita"});

@@ -142,7 +142,7 @@ module.exports = async function handler(req, res) {
     }
 
     const rows = await query(
-      `SELECT e.id,e.slug,e.title,e.category,e.event_type,e.description,e.poster_url,e.venue,e.address,e.maps_query,e.price,e.capacity,e.active,e.metadata,
+      `SELECT e.id,e.slug,e.title,e.category,e.event_type,e.description,e.poster_url,e.venue,e.address,e.maps_query,e.price,e.capacity,e.active,e.sort_order,e.metadata,
                 (SELECT ed.date_label FROM event_dates ed WHERE ed.event_id=e.id AND ed.active=1 ORDER BY ed.starts_at,ed.id LIMIT 1) AS date_label,
               COALESCE(SUM(CASE WHEN ${activeBookingWhere()} THEN b.seats ELSE 0 END),0) AS prenotati
        FROM events e
@@ -180,7 +180,7 @@ module.exports = async function handler(req, res) {
         maps:r.maps_query || "",
         data:r.date_label || "",
         ora:meta.ora || "",
-        ordine:meta.ordine == null ? null : Number(meta.ordine),
+        ordine:r.sort_order == null ? (meta.ordine == null ? null : Number(meta.ordine)) : Number(r.sort_order),
         stato:meta.stato || "",
         saggi:meta.saggi || null,
         yepPricing:meta.yepPricing || null,
