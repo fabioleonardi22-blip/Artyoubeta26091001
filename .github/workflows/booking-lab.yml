@@ -1,0 +1,26 @@
+name: Booking Lab isolated tests
+on:
+  push:
+    branches: [booking-lab-isolated-20261008]
+  pull_request:
+    paths:
+      - 'sandbox/booking-lab/**'
+      - 'api/booking-lab.js'
+      - '.github/workflows/booking-lab.yml'
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pure simulation
+        run: node sandbox/booking-lab/booking-lab.test.js
+      - name: Anonymized reconciliation comparator
+        run: node sandbox/booking-lab/compare-snapshots.test.js
+      - name: Staging modules (no external network)
+        run: node sandbox/booking-lab/staging.test.js

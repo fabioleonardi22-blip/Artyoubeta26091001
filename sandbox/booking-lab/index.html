@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Artyou | Booking Lab isolato</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body><div class="wrap">
+<span class="tag">AMBIENTE DI SIMULAZIONE • NON PRODUZIONE</span>
+<h1>Artyou Booking Lab</h1>
+<p>Prototipo isolato per verificare prenotazioni, disponibilità in tempo reale, concorrenza, pagamenti falliti e rimborsi.</p>
+<div class="alert"><strong>Nessuna vendita reale.</strong> Questo laboratorio usa esclusivamente dati fittizi in memoria nel browser. Non è collegato a PayPal, MySQL, Apps Script, email o gestionale Artyou. I dati scompaiono ricaricando la pagina.</div>
+<div class="grid">
+<div class="card"><small>Capienza evento demo</small><div id="capacity" class="metric">5</div></div>
+<div class="card"><small>Posti occupati</small><div id="booked" class="metric">0</div></div>
+<div class="card"><small>Posti liberi</small><div id="remaining" class="metric">5</div></div>
+</div>
+<div class="card"><h2>Scenari di prova</h2>
+<button id="race">40 richieste contemporanee</button>
+<button id="soldout">Esaurimento posti</button>
+<button id="fail">Pagamento fallito</button>
+<button id="refund">Rimborso e annullamento</button>
+<button id="expiry">Scadenza prenotazione</button>
+<button id="manager">Confronto gestionale simulato</button>
+<button id="reset" class="secondary">Azzera simulazione</button>
+</div>
+<h2>Esito del test</h2><pre id="output" aria-live="polite">Seleziona uno scenario.</pre>
+<footer>Laboratorio dimostrativo: non dimostra ancora transazioni PayPal Sandbox, MySQL transazionale o sincronizzazione con il gestionale reale.</footer>
+</div>
+<script src="./booking-lab.js"></script>
+<script src="./ui.js"></script>
+</body></html>

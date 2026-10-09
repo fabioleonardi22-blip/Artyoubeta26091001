@@ -1,0 +1,14 @@
+{
+  "asOf": "2026-10-08T10:00:00Z",
+  "events": [
+    {
+      "slug": "shortyou-demo",
+      "capacity": 5,
+      "confirmedSeats": 2,
+      "heldSeats": 1,
+      "paidCents": 3000,
+      "refundCents": 0,
+      "checkedInSeats": 1
+    }
+  ]
+}
