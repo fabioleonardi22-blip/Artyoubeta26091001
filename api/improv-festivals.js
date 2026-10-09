@@ -44,7 +44,7 @@ function parse(html){
 module.exports = async function handler(req,res){
   res.setHeader("Cache-Control","s-maxage=21600, stale-while-revalidate=86400");
   try{
-    const r=await fetch(SOURCE,{headers:{"user-agent":"ArtyouRoma-FestivalRadar/1.0"}});
+    const r=await fetch(SOURCE,{headers:{"user-agent":"ArtyouRoma-FestivalRadar/1.0"},signal:AbortSignal.timeout(10000)});
     if(!r.ok) throw new Error("source "+r.status);
     const items=parse(await r.text());
     res.status(200).json({ok:true,source:SOURCE,items:items.length>=3?items:FALLBACK});

@@ -33,7 +33,7 @@ module.exports=async function handler(req,res){
       options.headers["Content-Type"]="application/json; charset=utf-8";options.body=JSON.stringify(parsed);
     }
 
-    const upstream=await fetch(target,options),text=await upstream.text();
+    options.signal=AbortSignal.timeout(15000);const upstream=await fetch(target,options),text=await upstream.text();
     res.status(upstream.status);res.setHeader("Content-Type",upstream.headers.get("content-type")||"application/json; charset=utf-8");return res.send(text);
   }catch(err){console.error("merch railway proxy error");return res.status(502).json({ok:false,errore:"proxy_error"});}
 };

@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
 
     // Always load the teacher template from the current deployment.
     // Fetching artyouroma.it here can return the legacy/WordPress site and break the profile page.
-    const templateResp = await fetch(origin + "/insegnante.html", { redirect: "follow", cache: "no-store" });
+    const templateResp = await fetch(origin + "/insegnante.html", { redirect: "follow", cache: "no-store", signal: AbortSignal.timeout(8000) });
     if (!templateResp.ok) throw new Error("Template insegnante non disponibile: HTTP " + templateResp.status);
     let html = await templateResp.text();
 

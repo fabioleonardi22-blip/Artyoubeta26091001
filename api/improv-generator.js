@@ -1,3 +1,4 @@
+const { selfOrigin } = require("../lib/origin");
 const SEO = {
   luoghi: {
     title: "Generatore di Luoghi per Improvvisazione | Artyou Roma",
@@ -48,8 +49,8 @@ module.exports=async function handler(req,res){
     const slug=String(req.query&&req.query.slug||"").toLowerCase();
     const seo=SEO[slug];
     if(!seo)return res.status(404).send("Pagina non trovata");
-    const origin="https://artyouroma.it";
-    const r=await fetch(origin+"/improv-generator/index.html?seo="+Date.now(),{redirect:"follow",cache:"no-store"});
+    const origin=selfOrigin(req);
+    const r=await fetch(origin+"/improv-generator/index.html?seo="+Date.now(),{redirect:"follow",cache:"no-store",signal:AbortSignal.timeout(8000)});
     let html=await r.text();
     const canonical="https://artyouroma.it/improv-generator/"+slug+"/";
     html=html.replace(/<title>[\s\S]*?<\/title>/i,"<title>"+esc(seo.title)+"</title>");

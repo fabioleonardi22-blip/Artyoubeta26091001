@@ -26,7 +26,7 @@ module.exports = async function handler(req, res) {
     url.searchParams.set("limit", "9");
     url.searchParams.set("access_token", token);
 
-    const response = await fetch(url.toString());
+    const response = await fetch(url.toString(),{signal:AbortSignal.timeout(10000)});
     const text = await response.text();
     let data = {};
     try { data = JSON.parse(text); } catch (_) {}

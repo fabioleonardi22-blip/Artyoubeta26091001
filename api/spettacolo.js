@@ -1,16 +1,8 @@
 const { query } = require("../lib/db");
 const { romeIso, isPast } = require("../lib/event-dates");
 const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbwgqQguCWRt7yCTroh2qi4az1rCTZ7kgw0IxNRNDb9LZLOGPUD5Jy3K56NTi6FxAfKx/exec").trim();
-const CANONICAL_ORIGIN = "https://artyouroma.it";
+const { selfOrigin, CANONICAL_ORIGIN } = require("../lib/origin");
 const SCRIPT_CLOSE = "</" + "script>";
-
-// Il template va letto dallo stesso deploy che risponde (beta o produzione),
-// non dal dominio principale, che oggi serve ancora il vecchio sito.
-function templateOrigin(req) {
-  const host = String((req.headers && (req.headers["x-forwarded-host"] || req.headers.host)) || "").split(",")[0].trim().toLowerCase();
-  if (/^(www\.)?artyouroma\.it$/.test(host) || /^[a-z0-9-]+\.vercel\.app$/.test(host)) return "https://" + host;
-  return CANONICAL_ORIGIN;
-}
 
 function fill(target, source) {
   if (!source) return target;
@@ -62,7 +54,7 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    const templateResp = await fetch(templateOrigin(req) + "/spettacolo.html", { redirect: "follow", signal: AbortSignal.timeout(8000) });
+    const templateResp = await fetch(selfOrigin(req) + "/spettacolo.html", { redirect: "follow", signal: AbortSignal.timeout(8000) });
     let html = await templateResp.text();
 
     let event = null;

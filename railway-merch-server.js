@@ -35,7 +35,8 @@ function sameSecret(a,b){
   if(!aa.length||aa.length!==bb.length)return false;
   return crypto.timingSafeEqual(aa,bb);
 }
-function clientIp(req){return String(req.headers["x-forwarded-for"]||req.socket.remoteAddress||"unknown").split(",")[0].trim()}
+// L'ultimo valore di X-Forwarded-For è quello aggiunto dal proxy di Railway: i precedenti li sceglie il client.
+function clientIp(req){const list=String(req.headers["x-forwarded-for"]||"").split(",").map(v=>v.trim()).filter(Boolean);return list.length?list[list.length-1]:String(req.socket.remoteAddress||"unknown")}
 function allowRequest(req,limit,windowMs){
   const now=Date.now(),key=clientIp(req),old=rateBuckets.get(key);
   const item=!old||old.resetAt<=now?{count:0,resetAt:now+windowMs}:old;
