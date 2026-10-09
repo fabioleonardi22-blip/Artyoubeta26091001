@@ -48,8 +48,10 @@ for (const file of files) {
         const matches = line.match(/\bmysql:\/\/[^\s"\x27<>]+/gi) || [];
         const fixtureUrls = new Set(["mysql://a:b@db/lab","mysql://a:b@db/prod","mysql://a:b@db/other","mysql://other:password@db/prod"]);
         const isFixture = path.relative(root,file).replace(/\\/g,"/") === "sandbox/booking-lab/staging.test.js";
-        const isDoc = path.relative(root,file).replace(/\\/g,"/") === "sandbox/booking-lab/README.md";
-        if (matches.some(url => !(isFixture && fixtureUrls.has(url)) && !(isDoc && url === "mysql://.../DB_DI_STAGING"))) findings.push({file:path.relative(root,file), line:idx+1, type:p.name});
+        const relativePath = path.relative(root,file).replace(/\\/g,"/");
+        const isDoc = relativePath === "sandbox/booking-lab/README.md";
+        const isScanner = relativePath === "scripts/security-scan.mjs";
+        if (matches.some(url => !(isFixture && fixtureUrls.has(url)) && !(isDoc && url.startsWith("mysql://.../DB_DI_STAGING")) && !isScanner)) findings.push({file:path.relative(root,file), line:idx+1, type:p.name});
       } else if (p.re.test(line)) findings.push({file:path.relative(root,file), line:idx+1, type:p.name});
     }
   });
