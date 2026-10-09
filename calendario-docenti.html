@@ -502,6 +502,7 @@ input,select,textarea{border:1px solid #CCD5DC;border-radius:6px}
       <label><input type="checkbox" class="type-filter" value="Altro" checked> Altro</label>
     </div>
     <div id="syncStatus" class="status warn">Google Calendar non ancora collegato a questa branch.</div>
+    <section id="undatedSiteEvents" style="margin-top:12px" aria-label="Spettacoli e attività senza data"></section>
   </aside>
 
   <main class="panel main">
@@ -762,7 +763,26 @@ function refresh(){
 }
 function render(){
   $("monthTitle").textContent=current.toLocaleDateString("it-IT",{month:"long",year:"numeric"});
-  renderMonth();renderAgenda();renderBoard();renderPlan();
+  renderMonth();renderAgenda();renderBoard();renderPlan();renderUndatedSiteEvents();
+}
+function renderUndatedSiteEvents(){
+  var box=$("undatedSiteEvents");if(!box)return;
+  var items=events.filter(function(e){return e.source==="site"&&!e.date});
+  box.innerHTML="";
+  if(!items.length)return;
+  var header=document.createElement("strong");
+  header.textContent="Spettacoli da pianificare ("+items.length+")";
+  box.appendChild(header);
+  var note=document.createElement("p");note.className="mini";
+  note.textContent="Date non riconosciute dal calendario: verifica la data nel Gestionale Eventi.";
+  box.appendChild(note);
+  items.forEach(function(e){
+    var item=document.createElement("button");item.type="button";item.className="btn soft";
+    item.style.cssText="display:block;width:100%;margin:6px 0;text-align:left;white-space:normal";
+    item.textContent=e.title+(e.siteDateLabel?" — "+e.siteDateLabel:" — data da definire");
+    item.onclick=function(){openModal(e)};
+    box.appendChild(item);
+  });
 }
 function renderBoard(){
   var box=$("boardGrid");box.innerHTML="";
