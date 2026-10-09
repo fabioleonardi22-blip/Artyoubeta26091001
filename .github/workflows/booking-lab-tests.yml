@@ -4,6 +4,7 @@ on:
     branches: [booking-lab-isolated-20261008]
     paths:
       - 'booking-lab/**'
+      - 'sandbox/booking-lab/**'
       - '.github/workflows/booking-lab-tests.yml'
   workflow_dispatch:
 permissions:
@@ -18,7 +19,11 @@ jobs:
         with:
           node-version: '24'
       - name: Run isolated tests without secrets or database access
-        run: node --test booking-lab/*.test.js
+        run: |
+          node --test booking-lab/*.test.js
+          node sandbox/booking-lab/booking-lab.test.js
+          node sandbox/booking-lab/staging.test.js
+          node sandbox/booking-lab/compare-snapshots.test.js
         env:
           BOOKING_LAB_ENABLED: 'false'
           NODE_ENV: test
