@@ -1130,6 +1130,50 @@ a{color:#1A6E99}a:hover{color:#12506F}
       .artyou-exercise-search .aes-divider span{padding:0 10px}
       .artyou-exercise-search .aes-search-form{width:100%;max-width:none}
     }
+    /* Responsive: prevent the exercise/teacher utilities card from overflowing on phones. */
+    @media(max-width:900px){
+      .artyou-exercise-search .aes-box,
+      .artyou-exercise-search .aes-split,
+      .artyou-exercise-search .aes-copy,
+      .artyou-exercise-search .aes-generator{
+        box-sizing:border-box;
+        width:100%;
+        max-width:100%;
+        min-width:0;
+      }
+      .artyou-exercise-search .aes-split{
+        display:grid;
+        grid-template-columns:minmax(0,1fr);
+      }
+      .artyou-exercise-search h2,
+      .artyou-exercise-search .aes-sub{
+        max-width:100%;
+        overflow-wrap:break-word;
+      }
+      .artyou-exercise-search .aes-search-form input{min-width:0;box-sizing:border-box}
+    }
+    @media(max-width:560px){
+      .artyou-exercise-search .aes-box{padding:20px 16px}
+      .artyou-exercise-search .aes-generator h2{font-size:clamp(21px,6vw,25px);line-height:1.15}
+      .artyou-exercise-search .aes-dual-actions{
+        display:grid;
+        grid-template-columns:minmax(0,1fr);
+        gap:10px;
+      }
+      .artyou-exercise-search .aes-generator-btn,
+      .artyou-exercise-search .aes-timer-btn{
+        width:100%;
+        max-width:100%;
+        min-width:0;
+        box-sizing:border-box;
+        white-space:normal;
+        text-align:center;
+        height:auto;
+        min-height:48px;
+        padding:12px 14px;
+        overflow-wrap:anywhere;
+      }
+    }
     @media(max-width:560px){
       .artyou-exercise-search .aes-search-form{flex-direction:column;align-items:stretch}
       .artyou-exercise-search .aes-search-form button{justify-content:center;width:100%}
