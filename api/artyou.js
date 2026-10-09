@@ -178,16 +178,26 @@ module.exports = async function handler(req, res) {
     const body = await upstream.text();
 
     if (method === "POST" && upstream.ok) {
-      try {
-        const upstreamData = JSON.parse(body);
-        if (upstreamData && upstreamData.ok) {
-          try {
-            await mirrorBookingToMysql(JSON.parse(options.body || "{}"), upstreamData);
-          } catch (mirrorErr) {
-            console.error("ARTYOU_MYSQL_MIRROR_ERROR", String(mirrorErr && mirrorErr.message || mirrorErr));
-          }
+      let upstreamData = null;
+      try { upstreamData = JSON.parse(body); } catch (_) {}
+      if (upstreamData && upstreamData.ok) {
+        let mirror;
+        try {
+          mirror = await mirrorBookingToMysql(JSON.parse(options.body || "{}"), upstreamData);
+        } catch (mirrorErr) {
+          console.error("ARTYOU_MYSQL_MIRROR_ERROR", String(mirrorErr && mirrorErr.message || mirrorErr));
+          mirror = { ok:false, reason:"mysql_write_failed" };
         }
-      } catch (_) {}
+        if (!mirror || !mirror.ok) {
+          // Legacy booking is already confirmed; never imply it failed or invite blind retries.
+          // Expose a machine-readable reconciliation status without altering legacy receipt fields.
+          res.setHeader("X-Artyou-Mysql-Sync", "pending");
+          return res.status(upstream.status).json(Object.assign({}, upstreamData, {
+            mysqlSync: { ok:false, status:"pending_reconciliation" }
+          }));
+        }
+        res.setHeader("X-Artyou-Mysql-Sync", "synced");
+      }
     }
 
     res.status(upstream.status);
