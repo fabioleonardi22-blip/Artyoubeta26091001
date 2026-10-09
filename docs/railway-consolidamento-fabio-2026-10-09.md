@@ -22,3 +22,28 @@
 - Il plugin Railway consente un solo account collegato per volta: nel workspace finale non è visibile `talented-radiance`.
 - Le variabili Vercel sensibili sono volutamente **non lette** per evitare credenziali nei log o nel repository.
 - Nessun backup o import è stato eseguito, nessuna connessione alterata. Le operazioni di trasferimento dei dati richiedono confronto origine/destinazione e finestra controllata.
+
+
+## Verifica incrociata eseguita sui 3 progetti (Railway + GitHub)
+Il collegamento Railway ora permette la lettura anche di `talented-radiance`. I suoi 4 servizi sono:
+- `comfortable-celebration`: repo `GestionaleArtyou`, branch `piattaforma-funzionale`, cartella `platform`, entrypoint `npm start`, dominio `comfortable-celebration-production-1b2c.up.railway.app`.
+- `MySQL`: mysql:9 con volume persistente indipendente; **NON** copiare o unire senza confronto dei dati.
+- `artyou-booking-lab-mysql`: mysql:8.4 con volume indipendente.
+- `artyou-booking-lab-migrator`: repo `Artyoubeta26091001`, branch `booking-lab-isolated-20261008`.
+
+Nel workspace destinazione:
+- `genuine-liberation/gestionaleartyou-beta`: repo `GestionaleArtyou`, branch `beta-operativa`, root `platform`, `node server.js`, dominio `gestionaleartyou-beta-production.up.railway.app`.
+- `genuine-liberation/artyou-booking-lab-mysql`: mysql:8.4 con volume distinto.
+- `Artyou MySQL`: `MySQL` (mysql:9), `MySQL-cQic` (mysql:9), `artyou-merch-api`.
+
+### Differenze reali tra i gestionali
+- `platform/package.json` e `platform/migrate.js` hanno blob SHA identici tra `beta-operativa` e `piattaforma-funzionale`.
+- `platform/server.js` e `platform/public/app.js` differiscono: NON sostituire la versione beta con la branch precedente.
+- `beta-operativa` contiene `GET /api/beta-self-test` e import di `ensureBetaStorage`, `betaMode`; assenti dal server della precedente `piattaforma-funzionale`.
+- Le principali route per dati, prenotazioni, report, checkout e webhook Stripe risultano presenti in entrambe. Non dedurre equivalenza funzionale dalla sola lista route.
+- Le variabili di origine e beta differiscono: il beta usa `ARTYOU_ENV`, `BETA_SHARED_DB`, `MYSQL_SSL`, `AUTOMATIC_BACKUPS_ENABLED`, `EMAIL_DELIVERY_ENABLED` e `BOOTSTRAP_ADMIN_EMAIL`. Valori e segreti non copiati.
+
+### Decisione prudente
+La destinazione contiene già un gestionale beta e un database booking-lab, quindi **nessuna duplicazione automatica**. Occorre confrontare i dati dei due MySQL di origine con quelli finali, mantenere la vecchia applicazione raggiungibile fino a verifica delle funzioni residue, poi solo dopo decidere quali servizi dismettere.
+
+**Non eseguito:** dump e restore SQL, spostamento volumi, modifica DB URL, webhook, dominio, secrets, cancellazione servizi.
