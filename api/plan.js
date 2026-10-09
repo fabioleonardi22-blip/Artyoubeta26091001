@@ -235,17 +235,21 @@ async function deletePerson(admin,id) {
 }
 
 async function listSiteEvents(from, to) {
+  // Dates may exist only in date_label (starts_at can be NULL).
+  // Filter AFTER parsing those labels, otherwise calendar months hide or misplace shows.
   const params = [];
-  let where = "e.active=1 AND (ed.id IS NULL OR ed.active=1)";
-  if (from) { where += " AND (ed.starts_at IS NULL OR ed.starts_at>=?)"; params.push(from + " 00:00:00"); }
-  if (to) { where += " AND (ed.starts_at IS NULL OR ed.starts_at<=?)"; params.push(to + " 23:59:59"); }
+  const where = "e.active=1 AND (ed.id IS NULL OR ed.active=1)";
   const rows = await query(
     "SELECT e.id AS event_id,e.slug,e.title,e.category,e.event_type,e.description,e.venue,e.price,e.capacity,e.metadata AS event_metadata," +
     " ed.id AS date_id,ed.starts_at,ed.date_label,ed.capacity_override,ed.price_override,ed.metadata AS date_metadata" +
     " FROM events e LEFT JOIN event_dates ed ON ed.event_id=e.id WHERE " + where + " ORDER BY e.sort_order,e.id,ed.starts_at,ed.id",
     params
   );
+  const dateIndexByEvent = new Map();
   return rows.map(function(r, index) {
+    const eventKey = String(r.event_id);
+    const dateIndex = dateIndexByEvent.get(eventKey) || 0;
+    dateIndexByEvent.set(eventKey, dateIndex + 1);
     const em = parseMeta(r.event_metadata);
     const parsed = r.starts_at ? {date:isoDate(r.starts_at),start:hhmm(r.starts_at)} : parseDateLabel(r.date_label);
     const typeRaw = String(r.event_type || r.category || "").toLowerCase();
@@ -256,7 +260,7 @@ async function listSiteEvents(from, to) {
     return {
       id:"site_" + r.event_id + "_" + (r.date_id || index),
       siteEventId:String(r.event_id),
-      siteDateIndex:0,
+      siteDateIndex:dateIndex,
       title:String(r.title || r.slug || "Evento"),
       type:type,
       phase:"Evento dal Gestionale",
@@ -281,6 +285,10 @@ async function listSiteEvents(from, to) {
       source:"site",
       siteDateLabel:String(r.date_label || "")
     };
+  }).filter(function(event) {
+    // Undated events cannot be placed on a monthly calendar; avoid inventing a date.
+    if (!event.date) return false;
+    return (!from || event.date >= from) && (!to || event.date <= to);
   });
 }
 
