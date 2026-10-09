@@ -13,7 +13,7 @@ function bool(v){return v===true||v===1||v==="1"||String(v||"").toLowerCase()===
 
 async function eventDates(eventId,conn){
   const [rows]=conn?await conn.execute("SELECT id,date_label,starts_at,metadata FROM event_dates WHERE event_id=? AND active=1 ORDER BY starts_at,id",[eventId]):[await query("SELECT id,date_label,starts_at,metadata FROM event_dates WHERE event_id=? AND active=1 ORDER BY starts_at,id",[eventId])];
-  return rows.map(d=>({label:String(d.date_label||""),sold:0,metadata:meta(d.metadata)}));
+  return rows.map(d=>({id:String(d.id),label:String(d.date_label||""),sold:0,metadata:meta(d.metadata)}));
 }
 async function eventObject(row,conn){
   const m=meta(row.metadata);
@@ -62,10 +62,43 @@ async function saveEvent(input){
         id=Number(ins.insertId);
       }
     }
-    await conn.execute("DELETE FROM event_dates WHERE event_id=?",[id]);
+    // Preserve date IDs referenced by existing bookings and tickets.
+    // Match repeated date labels deterministically, rather than deleting and recreating rows.
+    const [existingDates]=await conn.execute("SELECT id,date_label FROM event_dates WHERE event_id=? ORDER BY id FOR UPDATE",[id]);
+    const byId=new Map(existingDates.map(row=>[String(row.id),row]));
+    const byLabel=new Map();
+    for(const row of existingDates){
+      const label=String(row.date_label||"");
+      if(!byLabel.has(label))byLabel.set(label,[]);
+      byLabel.get(label).push(row.id);
+    }
+    const retained=new Set();
     for(const d of dates){
       const label=clean(d&&d.label,255);if(!label)continue;
-      await conn.execute("INSERT INTO event_dates (event_id,starts_at,date_label,active,metadata) VALUES (?,NULL,?,1,?)",[id,label,JSON.stringify((d&&d.metadata)||{})]);
+      const metadata=JSON.stringify((d&&d.metadata)||{});
+      let dateId=null;
+      const suppliedId=String(d&&d.id||"").trim();
+      if(suppliedId){
+        if(!byId.has(suppliedId)||retained.has(suppliedId))throw new Error("data_evento_non_valida");
+        dateId=byId.get(suppliedId).id;
+      }else{
+        const available=byLabel.get(label)||[];
+        while(available.length&&retained.has(String(available[0])))available.shift();
+        dateId=available.shift()??null;
+      }
+      if(dateId!=null){
+        retained.add(String(dateId));
+        await conn.execute("UPDATE event_dates SET date_label=?,active=1,metadata=? WHERE id=? AND event_id=?",[label,metadata,dateId,id]);
+      }else{
+        const [created]=await conn.execute("INSERT INTO event_dates (event_id,starts_at,date_label,active,metadata) VALUES (?,NULL,?,1,?)",[id,label,metadata]);
+        retained.add(String(created.insertId));
+      }
+    }
+    for(const row of existingDates){
+      if(!retained.has(String(row.id))){
+        // Inactivation preserves existing ticket references and historical dates.
+        await conn.execute("UPDATE event_dates SET active=0 WHERE id=? AND event_id=?",[row.id,id]);
+      }
     }
     const [rows]=await conn.execute("SELECT * FROM events WHERE id=? LIMIT 1",[id]);
     return eventObject(rows[0],conn);
