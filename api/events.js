@@ -62,6 +62,13 @@ async function saveEvent(input){
         id=Number(ins.insertId);
       }
     }
+    // Never replace date IDs while bookings refer to those dates.
+    // A destructive rewrite would orphan reservations or fail on foreign keys.
+    const [linkedBookings]=await conn.execute(
+      "SELECT COUNT(*) AS total FROM bookings WHERE event_id=? AND event_date_id IS NOT NULL",
+      [id]
+    );
+    if(Number(linkedBookings[0]?.total||0)>0)throw new Error("date_con_prenotazioni");
     await conn.execute("DELETE FROM event_dates WHERE event_id=?",[id]);
     for(const d of dates){
       const label=clean(d&&d.label,255);if(!label)continue;
@@ -120,6 +127,7 @@ module.exports=async function handler(req,res){
     const code=String(err&&err.message||"errore");
     console.error("EVENTS_API_ERROR",code);
     if(code==="payload_too_large")return res.status(413).json({ok:false,errore:code});
+    if(code==="date_con_prenotazioni")return res.status(409).json({ok:false,errore:code});
     if(/(_mancante|_non_valido|_non_trovato)$/.test(code))return res.status(400).json({ok:false,errore:code});
     if(code.startsWith("upload_"))return res.status(503).json({ok:false,errore:code});
     return res.status(503).json({ok:false,errore:"mysql_unavailable"});
