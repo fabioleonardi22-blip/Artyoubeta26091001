@@ -35,7 +35,7 @@ jobs:
         ports: ["3306:3306"]
         options: --health-cmd="mysqladmin ping -ptest-root-pw" --health-interval=5s --health-retries=30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Dati di esempio
         run: |
           docker run --rm --network host -e MYSQL_PWD=test-root-pw mysql:9 mysql -h127.0.0.1 -uroot esempio \
@@ -61,7 +61,7 @@ jobs:
           - { db: merch, secret: BACKUP_DB_MERCH_URL, image: "mysql:9" }
           - { db: gestionale, secret: BACKUP_DB_GESTIONALE_URL, image: "mysql:8.4" }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Backup cifrato e prova di ripristino
         env:
           BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
