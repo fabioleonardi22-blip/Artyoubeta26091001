@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Artyou Roma - sito, API Vercel e backend MySQL",
   "dependencies": {
+    "@vercel/blob": "2.3.0",
     "mysql2": "3.24.5"
   },
   "scripts": {
