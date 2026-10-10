@@ -47,7 +47,7 @@ class Component extends DCLogic {
       plusOpacity: seats >= maxAllowed ? 0.35 : 1,
       available: true, soldOut: false, soldTitle: "Spettacolo esaurito",
       payNote: "Costo: 12 € a persona. Totale per " + seatsLabel + ": " + (12 * seats) + " €.",
-      ctaLabel: "Conferma e paga con PayPal",
+      ctaLabel: "Conferma prenotazione",
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare per Un Vortice di Emozioni: " + what + "."),
       waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Il " + shNames[sh].toLowerCase() + " di " + mk(ev).label.toLowerCase() + " di Un Vortice di Emozioni è esaurito: potete mettermi in lista d’attesa?"),
       confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
