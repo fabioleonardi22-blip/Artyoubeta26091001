@@ -460,7 +460,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div style="display:flex;flex-direction:column;gap:10px;">
 <span class="am-fs-body" style="font-size:14px;font-weight:700;">Come vuoi procedere?</span>
 <div class="am-wrap" style="display:flex;gap:8px;flex-wrap:wrap;">
-<button type="button" data-artyou-no-submit="1" id="payPaypal" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">Paga con PayPal</button>
+<button type="button" data-artyou-no-submit="1" id="payPaypal" disabled title="Pagamento online sospeso fino al collaudo del nuovo flusso" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">PayPal non disponibile</button>
 <button type="button" data-artyou-no-submit="1" id="payTeatro" style="padding:11px 16px;border-radius:999px;border:2px solid #CFC8BA;background:#FFFFFF;color:#13181D;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">Paga a teatro</button>
 </div>
 <span id="paymentNote" style="font-size:13px;line-height:1.5;color:#555D64;">{{payNote}}</span>
@@ -845,10 +845,10 @@ class Component extends DCLogic {
     if(e.target&&e.target.id==="payPaypal")setMode("paypal");
     if(e.target&&e.target.id==="payTeatro")setMode("teatro");
     if(e.target&&e.target.closest&&e.target.closest('button[aria-label="Aggiungi un posto"],button[aria-label="Togli un posto"]')){
-      setTimeout(function(){setMode(window.VORTICE_PAYMENT_MODE||"paypal");},0);
+      setTimeout(function(){setMode(window.VORTICE_PAYMENT_MODE||"teatro");},0);
     }
   });
-  window.addEventListener("load",function(){setTimeout(function(){setMode("paypal");},300);});
+  window.addEventListener("load",function(){setTimeout(function(){setMode("teatro");},300);});
 })();
 </script>
 </body>
