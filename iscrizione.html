@@ -500,6 +500,8 @@ class Component extends DCLogic {
       d.Pagamento = "PayPal (online)"; d.Importo = (prezzo * (parseInt(d.Posti, 10) || 1)).toFixed(2);
     } else { d.Pagamento = "In cassa"; }
     var hp = c.querySelector("input[name=_hp]"); d._hp = hp ? hp.value : "";
+    // Il proxy accetta "prenota" per i posti di un evento e "richiesta" per le iscrizioni ai corsi.
+    d.action = d.Evento ? "prenota" : "richiesta";
     return d;
   }
   function valida(b, d){
