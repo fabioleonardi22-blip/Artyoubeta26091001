@@ -19,7 +19,8 @@ run(){ docker run --rm -i ${MYSQL_DOCKER_ARGS:-} -e MYSQL_PWD="$pass" "$image" "
 # In caso di errore il messaggio di MySQL finisce in un'annotazione del workflow (GitHub copre i segreti con ***),
 # così si legge il motivo anche senza aprire i registri completi.
 err="$(mktemp)"; trap 'rm -f "$err"' EXIT
-fail(){ echo "::error title=Backup $name::$1: $(tr '\n' ' ' < "$err" | cut -c1-400)"; exit 2; }
+fail(){ echo "::error title=Backup $name::$1: $(grep -v -i -E 'pulling|waiting|download|verifying|digest|status:|unable to find image|already exists|pull complete' "$err" | tail -n 3 | tr '\n' ' ' | cut -c1-400)"; exit 2; }
+docker pull -q "$image" >/dev/null
 echo "Collegamento a $host:$port, database $db, utente $user"
 run mysql --host="$host" --port="$port" --user="$user" -N -B -e "SELECT VERSION()" "$db" >/dev/null 2>"$err" || fail "collegamento non riuscito"
 if ! run mysqldump --host="$host" --port="$port" --user="$user" --single-transaction --quick --routines --triggers --events \
