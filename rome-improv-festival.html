@@ -276,6 +276,10 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 }
 </style>
 
+<style id="artyou-laptop-width">
+/* Audit 10/10/2026: tra 821 e 1439 px il layout restava largo 1440 px e la pagina scorreva di lato (a 1024 px logo e titoli tagliati a sinistra). */
+@media (min-width:821px) and (max-width:1439px){body>x-dc,x-dc,x-dc>div:first-of-type,[style*="width: 1440px"],[style*="width:1440px"]{width:100%!important;max-width:100%!important;min-width:0!important}}
+</style>
 <style id="artyou-mobile-hardening">
 @media (max-width: 820px){
   *,*::before,*::after{box-sizing:border-box;}
@@ -447,7 +451,7 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 .rif-event-row:first-of-type{border-top:0}
 .rif-event-row>div{display:flex;flex-direction:column;gap:3px}
 .rif-event-row strong{font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:19px;color:#13181D}
-.rif-event-row span:not(.rif-time){font-size:14px;color:#6A7279}
+.rif-event-row span:not(.rif-time){font-size:14px;color:#575e64}
 .rif-time{display:inline-flex;align-items:center;justify-content:center;width:max-content;background:#F6F3EC;color:#7A1631;border-radius:999px;padding:8px 11px;font-size:13px;font-weight:800;white-space:nowrap}
 .rif-event-dark{background:#F6F3EC}
 .rif-event-dark strong{color:#7A1631}
@@ -525,7 +529,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <label for="artyou-menu-toggle" class="artyou-menu-btn" role="button" aria-label="Apri il menu" style="display: none;"><svg class="am-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg><svg class="am-close" style="display: none;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></label></div>
 </header>
 <div aria-hidden="true" style="height: 6px; background: #7A1631;"></div>
-<nav aria-label="Festival" class="am-px am-wrap am-fs-body" style="background: #FFFFFF; border-bottom: 1px solid #E4DED2; padding: 0 120px; display: flex; gap: 32px; height: 56px; align-items: center; font-size: 15px; position: sticky; top: 96px; z-index: 400;"><span style="font-weight: 700; color: #6A7279; text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;">Festival</span><a href="/rome-improv-festival/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #13181D; font-weight: 700; border-bottom: 3px solid #F09000;" aria-current="page">Roma Improv Festival</a><a href="/yep/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">YEP</a><a href="/un-vortice-di-emozioni/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">Un Vortice di Emozioni</a></nav>
+<nav aria-label="Festival" class="am-px am-wrap am-fs-body" style="background: #FFFFFF; border-bottom: 1px solid #E4DED2; padding: 0 120px; display: flex; gap: 32px; height: 56px; align-items: center; font-size: 15px; position: sticky; top: 96px; z-index: 400;"><span style="font-weight: 700; color: #575e64; text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;">Festival</span><a href="/rome-improv-festival/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #13181D; font-weight: 700; border-bottom: 3px solid #F09000;" aria-current="page">Roma Improv Festival</a><a href="/yep/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">YEP</a><a href="/un-vortice-di-emozioni/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">Un Vortice di Emozioni</a></nav>
 
 <section class="am-px am-py am-grid1" style="background: #13181D; color: #F6F3EC; padding: 64px 120px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: center;">
 <div style="display: flex; flex-direction: column; gap: 18px;">
@@ -593,7 +597,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 
 <div style="display:flex;flex-direction:column;gap:18px;">
   <div>
-    <p style="margin:0 0 6px;font-size:14px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#F09000;">Scegli la tua formula</p>
+    <p style="margin:0 0 6px;font-size:14px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#A35C00;">Scegli la tua formula</p>
     <h2 class="am-fs-l" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:40px;">Quote di partecipazione</h2>
   </div>
 
@@ -780,7 +784,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </article>
 
 <article class="rif-faq-card" style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:16px;box-sizing:border-box;text-align:left;">
-<div style="width:42px;height:42px;border-radius:12px;background:#FFF1D8;color:#A85F00;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;">02</div>
+<div style="width:42px;height:42px;border-radius:12px;background:#FFF1D8;color:#874c00;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;">02</div>
 <h3 style="margin:0 0 8px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;line-height:1.2;color:#13181D;text-align:left;">Il festival è in inglese?</h3>
 <p style="margin:0;font-size:15px;line-height:1.55;color:#3F474E;text-align:left;">I workshop e gli spettacoli internazionali sono pensati per un pubblico di improvvisatori provenienti da Paesi diversi e si svolgono in inglese.</p>
 </article>

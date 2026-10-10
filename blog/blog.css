@@ -1,7 +1,7 @@
 /* La finestra sul cortile – stile allineato al sito Artyou (stessi font, colori, header e footer) */
 :root{
-  --ink:#13181D;--ink-2:#0D1115;--cream:#F6F3EC;--line:#E4DED2;--muted:#3F474E;--muted-2:#6A7279;
-  --soft:#C4CCD2;--grey:#9AA5AE;--orange:#F09000;--orange-d:#C97800;--red:#B13A32;
+  --ink:#13181D;--ink-2:#0D1115;--cream:#F6F3EC;--line:#E4DED2;--muted:#3F474E;--muted-2:#575E64;
+  --soft:#C4CCD2;--grey:#9AA5AE;--orange:#F09000;--orange-d:#955200;--red:#B13A32;
   --wa:#25D366;--wa-ink:#0B2E1A;--wa-line:#79FF9C;
   --c-world:#1A6E99;--c-radar:#B13A32;--c-people:#7A1631;--c-inside:#2F7D4F;
   --display:'Bricolage Grotesque',Georgia,sans-serif;
@@ -39,7 +39,7 @@ header nav a.menu-extra{display:none}
 /* ===== Elementi comuni ===== */
 .crumbs{font-size:14px;color:var(--grey);display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
 .crumbs a{color:var(--soft)}
-.kicker{margin:0 0 12px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange)}
+.kicker{margin:0 0 12px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#A35C00}
 .chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:5px 10px;border-radius:999px;color:#fff;background:var(--c-world);white-space:nowrap}
 .chip.cat-radar,.dot.cat-radar{background:var(--c-radar)}
 .chip.cat-people,.dot.cat-people{background:var(--c-people)}
@@ -239,3 +239,4 @@ footer a{color:var(--grey)}footer strong{color:#E6EBEE}
   footer{padding:28px 20px;flex-direction:column}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.hero-text .kicker{color:var(--orange)}

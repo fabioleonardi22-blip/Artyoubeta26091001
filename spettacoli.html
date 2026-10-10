@@ -257,6 +257,10 @@ footer a{color:#9AA5AE}
 }
 </script>
 
+<style id="artyou-laptop-width">
+/* Audit 10/10/2026: tra 821 e 1439 px il layout restava largo 1440 px e la pagina scorreva di lato (a 1024 px logo e titoli tagliati a sinistra). */
+@media (min-width:821px) and (max-width:1439px){body>x-dc,x-dc,x-dc>div:first-of-type,[style*="width: 1440px"],[style*="width:1440px"]{width:100%!important;max-width:100%!important;min-width:0!important}}
+</style>
 <style id="artyou-mobile-hardening">
 @media (max-width: 820px){
   *,*::before,*::after{box-sizing:border-box;}
@@ -386,7 +390,7 @@ footer a{color:#9AA5AE}
 <div id="empty" class="empty" style="display:none">Nessun evento futuro disponibile per questa categoria.</div>
 </section>
 <section id="past-events" aria-labelledby="past-title" style="margin-top:64px;padding-top:40px;border-top:1px solid #D9D2C6;">
-<p style="margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#6B747B;">Archivio</p>
+<p style="margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#575e64;">Archivio</p>
 <h2 id="past-title" style="margin:0 0 12px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:34px;line-height:1.05;">Spettacoli passati</h2>
 <p style="margin:0 0 24px;font-size:16px;line-height:1.55;color:#626C74;">Gli eventi conclusi restano qui come archivio della stagione Artyou.</p>
 <div id="past-grid" class="grid"></div>
