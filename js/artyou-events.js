@@ -9,6 +9,8 @@ window.ARTYOU_PUBLIC_PROGRAM = function () {
     var copy = Object.assign({}, e);
     if (/shortyou/i.test(e.slug || "")) {
       copy.cat = "Improvvisazione";
+      if (!copy.venue) copy.venue = "The Spot Improv";
+      if (!copy.addr) copy.addr = "Via Giuseppe Bonaccorsi, 28 – Roma (Valle Aurelia)";
       if (!copy.poster) copy.poster = /29-novembre/.test(e.slug) ? (window.SHORTYOU_29_NOV_POSTER || "") : "/img/shortyou-4-ottobre.jpg";
     }
     return copy;

@@ -36,7 +36,7 @@ class Component extends DCLogic {
       { cat: "Improvvisazione", day: "29", month: "nov", when: "Domenica 29 novembre · dalle 19:30", slug: "shortyou-29-novembre", title: "ShortYou · show & aperitivo", where: "The Spot Improv · Via G. Bonaccorsi, 28", img: (window.SHORTYOU_29_NOV_POSTER || "") },
       { cat: "Stand-up", day: "25", month: "ott", when: "Dal 25 ottobre al 13 dicembre · 7 giornate", title: "Corso di Stand-up Comedy · 8ª edizione", where: "Docenti: Antonio Micali · Sandro Canori · Velia Lalli", img: "img/standup-locandina-8-edizione.jpg", href: "stand-up.html", ctaLabel: "Scopri il corso", waText: "Ciao volevo informazioni sul corso di Stand up!" },
       { cat: "Teatro", day: "24", month: "ott", when: "Sabato 24 ottobre · 20:45", slug: "spettacolo-24-ottobre" },
-      { cat: "Stand-up", day: "?", month: "presto", when: "Data da definire", title: "Stand-up comedy · lo spettacolo del corso", where: "Bistrot68 Centocelle", slug: "standup-bistrot68" },
+      { cat: "Stand-up", day: "?", month: "presto", when: "Data da definire", title: "Stand-up comedy · lo spettacolo del corso", ctaLabel:"Chiedi informazioni", href:"https://wa.me/393271881956?text=Informazioni%20spettacolo%20Stand-up%20Bistrot68", where: "Bistrot68 Centocelle", slug: "standup-bistrot68" },
       { cat: "Improvvisazione", day: "30", month: "ott", when: "Venerdì 30 ottobre · 21:00" },
       { cat: "Improvvisazione", day: "07", month: "nov", when: "Sabato 7 novembre · 21:00" },
       { cat: "Stand-up", day: "13", month: "nov", when: "Venerdì 13 novembre · 21:30" },
@@ -52,7 +52,11 @@ class Component extends DCLogic {
       if (tbd) return { day: "?", month: "presto" };
       var s = String(label || "");
       var m = s.match(/\b(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)\b/i);
-      if (!m) return { day: "•", month: "data" };
+      if (!m) {
+        var numeric = s.match(/^(\d{1,2})\/(\d{1,2})\/\d{4}/);
+        if (numeric) return {day:numeric[1].padStart(2,"0"),month:["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"][Number(numeric[2])-1]};
+        return { day: "•", month: "data" };
+      }
       var months = {gennaio:"gen",febbraio:"feb",marzo:"mar",aprile:"apr",maggio:"mag",giugno:"giu",luglio:"lug",agosto:"ago",settembre:"set",ottobre:"ott",novembre:"nov",dicembre:"dic"};
       return { day: String(m[1]).padStart(2,"0"), month: months[m[2].toLowerCase()] || m[2].slice(0,3).toLowerCase() };
     }
@@ -60,10 +64,6 @@ class Component extends DCLogic {
     var managed = window.ARTYOU_EVENTS_LOADED ? window.ARTYOU_PUBLIC_PROGRAM().map(function (e) {
       var first = e.dates && e.dates.length ? e.dates[0] : {label:"Data da definire"};
       var displayLabel = first.label || "Data da definire";
-      if (first.start && !e.tbd) {
-        var start = new Date(first.start);
-        if (!isNaN(start.getTime())) displayLabel = start.toLocaleString("it-IT", {timeZone:"Europe/Rome", day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
-      }
       var badge = badgeFromLabel(displayLabel, e.tbd);
       return {
         cat: e.cat || "Eventi",
