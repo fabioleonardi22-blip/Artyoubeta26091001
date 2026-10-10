@@ -460,7 +460,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div style="display:flex;flex-direction:column;gap:10px;">
 <span class="am-fs-body" style="font-size:14px;font-weight:700;">Come vuoi procedere?</span>
 <div class="am-wrap" style="display:flex;gap:8px;flex-wrap:wrap;">
-<button type="button" data-artyou-no-submit="1" id="payPaypal" disabled title="Pagamento online sospeso fino al collaudo del nuovo flusso" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">PayPal non disponibile</button>
+<button type="button" data-artyou-no-submit="1" id="payPaypal" disabled="{{ true }}" aria-disabled="true" title="Pagamento online sospeso fino al collaudo del nuovo flusso" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">PayPal non disponibile</button>
 <button type="button" data-artyou-no-submit="1" id="payTeatro" style="padding:11px 16px;border-radius:999px;border:2px solid #CFC8BA;background:#FFFFFF;color:#13181D;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">Paga a teatro</button>
 </div>
 <span id="paymentNote" style="font-size:13px;line-height:1.5;color:#555D64;">{{payNote}}</span>
@@ -672,6 +672,7 @@ class Component extends DCLogic {
           var src=posterFor(di,si);
           poster.style.backgroundImage='url("'+src+'")';
           poster.textContent="";
+          poster.setAttribute("aria-label",show.title?("Locandina di "+show.title):("Locandina del "+(si===0?"primo":"secondo")+" spettacolo della serata"));
           poster.onerror=null;
         }
         b.disabled=false;
@@ -812,6 +813,7 @@ class Component extends DCLogic {
 <script id="vortice-payment-choice">
 (function(){
   function setMode(mode){
+    mode="teatro"; // Unverified legacy online payments are suspended.
     var paypal=document.getElementById("payPaypal");
     var teatro=document.getElementById("payTeatro");
     var online=document.getElementById("f-paga-online");
