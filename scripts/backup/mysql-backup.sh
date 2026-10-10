@@ -32,4 +32,5 @@ tables="$(run mysql --host="$host" --port="$port" --user="$user" -N -B -e "SELEC
 : > "$base.counts.tsv"
 for t in $tables; do n="$(run mysql --host="$host" --port="$port" --user="$user" -N -B "$db" -e "SELECT COUNT(*) FROM \`$t\`")"; printf '%s\t%s\n' "$t" "$n" >> "$base.counts.tsv"; done
 sha256sum "$base.sql.gz.enc" > "$base.sha256"
+echo "::notice title=Backup $name::$(wc -l < "$base.counts.tsv") tabelle, $(awk -F'\t' '{s+=$2} END{print s+0}' "$base.counts.tsv") righe: $(awk -F'\t' '{printf "%s=%s ", $1, $2}' "$base.counts.tsv" | cut -c1-900)"
 echo "Backup: $base.sql.gz.enc ($(du -h "$base.sql.gz.enc" | cut -f1)), tabelle: $(wc -l < "$base.counts.tsv")"
