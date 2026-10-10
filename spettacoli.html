@@ -15,10 +15,10 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
 <script src="/js/support.js"></script>
-<script src="/js/enhancements.js"></script>
+<script src="/js/enhancements.js?v=20261010-shows"></script>
 <script src="/js/artyou-events-config.js"></script>
 <script src="/js/shortyou-29-nov-poster.js"></script>
-<script src="/js/artyou-events.js"></script>
+<script src="/js/artyou-events.js?v=20261010-shows"></script>
 <style id="artyou-centered-layout">
 html{background:#11181D!important;}
 body{margin:0!important;background:#11181D!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;min-height:100vh!important;}
@@ -348,7 +348,7 @@ footer a{color:#9AA5AE}
 <a href="/" aria-label="Artyou Roma – Home" class="am-wrap" style="display: flex; align-items: center;"><img decoding="async" src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" style="height: 56px; width: auto; display: block;"></a>
 <input type="checkbox" id="artyou-menu-toggle" aria-hidden="true" tabindex="-1" class="am-abs" style="position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none;">
 <nav class="am-wrap" style="display: flex; gap: 36px; align-items: center;">
-<a href="/#spettacoli" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Spettacoli</a>
+<a href="/spettacoli/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Spettacoli</a>
 <a href="/improvvisazione-teatrale/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Corsi</a>
 <a href="/workshow/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">WorkshoW</a>
 <a href="/rome-improv-festival/" style="color: #E6EBEE; text-decoration: none; font-size: 16px; font-weight: 500;">Festival</a>
@@ -484,7 +484,7 @@ function renderCard(e,past){
  var posterStyle=poster?'background-image:url('+encodeURI(String(poster))+');background-color:'+col[0]+';':'background-color:'+col[0]+';';
  var where=[e.venue,e.addr].filter(Boolean).join(" · "),detailHref=eventHref(e,first);
  var actions=past?"":
-   '<div class="actions"><a class="btn primary" href="'+detailHref+'">Prenota</a><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/393271881956?text='+encodeURIComponent("Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".")+'">WhatsApp</a></div>';
+   '<div class="actions"><a class="btn primary" href="'+detailHref+'">'+(e.informational?'Chiedi informazioni':'Prenota')+'</a><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/393271881956?text='+encodeURIComponent("Ciao! Vorrei informazioni su "+(e.title||"questo evento")+" · "+(first.label||"")+".")+'">WhatsApp</a></div>';
  art.innerHTML='<a href="'+detailHref+'" class="poster" style="'+posterStyle+';text-decoration:none"><div class="badge"><strong>'+esc(b.day)+'</strong><span>'+esc(b.month)+'</span></div></a>'+
    '<div class="card-body"><span class="cat" style="color:'+col[1]+'">'+esc(e.cat||"Evento")+'</span>'+
    '<h2><a href="'+detailHref+'" style="color:inherit;text-decoration:none">'+esc(e.title||"Evento")+'</a></h2>'+
@@ -504,7 +504,7 @@ function render(){
  past.forEach(function(e){pastBox.appendChild(renderCard(e,true))});
 }
 function load(){
- events=(window.ARTYOU_DYNAMIC_SHOWS&&window.ARTYOU_DYNAMIC_SHOWS.length)?window.ARTYOU_DYNAMIC_SHOWS:FALLBACK;
+ events=window.ARTYOU_EVENTS_LOADED?window.ARTYOU_PUBLIC_PROGRAM():FALLBACK.filter(function(e){return !/^spettacolo-/.test(e.slug)});
  renderFilters();render();
 }
 window.addEventListener("artyou-events-loaded",load);
