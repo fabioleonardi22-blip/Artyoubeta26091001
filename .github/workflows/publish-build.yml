@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout target
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Clone source
         run: git clone --depth 1 https://github.com/fabioleonardi22-blip/Artyou2026beta2591.git /tmp/artyou-source
