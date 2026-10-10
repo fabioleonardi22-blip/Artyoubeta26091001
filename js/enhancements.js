@@ -389,7 +389,7 @@
       var desiredOrder=[
         {label:/^\s*chi siamo\s*$/i, href:'/chi-siamo/'},
         {label:/^\s*corsi\s*$/i, href:'/improvvisazione-teatrale/'},
-        {label:/^\s*spettacoli\s*$/i},
+        {label:/^\s*spettacoli\s*$/i, href:'/spettacoli/'},
         {label:/^\s*workshow(?:™)?\s*$/i, href:'/workshow/'},
         {label:/^\s*festival\s*$/i, href:'/rome-improv-festival/'},
         {label:/^\s*aziende\s*$/i, href:'/formazione-aziende/'},
@@ -406,7 +406,7 @@
           var href=(link.getAttribute('href')||'').replace(location.origin,'');
           return rule.label.test(txt) || (rule.href && href===rule.href);
         });
-        if(a){ nav.appendChild(a); used.add(a); }
+        if(a){ if(rule.href) a.setAttribute("href",rule.href); nav.appendChild(a); used.add(a); }
       });
       links.forEach(function(a){ if(!used.has(a)) nav.appendChild(a); });
     });

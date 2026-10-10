@@ -57,15 +57,22 @@ class Component extends DCLogic {
       return { day: String(m[1]).padStart(2,"0"), month: months[m[2].toLowerCase()] || m[2].slice(0,3).toLowerCase() };
     }
 
-    var managed = (window.ARTYOU_DYNAMIC_SHOWS && window.ARTYOU_DYNAMIC_SHOWS.length) ? window.ARTYOU_DYNAMIC_SHOWS.map(function (e) {
+    var managed = window.ARTYOU_EVENTS_LOADED ? window.ARTYOU_PUBLIC_PROGRAM().map(function (e) {
       var first = e.dates && e.dates.length ? e.dates[0] : {label:"Data da definire"};
-      var badge = badgeFromLabel(first.label, e.tbd);
+      var displayLabel = first.label || "Data da definire";
+      if (first.start && !e.tbd) {
+        var start = new Date(first.start);
+        if (!isNaN(start.getTime())) displayLabel = start.toLocaleString("it-IT", {timeZone:"Europe/Rome", day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
+      }
+      var badge = badgeFromLabel(displayLabel, e.tbd);
       return {
         cat: e.cat || "Eventi",
         day: badge.day,
         month: badge.month,
-        when: first.label || "Data da definire",
+        when: displayLabel,
         slug: e.slug,
+        href: e.href,
+        ctaLabel: e.informational ? "Chiedi informazioni" : "Prenota",
         title: e.title,
         where: [e.venue,e.addr].filter(Boolean).join(" · "),
         img: e.poster || "",
@@ -98,8 +105,16 @@ class Component extends DCLogic {
       }
       return values.length ? Math.max.apply(Math, values) : Infinity;
     }
-    var all = (managed.length ? managed : fallbackShows).filter(function (s) {
+    var source = window.ARTYOU_EVENTS_LOADED ? managed : fallbackShows.filter(function (s) { return s.title; });
+    // Keep the course announcement alongside the show, without treating it as a ticketed event.
+    if (window.ARTYOU_EVENTS_LOADED) source = source.concat(fallbackShows.filter(function (s) { return s.href === "stand-up.html"; }));
+    var all = source.filter(function (s) {
       return eventEndTime(s) >= Date.now();
+    });
+    all.sort(function (a, b) {
+      var aShow = /^(Improvvisazione|Teatro|Stand-up|Spettacolo)$/.test(a.cat) ? 0 : 1;
+      var bShow = /^(Improvvisazione|Teatro|Stand-up|Spettacolo)$/.test(b.cat) ? 0 : 1;
+      return aShow - bShow || eventEndTime(a) - eventEndTime(b);
     });
     var venues = { "Improvvisazione": "[Teatro], Roma", "Teatro": "[Teatro], Roma", "Stand-up": "[Locale], Roma", "ImproEnglish": "[Teatro], Roma", "Eventi": "Roma", "Festival": "Roma", "Workshop": "Roma" };
     var shows = all.filter(function (s) { return filter === "Tutti" || s.cat === filter; }).map(function (s) {
@@ -117,7 +132,7 @@ class Component extends DCLogic {
         ctaLabel: s.ctaLabel || "Prenota"
       };
     });
-    shows = shows.slice(0, 4);
+    shows = shows.slice(0, 6);
     var filters = ["Tutti", "Improvvisazione", "Teatro", "Stand-up", "Eventi"].map(function (label) {
       var on = label === filter;
       return {
