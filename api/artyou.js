@@ -62,8 +62,8 @@ async function mirrorBookingToMysql(requestData, upstreamData) {
       (public_id,event_id,first_name,last_name,email,phone,seats,status,hold_expires_at,checkin_code,privacy_accepted,notes,metadata)
      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
      ON DUPLICATE KEY UPDATE
-       status=VALUES(status),
-       hold_expires_at=VALUES(hold_expires_at),
+       status=IF(status='PAGATO',status,VALUES(status)),
+       hold_expires_at=IF(status='PAGATO',NULL,VALUES(hold_expires_at)),
        updated_at=CURRENT_TIMESTAMP`,
     [
       code,
