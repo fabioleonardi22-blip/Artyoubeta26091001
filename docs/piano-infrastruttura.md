@@ -44,4 +44,10 @@ Decisione del 10/10/2026: i dati restano negli USA e l'informativa privacy lo di
 2. Railway: creare i servizi MySQL nella regione Europa (Amsterdam) e migrare come in B4 (stessi passi, stessa finestra di manutenzione).
 3. Aggiornare l'informativa privacy, togliendo i trasferimenti verso gli USA non più necessari.
 
-Funzioni e database vanno spostati insieme: oggi le funzioni sono a Washington e i database a San Francisco, e ogni query attraversa gli Stati Uniti.
+Funzioni e database vanno spostati insieme. Dal 10/10/2026 le funzioni Vercel girano a San Francisco (`sfo1`), accanto ai database Railway (`sfo`): misurato dall'ambiente Vercel, il contatto con il database è sceso da 150–230 ms (Washington) a circa 30 ms.
+
+## Connessione TLS sito → MySQL
+
+Dal 10/10/2026 `MYSQL_SSL_CA` (solo Production) contiene la CA autogenerata del MySQL `altaria` (CN `MySQL_Server_9.7.2_Auto_Generated_CA_Certificate`, SHA-256 `19:82:70:D8:…:D6:B1`, scadenza 30/09/2036): la connessione è cifrata (TLS 1.3) e il certificato del server viene verificato. Il nome host non viene confrontato (comportamento predefinito di mysql2), perché il certificato autogenerato non contiene il dominio del proxy.
+
+Se il servizio MySQL viene ricreato o il volume sostituito, MySQL genera una CA nuova e il sito non riesce più a collegarsi: in quel caso estrarre la nuova CA con `openssl s_client -starttls mysql -connect <host>:<porta> -showcerts` (secondo certificato) e aggiornare `MYSQL_SSL_CA`.
