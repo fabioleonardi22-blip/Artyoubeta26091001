@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Backup completo e cifrato di un database MySQL (audit 10/10/2026, A8).
-#   DB_URL=mysql://utente:password@host:porta/database
+#   DB_URL=URL MySQL nel formato  mysql + "://utente:password@host:porta/database"
 #   BACKUP_PASSPHRASE=frase lunga, conservata fuori da Railway e da GitHub
 #   scripts/backup/mysql-backup.sh <nome> <cartella-output>
 # Produce <nome>-AAAAMMGG-HHMM.sql.gz.enc (AES-256, PBKDF2) e <nome>-...counts.tsv con le righe per tabella.
@@ -10,7 +10,7 @@ name="${1:?nome del database}"; out="${2:?cartella di output}"
 : "${DB_URL:?DB_URL mancante}"; : "${BACKUP_PASSPHRASE:?BACKUP_PASSPHRASE mancante}"
 [ "${#BACKUP_PASSPHRASE}" -ge 24 ] || { echo "BACKUP_PASSPHRASE troppo corta (minimo 24 caratteri)"; exit 2; }
 image="${MYSQL_CLIENT_IMAGE:-mysql:9}"
-proto_rest="${DB_URL#mysql://}"; creds="${proto_rest%%@*}"; hostpart="${proto_rest#*@}"
+proto_rest="${DB_URL#*://}"; creds="${proto_rest%%@*}"; hostpart="${proto_rest#*@}"
 user="$(python3 -c 'import sys,urllib.parse;print(urllib.parse.unquote(sys.argv[1]))' "${creds%%:*}")"
 pass="$(python3 -c 'import sys,urllib.parse;print(urllib.parse.unquote(sys.argv[1]))' "${creds#*:}")"
 host="${hostpart%%/*}"; db="${hostpart#*/}"; db="${db%%\?*}"; port="${host##*:}"; host="${host%%:*}"; [ "$port" = "$host" ] && port=3306
