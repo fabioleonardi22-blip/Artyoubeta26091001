@@ -107,9 +107,9 @@ class Component extends DCLogic {
     }
     var source = window.ARTYOU_EVENTS_LOADED ? managed : fallbackShows.filter(function (s) { return s.title; });
     // Keep the course announcement alongside the show, without treating it as a ticketed event.
-    if (window.ARTYOU_EVENTS_LOADED) source = source.concat(fallbackShows.filter(function (s) { return s.href === "stand-up.html"; }));
+    
     var all = source.filter(function (s) {
-      return eventEndTime(s) >= Date.now();
+      return !/^(Workshop|WorkshoW)$/i.test(s.cat || "") && eventEndTime(s) >= Date.now();
     });
     all.sort(function (a, b) {
       var aShow = /^(Improvvisazione|Teatro|Stand-up|Spettacolo)$/.test(a.cat) ? 0 : 1;
