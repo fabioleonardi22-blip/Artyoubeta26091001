@@ -13,6 +13,8 @@ const MERCH_FROM_EMAIL = process.env.MERCH_FROM_EMAIL || "Artyou Roma <ordini@ar
 const MERCH_ADMIN_EMAIL = process.env.MERCH_ADMIN_EMAIL || "info@artyouroma.it";
 const MERCH_BACKUP_EMAIL = process.env.MERCH_BACKUP_EMAIL || "artyouroma@gmail.com";
 const PROXY_SECRET = String(process.env.ARTYOU_MERCH_PROXY_SECRET || "").trim();
+// Ordini PayPal non pagati: dopo queste ore i pezzi tornano disponibili (0 = mai).
+const PAYPAL_HOLD_HOURS = Math.max(0, Math.min(24 * 30, Number(process.env.MERCH_PAYPAL_HOLD_HOURS || 48)));
 const rateBuckets = new Map();
 
 const pool = mysql.createPool({
@@ -159,7 +161,9 @@ async function createOrder(data){
     }
     let totale=0;const righe=[];
     for(const it of locked){const p=Number(it.variant.price)||0;totale+=p*it.qty;righe.push(it.qty+"× "+it.variant.name+" – "+it.colore+", "+it.taglia)}
-    const id=orderCode(),stato=pagamento==="PayPal"?"In attesa PayPal":"Riservato",metadata=JSON.stringify({source:"web",backend:"mysql"});
+    const id=orderCode(),stato=pagamento==="PayPal"?"In attesa PayPal":"Riservato";
+    const reservedUntil=pagamento==="PayPal"&&PAYPAL_HOLD_HOURS>0?new Date(Date.now()+PAYPAL_HOLD_HOURS*3600*1000).toISOString():null;
+    const metadata=JSON.stringify({source:"web",backend:"mysql",...(reservedUntil?{reservedUntil}:{})});
     const [ins]=await conn.execute(`INSERT INTO merch_orders
       (order_number,customer_id,total_amount,status,order_code,ordered_at,customer_name,phone,email,venue,pieces,total,notes,returned_pieces,payment_method,metadata)
       VALUES (?,NULL,?,?,?,NOW(),?,?,?,?,?,?,?,0,?,?)`,
@@ -171,12 +175,42 @@ async function createOrder(data){
         VALUES (?,?,?,?,?,?,?)`,
         [ins.insertId,it.variant.id,it.variant.id,keyOf(it.id,it.colore,it.taglia),it.qty+"× "+it.variant.name+" – "+it.colore+", "+it.taglia,it.qty,price]);
       await conn.execute("UPDATE product_variants SET stock_qty=stock_qty-? WHERE id=?",[it.qty,it.variant.id]);
+      // Storico movimenti: facoltativo, un errore qui non deve bloccare l'ordine.
+      try{await conn.execute("INSERT INTO inventory_movements (product_variant_id,order_id,movement_type,quantity_delta,note) VALUES (?,?,?,?,?)",
+        [it.variant.id,ins.insertId,pagamento==="PayPal"?"RESERVE":"SALE",-it.qty,"Ordine "+id]);}catch(e){console.warn("MERCH_MOVEMENT_SKIPPED",e&&e.code)}
     }
     await conn.commit();
     const paypal=pagamento==="PayPal"?paypalUrl(id,totale):"";
     return {status:200,body:{ok:true,id,totale:Number(totale.toFixed(2)),righe,pagamento,paypal},
       mail:{id,nome,telefono,email,sede,note,totale:Number(totale.toFixed(2)),righe,pagamento,paypal}};
   }catch(e){try{await conn.rollback()}catch(_){}throw e}finally{conn.release()}
+}
+
+// Rilascia i pezzi degli ordini PayPal rimasti senza pagamento oltre PAYPAL_HOLD_HOURS.
+// Ogni ordine è gestito in una transazione con lock: lo stato passa a "Scaduto" una sola volta.
+async function releaseExpiredPaypalOrders(db,hours,now){
+  if(!(hours>0))return {released:0};
+  const cutoff=new Date((now?now.getTime():Date.now())-hours*3600*1000);
+  const [orders]=await db.execute("SELECT id FROM merch_orders WHERE status='In attesa PayPal' AND ordered_at < ? ORDER BY id LIMIT 50",[cutoff]);
+  let released=0;
+  for(const o of orders){
+    const conn=await db.getConnection();
+    try{
+      await conn.beginTransaction();
+      const [[row]]=await conn.execute("SELECT id,order_code,status FROM merch_orders WHERE id=? FOR UPDATE",[o.id]);
+      if(!row||row.status!=="In attesa PayPal"){await conn.rollback();continue;}
+      const [items]=await conn.execute("SELECT product_variant_id,quantity FROM merch_order_items WHERE order_id=? AND product_variant_id IS NOT NULL",[o.id]);
+      for(const it of items){
+        await conn.execute("UPDATE product_variants SET stock_qty=stock_qty+? WHERE id=?",[it.quantity,it.product_variant_id]);
+        try{await conn.execute("INSERT INTO inventory_movements (product_variant_id,order_id,movement_type,quantity_delta,note) VALUES (?,?,'RELEASE',?,?)",[it.product_variant_id,o.id,it.quantity,"Scaduto senza pagamento PayPal"]);}catch(e){console.warn("MERCH_MOVEMENT_SKIPPED",e&&e.code)}
+      }
+      await conn.execute("UPDATE merch_orders SET status='Scaduto' WHERE id=?",[o.id]);
+      await conn.commit();released++;
+      console.log("MERCH_PAYPAL_HOLD_RELEASED",row.order_code);
+    }catch(e){try{await conn.rollback()}catch(_){}console.error("MERCH_RELEASE_ERROR",String(e&&e.message||e));}
+    finally{conn.release();}
+  }
+  return {released};
 }
 
 const server=http.createServer(async(req,res)=>{
@@ -206,4 +240,11 @@ const server=http.createServer(async(req,res)=>{
     return send(res,e&&e.status||500,{ok:false,errore:known.includes(msg)?msg:"server_error"});
   }
 });
-server.listen(PORT,"0.0.0.0",()=>console.log("ARTYOU_MERCH_API_READY"));
+if(require.main===module){
+  server.listen(PORT,"0.0.0.0",()=>console.log("ARTYOU_MERCH_API_READY"));
+  if(PAYPAL_HOLD_HOURS>0){
+    const sweep=()=>releaseExpiredPaypalOrders(pool,PAYPAL_HOLD_HOURS).catch(e=>console.error("MERCH_RELEASE_ERROR",String(e&&e.message||e)));
+    setTimeout(sweep,60*1000);setInterval(sweep,15*60*1000).unref();
+  }
+}
+module.exports={releaseExpiredPaypalOrders,createOrder};
