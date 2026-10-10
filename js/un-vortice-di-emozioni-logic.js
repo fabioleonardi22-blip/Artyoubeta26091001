@@ -53,7 +53,7 @@ class Component extends DCLogic {
       confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
       doneTitle: "Posto prenotato!",
       summary: "Un Vortice di Emozioni · " + what + ".",
-      doneNote: "Anticipo ricevuto: ti abbiamo inviato un’email con la ricevuta. Il saldo si paga in cassa la sera dello spettacolo.",
+      doneNote: "La prenotazione non costituisce una ricevuta di pagamento. Conserva il codice e verifica l’esito mostrato dal sistema.",
       minus: function () { self.setState({ seats: Math.max(1, seats - 1) }); },
       plus: function () { self.setState({ seats: Math.min(maxAllowed, seats + 1) }); },
       confirm: function () { self.setState({ confirmed: true }); },

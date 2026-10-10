@@ -382,6 +382,7 @@ function dateRow(v){
   var row=document.createElement("div");row.className="repeat-row";
   row.innerHTML='<input class="date-label" placeholder="Es. Venerdì 17 aprile · 21:00"><button type="button" class="btn danger">Rimuovi</button>';
   row.querySelector("input").value=(v&&v.label)||"";
+  row.querySelector("input").artyouDate = v || {};
   row.querySelector("button").onclick=function(){row.remove();if(!$("dates").children.length)addDate()};
   $("dates").appendChild(row);
 }
@@ -426,7 +427,7 @@ function loadForm(e){
   updatePoster();updatePreviewLink();renderList();
 }
 function collect(){
-  var dates=[].slice.call(document.querySelectorAll(".date-label")).map(x=>({label:x.value.trim(),sold:0})).filter(x=>x.label);
+  var dates=[].slice.call(document.querySelectorAll(".date-label")).map(x=>({...x.artyouDate,label:x.value.trim(),sold:0})).filter(x=>x.label);
   var cast=[].slice.call(document.querySelectorAll(".cast-row")).map(row=>({name:row.querySelector(".cast-name").value.trim(),slug:row.querySelector(".cast-slug").value.trim()})).filter(x=>x.name);
   return {id:currentId,slug:$("slug").value.trim()||slugify($("title").value),title:$("title").value.trim(),cat:$("cat").value,eventType:$("eventType").value,tipo:$("eventType").value,ordine:Number($("ordine").value)||100,
     desc:$("desc").value.trim(),venue:$("venue").value.trim(),addr:$("addr").value.trim(),maps:$("maps").value.trim(),price:$("price").value===""?"":Number($("price").value),

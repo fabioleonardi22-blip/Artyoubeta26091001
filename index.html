@@ -1404,8 +1404,8 @@ a{color:#1A6E99}a:hover{color:#12506F}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    var __artyouConsent = null; try { __artyouConsent = window.localStorage.getItem("artyou-cookie-consent"); } catch (e) {}
-    this.state = { consent: __artyouConsent, filter: "Tutti", sent: false, gal: "Tutte", idx: 0, paused: false, heroIdx: 0, heroPaused: false };
+    var __artyouConsent = null, __artyouCats = {}; try { var saved = JSON.parse(window.localStorage.getItem("artyou-cookie-consent") || "null"); if(saved && saved.version === 2 && ["all","none","custom"].includes(saved.choice) && saved.categories){ __artyouConsent = saved.choice; __artyouCats = saved.categories; } } catch (e) {}
+    this.state = { consent: __artyouConsent, cc: __artyouCats, filter: "Tutti", sent: false, gal: "Tutte", idx: 0, paused: false, heroIdx: 0, heroPaused: false };
   }
   componentDidMount() {
     var self = this;
@@ -1628,9 +1628,9 @@ class Component extends DCLogic {
         var on = !!(st.cc && st.cc[c[0]]);
         return { label: c[1], on: on ? "true" : "false", track: on ? "#127A70" : "#B9C2C9", justify: on ? "flex-end" : "flex-start", toggle: function () { var cc = Object.assign({}, st.cc || {}); cc[c[0]] = !on; self.setState({ cc: cc }); } };
       }),
-      cookieAccept: function () { try { window.localStorage.setItem("artyou-cookie-consent", "all"); } catch (e) {} self.setState({ consent: "all", cookiePrefs: false }); },
-      cookieDeny: function () { try { window.localStorage.setItem("artyou-cookie-consent", "none"); } catch (e) {} self.setState({ consent: "none", cookiePrefs: false }); },
-      cookiePrefsAction: function () { if (st.cookiePrefs) { try { window.localStorage.setItem("artyou-cookie-consent", "custom"); } catch (e) {} } if (st.cookiePrefs) self.setState({ consent: "custom", cookiePrefs: false }); else self.setState({ cookiePrefs: true }); },
+      cookieAccept: function () { try { window.localStorage.setItem("artyou-cookie-consent", JSON.stringify({version:2,choice:"all",categories:{pref:true,stat:true,mkt:true},updatedAt:new Date().toISOString()})); } catch (e) {} self.setState({ consent: "all", cc:{pref:true,stat:true,mkt:true}, cookiePrefs: false }); },
+      cookieDeny: function () { try { window.localStorage.setItem("artyou-cookie-consent", JSON.stringify({version:2,choice:"none",categories:{pref:false,stat:false,mkt:false},updatedAt:new Date().toISOString()})); } catch (e) {} self.setState({ consent: "none", cc:{pref:false,stat:false,mkt:false}, cookiePrefs: false }); },
+      cookiePrefsAction: function () { if (st.cookiePrefs) { try { window.localStorage.setItem("artyou-cookie-consent", JSON.stringify({version:2,choice:"custom",categories:{pref:!!(st.cc&&st.cc.pref),stat:!!(st.cc&&st.cc.stat),mkt:!!(st.cc&&st.cc.mkt)},updatedAt:new Date().toISOString()})); } catch (e) {} } if (st.cookiePrefs) self.setState({ consent: "custom", cookiePrefs: false }); else self.setState({ cookiePrefs: true }); },
       cookieReopen: function () { self.setState({ consent: null }); },
       course: course, courseTabs: courseTabs,
       slide: slide, thumbs: thumbs, galTabs: galTabs,

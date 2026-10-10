@@ -86,7 +86,7 @@ async function mirrorBookingToMysql(requestData, upstreamData) {
 
 module.exports = async function handler(req, res) {
   setSecurityHeaders(res);
-  if (!APPS_SCRIPT_URL) return res.status(503).json({ ok:false, errore:"backend_non_configurato" });
+
 
   try {
     const method = String(req.method || "GET").toUpperCase();
@@ -111,6 +111,8 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    if ((method === "GET" || method === "HEAD") && queryAction === "public") return require("./events")(req,res);
+    if (!APPS_SCRIPT_URL) return reject(res,503,"backend_non_configurato");
     let url = APPS_SCRIPT_URL;
     if (query) url += "?" + query;
     const options = { method, redirect: "follow", headers: {} };
@@ -170,6 +172,11 @@ module.exports = async function handler(req, res) {
         return reject(res, 400, "email_non_valida");
       }
 
+      if(parsed.Privacy!==true)return reject(res,400,"privacy_obbligatoria");
+      // The old PayPal URL trusted a client amount and had no verified callback.
+      if(/^PayPal/i.test(String(parsed.Pagamento||"")))return reject(res,503,"pagamento_online_non_disponibile");
+      const events=await require("../lib/db").query("SELECT id FROM events WHERE slug=? AND active=1 LIMIT 1",[String(parsed.Evento).trim()]);
+      if(!events.length)return reject(res,400,"evento_non_trovato");
       options.headers["Content-Type"] = "text/plain;charset=utf-8";
       options.body = JSON.stringify(parsed);
     }
@@ -178,16 +185,12 @@ module.exports = async function handler(req, res) {
     const body = await upstream.text();
 
     if (method === "POST" && upstream.ok) {
-      try {
-        const upstreamData = JSON.parse(body);
-        if (upstreamData && upstreamData.ok) {
-          try {
-            await mirrorBookingToMysql(JSON.parse(options.body || "{}"), upstreamData);
-          } catch (mirrorErr) {
-            console.error("ARTYOU_MYSQL_MIRROR_ERROR", String(mirrorErr && mirrorErr.message || mirrorErr));
-          }
-        }
-      } catch (_) {}
+      let data;try{data=JSON.parse(body);}catch(_){return reject(res,502,"booking_response_invalid");}
+      if(data&&data.ok){
+        let persisted;try{persisted=await mirrorBookingToMysql(JSON.parse(options.body||"{}"),data);}catch(_){persisted={ok:false};}
+        return res.status(persisted.ok?200:202).json({...data,storage:persisted.ok?"mysql":"reconciliation_pending",persistenceConfirmed:!!persisted.ok,
+          ...(!persisted.ok?{avviso:"Prenotazione ricevuta dalla fonte originale; persistenza MySQL da verificare. Non ripetere l’invio.",paymentUrl:null}:{} )});
+      }
     }
 
     res.status(upstream.status);

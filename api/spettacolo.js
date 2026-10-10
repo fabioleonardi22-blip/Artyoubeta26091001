@@ -1,3 +1,5 @@
+const { readFileSync } = require("node:fs");
+const { join } = require("node:path");
 const { query } = require("../lib/db");
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgqQguCWRt7yCTroh2qi4az1rCTZ7kgw0IxNRNDb9LZLOGPUD5Jy3K56NTi6FxAfKx/exec";
 
@@ -39,8 +41,7 @@ module.exports = async function handler(req, res) {
     const slug = String((req.query && req.query.slug) || "").trim();
     const origin = "https://artyouroma.it";
 
-    const templateResp = await fetch(origin + "/spettacolo.html", { redirect: "follow" });
-    let html = await templateResp.text();
+    let html = readFileSync(join(__dirname, "..", "spettacolo.html"), "utf8");
 
     let event = null;
 
@@ -148,7 +149,7 @@ module.exports = async function handler(req, res) {
         '\n<meta property="og:type" content="website">' +
         '\n<meta property="og:url" content="' + escHtml(canonical) + '">' +
         (image ? '\n<meta property="og:image" content="' + escHtml(image) + '">' : "") +
-        '\n<script type="application/ld+json">' + safeJson(schema) + '<\\/script>\n';
+        '\n<script type="application/ld+json">' + safeJson(schema) + '</script>\n';
 
       html = html.replace("</head>", seoBlock + "</head>");
     }
