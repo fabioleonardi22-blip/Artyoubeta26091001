@@ -231,7 +231,7 @@ class Component extends DCLogic {
       cookieAccept: function () { try { window.localStorage.setItem("artyou-cookie-consent", JSON.stringify({version:2,choice:"all",categories:{pref:true,stat:true,mkt:true},updatedAt:new Date().toISOString()})); } catch (e) {} self.setState({ consent: "all", cc:{pref:true,stat:true,mkt:true}, cookiePrefs: false }); },
       cookieDeny: function () { try { window.localStorage.setItem("artyou-cookie-consent", JSON.stringify({version:2,choice:"none",categories:{pref:false,stat:false,mkt:false},updatedAt:new Date().toISOString()})); } catch (e) {} self.setState({ consent: "none", cc:{pref:false,stat:false,mkt:false}, cookiePrefs: false }); },
       cookiePrefsAction: function () { if (st.cookiePrefs) { try { window.localStorage.setItem("artyou-cookie-consent", JSON.stringify({version:2,choice:"custom",categories:{pref:!!(st.cc&&st.cc.pref),stat:!!(st.cc&&st.cc.stat),mkt:!!(st.cc&&st.cc.mkt)},updatedAt:new Date().toISOString()})); } catch (e) {} } if (st.cookiePrefs) self.setState({ consent: "custom", cookiePrefs: false }); else self.setState({ cookiePrefs: true }); },
-      cookieReopen: function () { self.setState({ consent: null }); },
+      cookieReopen: function () { self.setState({ consent: null, cookiePrefs: true }); },
       course: course, courseTabs: courseTabs,
       slide: slide, thumbs: thumbs, galTabs: galTabs,
       playing: !st.paused, paused: !!st.paused,

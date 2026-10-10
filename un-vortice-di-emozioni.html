@@ -664,8 +664,8 @@ class Component extends DCLogic {
         if(tw&&tw.children){
           if(tw.children[0])tw.children[0].textContent=si===0?"PRIMO SPETTACOLO":"SECONDO SPETTACOLO";
           if(tw.children[1])tw.children[1].textContent=x.ora||"";
-          if(tw.children[2])tw.children[2].textContent=show.title||("Spettacolo "+(si+1));
-          if(tw.children[3])tw.children[3].innerHTML="<strong>Insegnante:</strong> "+(show.teacher||"—");
+          if(tw.children[2])tw.children[2].textContent=show.title||"Titolo in aggiornamento";
+          if(tw.children[3])tw.children[3].textContent=show.teacher?("Insegnante: "+show.teacher):"Insegnante in aggiornamento";
         }
         var poster=b.querySelector(".am-vortice-poster");
         if(poster){
@@ -718,7 +718,7 @@ class Component extends DCLogic {
     shows.forEach(function(show,i){
       var b=shBtns[i];if(!b)return;
       var s=b.children;
-      if(s[0])s[0].textContent=show.title||("Spettacolo "+(i+1));
+      if(s[0])s[0].textContent=show.title||"Titolo in aggiornamento";
       if(s[1])s[1].textContent=show.teacher?("Insegnante: "+show.teacher):"";
       if(s[2])s[2].textContent="Scelta statistica";
       b.dataset.statShow=String(i+1);
