@@ -132,7 +132,7 @@ class Component extends DCLogic {
         ctaLabel: s.ctaLabel || "Prenota"
       };
     });
-    shows = shows.slice(0, 6);
+    shows = shows.slice(0, 4);
     var filters = ["Tutti", "Improvvisazione", "Teatro", "Stand-up", "Eventi"].map(function (label) {
       var on = label === filter;
       return {
