@@ -13,3 +13,9 @@ test('Non-image or forged files are refused before upload',async()=>{
   await assert.rejects(uploadImageToBlob({name:'x.png',base64:'not base64!'},put),/immagine_non_valido/);
   assert.equal(imageKind(Buffer.from('RIFF0000WEBPVP8 ')).mime,'image/webp');
 });
+test('Public list hides events whose dates are all past, keeps undated and TBD ones',()=>{
+  const {currentEvents}=require('../api/events');const now=new Date('2026-10-10T10:00:00Z');
+  const ev=(slug,starts,tbd=false)=>({slug,tbd,dates:starts.map(s=>({start:s}))});
+  const out=currentEvents([ev('passato',['2026-10-04T19:30:00.000Z']),ev('futuro',['2026-11-29T19:30:00.000Z']),ev('misto',['2026-10-01T21:00:00.000Z','2026-12-01T21:00:00.000Z']),ev('senza-ora',['']),ev('tbd',['2026-01-01T10:00:00.000Z'],true),ev('oggi',['2026-10-10T00:00:00.000Z'])],now).map(e=>e.slug);
+  assert.deepEqual(out,['futuro','misto','senza-ora','tbd','oggi']);
+});

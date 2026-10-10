@@ -2,7 +2,7 @@ const { rateLimit,applyRateLimitHeaders,rejectRateLimited,sameOrigin,setSecurity
 const { requireUser,authErrorStatus }=require("../lib/authorization");
 const { query,transaction }=require("../lib/db");
 const { audit }=require("../lib/audit");
-const { reconcileDates }=require("../lib/event-dates");
+const { reconcileDates,isPast }=require("../lib/event-dates");
 
 const APPS_SCRIPT_URL=String(process.env.ARTYOU_APPS_SCRIPT_URL||"").trim();
 const UPLOAD_PIN=String(process.env.ARTYOU_GESTIONALE_PIN||"").trim();
@@ -35,6 +35,14 @@ async function listAdminEvents(publicOnly=false){
   const dates=await query("SELECT event_id,id,date_label,starts_at,metadata FROM event_dates WHERE active=1 AND event_id IN ("+rows.map(()=>"?").join(",")+") ORDER BY starts_at,id",rows.map(r=>r.id));
   const grouped=new Map();for(const d of dates){const key=String(d.event_id);if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(d);}
   return Promise.all(rows.map(r=>eventObject(r,null,grouped.get(String(r.id))||[])));
+}
+// Lista pubblica: fuori gli eventi con date tutte passate (ora di Roma); restano quelli
+// "data da definire" e quelli senza orario salvato, che non si possono giudicare.
+function currentEvents(events,now){
+  return events.filter(e=>{
+    if(e.tbd||!e.dates.length)return true;
+    return e.dates.some(d=>!d.start||!isPast(d.start.replace(/\.\d+Z$|Z$/,""),now));
+  });
 }
 async function saveEvent(input){
   const e=input||{},title=clean(e.title,255),slug=clean(e.slug,190).toLowerCase();
@@ -119,7 +127,7 @@ module.exports=async function handler(req,res){
   const publicRead=(method==="GET"||method==="HEAD")&&action==="public";
   if(publicRead){
     const limit=rateLimit(req,{key:"events-public",limit:120,windowMs:60*1000});applyRateLimitHeaders(res,limit);if(!limit.ok)return rejectRateLimited(res,limit);
-    try{return res.status(200).json({ok:true,events:await listAdminEvents(true),storage:"mysql"});}
+    try{return res.status(200).json({ok:true,events:currentEvents(await listAdminEvents(true)),storage:"mysql"});}
     catch(_){return res.status(503).json({ok:false,errore:"mysql_unavailable"});}
   }
   if(!sameOrigin(req))return res.status(403).json({ok:false,errore:"origin_non_consentita"});
@@ -152,3 +160,4 @@ module.exports=async function handler(req,res){
 };
 
 module.exports.uploadImageToBlob=uploadImageToBlob;module.exports.imageKind=imageKind;
+module.exports.currentEvents=currentEvents;

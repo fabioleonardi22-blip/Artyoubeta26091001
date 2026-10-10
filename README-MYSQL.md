@@ -114,3 +114,22 @@ Se MySQL è temporaneamente indisponibile durante questa fase di transizione, Ap
 - Il Gestionale Eventi usa MySQL come storage autoritativo. Il vecchio PIN non viene più inviato dal browser né usato per list/save/delete; resta solo come integrazione server-side opzionale per l'upload immagini legacy Apps Script.
 - Il proxy merchandising applica rate limit, honeypot e può autenticarsi verso Railway con `ARTYOU_MERCH_PROXY_SECRET`; la stessa variabile deve essere configurata su Vercel e sul servizio Railway.
 - La CSP è ora applicata anche in enforcement mode; la policy Report-Only più restrittiva resta attiva per guidare la successiva eliminazione degli script inline.
+
+## Completare e ripulire gli eventi · 10 ottobre 2026
+
+Script in sola simulazione finché non si aggiunge `--apply`:
+
+```bash
+# Completa descrizioni, locandine, luoghi, date (starts_at) e chiavi storiche dal foglio Google
+DATABASE_URL="mysql://..." node scripts/mysql-sync-site-events.js
+DATABASE_URL="mysql://..." node scripts/mysql-sync-site-events.js --apply
+
+# Come sopra, e in più disattiva (active=0) gli eventi con tutte le date passate
+DATABASE_URL="mysql://..." node scripts/mysql-sync-site-events.js --apply --archive-past
+
+# Crea gli eventi prenotabili dal sito ma assenti in MySQL (compilare prima scripts/missing-events.json)
+DATABASE_URL="mysql://..." node scripts/mysql-create-missing-events.js --apply
+```
+
+Anche senza archiviazione, la lista pubblica (`/api/events?action=public`) non mostra gli eventi con date tutte passate.
+Con TLS verificato impostare `MYSQL_SSL=true` e `MYSQL_SSL_CA` (certificato della CA del server).
