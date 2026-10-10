@@ -13,9 +13,13 @@ const { query, getPool } = require("../lib/db");
 
 // --- Regole pure, sempre eseguite -----------------------------------------------
 
-test("booking code keeps the Apps Script format, in Rome time", () => {
-  const code = store.bookingCode(new Date("2026-10-10T16:31:05Z"), 123);
-  assert.equal(code, "ART-20261010-183105-123");
+test("booking codes use the scanner format with the Rome date", () => {
+  assert.equal(store.bookingCode(new Date("2026-10-10T22:30:00Z"), "K7Q2XA"), "ART-20261011-K7Q2XA");
+  const code = store.bookingCode(new Date("2026-10-10T16:31:05Z"));
+  assert.match(code, /^ART-20261010-[A-Z0-9]{6}$/);
+  // stesso controllo dello scanner (Script Google) e di api/checkin.js
+  assert.equal(code.match(/ART-\d{8}-[A-Z0-9]+/)[0], code);
+  assert.match(code, /^ART-\d{8}-[A-Z0-9]{3,32}$/);
 });
 
 test("server amount uses price × seats unless the booking has package choices", () => {

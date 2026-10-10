@@ -162,12 +162,14 @@ Cosa cambia con `mysql`:
 | Scanner check-in | foglio | foglio (riceve comunque tutte le prenotazioni) |
 | MySQL non raggiungibile | prenotazione sul foglio | prenotazione rifiutata (503), nessun ripiego sul foglio |
 
+I codici hanno il formato dello scanner, `ART-aaaammgg-XXXXXX`.
+
 I posti si contano per chiave come oggi: lo slug, oppure `<slug>-<indice>` per le pagine con più date (capienza della data = `capacity_override`, altrimenti quella dell'evento). Le prenotazioni copiate dal foglio prima del passaggio vengono contate per la stessa chiave.
 
 ### Attivazione (solo con backup attivi)
 
 1. **Backup**: configurare i segreti del workflow "Backup MySQL" (sezione Backup sopra) e verificare che un'esecuzione manuale completi backup e prova di ripristino.
-2. **Script Google**: copiare `google-apps-script/Code.gs` aggiornato (azione `registra`) e pubblicare una nuova versione della stessa distribuzione, così l'URL `/exec` non cambia. Con `sheet` l'azione non viene usata: si può fare in anticipo.
+2. **Script Google**: aggiungere allo script in produzione l'azione `registra` come indicato in `google-apps-script/RegistraMysql.gs` (NON incollare `Code.gs` del repository, che è una copia vecchia) e pubblicare una nuova versione della stessa distribuzione, così l'URL `/exec` non cambia. Con `sheet` l'azione non viene usata: si può fare in anticipo. La copia si autentica con `ARTYOU_SCANNER_SECRET`, lo stesso segreto dello scanner.
 3. **Controllo**: `DATABASE_URL=... node scripts/booking-switch-check.js` deve chiudere senza problemi bloccanti (eventi con capienza 0, prenotazioni con chiave non riconosciuta). Confrontare i posti liberi elencati con quelli del foglio.
 4. **Passaggio**, in un momento senza spettacoli imminenti: `ARTYOU_BOOKING_PRIMARY=mysql` su Vercel (Production) e nuovo deploy. Fare una prenotazione di prova e verificare codice, riga nel foglio ed email.
 5. **Riallineamento**: `node scripts/booking-sheet-resync.js` elenca le copie nel foglio non riuscite; con `--apply` le ripete (lo Script non duplica i codici già presenti).

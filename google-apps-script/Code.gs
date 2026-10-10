@@ -1,3 +1,8 @@
+// ATTENZIONE: copia storica, NON coincide con lo script in produzione.
+// Non incollarla nell'editor Apps Script: cancellerebbe scanner, piano operativo,
+// gestionale e scheda Capienza. L'azione "registra" per lo script reale è in
+// google-apps-script/RegistraMysql.gs.
+
 const CFG = {
   SHEET_PRENOTAZIONI: "Prenotazioni",
   SHEET_EVENTI: "Eventi",
