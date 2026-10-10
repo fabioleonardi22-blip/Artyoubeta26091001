@@ -650,3 +650,37 @@
   else styleWorkshowTrademark();
   window.addEventListener('pageshow',styleWorkshowTrademark);
 })();
+
+/* Festival submenu: restore the burgundy band and readable active links. */
+(function(){
+  var style=document.createElement('style');
+  style.id='artyou-festival-subnav';
+  style.textContent=`
+    html body nav[aria-label="Festival"]{
+      background:#7A1631!important;
+      border-bottom:1px solid #7A1631!important;
+      box-sizing:border-box!important;
+      flex-wrap:nowrap!important;
+      overflow-x:auto!important;
+      scrollbar-width:none;
+    }
+    html body nav[aria-label="Festival"]::-webkit-scrollbar{display:none}
+    html body nav[aria-label="Festival"]>span,
+    html body nav[aria-label="Festival"]>a{
+      color:#FFFFFF!important;
+      flex-shrink:0!important;
+      white-space:nowrap!important;
+    }
+    html body nav[aria-label="Festival"]>a[aria-current="page"]{
+      border-bottom:3px solid #F09000!important;
+      font-weight:700!important;
+    }
+    html body nav[aria-label="Festival"]>a:hover,
+    html body nav[aria-label="Festival"]>a:focus-visible{
+      color:#FFFFFF!important;
+      text-decoration:underline!important;
+      text-underline-offset:4px;
+    }
+  `;
+  document.head.appendChild(style);
+})();
