@@ -133,3 +133,12 @@ DATABASE_URL="mysql://..." node scripts/mysql-create-missing-events.js --apply
 
 Anche senza archiviazione, la lista pubblica (`/api/events?action=public`) non mostra gli eventi con date tutte passate.
 Con TLS verificato impostare `MYSQL_SSL=true` e `MYSQL_SSL_CA` (certificato della CA del server).
+
+## Backup · 10 ottobre 2026
+
+`.github/workflows/mysql-backup.yml` esegue ogni notte (01:37 UTC) un backup completo e cifrato di ciascun database con `scripts/backup/mysql-backup.sh`, lo ricarica in un MySQL temporaneo con `scripts/backup/mysql-restore-check.sh` confrontando le righe per tabella e lo conserva come artifact per 30 giorni.
+
+Configurazione (una volta): segreti `BACKUP_PASSPHRASE`, `BACKUP_DB_MAIN_URL` ed eventualmente `BACKUP_DB_MERCH_URL` nel repository GitHub, con un utente MySQL di sola lettura. Senza segreti il workflow avvisa e salta.
+
+Per ripristinare a mano: scaricare l'artifact, poi
+`openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -pass env:BACKUP_PASSPHRASE -in file.sql.gz.enc | gunzip | mysql ...`.
