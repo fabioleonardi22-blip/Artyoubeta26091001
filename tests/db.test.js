@@ -1,0 +1,2 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const {mysqlConfig}=require('../lib/db');
+test('TLS verifies server certificates and accepts a configured CA',()=>{const original={...process.env};try{process.env.DATABASE_URL='mysql://test:test@example.test/db';process.env.MYSQL_SSL='true';process.env.MYSQL_SSL_CA='test\\nca';const cfg=mysqlConfig();assert.equal(cfg.ssl.rejectUnauthorized,true);assert.equal(cfg.ssl.ca,'test\nca');assert.equal(cfg.timezone,'Z');}finally{process.env=original;}});

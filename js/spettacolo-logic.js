@@ -2,7 +2,7 @@
 window.ARTYOU_DC_LOGIC_FACTORY = function(DCLogic, React) {
 
 class Component extends DCLogic {
-  constructor(props) { super(props); this.state = { date: 0, seats: 2, confirmed: false, bookingCode: "", paymentMode: "paypal" }; }
+  constructor(props) { super(props); this.state = { date: 0, seats: 2, confirmed: false, bookingCode: "", paymentMode: "locale" }; }
   componentDidMount() {
     var self = this;
     this.onHash = function () { self.setState({ h: window.location.hash }); };
@@ -111,7 +111,7 @@ class Component extends DCLogic {
     var seats = Math.max(1, Math.min(st.seats || 2, Math.max(1, maxAllowed)));
     var seatsLabel = seats === 1 ? "1 posto" : seats + " posti";
     var payOnline = !!(cur.pagaOnline && typeof cur.price === "number" && cur.price > 0);
-    var paymentMode = st.paymentMode || "paypal";
+    var paymentMode = st.paymentMode || "locale";
     var payAtVenue = paymentMode === "locale";
     var what = cur.title + " · " + cur.dates[sel].label;
     var s = { title: cur.title, cat: cur.cat, desc: cur.desc, venue: cur.venue, addr: cur.addr, price: cur.price,
@@ -136,7 +136,7 @@ class Component extends DCLogic {
       pagaOnlineSelected: payOnline && !payAtVenue ? "true" : "false",
       paypalBg: !payAtVenue ? "#FFF3CF" : "#FFFFFF", paypalBorder: !payAtVenue ? "#F09000" : "#CFC8BA",
       localeBg: payAtVenue ? "#E9F8EE" : "#FFFFFF", localeBorder: payAtVenue ? "#25A95A" : "#CFC8BA",
-      payPaypal: function () { self.setState({ paymentMode: "paypal" }); },
+      payPaypal: function () { self.setState({ paymentMode: "locale" }); },
       payLocale: function () { self.setState({ paymentMode: "locale" }); },
       ctaLabel: cur.tbd ? "Avvisami" : (payOnline ? (payAtVenue ? "Prenota e paga al Locale · " + seatsLabel : "Paga con PayPal · " + seatsLabel) : "Conferma prenotazione · " + seatsLabel),
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare per " + what + "."),
@@ -144,7 +144,7 @@ class Component extends DCLogic {
       confirmed: !!st.confirmed, notConfirmed: !st.confirmed, bookingCode: st.bookingCode || "",
       doneTitle: cur.tbd ? "Ti avviseremo!" : "Prenotazione confermata!",
       summary: cur.tbd ? cur.title + ", " + cur.venue + "." : seatsLabel + " per " + what + ".",
-      doneNote: cur.tbd ? "Appena la data è confermata ti scriviamo per prenotare." : (payOnline && !payAtVenue ? "Prenotazione registrata: ora completi il pagamento su PayPal." : "Ti abbiamo inviato un’email di riepilogo: paghi al locale la sera dello spettacolo."),
+      doneNote: cur.tbd ? "Appena la data è confermata ti scriviamo per prenotare." : (payOnline && !payAtVenue ? "Prenotazione registrata: ora completi il pagamento su PayPal." : "Conserva il codice di prenotazione. Il pagamento avviene al locale la sera dello spettacolo."),
       minus: function () { self.setState({ seats: Math.max(1, seats - 1) }); },
       plus: function () { self.setState({ seats: Math.min(maxAllowed, seats + 1) }); },
       confirm: function () { self.setState({ confirmed: true }); },

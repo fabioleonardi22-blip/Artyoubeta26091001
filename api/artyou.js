@@ -29,6 +29,12 @@ function validText(value, max) {
   return String(value == null ? "" : value).trim().length <= max;
 }
 
+// Consenso esplicito: checkbox #f-privacy (Privacy=true) o modulo iscrizioni ("Privacy accettata": "Sì").
+function privacyAccepted(parsed) {
+  if (parsed.Privacy === true) return true;
+  return /^s[iì]$/i.test(String(parsed["Privacy accettata"] || "").trim());
+}
+
 function sanitizeBooking(parsed) {
   const out = {};
   let count = 0;
@@ -60,15 +66,22 @@ function upstreamQuery(raw) {
 async function findEventId(evento) {
   const key = String(evento || "").trim();
   if (!key) return null;
-  let rows = await query("SELECT id FROM events WHERE slug=? LIMIT 1", [key.toLowerCase()]);
+  let rows = await query("SELECT id FROM events WHERE slug=? AND active=1 LIMIT 1", [key.toLowerCase()]);
   if (rows.length) return rows[0].id;
   rows = await query(
-    "SELECT id FROM events WHERE JSON_UNQUOTE(JSON_EXTRACT(metadata,'$.legacyKey'))=? LIMIT 1",
+    "SELECT id FROM events WHERE active=1 AND JSON_UNQUOTE(JSON_EXTRACT(metadata,'$.legacyKey'))=? LIMIT 1",
     [key]
   );
   if (rows.length) return rows[0].id;
   rows = await query("SELECT id FROM events WHERE LOWER(title)=LOWER(?) AND active=1 LIMIT 2", [key]);
-  return rows.length === 1 ? rows[0].id : null;
+  if (rows.length === 1) return rows[0].id;
+  // Le pagine spettacolo con più date inviano "<slug>-<indice data>" (js/spettacolo-logic.js, slugId).
+  const indexed = key.toLowerCase().match(/^([a-z0-9]+(?:-[a-z0-9]+)*)-(\d{1,2})$/);
+  if (indexed) {
+    rows = await query("SELECT id FROM events WHERE slug=? AND active=1 LIMIT 1", [indexed[1]]);
+    if (rows.length) return rows[0].id;
+  }
+  return null;
 }
 
 async function mirrorBookingToMysql(requestData, upstreamData) {
@@ -113,8 +126,8 @@ async function mirrorBookingToMysql(requestData, upstreamData) {
       (public_id,event_id,first_name,last_name,email,phone,seats,status,hold_expires_at,checkin_code,privacy_accepted,notes,metadata)
      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
      ON DUPLICATE KEY UPDATE
-       status=VALUES(status),
-       hold_expires_at=VALUES(hold_expires_at),
+       status=IF(status='PAGATO',status,VALUES(status)),
+       hold_expires_at=IF(status='PAGATO',NULL,VALUES(hold_expires_at)),
        updated_at=CURRENT_TIMESTAMP`,
     [
       code,
@@ -137,7 +150,7 @@ async function mirrorBookingToMysql(requestData, upstreamData) {
 
 module.exports = async function handler(req, res) {
   setSecurityHeaders(res);
-  if (!APPS_SCRIPT_URL) return res.status(503).json({ ok:false, errore:"backend_non_configurato" });
+
 
   try {
     const method = String(req.method || "GET").toUpperCase();
@@ -162,10 +175,13 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    if ((method === "GET" || method === "HEAD") && queryAction === "public") return require("./events")(req,res);
+    if (!APPS_SCRIPT_URL) return reject(res,503,"backend_non_configurato");
     let url = APPS_SCRIPT_URL;
     const forwarded = method === "POST" ? "" : upstreamQuery(rawQuery);
     if (forwarded) url += "?" + forwarded;
     const options = { method, redirect: "follow", headers: {}, signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS) };
+    let isGenericRequest = false;
 
     if (method === "POST") {
       if (!sameOrigin(req)) {
@@ -194,9 +210,12 @@ module.exports = async function handler(req, res) {
         return res.status(200).json({ ok:true });
       }
 
-      if (String(parsed.action || "").toLowerCase() !== "prenota") {
+      // "prenota" = posti per un evento; "richiesta" = iscrizione a un corso o altra richiesta senza evento.
+      const postAction = String(parsed.action || "").toLowerCase();
+      if (postAction !== "prenota" && postAction !== "richiesta") {
         return reject(res, 403, "azione_non_consentita");
       }
+      isGenericRequest = postAction === "richiesta";
 
       const posti = Number(parsed.Posti || 1);
       if (!Number.isInteger(posti) || posti < 1 || posti > 10) {
@@ -214,7 +233,8 @@ module.exports = async function handler(req, res) {
         return reject(res, 400, "dati_non_validi");
       }
 
-      if (!String(parsed.Evento || "").trim() ||
+      if ((!isGenericRequest && !String(parsed.Evento || "").trim()) ||
+          (isGenericRequest && !String(parsed.Corso || parsed.Modulo || "").trim()) ||
           !String(parsed.Nome || "").trim() ||
           !String(parsed.Cognome || "").trim()) {
         return reject(res, 400, "campi_obbligatori_mancanti");
@@ -225,6 +245,10 @@ module.exports = async function handler(req, res) {
         return reject(res, 400, "email_non_valida");
       }
 
+      if(!privacyAccepted(parsed))return reject(res,400,"privacy_obbligatoria");
+      // The old PayPal URL trusted a client amount and had no verified callback.
+      if(/^PayPal/i.test(String(parsed.Pagamento||"")))return reject(res,503,"pagamento_online_non_disponibile");
+      if(!isGenericRequest&&!(await findEventId(parsed.Evento)))return reject(res,400,"evento_non_trovato");
       options.headers["Content-Type"] = "text/plain;charset=utf-8";
       options.body = JSON.stringify(sanitizeBooking(parsed));
     }
@@ -233,17 +257,15 @@ module.exports = async function handler(req, res) {
     const body = await upstream.text();
 
     if (method === "POST" && upstream.ok) {
-      try {
-        const upstreamData = JSON.parse(body);
-        if (upstreamData && upstreamData.ok) {
-          try {
-            const mirror = await mirrorBookingToMysql(JSON.parse(options.body || "{}"), upstreamData);
-            if (mirror && mirror.skipped) console.warn("ARTYOU_MYSQL_MIRROR_SKIPPED", mirror.reason);
-          } catch (mirrorErr) {
-            console.error("ARTYOU_MYSQL_MIRROR_ERROR", String(mirrorErr && mirrorErr.message || mirrorErr));
-          }
-        }
-      } catch (_) {}
+      let data;try{data=JSON.parse(body);}catch(_){return reject(res,502,"booking_response_invalid");}
+      // Le richieste generiche (iscrizioni ai corsi) non sono prenotazioni di posti: niente copia in MySQL.
+      if(data&&data.ok&&isGenericRequest)return res.status(200).json(data);
+      if(data&&data.ok){
+        let persisted;try{persisted=await mirrorBookingToMysql(JSON.parse(options.body||"{}"),data);}catch(err){console.error("ARTYOU_MYSQL_MIRROR_ERROR",String(err&&err.message||err));persisted={ok:false};}
+        if(persisted&&persisted.skipped)console.warn("ARTYOU_MYSQL_MIRROR_SKIPPED",persisted.reason);
+        return res.status(persisted.ok?200:202).json({...data,storage:persisted.ok?"mysql":"reconciliation_pending",persistenceConfirmed:!!persisted.ok,
+          ...(!persisted.ok?{avviso:"Prenotazione ricevuta dalla fonte originale; persistenza MySQL da verificare. Non ripetere l’invio.",paymentUrl:null}:{} )});
+      }
     }
 
     res.status(upstream.status);

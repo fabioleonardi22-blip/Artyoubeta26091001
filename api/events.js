@@ -2,12 +2,10 @@ const { rateLimit,applyRateLimitHeaders,rejectRateLimited,sameOrigin,setSecurity
 const { requireUser,authErrorStatus }=require("../lib/authorization");
 const { query,transaction }=require("../lib/db");
 const { audit }=require("../lib/audit");
-const { startsAtFromLabel,isPast }=require("../lib/event-dates");
+const { reconcileDates }=require("../lib/event-dates");
 
 const APPS_SCRIPT_URL=String(process.env.ARTYOU_APPS_SCRIPT_URL||"").trim();
 const UPLOAD_PIN=String(process.env.ARTYOU_GESTIONALE_PIN||"").trim();
-// Fonte della lista pubblica: "mysql" dopo aver completato i dati con scripts/mysql-sync-site-events.js.
-const PUBLIC_SOURCE=String(process.env.ARTYOU_EVENTS_SOURCE||"apps-script").trim().toLowerCase();
 
 function paramsOf(req){const raw=String(req.url||""),i=raw.indexOf("?");return new URLSearchParams(i>=0?raw.slice(i+1):"")}
 function meta(v){if(!v)return{};if(typeof v==="object")return v;try{return JSON.parse(String(v))}catch(_){return{}}}
@@ -16,9 +14,10 @@ function bool(v){return v===true||v===1||v==="1"||String(v||"").toLowerCase()===
 
 async function eventDates(eventId,conn){
   const [rows]=conn?await conn.execute("SELECT id,date_label,starts_at,metadata FROM event_dates WHERE event_id=? AND active=1 ORDER BY starts_at,id",[eventId]):[await query("SELECT id,date_label,starts_at,metadata FROM event_dates WHERE event_id=? AND active=1 ORDER BY starts_at,id",[eventId])];
-  return rows.map(d=>({label:String(d.date_label||""),sold:0,metadata:meta(d.metadata)}));
+  return mapDates(rows);
 }
-async function eventObject(row,conn){
+function mapDates(rows){return rows.map(d=>({id:String(d.id),label:String(d.date_label||""),start:d.starts_at?new Date(d.starts_at).toISOString():"",sold:0,metadata:meta(d.metadata)}));}
+async function eventObject(row,conn,prefetched){
   const m=meta(row.metadata);
   return {
     id:String(row.id),slug:String(row.slug||""),title:String(row.title||""),cat:String(row.category||""),
@@ -26,38 +25,33 @@ async function eventObject(row,conn){
     ordine:Number(row.sort_order==null?100:row.sort_order),desc:String(row.description||""),venue:String(row.venue||""),
     addr:String(row.address||""),maps:String(row.maps_query||""),price:row.price==null?"":Number(row.price),
     capienza:Number(row.capacity||0),pagaOnline:!!row.online_payment,tbd:!!row.tbd,attivo:!!row.active,
-    poster:String(row.poster_url||""),dates:await eventDates(row.id,conn),cast:Array.isArray(m.cast)?m.cast:[],
+    poster:String(row.poster_url||""),dates:prefetched===undefined?await eventDates(row.id,conn):mapDates(prefetched),cast:Array.isArray(m.cast)?m.cast:[],
     yepPricing:m.yepPricing||null,saggi:m.saggi||null
   };
 }
-async function listAdminEvents(){
-  const rows=await query("SELECT * FROM events ORDER BY sort_order,title,id");
-  const out=[];for(const r of rows)out.push(await eventObject(r));return out;
-}
-async function listPublicEvents(){
-  const rows=await query("SELECT * FROM events WHERE active=1 ORDER BY sort_order,title,id");
-  const out=[];
-  for(const r of rows){
-    const e=await eventObject(r);
-    const dateRows=await query("SELECT starts_at FROM event_dates WHERE event_id=? AND active=1 ORDER BY starts_at,id",[r.id]);
-    const future=e.dates.filter((d,i)=>!(dateRows[i]&&dateRows[i].starts_at&&isPast(dateRows[i].starts_at)));
-    if(e.dates.length&&!future.length&&!e.tbd)continue; // solo date passate: fuori dalla lista pubblica
-    out.push({slug:e.slug,title:e.title,cat:e.cat,poster:e.poster,desc:e.desc,venue:e.venue,addr:e.addr,maps:e.maps,price:e.price,
-      pagaOnline:e.pagaOnline,capienza:e.capienza,dates:future,cast:e.cast,yepPricing:e.yepPricing,tbd:e.tbd});
-  }
-  return out;
+async function listAdminEvents(publicOnly=false){
+  const rows=await query("SELECT * FROM events "+(publicOnly?"WHERE active=1 ":"")+"ORDER BY sort_order,title,id");
+  if(!rows.length)return [];
+  const dates=await query("SELECT event_id,id,date_label,starts_at,metadata FROM event_dates WHERE active=1 AND event_id IN ("+rows.map(()=>"?").join(",")+") ORDER BY starts_at,id",rows.map(r=>r.id));
+  const grouped=new Map();for(const d of dates){const key=String(d.event_id);if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(d);}
+  return Promise.all(rows.map(r=>eventObject(r,null,grouped.get(String(r.id))||[])));
 }
 async function saveEvent(input){
   const e=input||{},title=clean(e.title,255),slug=clean(e.slug,190).toLowerCase();
   if(!title)throw new Error("titolo_mancante");
   if(!slug||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug))throw new Error("slug_non_valido");
   const cap=Math.max(0,Math.min(100000,Math.floor(Number(e.capienza||0))));
+  if(!Number.isFinite(cap))throw new Error("capienza_non_valido");
   const price=e.price===""||e.price==null?null:Number(e.price);
   if(price!=null&&(!Number.isFinite(price)||price<0||price>100000))throw new Error("prezzo_non_valido");
   const dates=Array.isArray(e.dates)?e.dates.slice(0,100):[];
-  const metadata=JSON.stringify({cast:Array.isArray(e.cast)?e.cast.slice(0,100):[],yepPricing:e.yepPricing||null,saggi:e.saggi||null});
+  let metadata=JSON.stringify({cast:Array.isArray(e.cast)?e.cast.slice(0,100):[],yepPricing:e.yepPricing||null,saggi:e.saggi||null});
   return transaction(async conn=>{
     let id=/^\d+$/.test(String(e.id||""))?Number(e.id):0;
+    if(id&&!Number.isSafeInteger(id))throw new Error("id_non_valido");
+    const [original]=await conn.execute(id?"SELECT id,metadata FROM events WHERE id=? FOR UPDATE":"SELECT id,metadata FROM events WHERE slug=? FOR UPDATE",[id||slug]);
+    if(id&&!original.length)throw new Error("evento_non_trovato");
+    if(original.length){id=Number(original[0].id);metadata=JSON.stringify({...meta(original[0].metadata),...JSON.parse(metadata)});}
     if(id){
       const [r]=await conn.execute(`UPDATE events SET slug=?,title=?,category=?,event_type=?,description=?,poster_url=?,venue=?,address=?,maps_query=?,
         price=?,capacity=?,online_payment=?,tbd=?,active=?,sort_order=?,metadata=?,source_updated_at=NOW() WHERE id=?`,
@@ -78,22 +72,7 @@ async function saveEvent(input){
         id=Number(ins.insertId);
       }
     }
-    // Le date restano con id stabili (le prenotazioni vi fanno riferimento): si aggiornano,
-    // si aggiungono o si disattivano, mai cancellate.
-    const [existingDates]=await conn.execute("SELECT id,date_label FROM event_dates WHERE event_id=?",[id]);
-    const byLabel=new Map();for(const r of existingDates){const k=String(r.date_label||"");if(!byLabel.has(k))byLabel.set(k,Number(r.id));}
-    const kept=new Set();
-    for(const d of dates){
-      const label=clean(d&&d.label,255);if(!label)continue;
-      const startsAt=startsAtFromLabel(label),meta=JSON.stringify((d&&d.metadata)||{});
-      const existingId=byLabel.get(label);
-      if(existingId&&!kept.has(existingId)){
-        await conn.execute("UPDATE event_dates SET starts_at=?,active=1,metadata=? WHERE id=?",[startsAt,meta,existingId]);kept.add(existingId);
-      }else{
-        const [ins]=await conn.execute("INSERT INTO event_dates (event_id,starts_at,date_label,active,metadata) VALUES (?,?,?,1,?)",[id,startsAt,label,meta]);kept.add(Number(ins.insertId));
-      }
-    }
-    for(const r of existingDates){if(!kept.has(Number(r.id)))await conn.execute("UPDATE event_dates SET active=0 WHERE id=?",[r.id]);}
+    await reconcileDates(conn,id,dates);
     const [rows]=await conn.execute("SELECT * FROM events WHERE id=? LIMIT 1",[id]);
     return eventObject(rows[0],conn);
   });
@@ -120,13 +99,8 @@ module.exports=async function handler(req,res){
   const publicRead=(method==="GET"||method==="HEAD")&&action==="public";
   if(publicRead){
     const limit=rateLimit(req,{key:"events-public",limit:120,windowMs:60*1000});applyRateLimitHeaders(res,limit);if(!limit.ok)return rejectRateLimited(res,limit);
-    if(PUBLIC_SOURCE==="mysql"){
-      try{const events=await listPublicEvents();res.setHeader("Cache-Control","public, s-maxage=60, stale-while-revalidate=300");return res.status(200).json({ok:true,events,storage:"mysql"})}
-      catch(e){console.error("EVENTS_PUBLIC_MYSQL_ERROR",String(e&&e.message||e))}
-    }
-    if(!APPS_SCRIPT_URL)return res.status(503).json({ok:false,errore:"backend_non_configurato"});
-    try{const upstream=await fetch(APPS_SCRIPT_URL+"?action=public&_="+Date.now(),{redirect:"follow",signal:AbortSignal.timeout(15000)}),text=await upstream.text();res.status(upstream.status);res.setHeader("Content-Type",upstream.headers.get("content-type")||"application/json; charset=utf-8");return res.send(text)}
-    catch(_){return res.status(502).json({ok:false,errore:"proxy_error"})}
+    try{return res.status(200).json({ok:true,events:await listAdminEvents(true),storage:"mysql"});}
+    catch(_){return res.status(503).json({ok:false,errore:"mysql_unavailable"});}
   }
   if(!sameOrigin(req))return res.status(403).json({ok:false,errore:"origin_non_consentita"});
   const limit=rateLimit(req,{key:"events-admin",limit:60,windowMs:60*1000});applyRateLimitHeaders(res,limit);if(!limit.ok)return rejectRateLimited(res,limit);

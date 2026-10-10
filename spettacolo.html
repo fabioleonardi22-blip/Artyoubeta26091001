@@ -418,7 +418,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div></sc-if>
 <sc-if value="{{available}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
-<div style="display:flex;flex-direction:column;gap:10px;background:#F6F3EC;border-radius:14px;padding:14px 16px;"><span class="am-fs-body" style="font-size:15px;font-weight:800;">Modalità di pagamento</span><div class="am-grid2" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;"><button type="button" data-artyou-no-submit="1" onClick="{{payPaypal}}" style="min-height:48px;border-radius:12px;border:2px solid {{paypalBorder}};background:{{paypalBg}};color:#13181D;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;">Paga con PayPal</button><button type="button" data-artyou-no-submit="1" onClick="{{payLocale}}" style="min-height:48px;border-radius:12px;border:2px solid {{localeBorder}};background:{{localeBg}};color:#13181D;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;">Paga al Locale</button></div><span class="am-fs-body" style="font-size:14px;color:#555D64;">{{payNote}}</span></div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#F6F3EC;border-radius:14px;padding:14px 16px;"><span class="am-fs-body" style="font-size:15px;font-weight:800;">Modalità di pagamento</span><div class="am-grid2" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;"><button type="button" data-artyou-no-submit="1" disabled="{{ true }}" aria-disabled="true" title="Pagamento online sospeso fino al collaudo del nuovo flusso" onClick="{{payPaypal}}" style="min-height:48px;border-radius:12px;border:2px solid {{paypalBorder}};background:{{paypalBg}};color:#13181D;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;">PayPal non disponibile</button><button type="button" data-artyou-no-submit="1" onClick="{{payLocale}}" style="min-height:48px;border-radius:12px;border:2px solid {{localeBorder}};background:{{localeBg}};color:#13181D;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;">Paga al Locale</button></div><span class="am-fs-body" style="font-size:14px;color:#555D64;">{{payNote}}</span></div>
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input type="hidden" id="f-evento-id" value="{{s.slugId}}"><input type="hidden" id="f-prezzo" value="{{s.prezzoNum}}"><input type="hidden" id="f-paga-online" value="{{pagaOnlineSelected}}"><input type="hidden" id="f-pagamento-modalita" value="{{paymentModeLabel}}"><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho già la tessera associativa Artyou</label><span class="am-fs-body" style="font-size: 14px; color: #555D64; margin-left: 30px;">Non ce l’hai? <a href="https://artyou.infinitymundi.it/" target="_blank" rel="noopener">Diventa socio</a></span></div>
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
 <button type="button" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
@@ -481,7 +481,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F09000","options":["#F09000","#2CA8E0","#E41870","#7A1631"]},"capienza":{"editor":"int","default":60,"min":1,"max":500},"maxPerPrenotazione":{"editor":"int","default":6,"min":1,"max":20},"$preview":{"width":1440,"height":1400}}'>
 class Component extends DCLogic {
-  constructor(props) { super(props); this.state = { date: 0, seats: 2, confirmed: false, bookingCode: "", paymentMode: "paypal" }; }
+  constructor(props) { super(props); this.state = { date: 0, seats: 2, confirmed: false, bookingCode: "", paymentMode: "locale" }; }
   componentDidMount() {
     var self = this;
     this.onHash = function () { self.setState({ h: window.location.hash }); };
@@ -590,7 +590,7 @@ class Component extends DCLogic {
     var seats = Math.max(1, Math.min(st.seats || 2, Math.max(1, maxAllowed)));
     var seatsLabel = seats === 1 ? "1 posto" : seats + " posti";
     var payOnline = !!(cur.pagaOnline && typeof cur.price === "number" && cur.price > 0);
-    var paymentMode = st.paymentMode || "paypal";
+    var paymentMode = st.paymentMode || "locale";
     var payAtVenue = paymentMode === "locale";
     var what = cur.title + " · " + cur.dates[sel].label;
     var s = { title: cur.title, cat: cur.cat, desc: cur.desc, venue: cur.venue, addr: cur.addr, price: cur.price,
@@ -615,7 +615,7 @@ class Component extends DCLogic {
       pagaOnlineSelected: payOnline && !payAtVenue ? "true" : "false",
       paypalBg: !payAtVenue ? "#FFF3CF" : "#FFFFFF", paypalBorder: !payAtVenue ? "#F09000" : "#CFC8BA",
       localeBg: payAtVenue ? "#E9F8EE" : "#FFFFFF", localeBorder: payAtVenue ? "#25A95A" : "#CFC8BA",
-      payPaypal: function () { self.setState({ paymentMode: "paypal" }); },
+      payPaypal: function () { self.setState({ paymentMode: "locale" }); },
       payLocale: function () { self.setState({ paymentMode: "locale" }); },
       ctaLabel: cur.tbd ? "Avvisami" : (payOnline ? (payAtVenue ? "Prenota e paga al Locale · " + seatsLabel : "Paga con PayPal · " + seatsLabel) : "Conferma prenotazione · " + seatsLabel),
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare per " + what + "."),
@@ -623,7 +623,7 @@ class Component extends DCLogic {
       confirmed: !!st.confirmed, notConfirmed: !st.confirmed, bookingCode: st.bookingCode || "",
       doneTitle: cur.tbd ? "Ti avviseremo!" : "Prenotazione confermata!",
       summary: cur.tbd ? cur.title + ", " + cur.venue + "." : seatsLabel + " per " + what + ".",
-      doneNote: cur.tbd ? "Appena la data è confermata ti scriviamo per prenotare." : (payOnline && !payAtVenue ? "Prenotazione registrata: ora completi il pagamento su PayPal." : "Ti abbiamo inviato un’email di riepilogo: paghi al locale la sera dello spettacolo."),
+      doneNote: cur.tbd ? "Appena la data è confermata ti scriviamo per prenotare." : (payOnline && !payAtVenue ? "Prenotazione registrata: ora completi il pagamento su PayPal." : "Conserva il codice di prenotazione. Il pagamento avviene al locale la sera dello spettacolo."),
       minus: function () { self.setState({ seats: Math.max(1, seats - 1) }); },
       plus: function () { self.setState({ seats: Math.min(maxAllowed, seats + 1) }); },
       confirm: function () { self.setState({ confirmed: true }); },

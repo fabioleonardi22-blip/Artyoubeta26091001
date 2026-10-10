@@ -111,33 +111,17 @@ Promise.all(reqs).then(function(all){
   }
 });
 }
-function paypalUrl(d){
-  var amount=parseFloat(d&&d.Importo);
-  if(!d||!/^PayPal/i.test(String(d.Pagamento||""))||!Number.isFinite(amount)||amount<=0)return "";
-  var item=[window.ARTYOU_BOOKING_MODULE||"Artyou Roma",d.Evento||"",d.Pagamento||""].filter(Boolean).join(" - ");
-  return "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick"+
-    "&business="+encodeURIComponent("info@artyouroma.it")+
-    "&item_name="+encodeURIComponent(item)+
-    "&amount="+encodeURIComponent(amount.toFixed(2))+
-    "&currency_code=EUR";
-}
 
-document.addEventListener("click",function(e){var b=submitBtn(e.target);if(!b)return;if(b.dataset.artyouBookingBypass==="1"){delete b.dataset.artyouBookingBypass;return;}e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(!ENDPOINT){msg(b,"err",'Sistema prenotazioni non configurato. <a href="'+WA+'" target="_blank" rel="noopener">Scrivici su WhatsApp</a>.');return;}var d=collect(b),er=validate(d);if(er){msg(b,"err",er);return;}if(b.dataset.artyouBusy==="1")return;b.dataset.artyouBusy="1";b.style.opacity=".6";msg(b,"wait","Verifica disponibilità e invio in corso…");post(d).then(res=>{if(!res||!res.ok){
+document.addEventListener("click",function(e){var b=submitBtn(e.target);if(!b)return;if(b.dataset.artyouBookingBypass==="1"){delete b.dataset.artyouBookingBypass;return;}e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(!ENDPOINT){msg(b,"err",'Sistema prenotazioni non configurato. <a href="'+WA+'" target="_blank" rel="noopener">Scrivici su WhatsApp</a>.');return;}var d=collect(b),er=validate(d);if(er){msg(b,"err",er);return;}if(b.dataset.artyouBusy==="1"||b.dataset.artyouCompleted==="1")return;b.dataset.artyouBusy="1";b.style.opacity=".6";msg(b,"wait","Verifica disponibilità e invio in corso…");post(d).then(res=>{if(!res||!res.ok){
 if(res&&(res.errore==="esaurito"||res.errore==="posti_insufficienti"))throw new Error("Sono rimasti "+(res.liberi||0)+" posti disponibili.");
 if(res&&res.errore==="prenotazioni_chiuse")throw new Error("Le prenotazioni per questo evento sono chiuse.");
 if(res&&res.errore==="prenotazioni_non_aperte")throw new Error("Le prenotazioni per questo evento non sono ancora aperte.");
-var base=escapeHtml((res&&res.errore)||"Invio non riuscito.");
+var base=res&&res.errore==="pagamento_online_non_disponibile"?"Pagamento online temporaneamente non disponibile. Scegli un’altra modalità oppure contatta Artyou.":escapeHtml((res&&res.errore)||"Invio non riuscito.");
 if(window.ARTYOU_BOOKING_DEBUG)base+=" [Evento: "+escapeHtml(d.Evento||"-")+" · HTTP: "+escapeHtml(res&&res.__http||"-")+"]";
 throw new Error(base);
-}if(window.ARTYOU_CAP&&d.Evento&&typeof res.liberi==="number"){window.ARTYOU_CAP[d.Evento]=res.liberi;window.dispatchEvent(new Event("hashchange"));}var codice=res.codice||res.id||"";var h=codice?'Prenotazione registrata. Codice: <b>'+escapeHtml(codice)+'</b>.':"Prenotazione registrata.";if(res.stato==="HOLD")h+=" I posti sono bloccati per <b>"+escapeHtml(res.holdMinutes)+" minuti</b> in attesa del pagamento.";else if(/^PayPal/i.test(String(d.Pagamento||"")))h+=" Il pagamento non è ancora confermato: completa la procedura su PayPal.";else h+=" I posti sono stati riservati.";msg(b,"ok",h);if(codice){window.dispatchEvent(new CustomEvent("artyou-booking-code",{detail:codice}));}
-var pp=paypalUrl(d);
-if(pp){
-  window.dispatchEvent(new CustomEvent("artyou:paypal-redirect",{detail:{url:pp,amount:d.Importo,pagamento:d.Pagamento}}));
-  setTimeout(function(){window.location.href=pp;},700);
-}
+}if(window.ARTYOU_CAP&&d.Evento&&typeof res.liberi==="number"){window.ARTYOU_CAP[d.Evento]=res.liberi;window.dispatchEvent(new Event("hashchange"));}var codice=res.codice||res.id||"";var h=codice?'Prenotazione registrata. Codice: <b>'+escapeHtml(codice)+'</b>.':"Prenotazione registrata.";if(res.stato==="HOLD")h+=" I posti sono bloccati per <b>"+escapeHtml(res.holdMinutes)+" minuti</b> in attesa del pagamento.";else if(/^PayPal/i.test(String(d.Pagamento||"")))h+=" Il pagamento non è ancora confermato: completa la procedura su PayPal.";else h+=" I posti sono stati riservati.";if(res.persistenceConfirmed===false)h="Prenotazione ricevuta. Codice: <b>"+escapeHtml(codice)+"</b>. La registrazione nel gestionale deve essere verificata. Conserva il codice e non ripetere l’invio.";msg(b,"ok",h);b.dataset.artyouCompleted="1";if(codice){window.dispatchEvent(new CustomEvent("artyou-booking-code",{detail:codice}));}
 window.dispatchEvent(new CustomEvent("artyou:booking-success",{detail:res}));
 avail();
-b.dataset.artyouBookingBypass="1";
-setTimeout(()=>{try{b.click();}catch(_){ }},100);}).catch(err=>{var em=(err&&err.message?err.message:"Invio non riuscito.");if(window.ARTYOU_BOOKING_DEBUG)em+=" [Evento: "+(d.Evento||"-")+" · Risorse: "+(d.Risorse||"-")+"]";msg(b,"err",escapeHtml(em)+' <a href="'+WA+'" target="_blank" rel="noopener">Contattaci su WhatsApp</a>.');}).finally(()=>{delete b.dataset.artyouBusy;b.style.opacity="";});},true);
+}).catch(err=>{var em=(err&&err.message?err.message:"Invio non riuscito.");if(window.ARTYOU_BOOKING_DEBUG)em+=" [Evento: "+(d.Evento||"-")+" · Risorse: "+(d.Risorse||"-")+"]";msg(b,"err",escapeHtml(em)+' <a href="'+WA+'" target="_blank" rel="noopener">Contattaci su WhatsApp</a>.');}).finally(()=>{delete b.dataset.artyouBusy;b.style.opacity="";});},true);
 avail();
 })();

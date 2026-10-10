@@ -1,7 +1,9 @@
+const { readFileSync } = require("node:fs");
+const { join } = require("node:path");
 const { query } = require("../lib/db");
 const { romeIso, isPast } = require("../lib/event-dates");
 const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbwgqQguCWRt7yCTroh2qi4az1rCTZ7kgw0IxNRNDb9LZLOGPUD5Jy3K56NTi6FxAfKx/exec").trim();
-const { selfOrigin, CANONICAL_ORIGIN } = require("../lib/origin");
+const CANONICAL_ORIGIN = "https://artyouroma.it";
 const SCRIPT_CLOSE = "</" + "script>";
 
 function fill(target, source) {
@@ -54,8 +56,8 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    const templateResp = await fetch(selfOrigin(req) + "/spettacolo.html", { redirect: "follow", signal: AbortSignal.timeout(8000) });
-    let html = await templateResp.text();
+    // Template letto dai file del deploy (vercel.json: includeFiles), non da un dominio esterno.
+    let html = readFileSync(join(__dirname, "..", "spettacolo.html"), "utf8");
 
     let event = null;
 

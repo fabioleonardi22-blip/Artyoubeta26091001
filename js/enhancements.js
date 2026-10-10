@@ -1,31 +1,4 @@
-
-(function(){
-  var KEY='artyou_cookie_consent_v1';
-  function saved(){try{return !!localStorage.getItem(KEY)}catch(e){return false}}
-  function hide(){
-    var dlg=document.querySelector('[role="dialog"][aria-labelledby="cookie-title"]');
-    if(dlg && dlg.parentElement) dlg.parentElement.style.display='none';
-  }
-  if(saved()) document.documentElement.classList.add('artyou-consent-saved');
-  document.addEventListener('DOMContentLoaded', function(){ if(saved()) hide(); });
-  document.addEventListener('click',function(e){
-    var b=e.target.closest&&e.target.closest('button'); if(!b)return;
-    var t=(b.textContent||'').trim().toLowerCase();
-    if(t==='accetta'||t==='nega'||t==='salva preferenze'){
-      try{localStorage.setItem(KEY,t)}catch(err){}
-      document.documentElement.classList.add('artyou-consent-saved'); hide();
-    }
-  },true);
-  if(saved()){
-    var obs=new MutationObserver(function(){
-      hide();
-      if(document.querySelector('[role="dialog"][aria-labelledby="cookie-title"]')) setTimeout(function(){try{obs.disconnect()}catch(e){}},50);
-    });
-    obs.observe(document.documentElement,{childList:true,subtree:true});
-    setTimeout(function(){try{obs.disconnect()}catch(e){}},4000);
-  }
-})();
-
+/* Cookie consent is owned by the page component: reopening remains possible. */
 
 /* Header WhatsApp: uniform neutral icon on every page */
 (function(){
@@ -649,4 +622,69 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',styleWorkshowTrademark);
   else styleWorkshowTrademark();
   window.addEventListener('pageshow',styleWorkshowTrademark);
+})();
+
+/* Festival submenu: white band with readable dark links. */
+(function(){
+  var style=document.createElement('style');
+  style.id='artyou-festival-subnav';
+  style.textContent=`
+    html body nav[aria-label="Festival"]{
+      background:#FFFFFF!important;
+      border-bottom:1px solid #E4DED2!important;
+      box-sizing:border-box!important;
+      flex-wrap:nowrap!important;
+      overflow-x:auto!important;
+      scrollbar-width:none;
+    }
+    html body nav[aria-label="Festival"]::-webkit-scrollbar{display:none}
+    html body nav[aria-label="Festival"]>span,
+    html body nav[aria-label="Festival"]>a{
+      color:#13181D!important;
+      flex-shrink:0!important;
+      white-space:nowrap!important;
+    }
+    html body nav[aria-label="Festival"]>a[aria-current="page"]{
+      border-bottom:3px solid #F09000!important;
+      font-weight:700!important;
+    }
+    html body nav[aria-label="Festival"]>a:hover,
+    html body nav[aria-label="Festival"]>a:focus-visible{
+      color:#13181D!important;
+      text-decoration:underline!important;
+      text-underline-offset:4px;
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+/* Keep the burgundy divider attached to the sticky header, without content gaps. */
+(function(){
+  var style=document.createElement('style');
+  style.id='artyou-sticky-divider';
+  style.textContent=`
+    html body header.am-wrap::after{
+      content:"";position:absolute;left:0;right:0;bottom:-6px;
+      height:6px;background:#7A1631;pointer-events:none;
+    }
+    html body header.am-wrap~nav[aria-label]{
+      top:var(--artyou-subnav-top,96px)!important;
+    }
+  `;
+  document.head.appendChild(style);
+  function align(){
+    document.querySelectorAll('header.am-wrap').forEach(function(header){
+      var parent=header.parentElement;
+      parent.style.setProperty('--artyou-subnav-top',(header.getBoundingClientRect().height+6)+'px');
+      if(window.ResizeObserver&&!header.dataset.dividerObserved){
+        header.dataset.dividerObserved='true';
+        new ResizeObserver(function(){
+          parent.style.setProperty('--artyou-subnav-top',(header.getBoundingClientRect().height+6)+'px');
+        }).observe(header);
+      }
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',align);
+  else align();
+  new MutationObserver(align).observe(document.body||document.documentElement,{childList:true,subtree:true});
 })();

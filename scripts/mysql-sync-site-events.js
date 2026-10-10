@@ -41,7 +41,7 @@ async function main() {
   const conn = await mysql.createConnection({
     host: u.hostname, port: Number(u.port || 3306), user: decodeURIComponent(u.username),
     password: decodeURIComponent(u.password), database: decodeURIComponent(u.pathname.slice(1)),
-    timezone: "Z", ssl: process.env.MYSQL_SSL === "true" ? (process.env.MYSQL_CA ? { ca: process.env.MYSQL_CA } : { rejectUnauthorized: false }) : undefined
+    timezone: "Z", ssl: process.env.MYSQL_SSL === "true" ? (process.env.MYSQL_SSL_CA ? { ca: process.env.MYSQL_SSL_CA.replace(/\\n/g, "\n") } : { rejectUnauthorized: false }) : undefined
   });
   const changes = [];
   const run = async (sql, params, what) => { changes.push(what); if (APPLY) await conn.execute(sql, params); };

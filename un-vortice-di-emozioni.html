@@ -425,14 +425,14 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div style="display: flex; flex-direction: column; gap: 12px;">
 <h2 class="am-fs-m" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px;">Come funziona la prenotazione</h2>
 <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #3F474E;">Scegli la serata, lo spettacolo e il numero di posti. Il biglietto costa <strong>12 € a persona</strong>. I posti sono limitati e la disponibilità si aggiorna con le prenotazioni.</p>
-<p class="am-fs-body" style="margin: 0; font-size: 15px; line-height: 1.6; color: #555D64;">Dove: Teatro Primo Piano, Roma · Inizio: [ore 21:00] · Durata: [durata]</p>
+<p class="am-fs-body" style="margin: 0; font-size: 15px; line-height: 1.6; color: #555D64;">Dove: Teatro Primo Piano, Roma · Orario e durata sono indicati nelle informazioni della serata, quando disponibili.</p>
 </div>
 </div>
 <div style="background: #FFFFFF; border: 1px solid #E4DED2; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 22px; box-shadow: 0 20px 50px rgba(19,24,29,0.08);">
 <sc-if value="{{notConfirmed}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 22px;">
 <h2 class="am-fs-l" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 32px;">Prenota o riserva</h2>
-<span style="font-size:13px;line-height:1.4;color:#7A1631;margin-top:-12px;font-weight:700;">Attendi il caricamento in tempo reale delle disponibilità <span aria-hidden="true" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#D96A72;margin-left:5px;vertical-align:middle;"></span></span>
+<span style="font-size:13px;line-height:1.4;color:#7A1631;margin-top:-12px;font-weight:700;">Disponibilità aggiornate dal sistema prenotazioni <span aria-hidden="true" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#D96A72;margin-left:5px;vertical-align:middle;"></span></span>
 <div style="display: flex; flex-direction: column; gap: 10px;"><span class="am-fs-body" style="font-size: 14px; font-weight: 700;">Scegli la serata</span><div style="display: flex; flex-direction: column; gap: 10px;">
 <sc-for list="{{evenings}}" as="e" hint-placeholder-count="8">
 <button type="button" onClick="{{e.pick}}" class="am-wrap" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; border: 2px solid {{e.border}}; background: {{e.bg}}; font-family: inherit; color: #13181D; cursor: pointer; text-align: left;">
@@ -460,15 +460,15 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <div style="display:flex;flex-direction:column;gap:10px;">
 <span class="am-fs-body" style="font-size:14px;font-weight:700;">Come vuoi procedere?</span>
 <div class="am-wrap" style="display:flex;gap:8px;flex-wrap:wrap;">
-<button type="button" data-artyou-no-submit="1" id="payPaypal" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">Paga con PayPal</button>
+<button type="button" data-artyou-no-submit="1" id="payPaypal" disabled="{{ true }}" aria-disabled="true" title="Pagamento online sospeso fino al collaudo del nuovo flusso" style="padding:11px 16px;border-radius:999px;border:2px solid #13181D;background:#13181D;color:#FFFFFF;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">PayPal non disponibile</button>
 <button type="button" data-artyou-no-submit="1" id="payTeatro" style="padding:11px 16px;border-radius:999px;border:2px solid #CFC8BA;background:#FFFFFF;color:#13181D;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;min-height:44px;">Paga a teatro</button>
 </div>
 <span id="paymentNote" style="font-size:13px;line-height:1.5;color:#555D64;">{{payNote}}</span>
 </div>
 <input id="f-evento-id" type="hidden" value="">
 <input id="f-posti" type="hidden" value="2">
-<input id="f-paga-online" type="hidden" value="true">
-<input id="f-pagamento-modalita" type="hidden" value="PayPal">
+<input id="f-paga-online" type="hidden" value="false">
+<input id="f-pagamento-modalita" type="hidden" value="Pagamento a teatro">
 <input id="f-prezzo" type="hidden" value="12">
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-allievo" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Chi vieni a vedere? <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-allievo" type="text" placeholder="Nome dell’allievo o della classe" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
 <label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input id="f-privacy" type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
@@ -553,13 +553,13 @@ class Component extends DCLogic {
       plusOpacity: seats >= maxAllowed ? 0.35 : 1,
       available: true, soldOut: false, soldTitle: "Spettacolo esaurito",
       payNote: "Costo: 12 € a persona. Totale per " + seatsLabel + ": " + (12 * seats) + " €.",
-      ctaLabel: "Conferma e paga con PayPal",
+      ctaLabel: "Conferma prenotazione",
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare per Un Vortice di Emozioni: " + what + "."),
       waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Il " + shNames[sh].toLowerCase() + " di " + mk(ev).label.toLowerCase() + " di Un Vortice di Emozioni è esaurito: potete mettermi in lista d’attesa?"),
       confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
       doneTitle: "Posto prenotato!",
       summary: "Un Vortice di Emozioni · " + what + ".",
-      doneNote: "Anticipo ricevuto: ti abbiamo inviato un’email con la ricevuta. Il saldo si paga in cassa la sera dello spettacolo.",
+      doneNote: "La prenotazione non costituisce una ricevuta di pagamento. Conserva il codice e verifica l’esito mostrato dal sistema.",
       minus: function () { self.setState({ seats: Math.max(1, seats - 1) }); },
       plus: function () { self.setState({ seats: Math.min(maxAllowed, seats + 1) }); },
       confirm: function () { self.setState({ confirmed: true }); },
@@ -664,14 +664,15 @@ class Component extends DCLogic {
         if(tw&&tw.children){
           if(tw.children[0])tw.children[0].textContent=si===0?"PRIMO SPETTACOLO":"SECONDO SPETTACOLO";
           if(tw.children[1])tw.children[1].textContent=x.ora||"";
-          if(tw.children[2])tw.children[2].textContent=show.title||("Spettacolo "+(si+1));
-          if(tw.children[3])tw.children[3].innerHTML="<strong>Insegnante:</strong> "+(show.teacher||"—");
+          if(tw.children[2])tw.children[2].textContent=show.title||"Titolo in aggiornamento";
+          if(tw.children[3])tw.children[3].textContent=show.teacher?("Insegnante: "+show.teacher):"Insegnante in aggiornamento";
         }
         var poster=b.querySelector(".am-vortice-poster");
         if(poster){
           var src=posterFor(di,si);
           poster.style.backgroundImage='url("'+src+'")';
           poster.textContent="";
+          poster.setAttribute("aria-label",show.title?("Locandina di "+show.title):("Locandina del "+(si===0?"primo":"secondo")+" spettacolo della serata"));
           poster.onerror=null;
         }
         b.disabled=false;
@@ -718,7 +719,7 @@ class Component extends DCLogic {
     shows.forEach(function(show,i){
       var b=shBtns[i];if(!b)return;
       var s=b.children;
-      if(s[0])s[0].textContent=show.title||("Spettacolo "+(i+1));
+      if(s[0])s[0].textContent=show.title||"Titolo in aggiornamento";
       if(s[1])s[1].textContent=show.teacher?("Insegnante: "+show.teacher):"";
       if(s[2])s[2].textContent="Scelta statistica";
       b.dataset.statShow=String(i+1);
@@ -812,6 +813,7 @@ class Component extends DCLogic {
 <script id="vortice-payment-choice">
 (function(){
   function setMode(mode){
+    mode="teatro"; // Unverified legacy online payments are suspended.
     var paypal=document.getElementById("payPaypal");
     var teatro=document.getElementById("payTeatro");
     var online=document.getElementById("f-paga-online");
@@ -845,10 +847,10 @@ class Component extends DCLogic {
     if(e.target&&e.target.id==="payPaypal")setMode("paypal");
     if(e.target&&e.target.id==="payTeatro")setMode("teatro");
     if(e.target&&e.target.closest&&e.target.closest('button[aria-label="Aggiungi un posto"],button[aria-label="Togli un posto"]')){
-      setTimeout(function(){setMode(window.VORTICE_PAYMENT_MODE||"paypal");},0);
+      setTimeout(function(){setMode(window.VORTICE_PAYMENT_MODE||"teatro");},0);
     }
   });
-  window.addEventListener("load",function(){setTimeout(function(){setMode("paypal");},300);});
+  window.addEventListener("load",function(){setTimeout(function(){setMode("teatro");},300);});
 })();
 </script>
 </body>
