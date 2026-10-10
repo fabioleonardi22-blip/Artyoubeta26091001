@@ -651,14 +651,14 @@
   window.addEventListener('pageshow',styleWorkshowTrademark);
 })();
 
-/* Festival submenu: restore the burgundy band and readable active links. */
+/* Festival submenu: white band with readable dark links. */
 (function(){
   var style=document.createElement('style');
   style.id='artyou-festival-subnav';
   style.textContent=`
     html body nav[aria-label="Festival"]{
-      background:#7A1631!important;
-      border-bottom:1px solid #7A1631!important;
+      background:#FFFFFF!important;
+      border-bottom:1px solid #E4DED2!important;
       box-sizing:border-box!important;
       flex-wrap:nowrap!important;
       overflow-x:auto!important;
@@ -667,7 +667,7 @@
     html body nav[aria-label="Festival"]::-webkit-scrollbar{display:none}
     html body nav[aria-label="Festival"]>span,
     html body nav[aria-label="Festival"]>a{
-      color:#FFFFFF!important;
+      color:#13181D!important;
       flex-shrink:0!important;
       white-space:nowrap!important;
     }
@@ -677,7 +677,7 @@
     }
     html body nav[aria-label="Festival"]>a:hover,
     html body nav[aria-label="Festival"]>a:focus-visible{
-      color:#FFFFFF!important;
+      color:#13181D!important;
       text-decoration:underline!important;
       text-underline-offset:4px;
     }
