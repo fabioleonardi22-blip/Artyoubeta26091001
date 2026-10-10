@@ -1,3 +1,4 @@
+const { selfOrigin } = require("../lib/origin");
 const { query } = require("../lib/db");
 
 const SITE = "https://artyouroma.it";
@@ -56,7 +57,7 @@ function isPublicShow(row) {
 
 async function teacherUrls(origin) {
   try {
-    const r = await fetch(origin + "/insegnante.html", { redirect:"follow" });
+    const r = await fetch(origin + "/insegnante.html", { redirect:"follow", signal:AbortSignal.timeout(8000) });
     const html = await r.text();
     const m = html.match(/var TEACH = (\[[\s\S]*?\]);\s*var META/);
     if (!m || !m[1]) return [];
@@ -78,7 +79,7 @@ module.exports = async function handler(req, res) {
   }
 
   const today = new Date().toISOString().slice(0,10);
-  const origin = "https://artyouroma.it";
+  const origin = selfOrigin(req);
 
   const urls = new Map();
   STATIC_URLS.forEach(path => urls.set(SITE + path, null));
@@ -106,7 +107,7 @@ module.exports = async function handler(req, res) {
   // Transitional safety net: merge any public show that is still only in the
   // legacy event service. MySQL remains primary; duplicates are overwritten.
   try {
-    const r = await fetch(origin + "/api/artyou?eventi=1&sitemap=1", { redirect:"follow" });
+    const r = await fetch(origin + "/api/artyou?eventi=1&sitemap=1", { redirect:"follow", signal:AbortSignal.timeout(8000) });
     if (r.ok) {
       const data = await r.json();
       const events = data && data.eventi && typeof data.eventi === "object" ? data.eventi : {};

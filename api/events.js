@@ -2,7 +2,7 @@ const { rateLimit,applyRateLimitHeaders,rejectRateLimited,sameOrigin,setSecurity
 const { requireUser,authErrorStatus }=require("../lib/authorization");
 const { query,transaction }=require("../lib/db");
 const { audit }=require("../lib/audit");
-const { reconcileDates }=require("../lib/event-dates");
+const { reconcileDates,isPast }=require("../lib/event-dates");
 
 const APPS_SCRIPT_URL=String(process.env.ARTYOU_APPS_SCRIPT_URL||"").trim();
 const UPLOAD_PIN=String(process.env.ARTYOU_GESTIONALE_PIN||"").trim();
@@ -35,6 +35,14 @@ async function listAdminEvents(publicOnly=false){
   const dates=await query("SELECT event_id,id,date_label,starts_at,metadata FROM event_dates WHERE active=1 AND event_id IN ("+rows.map(()=>"?").join(",")+") ORDER BY starts_at,id",rows.map(r=>r.id));
   const grouped=new Map();for(const d of dates){const key=String(d.event_id);if(!grouped.has(key))grouped.set(key,[]);grouped.get(key).push(d);}
   return Promise.all(rows.map(r=>eventObject(r,null,grouped.get(String(r.id))||[])));
+}
+// Lista pubblica: fuori gli eventi con date tutte passate (ora di Roma); restano quelli
+// "data da definire" e quelli senza orario salvato, che non si possono giudicare.
+function currentEvents(events,now){
+  return events.filter(e=>{
+    if(e.tbd||!e.dates.length)return true;
+    return e.dates.some(d=>!d.start||!isPast(d.start.replace(/\.\d+Z$|Z$/,""),now));
+  });
 }
 async function saveEvent(input){
   const e=input||{},title=clean(e.title,255),slug=clean(e.slug,190).toLowerCase();
@@ -82,11 +90,31 @@ async function deleteEvent(id){
   const r=await query("UPDATE events SET active=0,source_updated_at=NOW() WHERE id=?",[n]);
   if(!r||!r.affectedRows)throw new Error("evento_non_trovato");
 }
+// Locandine: riconosce il formato dai primi byte, non dal nome o dal tipo dichiarato.
+function imageKind(buf){
+  if(buf.length>3&&buf[0]===0xff&&buf[1]===0xd8&&buf[2]===0xff)return {mime:"image/jpeg",ext:"jpg"};
+  if(buf.length>8&&buf.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))return {mime:"image/png",ext:"png"};
+  if(buf.length>12&&buf.subarray(0,4).toString("latin1")==="RIFF"&&buf.subarray(8,12).toString("latin1")==="WEBP")return {mime:"image/webp",ext:"webp"};
+  return null;
+}
+// Con BLOB_READ_WRITE_TOKEN le locandine vanno su Vercel Blob (pubbliche: sono immagini del sito)
+// e non serve più il PIN del vecchio Apps Script, che resta come ripiego.
+async function uploadImageToBlob(body,put){
+  const b64=String(body.base64||"");
+  if(!b64||b64.length>11*1024*1024||!/^[A-Za-z0-9+/]+={0,2}$/.test(b64))throw new Error("immagine_non_valido");
+  const bytes=Buffer.from(b64,"base64");
+  if(bytes.length>8*1024*1024)throw new Error("payload_too_large");
+  const kind=imageKind(bytes);if(!kind)throw new Error("formato_immagine_non_valido");
+  const base=clean(body.name,120).toLowerCase().replace(/\.[a-z0-9]+$/,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"locandina";
+  const blob=await put("locandine/"+base+"."+kind.ext,bytes,{access:"public",addRandomSuffix:true,contentType:kind.mime,token:process.env.BLOB_READ_WRITE_TOKEN});
+  return {ok:true,url:blob.url,storage:"vercel-blob"};
+}
 async function uploadImage(body){
+  if(process.env.BLOB_READ_WRITE_TOKEN){const {put}=require("@vercel/blob");return uploadImageToBlob(body,put);}
   if(!APPS_SCRIPT_URL||!UPLOAD_PIN)throw new Error("upload_non_configurato");
   const payload={action:"uploadimage",pin:UPLOAD_PIN,name:clean(body.name,255),mime:clean(body.mime,100),base64:String(body.base64||"")};
   if(Buffer.byteLength(payload.base64,"utf8")>8*1024*1024)throw new Error("payload_too_large");
-  const r=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow"});
+  const r=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow",signal:AbortSignal.timeout(30000)});
   const text=await r.text();let data;try{data=JSON.parse(text)}catch(_){throw new Error("upload_response_invalid")}
   if(!r.ok||!data||!data.ok)throw new Error((data&&data.errore)||"upload_failed");return data;
 }
@@ -99,7 +127,7 @@ module.exports=async function handler(req,res){
   const publicRead=(method==="GET"||method==="HEAD")&&action==="public";
   if(publicRead){
     const limit=rateLimit(req,{key:"events-public",limit:120,windowMs:60*1000});applyRateLimitHeaders(res,limit);if(!limit.ok)return rejectRateLimited(res,limit);
-    try{return res.status(200).json({ok:true,events:await listAdminEvents(true),storage:"mysql"});}
+    try{return res.status(200).json({ok:true,events:currentEvents(await listAdminEvents(true)),storage:"mysql"});}
     catch(_){return res.status(503).json({ok:false,errore:"mysql_unavailable"});}
   }
   if(!sameOrigin(req))return res.status(403).json({ok:false,errore:"origin_non_consentita"});
@@ -130,3 +158,6 @@ module.exports=async function handler(req,res){
     return res.status(503).json({ok:false,errore:"mysql_unavailable"});
   }
 };
+
+module.exports.uploadImageToBlob=uploadImageToBlob;module.exports.imageKind=imageKind;
+module.exports.currentEvents=currentEvents;

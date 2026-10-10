@@ -68,7 +68,10 @@ function doPost(e) {
     // Piano Operativo: verifica anche nel backend Apps Script il token Google.
     let poEmail = "";
     if (action.indexOf("po_")===0) poEmail = PO_emailFromGoogleToken_(data.token);
-    if (action === "po_session") {\n      return gestJson_(PO_session(poEmail));\n    }\n    if (action === "po_list") {
+    if (action === "po_session") {
+      return gestJson_(PO_session(poEmail));
+    }
+    if (action === "po_list") {
       return gestJson_({ok:true, events:PO_listEvents(poEmail, String(data.from||""), String(data.to||""))});
     }
     if (action === "po_save") {

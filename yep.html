@@ -228,6 +228,10 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 }
 </script>
 
+<style id="artyou-laptop-width">
+/* Audit 10/10/2026: tra 821 e 1439 px il layout restava largo 1440 px e la pagina scorreva di lato (a 1024 px logo e titoli tagliati a sinistra). */
+@media (min-width:821px) and (max-width:1439px){body>x-dc,x-dc,x-dc>div:first-of-type,[style*="width: 1440px"],[style*="width:1440px"]{width:100%!important;max-width:100%!important;min-width:0!important}}
+</style>
 <style id="artyou-mobile-hardening">
 @media (max-width: 820px){
   *,*::before,*::after{box-sizing:border-box;}
@@ -414,7 +418,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <label for="artyou-menu-toggle" class="artyou-menu-btn" role="button" aria-label="Apri il menu" style="display: none;"><svg class="am-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg><svg class="am-close" style="display: none;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></label></div>
 </header>
 <div aria-hidden="true" style="height: 6px; background: #7A1631;"></div>
-<nav aria-label="Festival" class="am-px am-wrap am-fs-body" style="background: #FFFFFF; border-bottom: 1px solid #E4DED2; padding: 0 120px; display: flex; gap: 32px; height: 56px; align-items: center; font-size: 15px; position: sticky; top: 96px; z-index: 400;"><span style="font-weight: 700; color: #6A7279; text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;">Festival</span><a href="/rome-improv-festival/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">Roma Improv Festival</a><a href="/yep/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #13181D; font-weight: 700; border-bottom: 3px solid #F09000;" aria-current="page">YEP</a><a href="/un-vortice-di-emozioni/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">Un Vortice di Emozioni</a></nav>
+<nav aria-label="Festival" class="am-px am-wrap am-fs-body" style="background: #FFFFFF; border-bottom: 1px solid #E4DED2; padding: 0 120px; display: flex; gap: 32px; height: 56px; align-items: center; font-size: 15px; position: sticky; top: 96px; z-index: 400;"><span style="font-weight: 700; color: #575e64; text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;">Festival</span><a href="/rome-improv-festival/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">Roma Improv Festival</a><a href="/yep/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #13181D; font-weight: 700; border-bottom: 3px solid #F09000;" aria-current="page">YEP</a><a href="/un-vortice-di-emozioni/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">Un Vortice di Emozioni</a></nav>
 <section id="yep-hero" class="am-px am-py" style="position: relative; overflow: hidden; background-image: linear-gradient(90deg, rgba(255,255,255,.94) 0%, rgba(255,255,255,.86) 38%, rgba(255,255,255,.58) 62%, rgba(255,255,255,.24) 100%), url('/img/yep-foto.jpg'); background-size: cover; background-position: center 42%; background-repeat: no-repeat; padding: 38px 120px; min-height: 320px; display: flex; align-items: center; border-bottom: 1px solid #E4DED2;">
 <div style="display: flex; flex-direction: column; gap: 18px; max-width: 760px; position: relative; z-index: 1;">
 <nav aria-label="Percorso" class="am-wrap am-fs-body" style="font-size: 14px; color: #555D64; display: flex; gap: 10px;"><a href="/">Home</a><span>/</span><a href="/#festival">Festival</a><span>/</span><span>YEP 2027</span></nav>
@@ -439,7 +443,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 .yep-program-head{display:flex;align-items:end;justify-content:space-between;gap:18px}
 .yep-program-head h2{margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:40px;line-height:1}
 .yep-program-kicker{font-size:12px;font-weight:850;letter-spacing:1.7px;text-transform:uppercase;color:#7A1631;margin-bottom:7px}
-.yep-program-note{margin:0;color:#6D7378;font-size:14px;line-height:1.45;max-width:260px;text-align:right}
+.yep-program-note{margin:0;color:#575e64;font-size:14px;line-height:1.45;max-width:260px;text-align:right}
 .yep-day{background:#fff;border:1px solid #E5DED6;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(36,28,20,.05)}
 .yep-day-head{display:grid;grid-template-columns:150px minmax(0,1fr);align-items:center;gap:18px;padding:18px 20px;border-bottom:1px solid #EEE6DF;background:#FFF9F5}
 .yep-day:nth-of-type(3) .yep-day-head{background:#F5F8FF}
@@ -454,7 +458,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 .yep-slot:last-child{border-bottom-color:transparent}
 .yep-time{display:inline-flex;align-items:center;justify-content:flex-start;min-height:28px;padding:4px 10px;border-radius:10px;background:#FFF3EA;border:1px solid #FFD9C3;color:#A94408;font-size:12px;font-weight:900;letter-spacing:.15px;white-space:nowrap}
 .yep-activity{font-size:14px;line-height:1.35;color:#252A2E;font-weight:700}
-.yep-activity em{font-style:normal;color:#747B80;font-weight:550}
+.yep-activity em{font-style:normal;color:#575e64;font-weight:550}
 @media(max-width:900px){
   .yep-program-head{align-items:flex-start;flex-direction:column;gap:7px}
   .yep-program-head h2{font-size:34px}
@@ -549,7 +553,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 .yep-pricing-harmony .yp-label{color:#28313A}
 .yep-pricing-harmony .yp-price{font-size:18px;font-weight:850;color:#11161B;letter-spacing:-.02em;white-space:nowrap}
 .yep-pricing-harmony .yp-card--stay .yp-price{font-size:19px}
-.yep-pricing-harmony .yp-note{margin-top:auto;padding:2px 2px 0;font-size:12.5px;line-height:1.5;color:#72797F}
+.yep-pricing-harmony .yp-note{margin-top:auto;padding:2px 2px 0;font-size:12.5px;line-height:1.5;color:#575E64}
 .yep-pricing-harmony .yp-card--stay .yp-card-head{border-top:5px solid var(--yp-orange)}
 .yep-pricing-harmony .yp-card--stay .yp-card-kicker{color:var(--yp-orange)}
 .yep-pricing-harmony .yp-card--workshop .yp-card-head{border-top:5px solid var(--yp-blue)}
@@ -640,7 +644,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </section>
 <div style="display: flex; flex-direction: column; gap: 12px;">
 <h2 class="am-fs-m" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px;">Prenotare o riservare</h2>
-<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #3F474E;">I posti nei workshop e le camere sono limitati. Puoi scegliere se <strong>pagare 10 € di iscrizione e saldare prima del Festival</strong> oppure <strong>pagare subito 20 €</strong>. I pagamenti vengono gestiti tramite PayPal all’indirizzo <strong>info@artyouroma.it</strong>.</p>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #3F474E;">I posti nei workshop e le camere sono limitati. Puoi scegliere se <strong>pagare 10 € di iscrizione e saldare prima del Festival</strong> oppure <strong>pagare subito 20 €</strong>. Il pagamento online è temporaneamente sospeso: prenoti ora e la segreteria (<strong>info@artyouroma.it</strong>) ti contatta per iscrizione e saldo.</p>
 <div style="display: flex; flex-direction: column; gap: 16px;">
 <h3 class="am-fs-s" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 24px;">I workshop e i loro insegnanti</h3>
 <div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
@@ -717,11 +721,11 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <input id="f-posti" type="hidden" value="{{bookingSeats}}">
 <input id="f-scelta-yep" type="hidden" value="{{bookingChoice}}">
 <input id="f-note-yep" type="hidden" value="{{bookingNote}}">
-<input id="f-paga-online" type="hidden" value="true">
+<input id="f-paga-online" type="hidden" value="false">
 <input id="f-pagamento-modalita" type="hidden" value="{{paymentMode}}">
 <input id="f-prezzo" type="hidden" value="{{paymentAmount}}">
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-camera" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Con chi vuoi condividere la camera? <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-camera" type="text" placeholder="Nome e cognome" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cibo" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Esigenze alimentari <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-cibo" type="text" placeholder="Es. vegetariano" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
-<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
+<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" id="f-privacy" name="privacy" required style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
 <button id="f-submit-booking" type="button" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
 <a target="_blank" rel="noopener" href="{{wa}}" class="am-wrap" style="height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #25D366; color: #0B2E1A; border-radius: 14px; font-weight: 700; font-size: 16px; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.001c-5.523 0-10 4.477-10 10 0 1.762.464 3.479 1.345 4.997L2 22l5.161-1.352a9.953 9.953 0 0 0 4.879 1.253h.005c5.522 0 9.999-4.477 9.999-10 0-2.671-1.04-5.182-2.929-7.07A9.935 9.935 0 0 0 12.04 2Zm0 18.174h-.004a8.172 8.172 0 0 1-4.166-1.14l-.299-.177-3.096.812.827-3.016-.194-.31a8.163 8.163 0 0 1-1.253-4.343c0-4.508 3.669-8.176 8.19-8.176a8.14 8.14 0 0 1 5.79 2.398 8.13 8.13 0 0 1 2.397 5.788c0 4.508-3.669 8.164-8.192 8.164Zm4.484-6.13c-.246-.123-1.454-.718-1.68-.8-.226-.082-.39-.123-.554.123-.164.246-.635.8-.778.964-.144.165-.287.185-.533.062-.246-.123-1.037-.382-1.976-1.22-.73-.65-1.222-1.453-1.365-1.7-.144-.246-.015-.379.108-.501.11-.11.246-.287.369-.43.123-.144.164-.246.246-.41.082-.164.041-.308-.02-.43-.062-.123-.554-1.335-.76-1.828-.2-.48-.404-.415-.554-.423l-.472-.008a.906.906 0 0 0-.656.307c-.226.246-.862.842-.862 2.054 0 1.212.883 2.383 1.006 2.548.123.164 1.74 2.658 4.216 3.727.589.254 1.049.406 1.408.52.591.188 1.13.161 1.556.098.475-.071 1.454-.595 1.66-1.169.205-.574.205-1.066.144-1.169-.062-.102-.226-.164-.472-.287Z"></path></svg> Prenota su WhatsApp</a>
 </div>
@@ -948,7 +952,7 @@ class Component extends DCLogic {
       bookingNote: roomNote + " · Prezzo YEP: " + priceText,
       bookingSeats: 1,
       payOnline: true,
-      paymentMode: pay===0 ? "Iscrizione 10 € + saldo prima del Festival" : "Pagamento completo",
+      paymentMode: pay===0 ? "Iscrizione 10 € + saldo prima del Festival · da regolare con la segreteria" : "Quota intera · da regolare con la segreteria",
       paymentAmount: pay===0 ? 10 : fullPrice,
       payOpts: payOpts,
       wsCards: wsCards,
@@ -959,9 +963,9 @@ class Component extends DCLogic {
       capacityPending: !capacityReady,
       soldTitle: "Workshop al completo",
       payNote: pay===0
-        ? "Paghi ora <strong>10 €</strong> di iscrizione con PayPal a info@artyouroma.it e saldi il restante importo prima del Festival. La camera resta una preferenza."
-        : "Paghi ora l’intero importo di <strong>"+(fullPrice?fullPrice+" €":"da confermare")+"</strong> con PayPal a info@artyouroma.it." + (hasStay ? " La camera resta una preferenza." : ""),
-      ctaLabel: "Conferma e paga con PayPal",
+        ? "Prenoti ora senza pagare online: i <strong>10 €</strong> di iscrizione e il saldo si regolano con la segreteria prima del Festival. La camera resta una preferenza."
+        : "Prenoti ora senza pagare online: l’importo di <strong>"+(fullPrice?fullPrice+" €":"da confermare")+"</strong> da regolare con la segreteria: ti scriviamo noi con le istruzioni." + (hasStay ? " La camera resta una preferenza." : ""),
+      ctaLabel: "Conferma prenotazione",
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare YEP 2027: " + what + "."),
       waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Per YEP 2027 (" + what + ") il workshop risulta completo: potete mettermi in lista d’attesa?"),
       confirmed: !!st.confirmed, notConfirmed: !st.confirmed,

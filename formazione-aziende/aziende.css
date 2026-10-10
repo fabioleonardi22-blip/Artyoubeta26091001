@@ -6,7 +6,7 @@ html{scroll-behavior:smooth;scroll-padding-top:170px}
 #aziende-subnav a:hover{color:#13181D!important;border-bottom-color:#F09000!important}
 
 /* Il metodo */
-.az-maphead{display:grid;grid-template-columns:5fr 7fr;gap:24px;margin:16px 0 0;padding-bottom:12px;border-bottom:2px solid #13181D;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6A7279}
+.az-maphead{display:grid;grid-template-columns:5fr 7fr;gap:24px;margin:16px 0 0;padding-bottom:12px;border-bottom:2px solid #13181D;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#575E64}
 .az-row{display:grid;grid-template-columns:5fr 7fr;gap:24px;padding:20px 0;border-bottom:1px solid #E4DED2}
 .az-row:last-child{border-bottom:0}
 .az-situation{margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:600;font-size:19px;line-height:1.3;color:#7A1631}

@@ -114,3 +114,31 @@ Se MySQL è temporaneamente indisponibile durante questa fase di transizione, Ap
 - Il Gestionale Eventi usa MySQL come storage autoritativo. Il vecchio PIN non viene più inviato dal browser né usato per list/save/delete; resta solo come integrazione server-side opzionale per l'upload immagini legacy Apps Script.
 - Il proxy merchandising applica rate limit, honeypot e può autenticarsi verso Railway con `ARTYOU_MERCH_PROXY_SECRET`; la stessa variabile deve essere configurata su Vercel e sul servizio Railway.
 - La CSP è ora applicata anche in enforcement mode; la policy Report-Only più restrittiva resta attiva per guidare la successiva eliminazione degli script inline.
+
+## Completare e ripulire gli eventi · 10 ottobre 2026
+
+Script in sola simulazione finché non si aggiunge `--apply`:
+
+```bash
+# Completa descrizioni, locandine, luoghi, date (starts_at) e chiavi storiche dal foglio Google
+DATABASE_URL="mysql://..." node scripts/mysql-sync-site-events.js
+DATABASE_URL="mysql://..." node scripts/mysql-sync-site-events.js --apply
+
+# Come sopra, e in più disattiva (active=0) gli eventi con tutte le date passate
+DATABASE_URL="mysql://..." node scripts/mysql-sync-site-events.js --apply --archive-past
+
+# Crea gli eventi prenotabili dal sito ma assenti in MySQL (compilare prima scripts/missing-events.json)
+DATABASE_URL="mysql://..." node scripts/mysql-create-missing-events.js --apply
+```
+
+Anche senza archiviazione, la lista pubblica (`/api/events?action=public`) non mostra gli eventi con date tutte passate.
+Con TLS verificato impostare `MYSQL_SSL=true` e `MYSQL_SSL_CA` (certificato della CA del server).
+
+## Backup · 10 ottobre 2026
+
+`.github/workflows/mysql-backup.yml` esegue ogni notte (01:37 UTC) un backup completo e cifrato di ciascun database con `scripts/backup/mysql-backup.sh`, lo ricarica in un MySQL temporaneo con `scripts/backup/mysql-restore-check.sh` confrontando le righe per tabella e lo conserva come artifact per 30 giorni.
+
+Configurazione (una volta): segreti `BACKUP_PASSPHRASE`, `BACKUP_DB_MAIN_URL` ed eventualmente `BACKUP_DB_MERCH_URL` nel repository GitHub, con un utente MySQL di sola lettura. Senza segreti il workflow avvisa e salta.
+
+Per ripristinare a mano: scaricare l'artifact, poi
+`openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -pass env:BACKUP_PASSPHRASE -in file.sql.gz.enc | gunzip | mysql ...`.

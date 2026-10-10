@@ -155,8 +155,14 @@ CREATE TABLE IF NOT EXISTS product_variants (
   CONSTRAINT fk_variants_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Colonne order_number, customer_id, total_amount (merch_orders) e variant_id (merch_order_items):
+-- scritte da railway-merch-server.js ma assenti dalla versione precedente di questo file.
+-- Tipi ricavati dal codice: confrontarli con SHOW CREATE TABLE sul database di produzione.
 CREATE TABLE IF NOT EXISTS merch_orders (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  order_number VARCHAR(190) NULL,
+  customer_id BIGINT UNSIGNED NULL,
+  total_amount DECIMAL(10,2) NULL,
   order_code VARCHAR(190) NOT NULL,
   ordered_at DATETIME NULL,
   status VARCHAR(80) NOT NULL DEFAULT 'Riservato',
@@ -180,6 +186,7 @@ CREATE TABLE IF NOT EXISTS merch_orders (
 CREATE TABLE IF NOT EXISTS merch_order_items (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   order_id BIGINT UNSIGNED NOT NULL,
+  variant_id BIGINT UNSIGNED NULL,
   product_variant_id BIGINT UNSIGNED NULL,
   item_key VARCHAR(500) NULL,
   description VARCHAR(500) NULL,

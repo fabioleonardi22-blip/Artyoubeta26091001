@@ -276,6 +276,10 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 }
 </style>
 
+<style id="artyou-laptop-width">
+/* Audit 10/10/2026: tra 821 e 1439 px il layout restava largo 1440 px e la pagina scorreva di lato (a 1024 px logo e titoli tagliati a sinistra). */
+@media (min-width:821px) and (max-width:1439px){body>x-dc,x-dc,x-dc>div:first-of-type,[style*="width: 1440px"],[style*="width:1440px"]{width:100%!important;max-width:100%!important;min-width:0!important}}
+</style>
 <style id="artyou-mobile-hardening">
 @media (max-width: 820px){
   *,*::before,*::after{box-sizing:border-box;}
@@ -447,7 +451,7 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 .rif-event-row:first-of-type{border-top:0}
 .rif-event-row>div{display:flex;flex-direction:column;gap:3px}
 .rif-event-row strong{font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:19px;color:#13181D}
-.rif-event-row span:not(.rif-time){font-size:14px;color:#6A7279}
+.rif-event-row span:not(.rif-time){font-size:14px;color:#575e64}
 .rif-time{display:inline-flex;align-items:center;justify-content:center;width:max-content;background:#F6F3EC;color:#7A1631;border-radius:999px;padding:8px 11px;font-size:13px;font-weight:800;white-space:nowrap}
 .rif-event-dark{background:#F6F3EC}
 .rif-event-dark strong{color:#7A1631}
@@ -525,7 +529,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 <label for="artyou-menu-toggle" class="artyou-menu-btn" role="button" aria-label="Apri il menu" style="display: none;"><svg class="am-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg><svg class="am-close" style="display: none;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></label></div>
 </header>
 <div aria-hidden="true" style="height: 6px; background: #7A1631;"></div>
-<nav aria-label="Festival" class="am-px am-wrap am-fs-body" style="background: #FFFFFF; border-bottom: 1px solid #E4DED2; padding: 0 120px; display: flex; gap: 32px; height: 56px; align-items: center; font-size: 15px; position: sticky; top: 96px; z-index: 400;"><span style="font-weight: 700; color: #6A7279; text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;">Festival</span><a href="/rome-improv-festival/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #13181D; font-weight: 700; border-bottom: 3px solid #F09000;" aria-current="page">Roma Improv Festival</a><a href="/yep/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">YEP</a><a href="/un-vortice-di-emozioni/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">Un Vortice di Emozioni</a></nav>
+<nav aria-label="Festival" class="am-px am-wrap am-fs-body" style="background: #FFFFFF; border-bottom: 1px solid #E4DED2; padding: 0 120px; display: flex; gap: 32px; height: 56px; align-items: center; font-size: 15px; position: sticky; top: 96px; z-index: 400;"><span style="font-weight: 700; color: #575e64; text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px;">Festival</span><a href="/rome-improv-festival/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #13181D; font-weight: 700; border-bottom: 3px solid #F09000;" aria-current="page">Roma Improv Festival</a><a href="/yep/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">YEP</a><a href="/un-vortice-di-emozioni/" class="am-wrap" style="text-decoration: none; height: 56px; display: flex; align-items: center; box-sizing: border-box; color: #3F474E; font-weight: 500; border-bottom: 3px solid transparent;">Un Vortice di Emozioni</a></nav>
 
 <section class="am-px am-py am-grid1" style="background: #13181D; color: #F6F3EC; padding: 64px 120px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: center;">
 <div style="display: flex; flex-direction: column; gap: 18px;">
@@ -593,7 +597,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 
 <div style="display:flex;flex-direction:column;gap:18px;">
   <div>
-    <p style="margin:0 0 6px;font-size:14px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#F09000;">Scegli la tua formula</p>
+    <p style="margin:0 0 6px;font-size:14px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#A35C00;">Scegli la tua formula</p>
     <h2 class="am-fs-l" style="margin:0;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-weight:800;font-size:40px;">Quote di partecipazione</h2>
   </div>
 
@@ -668,7 +672,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </article>
 </sc-for>
 </div>
-<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #3F474E;">Puoi scegliere se <strong>pagare 10 € di iscrizione e saldare prima del Festival</strong> oppure <strong>pagare subito 20 €</strong>. I pagamenti vengono gestiti tramite PayPal all’indirizzo <strong>info@artyouroma.it</strong>.</p>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #3F474E;">Puoi scegliere se <strong>pagare 10 € di iscrizione e saldare prima del Festival</strong> oppure <strong>pagare subito 20 €</strong>. Il pagamento online è temporaneamente sospeso: prenoti ora e la segreteria (<strong>info@artyouroma.it</strong>) ti contatta per iscrizione e saldo.</p>
 </div>
 <div style="display: flex; flex-direction: column; gap: 12px;">
 <h2 class="am-fs-m" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px;">Info pratiche</h2>
@@ -722,11 +726,11 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div><span style="font-size: 13px; color: #555D64;">{{payNote}}</span></div>
 <input id="f-evento-id" type="hidden" value="{{eventId}}">
 <input id="f-posti" type="hidden" value="{{bookingSeats}}">
-<input id="f-paga-online" type="hidden" value="true">
+<input id="f-paga-online" type="hidden" value="false">
 <input id="f-pagamento-modalita" type="hidden" value="{{paymentMode}}">
 <input id="f-prezzo" type="hidden" value="{{paymentAmount}}">
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-scuola" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Scuola o gruppo di provenienza <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-scuola" type="text" placeholder="Es. Artyou Roma" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
-<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
+<label class="am-wrap am-fs-body" style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #555D64; line-height: 1.4;"><input type="checkbox" id="f-privacy" name="privacy" required style="width: 20px; height: 20px; margin: 0; flex-shrink: 0;">Ho letto e accetto la privacy policy e le condizioni di prenotazione</label>
 <button type="button" data-artyou-submit="1" onClick="{{confirm}}" style="height: 58px; border: none; border-radius: 14px; background: {{accent}}; color: #1C1606; font-family: inherit; font-weight: 700; font-size: 17px; cursor: pointer;">{{ctaLabel}}</button>
 <a target="_blank" rel="noopener" href="{{wa}}" class="am-wrap" style="height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #25D366; color: #0B2E1A; border-radius: 14px; font-weight: 700; font-size: 16px; text-decoration: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.001c-5.523 0-10 4.477-10 10 0 1.762.464 3.479 1.345 4.997L2 22l5.161-1.352a9.953 9.953 0 0 0 4.879 1.253h.005c5.522 0 9.999-4.477 9.999-10 0-2.671-1.04-5.182-2.929-7.07A9.935 9.935 0 0 0 12.04 2Zm0 18.174h-.004a8.172 8.172 0 0 1-4.166-1.14l-.299-.177-3.096.812.827-3.016-.194-.31a8.163 8.163 0 0 1-1.253-4.343c0-4.508 3.669-8.176 8.19-8.176a8.14 8.14 0 0 1 5.79 2.398 8.13 8.13 0 0 1 2.397 5.788c0 4.508-3.669 8.164-8.192 8.164Zm4.484-6.13c-.246-.123-1.454-.718-1.68-.8-.226-.082-.39-.123-.554.123-.164.246-.635.8-.778.964-.144.165-.287.185-.533.062-.246-.123-1.037-.382-1.976-1.22-.73-.65-1.222-1.453-1.365-1.7-.144-.246-.015-.379.108-.501.11-.11.246-.287.369-.43.123-.144.164-.246.246-.41.082-.164.041-.308-.02-.43-.062-.123-.554-1.335-.76-1.828-.2-.48-.404-.415-.554-.423l-.472-.008a.906.906 0 0 0-.656.307c-.226.246-.862.842-.862 2.054 0 1.212.883 2.383 1.006 2.548.123.164 1.74 2.658 4.216 3.727.589.254 1.049.406 1.408.52.591.188 1.13.161 1.556.098.475-.071 1.454-.595 1.66-1.169.205-.574.205-1.066.144-1.169-.062-.102-.226-.164-.472-.287Z"></path></svg> Prenota su WhatsApp</a>
 </div>
@@ -780,7 +784,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </article>
 
 <article class="rif-faq-card" style="background:#FFFFFF;border:1px solid #E4DED2;border-radius:16px;box-sizing:border-box;text-align:left;">
-<div style="width:42px;height:42px;border-radius:12px;background:#FFF1D8;color:#A85F00;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;">02</div>
+<div style="width:42px;height:42px;border-radius:12px;background:#FFF1D8;color:#874c00;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;">02</div>
 <h3 style="margin:0 0 8px;font-family:'Bricolage Grotesque',Georgia,sans-serif;font-size:20px;line-height:1.2;color:#13181D;text-align:left;">Il festival è in inglese?</h3>
 <p style="margin:0;font-size:15px;line-height:1.55;color:#3F474E;text-align:left;">I workshop e gli spettacoli internazionali sono pensati per un pubblico di improvvisatori provenienti da Paesi diversi e si svolgono in inglese.</p>
 </article>
@@ -964,12 +968,12 @@ class Component extends DCLogic {
       soldOut:capacityReady&&rem===0,
       capacityPending:!capacityReady,
       soldTitle:isShow?"Serata esaurita":"Workshop completo",
-      paymentMode:pay===0?"Iscrizione 10 € + saldo prima del Festival":"Pagamento completo 20 €",
+      paymentMode:pay===0?"Iscrizione 10 € + saldo prima del Festival · da regolare con la segreteria":"Quota intera 20 € · da regolare con la segreteria",
       paymentAmount:pay===0?10:20,
       payNote:pay===0
-        ?"Paghi ora 10 € di iscrizione con PayPal a info@artyouroma.it e saldi il restante importo prima del Festival."
-        :"Paghi ora l’intero importo di 20 € con PayPal a info@artyouroma.it.",
-      ctaLabel:"Conferma e paga con PayPal",
+        ?"Prenoti ora senza pagare online: i 10 € di iscrizione e il saldo si regolano con la segreteria prima del Festival. Ti scriviamo noi con le istruzioni."
+        :"Prenoti ora senza pagare online: i 20 € si regolano con la segreteria. Ti scriviamo noi con le istruzioni.",
+      ctaLabel:"Conferma prenotazione",
       wa:wa,
       waWait:"https://wa.me/393271881956?text="+encodeURIComponent("Ciao! "+what+" è al completo: potete mettermi in lista d’attesa?"),
       confirmed:!!st.confirmed,notConfirmed:!st.confirmed,

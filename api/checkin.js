@@ -37,7 +37,7 @@ module.exports=async function handler(req,res){
 
   try{
     const upstream=await fetch(appsScriptUrl,{
-      method:"POST",headers:{"content-type":"application/json"},
+      method:"POST",headers:{"content-type":"application/json"},signal:AbortSignal.timeout(15000),
       body:JSON.stringify({action:action==="lookup"?"scanner_lookup":action==="checkin"?"scanner_checkin":"scanner_stats",codice:normalizedCode,evento:normalizedEvent,scannerSecret}),
       redirect:"follow"
     });

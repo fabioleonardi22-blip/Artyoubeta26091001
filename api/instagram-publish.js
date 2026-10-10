@@ -66,7 +66,7 @@ module.exports = async function handler(req, res) {
 
     const createResp = await fetch(
       "https://graph.instagram.com/" + encodeURIComponent(accountId) + "/media",
-      { method: "POST", body: createParams }
+      { method: "POST", body: createParams, signal: AbortSignal.timeout(20000) }
     );
     const createText = await createResp.text();
     let createData = {};
@@ -86,7 +86,7 @@ module.exports = async function handler(req, res) {
 
     const publishResp = await fetch(
       "https://graph.instagram.com/" + encodeURIComponent(accountId) + "/media_publish",
-      { method: "POST", body: publishParams }
+      { method: "POST", body: publishParams, signal: AbortSignal.timeout(20000) }
     );
     const publishText = await publishResp.text();
     let publishData = {};

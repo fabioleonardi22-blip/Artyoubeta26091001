@@ -1,7 +1,19 @@
 const { readFileSync } = require("node:fs");
 const { join } = require("node:path");
 const { query } = require("../lib/db");
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgqQguCWRt7yCTroh2qi4az1rCTZ7kgw0IxNRNDb9LZLOGPUD5Jy3K56NTi6FxAfKx/exec";
+const { romeIso, isPast } = require("../lib/event-dates");
+const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbwgqQguCWRt7yCTroh2qi4az1rCTZ7kgw0IxNRNDb9LZLOGPUD5Jy3K56NTi6FxAfKx/exec").trim();
+const CANONICAL_ORIGIN = "https://artyouroma.it";
+const SCRIPT_CLOSE = "</" + "script>";
+
+function fill(target, source) {
+  if (!source) return target;
+  for (const k of ["title", "desc", "venue", "addr", "poster"]) {
+    if (!String(target[k] || "").trim() && String(source[k] || "").trim()) target[k] = source[k];
+  }
+  if ((!target.dates || !target.dates.length || !target.dates[0].label) && Array.isArray(source.dates) && source.dates.length) target.dates = source.dates;
+  return target;
+}
 
 function escHtml(s) {
   return String(s == null ? "" : s)
@@ -38,14 +50,18 @@ function fallback(slug) {
 
 module.exports = async function handler(req, res) {
   try {
-    const slug = String((req.query && req.query.slug) || "").trim();
-    const origin = "https://artyouroma.it";
+    const slug = String((req.query && req.query.slug) || "").trim().toLowerCase();
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+      res.status(404).send("Spettacolo non trovato");
+      return;
+    }
 
+    // Template letto dai file del deploy (vercel.json: includeFiles), non da un dominio esterno.
     let html = readFileSync(join(__dirname, "..", "spettacolo.html"), "utf8");
 
     let event = null;
 
-    // MySQL is the primary source for public event SEO pages.
+    // MySQL è la fonte principale; la prima data è la prossima futura, altrimenti la più recente.
     try {
       const rows = await query(
         `SELECT e.slug,e.title,e.description,e.poster_url,e.venue,e.address,e.category,e.event_type,e.metadata,
@@ -54,7 +70,8 @@ module.exports = async function handler(req, res) {
          LEFT JOIN event_dates ed
            ON ed.id=(SELECT ed2.id FROM event_dates ed2
                      WHERE ed2.event_id=e.id AND ed2.active=1
-                     ORDER BY COALESCE(ed2.starts_at,'9999-12-31'),ed2.id LIMIT 1)
+                     ORDER BY CASE WHEN ed2.starts_at IS NULL THEN 1 WHEN ed2.starts_at>=UTC_TIMESTAMP() THEN 0 ELSE 2 END,
+                              ed2.starts_at,ed2.id LIMIT 1)
          WHERE e.slug=? AND e.active=1
          LIMIT 1`,
         [slug]
@@ -74,84 +91,83 @@ module.exports = async function handler(req, res) {
           event_type: r.event_type || "",
           dates: [{
             label: r.date_label || "",
-            start: r.starts_at ? new Date(r.starts_at).toISOString() : "",
+            startsAt: r.starts_at || null,
             ora: meta.ora || ""
           }]
         };
       }
     } catch (_) {}
 
-    // Transitional fallback while all public-event fields finish migrating.
-    if (!event) {
+    // Campi ancora mancanti in MySQL: li completa la fonte storica, poi i testi di riserva.
+    if (!event || !event.desc || !event.venue) {
       try {
-        const upstream = await fetch(APPS_SCRIPT_URL + "?action=public", { redirect: "follow" });
+        const upstream = await fetch(APPS_SCRIPT_URL + "?action=public", { redirect: "follow", signal: AbortSignal.timeout(8000) });
         const data = await upstream.json();
         if (data && data.ok && Array.isArray(data.events)) {
-          event = data.events.find(e => String(e && e.slug || "") === slug) || null;
+          const legacy = data.events.find(e => String(e && e.slug || "") === slug) || null;
+          event = event ? fill(event, legacy) : legacy;
         }
       } catch (_) {}
     }
-
-    if (!event) event = fallback(slug);
+    event = event ? fill(event, fallback(slug)) : fallback(slug);
 
     const placeholder = !event || /^\s*\[/.test(String(event.title || ""));
     const title = event && event.title ? event.title + " a Roma | Artyou" : "Spettacolo a Roma | Artyou";
     const description = event && event.desc
       ? String(event.desc).slice(0, 160)
       : "Scopri gli spettacoli Artyou Roma: date, sedi, informazioni e prenotazioni.";
-    const canonical = "https://artyouroma.it/spettacoli/" + encodeURIComponent(slug) + "/";
+    const canonical = CANONICAL_ORIGIN + "/spettacoli/" + encodeURIComponent(slug) + "/";
 
     html = html.replace(/<title>[\s\S]*?<\/title>/i, "<title>" + escHtml(title) + "</title>");
     html = html.replace(/<meta\s+name=["']description["'][^>]*>/i,
       '<meta name="description" content="' + escHtml(description) + '">');
     html = html.replace(/<meta\s+name=["']robots["'][^>]*>/i,
       '<meta name="robots" content="' + (placeholder ? "noindex,follow" : "index,follow") + '">');
-    html = html.replace(/<link\s+rel=["']canonical["'][^>]*>/i,
-      '<link rel="canonical" href="' + escHtml(canonical) + '">');
+    if (/<link\s+rel=["']canonical["'][^>]*>/i.test(html)) {
+      html = html.replace(/<link\s+rel=["']canonical["'][^>]*>/i,
+        '<link rel="canonical" href="' + escHtml(canonical) + '">');
+    } else {
+      html = html.replace("</head>", '<link rel="canonical" href="' + escHtml(canonical) + '">\n</head>');
+    }
 
     if (!placeholder) {
       const firstDate = event.dates && event.dates[0] ? event.dates[0] : {};
-      const dateLabel = firstDate && firstDate.label ? String(firstDate.label) : "";
-      const startDate = firstDate && firstDate.start ? String(firstDate.start) : "";
+      const startDate = firstDate && firstDate.startsAt ? romeIso(firstDate.startsAt) : "";
+      const past = firstDate && firstDate.startsAt ? isPast(firstDate.startsAt) : false;
       const image = event.poster
-        ? (String(event.poster).startsWith("http") ? String(event.poster) : "https://artyouroma.it/" + String(event.poster).replace(/^\//, ""))
+        ? (String(event.poster).startsWith("http") ? String(event.poster) : CANONICAL_ORIGIN + "/" + String(event.poster).replace(/^\//, ""))
         : undefined;
 
-      const schema = {
-        "@context": "https://schema.org",
-        "@type": "Event",
-        name: String(event.title || ""),
-        description: String(event.desc || ""),
-        url: canonical,
-        eventStatus: "https://schema.org/EventScheduled",
-        eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-        organizer: {
-          "@type": "Organization",
-          name: "Artyou Roma",
-          url: "https://artyouroma.it/"
-        },
-        location: {
-          "@type": "Place",
-          name: String(event.venue || "Roma"),
-          address: String(event.addr || "Roma")
-        }
-      };
-      if (image) schema.image = [image];
-      if (startDate) schema.startDate = startDate;
-      else if (dateLabel) schema.eventSchedule = {
-        "@type": "Schedule",
-        description: dateLabel
-      };
-
-      const seoBlock =
+      let seoBlock =
         '\n<meta property="og:title" content="' + escHtml(title) + '">' +
         '\n<meta property="og:description" content="' + escHtml(description) + '">' +
         '\n<meta property="og:type" content="website">' +
         '\n<meta property="og:url" content="' + escHtml(canonical) + '">' +
-        (image ? '\n<meta property="og:image" content="' + escHtml(image) + '">' : "") +
-        '\n<script type="application/ld+json">' + safeJson(schema) + '</script>\n';
+        (image ? '\n<meta property="og:image" content="' + escHtml(image) + '">' : "");
 
-      html = html.replace("</head>", seoBlock + "</head>");
+      // Dati strutturati Event solo per date future e con indirizzo reale: Google scarta eventi senza startDate.
+      if (startDate && !past) {
+        const schema = {
+          "@context": "https://schema.org",
+          "@type": "Event",
+          name: String(event.title || ""),
+          description: String(event.desc || description),
+          url: canonical,
+          startDate: startDate,
+          eventStatus: "https://schema.org/EventScheduled",
+          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+          organizer: { "@type": "Organization", name: "Artyou Roma", url: CANONICAL_ORIGIN + "/" },
+          location: {
+            "@type": "Place",
+            name: String(event.venue || "Roma"),
+            address: String(event.addr || "Roma")
+          }
+        };
+        if (image) schema.image = [image];
+        seoBlock += '\n<script type="application/ld+json">' + safeJson(schema) + SCRIPT_CLOSE;
+      }
+
+      html = html.replace("</head>", seoBlock + "\n</head>");
     }
 
     res.setHeader("Content-Type", "text/html; charset=utf-8");

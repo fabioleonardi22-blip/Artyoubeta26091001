@@ -1,7 +1,7 @@
 /* ===== Palette e font del sito Artyou ===== */
 :root{
-  --ink:#13181D; --ink-2:#0D1115; --cream:#F6F3EC; --line:#E4DED2; --muted:#3F474E; --muted-2:#6A7279;
-  --soft:#C4CCD2; --grey:#9AA5AE; --orange:#F09000; --orange-d:#C97800; --ocra:#C79A2B; --wine:#7A1631;
+  --ink:#13181D; --ink-2:#0D1115; --cream:#F6F3EC; --line:#E4DED2; --muted:#3F474E; --muted-2:#575E64;
+  --soft:#C4CCD2; --grey:#9AA5AE; --orange:#F09000; --orange-d:#955200; --ocra:#C79A2B; --wine:#7A1631;
   --wa:#25D366; --wa-ink:#0B2E1A; --wa-line:#79FF9C;
   --display:'Bricolage Grotesque', Georgia, sans-serif;
   --body:'Instrument Sans','Helvetica Neue',Helvetica,sans-serif;

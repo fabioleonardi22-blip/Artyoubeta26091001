@@ -153,12 +153,12 @@ class Component extends DCLogic {
       soldOut:capacityReady&&rem===0,
       capacityPending:!capacityReady,
       soldTitle:isShow?"Serata esaurita":"Workshop completo",
-      paymentMode:pay===0?"Iscrizione 10 € + saldo prima del Festival":"Pagamento completo 20 €",
+      paymentMode:pay===0?"Iscrizione 10 € + saldo prima del Festival · da regolare con la segreteria":"Quota intera 20 € · da regolare con la segreteria",
       paymentAmount:pay===0?10:20,
       payNote:pay===0
-        ?"Paghi ora 10 € di iscrizione con PayPal a info@artyouroma.it e saldi il restante importo prima del Festival."
-        :"Paghi ora l’intero importo di 20 € con PayPal a info@artyouroma.it.",
-      ctaLabel:"Conferma e paga con PayPal",
+        ?"Prenoti ora senza pagare online: i 10 € di iscrizione e il saldo si regolano con la segreteria prima del Festival. Ti scriviamo noi con le istruzioni."
+        :"Prenoti ora senza pagare online: i 20 € si regolano con la segreteria. Ti scriviamo noi con le istruzioni.",
+      ctaLabel:"Conferma prenotazione",
       wa:wa,
       waWait:"https://wa.me/393271881956?text="+encodeURIComponent("Ciao! "+what+" è al completo: potete mettermi in lista d’attesa?"),
       confirmed:!!st.confirmed,notConfirmed:!st.confirmed,

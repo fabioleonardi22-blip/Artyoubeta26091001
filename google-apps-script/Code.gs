@@ -71,7 +71,7 @@ function doPost(e) {
   try {
     cleanupExpiredHolds_();
 
-    const data = parseRequest_(e);
+    let data = parseRequest_(e);
 
     if (data._hp && String(data._hp).trim() !== "") {
       return jsonResponse_({ ok: true });
@@ -80,13 +80,20 @@ function doPost(e) {
     const action = String(data.action || data.Azione || "prenota").toLowerCase();
 
     if (action === "confermapagamento" || action === "pagato") {
+      requireAdminSecret_(data.adminSecret);
       return confirmPayment_(data);
     }
 
     if (action === "annulla") {
+      requireAdminSecret_(data.adminSecret);
       return cancelBooking_(data);
     }
 
+    if (action !== "prenota") {
+      return jsonResponse_({ ok: false, errore: "azione_non_valida" });
+    }
+
+    data = sanitizeRequest_(data);
     validateRequiredFields_(data);
 
     const isEvento = !!String(data.Evento || "").trim();
@@ -110,11 +117,11 @@ function doPost(e) {
 
 function createGenericRequest_(data) {
   const id = makeId_();
-  const rowData = Object.assign({
+  const rowData = Object.assign({}, data, {
     ID: id,
     Timestamp: new Date(),
     Stato: "Nuova"
-  }, data);
+  });
 
   delete rowData._hp;
   delete rowData.action;
@@ -142,9 +149,8 @@ function createEventBooking_(data) {
   const evento = String(data.Evento || "").trim();
   const posti = Math.max(1, parseInt(data.Posti || "1", 10) || 1);
   const pagamento = String(data.Pagamento || "In cassa").trim();
-  const importo = String(data.Importo || "").trim();
-
   const ev = getEvent_(evento);
+  const importo = serverAmount_(ev, posti, data);
 
   // Se l'evento non è ancora configurato nel foglio Eventi,
   // la prenotazione viene comunque accettata e salvata.
@@ -179,7 +185,7 @@ function createEventBooking_(data) {
 
   const id = makeId_();
 
-  const rowData = Object.assign({
+  const rowData = Object.assign({}, data, {
     ID: id,
     Timestamp: new Date(),
     Stato: stato,
@@ -187,7 +193,7 @@ function createEventBooking_(data) {
     Pagamento: pagamento,
     Importo: importo,
     ScadenzaHold: scadenza
-  }, data);
+  });
 
   delete rowData._hp;
   delete rowData.action;
@@ -742,6 +748,44 @@ function parseRequest_(e) {
   return e.parameter || {};
 }
 
+// Campi che solo il server può valorizzare: il client non può impostarli.
+const SERVER_FIELDS_ = ["ID", "Timestamp", "Stato", "ScadenzaHold", "adminSecret", "scannerSecret", "pin", "token"];
+const MAX_REQUEST_FIELDS_ = 40;
+const MAX_FIELD_LENGTH_ = 4000;
+
+function sanitizeRequest_(data) {
+  const out = {};
+  let count = 0;
+  Object.keys(data || {}).forEach(function(key) {
+    if (SERVER_FIELDS_.indexOf(key) !== -1) return;
+    if (!/^[A-Za-z_][A-Za-z0-9_ ]{0,39}$/.test(key)) return;
+    if (count >= MAX_REQUEST_FIELDS_) return;
+    let value = data[key];
+    if (value !== null && typeof value === "object") value = JSON.stringify(value);
+    if (typeof value === "string" && value.length > MAX_FIELD_LENGTH_) value = value.slice(0, MAX_FIELD_LENGTH_);
+    out[key] = value;
+    count++;
+  });
+  return out;
+}
+
+function requireAdminSecret_(secret) {
+  const expected = PropertiesService.getScriptProperties().getProperty("ARTYOU_ADMIN_SECRET");
+  if (!expected || String(secret || "") !== expected) {
+    throw new Error("non_autorizzato");
+  }
+}
+
+// Importo calcolato dal prezzo del foglio Eventi quando l'evento ha un prezzo unico.
+// Per pacchetti a scelta (RIF, YEP) resta l'importo dichiarato, da verificare sul pagamento reale.
+function serverAmount_(ev, posti, data) {
+  const prezzo = ev ? parseFloat(String(ev.prezzo || "").replace(",", ".").replace(/[^0-9.]/g, "")) : NaN;
+  if (Number.isFinite(prezzo) && prezzo > 0 && !String(data.Scelte || "").trim()) {
+    return (prezzo * posti).toFixed(2);
+  }
+  return String(data.Importo || "").trim().slice(0, 40);
+}
+
 function makeId_() {
   return (
     "ART-" +
@@ -811,7 +855,12 @@ function normalizeValue_(value) {
   }
 
   if (typeof value === "object" && !(value instanceof Date)) {
-    return JSON.stringify(value);
+    value = JSON.stringify(value);
+  }
+
+  // Un testo che inizia con = + - @ verrebbe interpretato come formula dal foglio.
+  if (typeof value === "string" && /^[=+\-@\t\r]/.test(value)) {
+    return "'" + value;
   }
 
   return value;

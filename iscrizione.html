@@ -201,6 +201,10 @@ x-dc>div:first-of-type{width:100%!important;max-width:1200px!important;margin:0 
 .artyou-field-err { outline: 2px solid #D93A3A !important; outline-offset: 1px; }
 </style>
 
+<style id="artyou-laptop-width">
+/* Audit 10/10/2026: tra 821 e 1439 px il layout restava largo 1440 px e la pagina scorreva di lato (a 1024 px logo e titoli tagliati a sinistra). */
+@media (min-width:821px) and (max-width:1439px){body>x-dc,x-dc,x-dc>div:first-of-type,[style*="width: 1440px"],[style*="width:1440px"]{width:100%!important;max-width:100%!important;min-width:0!important}}
+</style>
 <style id="artyou-mobile-hardening">
 @media (max-width: 820px){
   *,*::before,*::after{box-sizing:border-box;}
@@ -500,6 +504,8 @@ class Component extends DCLogic {
       d.Pagamento = "PayPal (online)"; d.Importo = (prezzo * (parseInt(d.Posti, 10) || 1)).toFixed(2);
     } else { d.Pagamento = "In cassa"; }
     var hp = c.querySelector("input[name=_hp]"); d._hp = hp ? hp.value : "";
+    // Il proxy accetta "prenota" per i posti di un evento e "richiesta" per le iscrizioni ai corsi.
+    d.action = d.Evento ? "prenota" : "richiesta";
     return d;
   }
   function valida(b, d){
