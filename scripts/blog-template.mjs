@@ -24,7 +24,7 @@ export function header() {
   <a href="/" aria-label="Artyou Roma – Home"><img src="/img/logo-orizzontale-bianco.png" alt="Artyou Roma" width="170" height="56"></a>
   <input type="checkbox" id="menu-toggle" aria-hidden="true" tabindex="-1">
   <nav aria-label="Menu principale">
-    <a href="/#spettacoli">Spettacoli</a>
+    <a href="/spettacoli/">Spettacoli</a>
     <a href="/improvvisazione-teatrale/">Corsi</a>
     <a href="/workshow/">WorkshoW</a>
     <a href="/rome-improv-festival/">Festival</a>
@@ -85,6 +85,7 @@ ${ogImage ? `<meta property="og:image" content="${safe(ogImage)}">` : ""}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
 <link rel="stylesheet" href="/blog/blog.css">
+<script src="/js/enhancements.js?v=20261010-shows2" defer></script>
 ${jsonLd}
 </head>
 <body>
@@ -117,7 +118,7 @@ export function renderArticle({ slug, title, category, date, excerpt, bodyHtml, 
   const minuti = Math.max(1, Math.round(parole / 220));
   const ld = `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org", "@type": "BlogPosting", headline: title, description: excerpt,
-    datePublished: date, author: { "@type": "Organization", name: "Artyou Roma" },
+    datePublished: date, dateModified: date, ...(image ? {image:new URL(image,"https://artyouroma.it").href} : {}), author: { "@type": "Organization", name: "Artyou Roma" },
     publisher: { "@type": "Organization", name: "Artyou Roma" }, mainEntityOfPage: url
   }).replace(/</g, "\\u003c")}</script>`;
   const body = `<section class="art-hero">

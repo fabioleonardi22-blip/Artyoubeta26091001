@@ -1,6 +1,8 @@
 const { selfOrigin } = require("../lib/origin");
 const { query } = require("../lib/db");
 
+const blog = require("../blog/articles.json");
+
 const SITE = "https://artyouroma.it";
 const STATIC_URLS = [
   "/",
@@ -83,6 +85,11 @@ module.exports = async function handler(req, res) {
 
   const urls = new Map();
   STATIC_URLS.forEach(path => urls.set(SITE + path, null));
+  for (const article of blog.articles || []) {
+    if (/^\/la-finestra-sul-cortile\/[a-z0-9-]+\/$/.test(article.url || "")) {
+      urls.set(SITE + article.url, ymd(article.date));
+    }
+  }
 
   const teachers = await teacherUrls(origin);
   teachers.forEach(path => urls.set(SITE + path, null));

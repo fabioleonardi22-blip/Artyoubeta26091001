@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { renderArticle, bodyFromParagraphs, sourcesFromList } from "./blog-template.mjs";
 import { findImage, QUERY_RUBRICA } from "./blog-images.mjs";
+import { sourcesForCategory, proposeUnique } from "./blog-editorial.mjs";
 
 // Due articoli a settimana:
 //  - lunedì   → "Festival Radar": festival internazionali di improvvisazione
@@ -9,12 +10,7 @@ import { findImage, QUERY_RUBRICA } from "./blog-images.mjs";
 // Ogni esecuzione aggiorna anche il riquadro "Festival Radar" dell'archivio.
 // RUBRICA (variabile d'ambiente) forza la rubrica, per gli avvii manuali.
 
-const geminiKey=process.env.GEMINI_API_KEY;
-const openrouterKey=process.env.OPENROUTER_API_KEY;
-if(!geminiKey&&!openrouterKey){
-  console.log("Nessuna chiave AI configurata: nessun articolo generato.");
-  process.exit(0);
-}
+
 
 const root=process.cwd();
 const dataPath=path.join(root,"blog","articles.json");
@@ -31,6 +27,13 @@ const today=new Date().toISOString().slice(0,10);
 if(!process.env.RUBRICA&&data.articles.some(x=>x.date===today)){
   console.log("Oggi l'articolo è già stato pubblicato: nessuna nuova uscita.");
   process.exit(0);
+}
+
+const geminiKey=process.env.GEMINI_API_KEY;
+const openrouterKey=process.env.OPENROUTER_API_KEY;
+if(!geminiKey&&!openrouterKey){
+  console.error("Nessuna chiave AI configurata: pubblicazione non eseguita.");
+  process.exit(1);
 }
 
 const ALTRE=["Improv around the world","Impro People","Dentro l'improv"];
@@ -60,10 +63,12 @@ async function fetchText(url,{limit=12000,timeout=20000}={}){
   }finally{clearTimeout(t)}
 }
 
+const unavailableGemini = new Set();
 async function callGemini(prompt,{json=true}={}){
   if(!geminiKey) return null;
   const models=["gemini-3.8-flash","gemini-3.5-flash-lite","gemini-2.5-flash"];
   for(const model of models){
+    if (unavailableGemini.has(model)) continue;
     try{
       const ctrl=new AbortController();
       const timer=setTimeout(()=>ctrl.abort(),45000);
@@ -84,7 +89,8 @@ async function callGemini(prompt,{json=true}={}){
       });
       clearTimeout(timer);
       if(!res.ok){
-        console.log(`Gemini ${model} ${res.status}: ${await res.text()}`);
+        if ([404,429].includes(res.status)) unavailableGemini.add(model);
+        console.log(`Gemini ${model} ${res.status}`);
         continue;
       }
       const out=await res.json();
@@ -254,7 +260,7 @@ if(category==="Festival Radar"){
   }
 }
 if(category!=="Festival Radar"){
-  for(const s of sourceList.filter(x=>x.type!=="festival-directory")){
+  for(const s of sourcesForCategory(sourceList,category)){
     try{docs.push({source:s,text:await fetchText(s.url)});}catch(e){console.log(String(e));}
   }
   if(docs.length<2) throw new Error("Fonti ufficiali insufficienti per generare in sicurezza.");
@@ -264,7 +270,7 @@ const sourceBundle=docs.map((d,i)=>`FONTE ${i+1}: ${d.source.name}\nURL: ${d.sou
 const istruzioniRubrica=category==="Festival Radar"
   ?`Presenta questi festival internazionali di improvvisazione in arrivo: ${festivalScelti.map(f=>`${f.name} (${[f.city,f.country].filter(Boolean).join(", ")}, ${periodo(f.start,f.end)})`).join("; ")}.
 Per ognuno: dove e quando si svolge e cosa lo caratterizza, solo secondo le fonti. Le date le hai già qui sopra: non cambiarle.`
-  :`Se non ci sono abbastanza dati per la rubrica assegnata, scrivi un articolo "Improv around the world" basato sulle scuole presenti.`;
+  :`Mantieni la rubrica assegnata. Per Dentro l’improv spiega un solo concetto pratico; per Impro People presenta una persona documentata dalle fonti; per Improv around the world scegli una realtà o un percorso diverso dagli articoli già pubblicati. Se mancano dati, blocca la pubblicazione senza ripiegare su un argomento già trattato.`;
 
 const prompt=`Sei la redazione di "La finestra sul cortile – Lo sconfinato mondo dell’improvvisazione", blog di Artyou Roma.
 Scrivi UN articolo in italiano, circa 1000-1500 caratteri spazi inclusi, rubrica: ${category}.
@@ -290,7 +296,7 @@ Requisiti:
 - body totale circa 1000-1500 caratteri
 - image_query: 2-4 parole IN INGLESE per cercare una foto d'atmosfera su Unsplash (un luogo o un tema, es. "Berlin theater night", "comedy festival stage"); MAI nomi di persone`;
 
-const a=await chiediAI(prompt);
+async function validateArticle(a){
 a.category=category;
 if(!a.title||!a.slug||!Array.isArray(a.body)||!Array.isArray(a.sources)||!a.sources.length) throw new Error("Articolo incompleto");
 a.slug=String(a.slug).toLowerCase().replace(/[^a-z0-9-]+/g,"-").replace(/^-+|-+$/g,"").slice(0,90);
@@ -328,9 +334,12 @@ Rispondi SOLO JSON: {"duplicate":true oppure false,"matched_slug":"slug dell'art
   if(review.duplicate) throw new Error("Argomento già pubblicato: "+review.matched_slug+" — "+review.reason);
 }
 
+}
+const a=await proposeUnique({prompt,generate:chiediAI,validate:validateArticle});
+
 const allowed=new Set(docs.map(d=>d.source.url));
 a.sources=a.sources.filter(x=>allowed.has(x.url));
-if(!a.sources.length) a.sources=docs.slice(0,3).map(d=>({name:d.source.name,url:d.source.url}));
+if(!a.sources.length) throw new Error("Fonti citate non presenti nei documenti verificati");
 
 const dir=path.join(root,"la-finestra-sul-cortile",a.slug);
 fs.mkdirSync(dir,{recursive:true});

@@ -1,5 +1,12 @@
 name: Weekly blog - La finestra sul cortile
 on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/generate-blog.mjs"
+      - "scripts/blog-editorial.mjs"
+      - "blog/sources.json"
+      - ".github/workflows/weekly-blog.yml"
   workflow_dispatch:
     inputs:
       rubrica:
@@ -12,7 +19,7 @@ on:
     # lunedì: Festival Radar · giovedì: le altre rubriche a rotazione
     - cron: "15 8 * * 1"
     - cron: "15 8 * * 4"
-    # tentativi di riserva nello stesso giorno: partono solo se alle 8 non è uscito nulla
+    # Orari UTC; i tentativi di riserva non generano un secondo articolo nello stesso giorno
     - cron: "15 13 * * 1"
     - cron: "15 13 * * 4"
     - cron: "15 18 * * 1"
@@ -34,6 +41,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
+      - name: Verifica selezione fonti e recupero duplicati
+        run: node --test tests/blog-editorial.test.js
       - name: Genera articolo con Gemini + fallback OpenRouter (con foto Unsplash)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

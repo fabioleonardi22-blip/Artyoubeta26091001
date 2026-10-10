@@ -46,5 +46,41 @@
     "url": "https://improv-festivals.radical-elements.com/",
     "type": "festival-directory",
     "region": "World"
+  },
+  {
+    "name": "Viola Spolin – sito ufficiale",
+    "url": "https://www.violaspolin.org/",
+    "type": "person",
+    "region": "USA"
+  },
+  {
+    "name": "Northwestern University Press – Improvisation for the Theater",
+    "url": "https://nupress.northwestern.edu/9780810140080/improvisation-for-the-theater/",
+    "type": "person",
+    "region": "USA"
+  },
+  {
+    "name": "Spolin Games Online – metodo e sidecoaching",
+    "url": "https://spolingamesonline.org/about/",
+    "type": "technique",
+    "region": "USA"
+  },
+  {
+    "name": "Spolin Games Online – Sidecoaching & the Language of Authority",
+    "url": "https://spolingamesonline.org/the-language-of-authority/",
+    "type": "technique",
+    "region": "USA"
+  },
+  {
+    "name": "BATS Improv – San Francisco",
+    "url": "https://www.improv.org/about/",
+    "type": "school",
+    "region": "USA"
+  },
+  {
+    "name": "BATS Improv – School",
+    "url": "https://www.improv.org/school/",
+    "type": "school",
+    "region": "USA"
   }
 ]

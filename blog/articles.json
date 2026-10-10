@@ -1,6 +1,17 @@
 {
-  "updated": "2026-10-06",
+  "updated": "2026-10-10",
   "articles": [
+    {
+      "slug": "viola-spolin-imparare-teatro-giocando",
+      "title": "Viola Spolin: imparare il teatro giocando",
+      "category": "Impro People",
+      "date": "2026-10-10",
+      "excerpt": "I giochi teatrali di Viola Spolin e il sidecoaching: un modo di imparare attraverso l’esperienza, l’attenzione e il lavoro insieme.",
+      "url": "/la-finestra-sul-cortile/viola-spolin-imparare-teatro-giocando/",
+      "image": "/img/home-carousel-06.jpg",
+      "imageThumb": "/img/home-carousel-06.jpg",
+      "imageAlt": "Due interpreti Artyou in scena, tra gesto e ascolto"
+    },
     {
       "slug": "festival-radar-ottobre",
       "title": "Festival Radar: gli appuntamenti internazionali di ottobre",

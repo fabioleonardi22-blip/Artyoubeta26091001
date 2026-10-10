@@ -81,7 +81,7 @@ if(grid){
     var list=filter==="all"?all.slice(1):all.filter(function(a){return a.category===filter});
     if(filter==="all"&&!all.length)list=[];
     document.getElementById("count").textContent=(filter==="all"?all.length:list.length)+(((filter==="all"?all.length:list.length)===1)?" articolo":" articoli");
-    grid.innerHTML=list.length?list.map(card).join(""):'<div class="empty">'+(filter==="all"&&all.length?"Gli altri articoli arriveranno presto: ne pubblichiamo uno nuovo ogni settimana.":"Nessun articolo in questa rubrica, per ora.")+'</div>';
+    grid.innerHTML=list.length?list.map(card).join(""):'<div class="empty">'+(filter==="all"&&all.length?"Gli altri articoli arriveranno presto: ne pubblichiamo due ogni settimana, il lunedì e il giovedì.":"Nessun articolo in questa rubrica, per ora.")+'</div>';
   };
   load().then(function(d){
     all=d.articles;var f=all[0];
