@@ -668,7 +668,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </article>
 </sc-for>
 </div>
-<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #3F474E;">Puoi scegliere se <strong>pagare 10 € di iscrizione e saldare prima del Festival</strong> oppure <strong>pagare subito 20 €</strong>. I pagamenti vengono gestiti tramite PayPal all’indirizzo <strong>info@artyouroma.it</strong>.</p>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #3F474E;">Puoi scegliere se <strong>pagare 10 € di iscrizione e saldare prima del Festival</strong> oppure <strong>pagare subito 20 €</strong>. Il pagamento online è temporaneamente sospeso: prenoti ora e la segreteria (<strong>info@artyouroma.it</strong>) ti contatta per iscrizione e saldo.</p>
 </div>
 <div style="display: flex; flex-direction: column; gap: 12px;">
 <h2 class="am-fs-m" style="margin: 0; font-family: 'Bricolage Grotesque', Georgia, sans-serif; font-weight: 800; font-size: 28px;">Info pratiche</h2>
@@ -722,7 +722,7 @@ a{color:#1A6E99}a:hover{color:#12506F}
 </div><span style="font-size: 13px; color: #555D64;">{{payNote}}</span></div>
 <input id="f-evento-id" type="hidden" value="{{eventId}}">
 <input id="f-posti" type="hidden" value="{{bookingSeats}}">
-<input id="f-paga-online" type="hidden" value="true">
+<input id="f-paga-online" type="hidden" value="false">
 <input id="f-pagamento-modalita" type="hidden" value="{{paymentMode}}">
 <input id="f-prezzo" type="hidden" value="{{paymentAmount}}">
 <div style="display: flex; flex-direction: column; gap: 14px;"><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-nome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Nome</label><input id="f-nome" type="text" autocomplete="given-name" placeholder="Mario" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-cognome" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Cognome</label><input id="f-cognome" type="text" autocomplete="family-name" placeholder="Rossi" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div class="am-grid2 am-k" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;"><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-mail" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Email</label><input id="f-mail" type="email" autocomplete="email" placeholder="nome@email.it" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-tel" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Numero di telefono</label><input id="f-tel" type="tel" autocomplete="tel" placeholder="+39 …" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div><div style="display: flex; flex-direction: column; gap: 8px;"><label for="f-scuola" class="am-fs-body" style="font-size: 14px; font-weight: 700;">Scuola o gruppo di provenienza <span style="font-weight: 400; color: #555D64;">(facoltativo)</span></label><input id="f-scuola" type="text" placeholder="Es. Artyou Roma" style="height: 50px; border: 1px solid #CFC8BA; border-radius: 12px; padding: 0 16px; font-size: 16px; font-family: inherit;"></div></div>
@@ -964,12 +964,12 @@ class Component extends DCLogic {
       soldOut:capacityReady&&rem===0,
       capacityPending:!capacityReady,
       soldTitle:isShow?"Serata esaurita":"Workshop completo",
-      paymentMode:pay===0?"Iscrizione 10 € + saldo prima del Festival":"Pagamento completo 20 €",
+      paymentMode:pay===0?"Iscrizione 10 € + saldo prima del Festival · da regolare con la segreteria":"Quota intera 20 € · da regolare con la segreteria",
       paymentAmount:pay===0?10:20,
       payNote:pay===0
-        ?"Paghi ora 10 € di iscrizione con PayPal a info@artyouroma.it e saldi il restante importo prima del Festival."
-        :"Paghi ora l’intero importo di 20 € con PayPal a info@artyouroma.it.",
-      ctaLabel:"Conferma e paga con PayPal",
+        ?"Prenoti ora senza pagare online: i 10 € di iscrizione e il saldo si regolano con la segreteria prima del Festival. Ti scriviamo noi con le istruzioni."
+        :"Prenoti ora senza pagare online: i 20 € si regolano con la segreteria. Ti scriviamo noi con le istruzioni.",
+      ctaLabel:"Conferma prenotazione",
       wa:wa,
       waWait:"https://wa.me/393271881956?text="+encodeURIComponent("Ciao! "+what+" è al completo: potete mettermi in lista d’attesa?"),
       confirmed:!!st.confirmed,notConfirmed:!st.confirmed,

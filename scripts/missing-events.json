@@ -1,0 +1,26 @@
+{
+  "_nota": "Eventi prenotabili dal sito ma assenti in MySQL. Compilare 'capienza' (posti) prima di lanciare scripts/mysql-create-missing-events.js: gli eventi con capienza null non vengono creati.",
+  "eventi": [
+    {
+      "slug": "yep-2027-solo-soggiorno",
+      "titolo": "YEP 2027 · Solo soggiorno",
+      "categoria": "YEP",
+      "tipo": "Soggiorno",
+      "data": "03/09/2027",
+      "capienza": null,
+      "prezzo": null,
+      "fonte": "yep.html / js/yep-logic.js: eventId usato quando non si sceglie un workshop"
+    },
+    {
+      "slug": "rif-2027-spettacolo-all-in",
+      "titolo": "Rome Improv Festival – Spettacolo ALL IN",
+      "categoria": "Spettacolo",
+      "tipo": "Spettacolo",
+      "data": "13/03/2027 · 22:00",
+      "luogo": "Via La Spezia 73, Roma",
+      "capienza": null,
+      "prezzo": 15,
+      "fonte": "api/mysql-events.js defaultRifConfig (Spettacolo ALL IN, sabato 13 marzo, ore 22:00, 15 €)"
+    }
+  ]
+}

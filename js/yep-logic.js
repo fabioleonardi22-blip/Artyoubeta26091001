@@ -171,7 +171,7 @@ class Component extends DCLogic {
       bookingNote: roomNote + " · Prezzo YEP: " + priceText,
       bookingSeats: 1,
       payOnline: true,
-      paymentMode: pay===0 ? "Iscrizione 10 € + saldo prima del Festival" : "Pagamento completo",
+      paymentMode: pay===0 ? "Iscrizione 10 € + saldo prima del Festival · da regolare con la segreteria" : "Quota intera · da regolare con la segreteria",
       paymentAmount: pay===0 ? 10 : fullPrice,
       payOpts: payOpts,
       wsCards: wsCards,
@@ -182,9 +182,9 @@ class Component extends DCLogic {
       capacityPending: !capacityReady,
       soldTitle: "Workshop al completo",
       payNote: pay===0
-        ? "Paghi ora <strong>10 €</strong> di iscrizione con PayPal a info@artyouroma.it e saldi il restante importo prima del Festival. La camera resta una preferenza."
-        : "Paghi ora l’intero importo di <strong>"+(fullPrice?fullPrice+" €":"da confermare")+"</strong> con PayPal a info@artyouroma.it." + (hasStay ? " La camera resta una preferenza." : ""),
-      ctaLabel: "Conferma e paga con PayPal",
+        ? "Prenoti ora senza pagare online: i <strong>10 €</strong> di iscrizione e il saldo si regolano con la segreteria prima del Festival. La camera resta una preferenza."
+        : "Prenoti ora senza pagare online: l’importo di <strong>"+(fullPrice?fullPrice+" €":"da confermare")+"</strong> da regolare con la segreteria: ti scriviamo noi con le istruzioni." + (hasStay ? " La camera resta una preferenza." : ""),
+      ctaLabel: "Conferma prenotazione",
       wa: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Vorrei prenotare YEP 2027: " + what + "."),
       waWait: "https://wa.me/393271881956?text=" + encodeURIComponent("Ciao! Per YEP 2027 (" + what + ") il workshop risulta completo: potete mettermi in lista d’attesa?"),
       confirmed: !!st.confirmed, notConfirmed: !st.confirmed,
