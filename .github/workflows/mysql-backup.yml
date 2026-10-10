@@ -6,6 +6,7 @@ name: Backup MySQL
 #   BACKUP_PASSPHRASE   frase di almeno 24 caratteri, da custodire anche fuori da GitHub
 #   BACKUP_DB_MAIN_URL  URL MySQL "mysql" + "://utente_backup:password@host:porta/database" (database del sito)
 #   BACKUP_DB_MERCH_URL stesso formato (database del merchandising; facoltativo)
+#   BACKUP_DB_GESTIONALE_URL stesso formato (database del gestionale, servizio artyou-booking-lab-mysql, MySQL 8.4)
 # Usare un utente MySQL con soli permessi SELECT, SHOW VIEW, TRIGGER, EVENT, LOCK TABLES.
 on:
   schedule:
@@ -55,13 +56,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        db: [main, merch]
+        include:
+          - { db: main, secret: BACKUP_DB_MAIN_URL, image: "mysql:9" }
+          - { db: merch, secret: BACKUP_DB_MERCH_URL, image: "mysql:9" }
+          - { db: gestionale, secret: BACKUP_DB_GESTIONALE_URL, image: "mysql:8.4" }
     steps:
       - uses: actions/checkout@v4
       - name: Backup cifrato e prova di ripristino
         env:
           BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
-          DB_URL: ${{ matrix.db == 'main' && secrets.BACKUP_DB_MAIN_URL || secrets.BACKUP_DB_MERCH_URL }}
+          DB_URL: ${{ secrets[matrix.secret] }}
+          MYSQL_CLIENT_IMAGE: ${{ matrix.image }}
+          MYSQL_SERVER_IMAGE: ${{ matrix.image }}
         run: |
           if [ -z "$DB_URL" ] || [ -z "$BACKUP_PASSPHRASE" ]; then echo "::warning::Segreti per ${{ matrix.db }} non configurati: backup saltato"; exit 0; fi
           scripts/backup/mysql-backup.sh "${{ matrix.db }}" out
