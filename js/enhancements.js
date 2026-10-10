@@ -684,3 +684,34 @@
   `;
   document.head.appendChild(style);
 })();
+
+/* Keep the burgundy divider attached to the sticky header, without content gaps. */
+(function(){
+  var style=document.createElement('style');
+  style.id='artyou-sticky-divider';
+  style.textContent=`
+    html body header.am-wrap::after{
+      content:"";position:absolute;left:0;right:0;bottom:-6px;
+      height:6px;background:#7A1631;pointer-events:none;
+    }
+    html body header.am-wrap~nav[aria-label]{
+      top:var(--artyou-subnav-top,96px)!important;
+    }
+  `;
+  document.head.appendChild(style);
+  function align(){
+    document.querySelectorAll('header.am-wrap').forEach(function(header){
+      var parent=header.parentElement;
+      parent.style.setProperty('--artyou-subnav-top',(header.getBoundingClientRect().height+6)+'px');
+      if(window.ResizeObserver&&!header.dataset.dividerObserved){
+        header.dataset.dividerObserved='true';
+        new ResizeObserver(function(){
+          parent.style.setProperty('--artyou-subnav-top',(header.getBoundingClientRect().height+6)+'px');
+        }).observe(header);
+      }
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',align);
+  else align();
+  new MutationObserver(align).observe(document.body||document.documentElement,{childList:true,subtree:true});
+})();
