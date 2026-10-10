@@ -5,6 +5,7 @@ const { rateLimit, applyRateLimitHeaders, rejectRateLimited, sameOrigin, setSecu
 const { requireUser, authErrorStatus } = require("../lib/authorization");
 const { query } = require("../lib/db");
 const { audit } = require("../lib/audit");
+const { primaryMode, setBookingStatus } = require("../lib/booking-store");
 
 const ACTIONS = { conferma: { upstream:"confermapagamento", status:"PAGATO" }, annulla: { upstream:"annulla", status:"ANNULLATO" } };
 
@@ -34,6 +35,37 @@ module.exports = async function handler(req, res) {
 
   const url = String(process.env.ARTYOU_APPS_SCRIPT_URL || "").trim();
   const secret = String(process.env.ARTYOU_ADMIN_SECRET || "").trim();
+
+  // MySQL archivio principale: lo stato cambia prima in MySQL, il foglio segue.
+  // Un codice che MySQL non conosce (prenotazione mai copiata) passa al vecchio percorso.
+  if (primaryMode() === "mysql") {
+    let found;
+    try { found = await setBookingStatus(id, action.status); }
+    catch (err) {
+      const code = String(err && err.message || err);
+      if (/^prenotazione_non_confermabile$|^operazione_non_riuscita$/.test(code)) return res.status(409).json({ ok:false, errore:code });
+      console.error("BOOKING_ADMIN_MYSQL_ERROR", code);
+      return res.status(503).json({ ok:false, errore:"mysql_unavailable" });
+    }
+    if (found) {
+      let sheet = false;
+      if (url && secret) {
+        try {
+          const upstream = await fetch(url, {
+            method:"POST", redirect:"follow", signal:AbortSignal.timeout(15000),
+            headers:{ "Content-Type":"text/plain;charset=utf-8" },
+            body:JSON.stringify({ action:action.upstream, ID:id, adminSecret:secret })
+          });
+          const data = JSON.parse(await upstream.text());
+          sheet = !!(data && data.ok);
+        } catch (_) {}
+        if (!sheet) console.warn("BOOKING_ADMIN_SHEET_NOT_UPDATED", id);
+      }
+      await audit({ email:auth.identity.email, role:auth.user.role }, "booking_" + String(body.action), id, { sheet });
+      return res.status(200).json({ ok:true, id, stato:action.status, foglioAggiornato:sheet });
+    }
+  }
+
   if (!url || !secret) return res.status(503).json({ ok:false, errore:"non_configurato" });
 
   try {

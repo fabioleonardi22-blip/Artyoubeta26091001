@@ -142,3 +142,35 @@ Configurazione (una volta): segreti `BACKUP_PASSPHRASE`, `BACKUP_DB_MAIN_URL` ed
 
 Per ripristinare a mano: scaricare l'artifact, poi
 `openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -pass env:BACKUP_PASSPHRASE -in file.sql.gz.enc | gunzip | mysql ...`.
+
+## Prenotazioni: MySQL archivio principale · predisposto il 10 ottobre 2026
+
+Interruttore su Vercel: `ARTYOU_BOOKING_PRIMARY`.
+
+- `sheet` (predefinito, anche se la variabile manca): tutto come prima. Il foglio Google decide posti e conferme, MySQL riceve una copia.
+- `mysql`: MySQL decide. La prenotazione viene creata in una transazione con lock sulla riga dell'evento, quindi due persone che prenotano insieme non possono superare la capienza. Il cliente riceve subito il codice; la copia nel foglio e le email partono dopo la risposta (azione `registra` dello Script Google), così chi prenota non aspetta lo Script.
+
+Cosa cambia con `mysql`:
+
+| | `sheet` | `mysql` |
+| --- | --- | --- |
+| Chi conta i posti | foglio | MySQL (`lib/booking-store.js`) |
+| `?disponibilita=1`, `?evento=` | Script Google | MySQL, stesso formato |
+| Iscrizioni ai corsi (`richiesta`) | foglio | foglio (invariato) |
+| Email cliente e staff | Script Google | Script Google, dopo la risposta |
+| Conferma/annulla staff | foglio, poi MySQL | MySQL, poi foglio |
+| Scanner check-in | foglio | foglio (riceve comunque tutte le prenotazioni) |
+| MySQL non raggiungibile | prenotazione sul foglio | prenotazione rifiutata (503), nessun ripiego sul foglio |
+
+I posti si contano per chiave come oggi: lo slug, oppure `<slug>-<indice>` per le pagine con più date (capienza della data = `capacity_override`, altrimenti quella dell'evento). Le prenotazioni copiate dal foglio prima del passaggio vengono contate per la stessa chiave.
+
+### Attivazione (solo con backup attivi)
+
+1. **Backup**: configurare i segreti del workflow "Backup MySQL" (sezione Backup sopra) e verificare che un'esecuzione manuale completi backup e prova di ripristino.
+2. **Script Google**: copiare `google-apps-script/Code.gs` aggiornato (azione `registra`) e pubblicare una nuova versione della stessa distribuzione, così l'URL `/exec` non cambia. Con `sheet` l'azione non viene usata: si può fare in anticipo.
+3. **Controllo**: `DATABASE_URL=... node scripts/booking-switch-check.js` deve chiudere senza problemi bloccanti (eventi con capienza 0, prenotazioni con chiave non riconosciuta). Confrontare i posti liberi elencati con quelli del foglio.
+4. **Passaggio**, in un momento senza spettacoli imminenti: `ARTYOU_BOOKING_PRIMARY=mysql` su Vercel (Production) e nuovo deploy. Fare una prenotazione di prova e verificare codice, riga nel foglio ed email.
+5. **Riallineamento**: `node scripts/booking-sheet-resync.js` elenca le copie nel foglio non riuscite; con `--apply` le ripete (lo Script non duplica i codici già presenti).
+6. **Ritorno indietro**: rimettere `ARTYOU_BOOKING_PRIMARY=sheet` e rifare il deploy. Le prenotazioni fatte nel frattempo sono già nel foglio (dopo il riallineamento del punto 5), quindi il foglio riparte con i conti giusti.
+
+Prove: `MYSQL_TEST_URL=<database di prova vuoto con schema.sql> npm test` esegue anche 30 prenotazioni simultanee su 10 posti (ne passano esattamente 10). In CI gira su MySQL 9 a ogni PR.

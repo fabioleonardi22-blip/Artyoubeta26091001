@@ -9,6 +9,45 @@ const {
 const APPS_SCRIPT_URL = String(process.env.ARTYOU_APPS_SCRIPT_URL || "").trim();
 const { query } = require("../lib/db");
 const { persistentRateLimit } = require("../lib/persistent-rate-limit");
+const bookingStore = require("../lib/booking-store");
+const { copyAfterResponse } = require("../lib/sheet-copy");
+
+// Letture di posti e disponibilità quando MySQL è l'archivio principale.
+// Stesso formato di risposta dello Script Google.
+async function mysqlRead(req, res, params) {
+  try {
+    if (params.get("eventi") === "1") return require("./mysql-events")(req, res);
+    if (params.get("disponibilita") === "1") {
+      return res.status(200).json({ ok:true, disponibilita: await bookingStore.availabilityMap() });
+    }
+    const evento = String(params.get("evento") || "").trim().slice(0, 180);
+    if (evento) {
+      const liberi = await bookingStore.seatsLeft(evento);
+      return res.status(200).json({ ok:true, evento, liberi: liberi == null ? 0 : liberi });
+    }
+    return res.status(200).json({ ok:true, message:"Artyou booking endpoint attivo" });
+  } catch (err) {
+    console.error("ARTYOU_MYSQL_READ_ERROR", String(err && err.message || err));
+    return reject(res, 503, "disponibilita_non_disponibile");
+  }
+}
+
+// Prenotazione decisa da MySQL; il foglio riceve una copia dopo la risposta.
+async function mysqlBooking(res, data) {
+  let booking;
+  try { booking = await bookingStore.createBooking(data); }
+  catch (err) {
+    console.error("ARTYOU_MYSQL_BOOKING_ERROR", String(err && err.message || err));
+    return reject(res, 503, "prenotazioni_temporaneamente_non_disponibili");
+  }
+  if (!booking.ok) return res.status(200).json(booking);
+  const pending = copyAfterResponse(data, booking);
+  if (pending) await pending;
+  return res.status(200).json({
+    ok:true, id:booking.id, codice:booking.codice, stato:booking.stato, liberi:booking.liberi,
+    holdMinutes:booking.holdMinutes, storage:"mysql", persistenceConfirmed:true
+  });
+}
 
 const UPSTREAM_TIMEOUT_MS = 15000;
 
@@ -176,6 +215,8 @@ module.exports = async function handler(req, res) {
     }
 
     if ((method === "GET" || method === "HEAD") && queryAction === "public") return require("./events")(req,res);
+    const mysqlPrimary = bookingStore.primaryMode() === "mysql";
+    if ((method === "GET" || method === "HEAD") && mysqlPrimary) return mysqlRead(req, res, params);
     if (!APPS_SCRIPT_URL) return reject(res,503,"backend_non_configurato");
     let url = APPS_SCRIPT_URL;
     const forwarded = method === "POST" ? "" : upstreamQuery(rawQuery);
@@ -249,6 +290,8 @@ module.exports = async function handler(req, res) {
       // The old PayPal URL trusted a client amount and had no verified callback.
       if(/^PayPal/i.test(String(parsed.Pagamento||"")))return reject(res,503,"pagamento_online_non_disponibile");
       if(!isGenericRequest&&!(await findEventId(parsed.Evento)))return reject(res,400,"evento_non_trovato");
+      // Le iscrizioni ai corsi ("richiesta") restano sul foglio in entrambe le modalità.
+      if (mysqlPrimary && !isGenericRequest) return mysqlBooking(res, sanitizeBooking(parsed));
       options.headers["Content-Type"] = "text/plain;charset=utf-8";
       options.body = JSON.stringify(sanitizeBooking(parsed));
     }

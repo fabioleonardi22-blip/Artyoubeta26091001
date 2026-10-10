@@ -89,6 +89,13 @@ function doPost(e) {
       return cancelBooking_(data);
     }
 
+    // MySQL archivio principale (ARTYOU_BOOKING_PRIMARY=mysql su Vercel): la
+    // prenotazione è già decisa, qui si scrive solo la copia e si mandano le email.
+    if (action === "registra") {
+      requireAdminSecret_(data.adminSecret);
+      return registerMysqlBooking_(data);
+    }
+
     if (action !== "prenota") {
       return jsonResponse_({ ok: false, errore: "azione_non_valida" });
     }
@@ -217,6 +224,58 @@ function createEventBooking_(data) {
     emailAdmin: emailAdmin,
     emailUtente: emailUtente
   });
+}
+
+// Copia di una prenotazione decisa da MySQL. Non controlla la capienza (l'ha già fatto
+// MySQL) e non duplica: se il codice è già nel foglio risponde ok senza riscrivere
+// né rimandare le email, così il riallineamento può ripetere l'invio senza rischi.
+function registerMysqlBooking_(raw) {
+  const id = String(raw.ID || "").trim();
+  if (!/^ART-[0-9A-Z-]{6,60}$/i.test(id)) {
+    return jsonResponse_({ ok: false, errore: "codice_non_valido" });
+  }
+  const stato = String(raw.Stato || "RISERVATO").toUpperCase();
+  if (["HOLD", "RISERVATO", "PAGATO", "SCADUTO", "ANNULLATO"].indexOf(stato) === -1) {
+    return jsonResponse_({ ok: false, errore: "stato_non_valido" });
+  }
+
+  const sheet = ensureSheet_(SpreadsheetApp.getActiveSpreadsheet(), CFG.SHEET_PRENOTAZIONI);
+  if (sheet.getLastRow() >= 2) {
+    // Riga di intestazione senza filtri, così l'indice coincide con la colonna.
+    const headers = sheet.getRange(1, 1, 1, Math.max(1, sheet.getLastColumn())).getValues()[0];
+    const idxID = headers.indexOf("ID");
+    if (idxID !== -1) {
+      const ids = sheet.getRange(2, idxID + 1, sheet.getLastRow() - 1, 1).getValues();
+      for (let i = 0; i < ids.length; i++) {
+        if (String(ids[i][0]).trim() === id) {
+          return jsonResponse_({ ok: true, id: id, gia_presente: true });
+        }
+      }
+    }
+  }
+
+  const liberi = raw.liberi === "" || raw.liberi == null ? null : Number(raw.liberi);
+  const scadenza = raw.ScadenzaHold ? new Date(raw.ScadenzaHold) : "";
+  const data = sanitizeRequest_(raw);
+  delete data.liberi;
+  delete data.action;
+  delete data._hp;
+
+  const rowData = Object.assign({}, data, {
+    ID: id,
+    Timestamp: new Date(),
+    Stato: stato,
+    ScadenzaHold: scadenza && !isNaN(scadenza.getTime()) ? scadenza : ""
+  });
+  saveDynamicRow_(rowData);
+
+  const emailAdmin = sendAdminEmail_(rowData, id, typeof liberi === "number" && isFinite(liberi) ? liberi : null);
+  let emailUtente = { ok: false, errore: "email_utente_non_inviata" };
+  if (CFG.INVIA_EMAIL_UTENTE && isValidEmail_(data.Email)) {
+    emailUtente = sendUserEmail_(rowData, id);
+  }
+
+  return jsonResponse_({ ok: true, id: id, emailAdmin: emailAdmin, emailUtente: emailUtente });
 }
 
 function confirmPayment_(data) {
