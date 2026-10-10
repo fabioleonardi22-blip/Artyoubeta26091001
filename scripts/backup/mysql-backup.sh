@@ -16,10 +16,18 @@ pass="$(python3 -c 'import sys,urllib.parse;print(urllib.parse.unquote(sys.argv[
 host="${hostpart%%/*}"; db="${hostpart#*/}"; db="${db%%\?*}"; port="${host##*:}"; host="${host%%:*}"; [ "$port" = "$host" ] && port=3306
 stamp="$(date -u +%Y%m%d-%H%M)"; mkdir -p "$out"; base="$out/$name-$stamp"
 run(){ docker run --rm -i ${MYSQL_DOCKER_ARGS:-} -e MYSQL_PWD="$pass" "$image" "$@"; }
-run mysqldump --host="$host" --port="$port" --user="$user" --single-transaction --quick --routines --triggers --events \
-  --no-tablespaces --set-gtid-purged=OFF --default-character-set=utf8mb4 "$db" \
-  | gzip -9 | openssl enc -aes-256-cbc -salt -pbkdf2 -iter 200000 -pass env:BACKUP_PASSPHRASE -out "$base.sql.gz.enc"
-tables="$(run mysql --host="$host" --port="$port" --user="$user" -N -B -e "SELECT table_name FROM information_schema.tables WHERE table_schema='$db' AND table_type='BASE TABLE' ORDER BY table_name")"
+# In caso di errore il messaggio di MySQL finisce in un'annotazione del workflow (GitHub copre i segreti con ***),
+# così si legge il motivo anche senza aprire i registri completi.
+err="$(mktemp)"; trap 'rm -f "$err"' EXIT
+fail(){ echo "::error title=Backup $name::$1: $(tr '\n' ' ' < "$err" | cut -c1-400)"; exit 2; }
+echo "Collegamento a $host:$port, database $db, utente $user"
+run mysql --host="$host" --port="$port" --user="$user" -N -B -e "SELECT VERSION()" "$db" >/dev/null 2>"$err" || fail "collegamento non riuscito"
+if ! run mysqldump --host="$host" --port="$port" --user="$user" --single-transaction --quick --routines --triggers --events \
+  --no-tablespaces --set-gtid-purged=OFF --default-character-set=utf8mb4 "$db" 2>"$err" \
+  | gzip -9 | openssl enc -aes-256-cbc -salt -pbkdf2 -iter 200000 -pass env:BACKUP_PASSPHRASE -out "$base.sql.gz.enc"; then
+  fail "mysqldump non riuscito"
+fi
+tables="$(run mysql --host="$host" --port="$port" --user="$user" -N -B -e "SELECT table_name FROM information_schema.tables WHERE table_schema='$db' AND table_type='BASE TABLE' ORDER BY table_name" 2>"$err")" || fail "elenco tabelle non riuscito"
 : > "$base.counts.tsv"
 for t in $tables; do n="$(run mysql --host="$host" --port="$port" --user="$user" -N -B "$db" -e "SELECT COUNT(*) FROM \`$t\`")"; printf '%s\t%s\n' "$t" "$n" >> "$base.counts.tsv"; done
 sha256sum "$base.sql.gz.enc" > "$base.sha256"
