@@ -123,13 +123,13 @@ class Component extends DCLogic {
         cat: s.cat, day: s.day, month: s.month, when: s.when,
         title: s.title || "[Titolo spettacolo]", where: s.where || venues[s.cat] || "Roma",
         bgImg: s.img ? "url(" + s.img + ")" : "none",
-        href: s.href || ("spettacolo.html#" + (s.slug || "")),
+        href: s.slug === "standup-bistrot68" ? "/stand-up/" : (s.href || ("spettacolo.html#" + (s.slug || ""))),
         phOp: s.img ? 0 : 1,
         badgeDisp: s.img ? "none" : "flex",
         tint: tints[s.cat] || "#26343D",
         tagColor: tags[s.cat] || "#415D6B",
         wa: "https://wa.me/393271881956?text=" + encodeURIComponent(msg),
-        ctaLabel: s.ctaLabel || "Prenota"
+        ctaLabel: s.slug === "standup-bistrot68" ? "Scopri Stand-up" : (s.ctaLabel || "Prenota")
       };
     });
     shows = shows.slice(0, 4);
